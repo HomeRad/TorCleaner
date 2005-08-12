@@ -312,9 +312,7 @@ a = "--&#62;";
 
 
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestRewriteScript))
-    return suite
+    return unittest.makeSuite(TestRewriteScript)
 
 if __name__ == '__main__':
     unittest.main()

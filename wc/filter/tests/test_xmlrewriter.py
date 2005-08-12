@@ -94,10 +94,9 @@ class TestXmlRewriter (unittest.TestCase):
 </item>
 </rdf:RDF>""")
 
+
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestXmlRewriter))
-    return suite
+    return unittest.makeSuite(TestXmlRewriter)
 
 if __name__ == '__main__':
     unittest.main()

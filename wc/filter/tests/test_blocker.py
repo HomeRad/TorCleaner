@@ -41,9 +41,7 @@ class TestBlocker (unittest.TestCase):
 
 
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestBlocker))
-    return suite
+    return unittest.makeSuite(TestBlocker)
 
 if __name__ == '__main__':
     unittest.main()

@@ -96,9 +96,7 @@ class TestRating (unittest.TestCase):
 
 
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestRating))
-    return suite
+    return unittest.makeSuite(TestRating)
 
 if __name__ == '__main__':
     unittest.main()

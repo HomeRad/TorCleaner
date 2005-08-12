@@ -49,9 +49,7 @@ class TestReplacer (unittest.TestCase):
 
 
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestReplacer))
-    return suite
+    return unittest.makeSuite(TestReplacer)
 
 if __name__ == '__main__':
     unittest.main()

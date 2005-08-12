@@ -56,9 +56,7 @@ class TestBinaryCharFilter (unittest.TestCase):
 
 
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestBinaryCharFilter))
-    return suite
+    return unittest.makeSuite(TestBinaryCharFilter)
 
 if __name__ == '__main__':
     unittest.main()

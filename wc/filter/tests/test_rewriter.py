@@ -253,9 +253,7 @@ class TestRewriter (unittest.TestCase):
 
 
 def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestRewriter))
-    return suite
+    return unittest.makeSuite(TestRewriter)
 
 if __name__ == '__main__':
     unittest.main()
