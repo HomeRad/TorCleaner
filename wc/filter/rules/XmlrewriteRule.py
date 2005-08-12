@@ -201,7 +201,8 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = p
-        encoding = "UTF8"
+        # XXX remove encoding when HTML parser supports unicode
+        encoding = "iso8859-1"
         data = data.encode(encoding, "ignore")
         p.feed(data)
         p.flush()
