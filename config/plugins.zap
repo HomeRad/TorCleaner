@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.289" oid="0" configversion="0.10">
+<folder sid="wc.289" oid="8" configversion="0.10">
 <title lang="de">Plugins und Medien</title>
 <title lang="en">Plugins</title>
 <description lang="en">The filter rules found here remove plugin (eg flash) contents, but only for selected sites.</description>
@@ -26,7 +26,22 @@
 <htmlrewrite sid="wc.39"
  tag="embed">
   <title lang="de">Entferne embed loops</title>
+  <title lang="en">Remove EMBED loops</title>
   <attr name="loop">true</attr>
   <replacement part="attr"/>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.43"
+ tag="embed">
+  <title lang="en">Disable EMBED autostart</title>
+  <attr name="autostart">(?i)true</attr>
+  <replacement part="attrval">false</replacement>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.44"
+ tag="embed">
+  <title lang="en">Disable EMBED hidden</title>
+  <attr name="hidden">(?i)true</attr>
+  <replacement part="attrval">false</replacement>
 </htmlrewrite>
 </folder>
