@@ -25,12 +25,13 @@ from wc.filter.html import check_spelling
 class TestSpelling (unittest.TestCase):
 
     def test_htmltags (self):
-        self.assertEqual("blink", check_spelling("blink"))
-        self.assertEqual("blink", check_spelling("bllnk"))
-        self.assertEqual("html", check_spelling("htmm"))
-        self.assertEqual("hr", check_spelling("hu"))
-        self.assertEqual("xmlns:a", check_spelling("xmlns:a"))
-        self.assertEqual("heisead", check_spelling("heisead"))
+        url = "unknown"
+        self.assertEqual("blink", check_spelling("blink", url))
+        self.assertEqual("blink", check_spelling("bllnk", url))
+        self.assertEqual("html", check_spelling("htmm", url))
+        self.assertEqual("hr", check_spelling("hrr", url))
+        self.assertEqual("xmlns:a", check_spelling("xmlns:a", url))
+        self.assertEqual("heisead", check_spelling("heisead", url))
 
 
 def test_suite ():
