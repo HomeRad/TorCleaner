@@ -75,9 +75,10 @@ class RssHtmlFilter (object):
         self.rules = []
 
     def filter (self, data, url, rules):
-        encoding = "UTF8"
+        # XXX remove encoding when HTML parser supports unicode
+        encoding = "iso8859-1"
         self.parser.encoding = encoding
-        data = data.encode(encoding)
+        data = data.encode(encoding, "ignore")
         self.rules = rules
         self.url = url
         self.parser.feed(data)
