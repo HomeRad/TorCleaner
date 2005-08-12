@@ -211,3 +211,31 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
  567, in process_read
      callback(self.hostname, DnsResponse('found', ip_addrs)) 
  exceptions.TypeError: 'NoneType' object is not callable
+
+- endless loop, 100% CPU
+DEBUG wc.proxy poll result ([<dns-lookup TCP  www.robotstxt.org retry #4>], [], [])
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> poll handle read
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> Connection.handle_read
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> Connection.handle_close
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> Connection.delayed_close
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> close ready channel
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> closed, got empty data
+DEBUG wc.proxy select with 0.206166 timeout:
+DEBUG wc.proxy   <Listener:('', 8081)>
+DEBUG wc.proxy   <Listener:('', 8444)>
+DEBUG wc.proxy   <client:receive  persistent http://www.robotstxt.org/favicon.ico>
+DEBUG wc.proxy   <dns-lookup TCP  www.robotstxt.org retry #4>
+DEBUG wc.proxy   <dns-lookup      www.robotstxt.org>
+DEBUG wc.proxy poll result ([<dns-lookup TCP  www.robotstxt.org retry #4>], [], [])
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> poll handle read
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> Connection.handle_read
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> Connection.handle_close
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> Connection.delayed_close
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> close ready channel
+DEBUG wc.proxy <dns-lookup TCP  www.robotstxt.org retry #4> closed, got empty data
+DEBUG wc.proxy select with 0.201074 timeout:
+DEBUG wc.proxy   <Listener:('', 8081)>
+DEBUG wc.proxy   <Listener:('', 8444)>
+DEBUG wc.proxy   <client:receive  persistent http://www.robotstxt.org/favicon.ico>
+DEBUG wc.proxy   <dns-lookup TCP  www.robotstxt.org retry #4>
+DEBUG wc.proxy   <dns-lookup      www.robotstxt.org>
