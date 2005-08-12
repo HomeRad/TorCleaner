@@ -54,7 +54,7 @@ class XmlFilter (object):
         self.tagbuf = []
         self.rulestack = []
         self.stack = []
-        self.encoding = "UTF8"
+        self.encoding = "UTF-8"
 
     # ErrorHandler methods
 
