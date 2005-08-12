@@ -1,18 +1,5 @@
 TODO
 
-- padding error when password ends with equal sign?
-  150, in check_credentials                                                                     
-  res = check_digest_credentials(creds['Digest'][0], **attrs)                               
-  File "C:\Python24\Lib\site-packages\wc\proxy\auth\digest.py", line                          
-    101, in check_digest_credentials                                                              
-    our_response = get_response_digest(credentials, **attrs)[2]                               
-  File "C:\Python24\Lib\site-packages\wc\proxy\auth\digest.py", line                          
-    187, in get_response_digest                                                                   
-    password = base64.decodestring(attrs['password_b64'])                                     
-  File "C:\Python24\lib\base64.py", line 317, in decodestring                                 
-    return binascii.a2b_base64(s)                                                             
-  binascii.Error: Incorrect padding
-
 - > 188, in get_response_digest
 >     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
 > UnicodeDecodeError: 'ascii' codec can't decode byte 0xfa in position 2:

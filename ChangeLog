@@ -41,6 +41,10 @@
     Type: bugfix
     Changed: wc/js/jslib.c
 
+  * Catch decoding errors on HTTP Digest authentication.
+    Type: bugfix
+    Changed: wc/proxy/auth/digest.py
+
 2.29 "The Forgotten" (released 12.4.2005)
 
   * Replace template_dir in windows install script.
