@@ -59,7 +59,7 @@ class TestXmlRewriter (unittest.TestCase):
 <description>bla &lt;a href='http://fmads.osdn.com/cgi-bin/adlog.pl?index,tkgk0128en'&gt;&lt;/a&gt;</description>
 </item>
 </rdf:RDF>""",
-                  """<?xml version="1.0" encoding="UTF8"?>
+                  """<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/">
 <item rdf:about="blubb">
 <description>bla </description>
@@ -73,7 +73,7 @@ class TestXmlRewriter (unittest.TestCase):
 <description>bla &lt;foo&gt;</description>
 </item>
 </rdf:RDF>""",
-                  """<?xml version="1.0" encoding="UTF8"?>
+                  """<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/">
 <item rdf:about="blubb">
 <description>bla </description>
@@ -87,7 +87,7 @@ class TestXmlRewriter (unittest.TestCase):
 <description>bla &lt;img grog='warz'&gt;</description>
 </item>
 </rdf:RDF>""",
-                  """<?xml version="1.0" encoding="UTF8"?>
+                  """<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/">
 <item rdf:about="blubb">
 <description>bla &lt;img&gt;</description>
