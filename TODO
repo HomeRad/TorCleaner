@@ -1,5 +1,7 @@
 TODO
 
+- recompile pycrypto installer .exe with version 2.0.1
+
 - rework the HTML GUI using mini-tabs and styled checkboxes.
 
 - padding error when password ends with equal sign?
