@@ -102,13 +102,6 @@
   <replacement part="attr"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.379"
- tag="div">
-  <title lang="en">Eselfilme layer</title>
-  <matchurl>eselfilme\.de</matchurl>
-  <attr name="id">Layer1</attr>
-</htmlrewrite>
-
 <htmlrewrite sid="wc.3">
   <title lang="de">Markiere &lt;href&gt; targets</title>
   <title lang="en">Mark &lt;href&gt; targets</title>
