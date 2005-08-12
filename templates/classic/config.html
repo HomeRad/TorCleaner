@@ -390,6 +390,13 @@ match any hosts ending with <code>.intra</code>.</span><br>
 </td>
 </tr>
 </table>
+
+<!-- XXX remove hidden values when they are enabled above -->
+<input type="hidden" name="auth_ntlm" value="0"
+ tal:attributes="value config/auth_ntlm">
+<input type="hidden" name="try_google" value="0"
+ tal:attributes="value config/try_google">
+
 </form>
 
 <div class="info">
