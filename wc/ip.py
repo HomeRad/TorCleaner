@@ -266,5 +266,5 @@ def resolve_host (host):
             # add first ip of socket address
             ips.add(res[4][0])
     except socket.error:
-        wc.log.error(wc.LOG_NET, "Ignored invalid host %r", host)
+        wc.log.warn(wc.LOG_NET, "Ignored invalid host %r", host)
     return ips
