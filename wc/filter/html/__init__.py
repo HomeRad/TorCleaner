@@ -359,7 +359,7 @@ def check_spelling (tag, url):
     # encode for levenshtein method
     # since tag names should be ascii anyway, ignore encoding errors
     enctag = tag.encode("ascii", "ignore")
-    for htmltag in HtmlTags.keys()+MathTags.keys():
+    for htmltag in HtmlTags.keys()+OldTags.keys()+MathTags.keys():
         if wc.levenshtein.distance(enctag, htmltag) == 1:
             wc.log.warn(wc.LOG_FILTER,
                       "HTML tag %r corrected to %r at %r", tag, htmltag, url)
