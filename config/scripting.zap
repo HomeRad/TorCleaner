@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.312" oid="8" configversion="0.10">
+<folder sid="wc.312" oid="7" configversion="0.10">
 <title lang="de">Skripte (Javascript)</title>
 <title lang="en">Scripting</title>
 <description lang="en">Scripting related.</description>

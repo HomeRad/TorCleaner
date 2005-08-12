@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.429" oid="5" configversion="0.10">
+<folder sid="wc.429" oid="4" configversion="0.10">
 <title lang="de">Spezielle Werbung</title>
 <title lang="en">Specific adverts</title>
 <description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href="http://company.com"&gt;&lt;img  src="http://adserver.de/banner.gif"&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
@@ -263,8 +263,8 @@
 
 <htmlrewrite sid="wc.28"
  tag="table">
-  <title lang="en">Google search ads</title>
   <title lang="de">Google Suche Werbungen</title>
+  <title lang="en">Google search ads</title>
   <matchurl>www\.google\.</matchurl>
   <attr name="width">^(25|100)%$</attr>
   <enclosed>&amp;ai=A</enclosed>
@@ -276,9 +276,8 @@
 </block>
 
 <htmlrewrite sid="wc.32">
-  <title lang="en">Blog ads</title>
   <title lang="de">Blog Werbungen</title>
+  <title lang="en">Blog ads</title>
   <attr>blogads\.com</attr>
 </htmlrewrite>
-
 </folder>
