@@ -62,7 +62,7 @@ Direct download links are in brackets.
    Be sure to install in the given order:
    
    a) MingGW
-      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-4.1.0.exe]
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-4.1.1.exe]
    b) MSYS
       [http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe]
    
@@ -189,12 +189,12 @@ Setup for Windows - compiling from source:
 
 3. Compile the JavaScript library
    
-   Copy the webcleaner-X.X.tar.gz into your MSYS home directory,
+   Copy the webcleaner-X.Y.tar.gz into your MSYS home directory,
    which is usually under c:\\msys\\1.0\\home\\user\\.
    Launch MSYS and extract the tarball with
-   ``% tar xzvf webcleaner-X.X.tar.gz``.
+   ``% tar xzvf webcleaner-X.Y.tar.gz``.
    Now change into the generated directory with
-   ``% cd webcleaner-X.X`` and configure and compile the JavaScript
+   ``% cd webcleaner-X.Y`` and configure and compile the JavaScript
    library:
    ``% ./configure && make``.
 
@@ -214,11 +214,11 @@ Setup for Windows - compiling from source:
 
 6. Generate the WebCleaner installer
    
-   Change to the webcleaner-X.X directory and run
+   Change to the webcleaner-X.Y directory and run
    ``c:> python setup.py build -c mingw32 bdist_wininst``.
 
    This generates a binary installer
-   ``dist\webcleaner-X.X.win32-py2.4.exe`` which you just have to
+   ``dist\webcleaner-X.Y.win32-py2.4.exe`` which you just have to
    execute.
 
    If you installed Psyco please read the `psyco installation docs`_.
