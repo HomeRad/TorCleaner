@@ -181,8 +181,6 @@ class ClientServerMatchmaker (object):
                     klass = wc.proxy.HttpServer.HttpServer
                 server = klass(self.ipaddr, self.port, self)
                 serverpool.register_server(addr, server)
-            except socket.timeout:
-                self.client.error(504, _('Connection timeout'))
             except socket.error:
                 self.client.error(503, _('Connect error'))
 
@@ -257,7 +255,7 @@ class ClientServerMatchmaker (object):
         elif self.client.connected:
             # The server didn't handle the original request, so we just
             # tell the client, sorry.
-            self.client.error(503, _("Server closed connection"))
+            self.client.error(503, _("Server did not respond"))
 
     def server_response (self, server, response, status, headers):
         """
