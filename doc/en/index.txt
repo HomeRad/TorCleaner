@@ -39,12 +39,9 @@ Download
 ========
 
 Download the latest packages from `WebCleaner download section`_.
-There are also `Md5sum checksums`_ from above files.
 
 .. _WebCleaner download section:
    http://sourceforge.net/project/showfiles.php?group_id=7692
-.. _Md5sum checksums:
-   webcleaner-md5sums.txt
 
 Requirements and installation instructions are located at the
 `install documentation`_. To see what has changed between releases
@@ -183,7 +180,7 @@ therefore not included in WebCleaner. See http://burnallgifs.org/.
 
 .. image:: http://sourceforge.net/sflogo.php?group_id=7692&type=1
    :align: right
-   :target: http://sourceforge.net/
+   :target: http://sourceforge.net/projects/webcleaner/
    :alt: SourceForge Logo
    :width: 88
    :height: 31
