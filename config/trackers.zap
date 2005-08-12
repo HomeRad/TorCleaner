@@ -6,7 +6,7 @@
 <description lang="en">Statistic links and tracker images deserve now a separate category as they became a lot more in the last couple of months.</description>
 
 <block sid="wc.363"
- url="https?://(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)">
+ url="https?://(nedstatbasic\.net|nedstat\.nl|ivwbox\.de|stats\.esomniture\.com)">
   <title lang="de">Statistik Seiten</title>
   <title lang="en">Statistic sites</title>
   <description lang="de">Einige Statistik-Seiten.</description>
@@ -62,7 +62,9 @@
 
 <htmlrewrite sid="wc.21">
   <title lang="de">Verschiedene Zählskripte</title>
+  <title lang="en">Counter scripts</title>
   <description lang="de">CGI Skripte zur Zählung</description>
+  <description lang="en">CGI scripts counting web hits</description>
   <attr>/(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
 </htmlrewrite>
 
