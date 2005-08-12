@@ -23,7 +23,7 @@ from wc.proxy.auth import wc_realm
 
 random.seed()
 # the default opaque value
-wc_opaque = base64.encodestring("unknown").strip()
+wc_opaque = base64.b64encode("unknown")
 # XXX regularly delete all old nonces
 nonces = {} # nonce to timestamp
 max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
@@ -135,7 +135,11 @@ def get_digest_credentials (challenge, **attrs):
     if not check_digest_values(challenge):
         return None
     # calculate response digest
-    password = base64.decodestring(attrs['password_b64'])
+    try:
+        password = base64.b64decode(attrs['password_b64'])
+    except TypeError:
+        wc.log.warn(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
+        password = ""
     nc, cnonce, response_digest = get_response_digest(challenge, **attrs)
     # construct credentials
     base = 'username="%s", realm="%s", nonce="%s", uri="%s"' % \
@@ -184,7 +188,11 @@ def get_response_digest (challenge, **attrs):
         entdig = None
     # calculate H(A1)
     username = attrs['username']
-    password = base64.decodestring(attrs['password_b64'])
+    try:
+        password = base64.b64decode(attrs['password_b64'])
+    except TypeError:
+        wc.log.warn(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
+        password = ""
     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
     HA1 = encode_digest(H(A1))
     if algorithm == 'MD5-sess':
