@@ -293,7 +293,7 @@ class Dispatcher (object):
         wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
         self.connect_checks += 1
         if self.connect_checks >= 50:
-            wc.log.info(wc.LOG_PROXY, '%s connect timed out', self)
+            wc.log.debug(wc.LOG_PROXY, '%s connect timed out', self)
             self.handle_close()
             return
         try:
