@@ -1,10 +1,5 @@
 TODO
 
-- > 188, in get_response_digest
->     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
-> UnicodeDecodeError: 'ascii' codec can't decode byte 0xfa in position 2:
-> ordinal not in range(128)
-
 - Some DNS requests are aborted too early. If the web page is reloaded
   in the browser and the DNS request is made again, it succeeds.
 

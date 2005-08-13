@@ -45,6 +45,11 @@
     Type: bugfix
     Changed: wc/proxy/auth/digest.py
 
+  * Ensure that proxy usernames and passwords are all ASCII.
+    Type: bugfix
+    Changed: wc/configuration.py, wc/webgui/context/config_html.py,
+      templates/classic/config.html
+
 2.29 "The Forgotten" (released 12.4.2005)
 
   * Replace template_dir in windows install script.
