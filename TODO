@@ -3,6 +3,8 @@ TODO
 - Some DNS requests are aborted too early. If the web page is reloaded
   in the browser and the DNS request is made again, it succeeds.
 
+- streaming clamav scanning, try to detect virii immediately
+
 - recompile pycrypto installer .exe with version 2.0.1
 
 - rework the HTML GUI using mini-tabs and styled checkboxes.
