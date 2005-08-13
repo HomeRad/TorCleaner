@@ -60,6 +60,17 @@ def ascii_safe (s):
     return s
 
 
+def is_ascii (s):
+    """
+    Test if a string can be encoded in ASCII.
+    """
+    try:
+        s.encode('ascii', 'strict')
+        return True
+    except UnicodeEncodeError:
+        return False
+
+
 def url_unicode_split (url):
     """
     Like urlparse.urlsplit(), but always returning unicode parts.

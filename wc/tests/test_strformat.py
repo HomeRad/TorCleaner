@@ -89,6 +89,10 @@ class TestStrFormat (unittest.TestCase):
         self.assertEquals(wc.strformat.strsize(1023), "1023 Bytes")
         self.assertEquals(wc.strformat.strsize(1024), "1.00 kB")
 
+    def test_is_ascii (self):
+        self.assert_(wc.strformat.is_ascii("abcd./"))
+        self.assert_(not wc.strformat.is_ascii("ä"))
+
 
 def test_suite ():
     """
