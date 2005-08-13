@@ -18,15 +18,16 @@
 <header sid="wc.314"
  name="Referer">
   <title lang="de">Entferne 'Referer'</title>
-  <title lang="en">Remove 'Referer'</title>
+  <title lang="en">Replace 'Referer'</title>
   <description lang="de">Entferne das Referer Kopfdatum. Einige Seiten funktionieren mit dieser Einstellung nicht.</description>
-  <description lang="en">Remove the Referer header. Some sites may not work with this option, because they check the referer. In this case add them to 'dont match url' and write me an email.</description>
+  <description lang="en">Replace the Referer header. Some sites may not work with this option, because they check the referer. In this case add them to "Don't match URL" list and write me an email.</description>
   <nomatchurl>printerfriendly\.abcnews\.com</nomatchurl>
   <nomatchurl>/cgi-bin/fosi\.cgi</nomatchurl>
   <nomatchurl>\.ask\.com</nomatchurl>
   <nomatchurl>www\.amazon\.de/exec/obidos/clipserve/</nomatchurl>
   <nomatchurl>\.lufthansa\.</nomatchurl>
   <nomatchurl>www\.nba\.com</nomatchurl>
+  <replacement>http://www.google.com/</replacement>
 </header>
 
 <header sid="wc.315"
