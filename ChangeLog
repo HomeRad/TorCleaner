@@ -50,6 +50,11 @@
     Changed: wc/configuration.py, wc/webgui/context/config_html.py,
       templates/classic/config.html
 
+  * Instead of removing the "Referer" HTTP header it is now replaced
+    with "http://www.google.com/".
+    Type: feature
+    Changed: config/headers.zap
+
 2.29 "The Forgotten" (released 12.4.2005)
 
   * Replace template_dir in windows install script.
