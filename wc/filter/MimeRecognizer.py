@@ -91,7 +91,8 @@ class MimeRecognizer (wc.filter.Filter.Filter):
                 attrs['headers']['data']['Content-Type'] = "%s\r" % mime
         except StandardError:
             wc.log.warn(wc.LOG_FILTER,
-                        "Mime recognize error at %r", attrs['url'])
+                        "Mime recognize error at %r (%r)",
+                        attrs['url'], buf.getvalue())
         data = buf.getvalue()
         buf.close()
         return data
