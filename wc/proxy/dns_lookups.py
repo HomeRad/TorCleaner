@@ -52,7 +52,7 @@ def coerce_hostname (hostname):
         # XXX encode?
         hostname = str(hostname)
     elif not isinstance(hostname, str):
-        raise ValueError, "Invalid hostname type %r" % hostname
+        raise ValueError, "invalid hostname type %r" % hostname
     return hostname
 
 
@@ -385,11 +385,10 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if self.tcp:
             self.create_socket(family, socket.SOCK_STREAM)
             self.connect((self.nameserver, self.PORT))
-            wc.proxy.make_timer(30, self.handle_connect_timeout)
         else:
             self.create_socket(family, socket.SOCK_DGRAM)
             self.connect((self.nameserver, self.PORT))
-            self.send_dns_request()
+        wc.proxy.make_timer(30, self.handle_connect_timeout)
 
     def __repr__ (self):
         where = ''
@@ -412,8 +411,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.callback = None
 
     def handle_connect (self):
-        # For TCP requests only
-        dns_accepts_tcp[self.nameserver] = True
+        if self.tcp:
+            dns_accepts_tcp[self.nameserver] = True
         self.send_dns_request()
 
     def handle_connect_timeout (self):
@@ -438,7 +437,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.query.use_tsig(resolver.keyring, resolver.keyname)
         self.query.use_edns(resolver.edns, resolver.ednsflags,
                             resolver.payload)
-        wc.log.debug(wc.LOG_DNS, "sending DNS query %s", self.query)
+        wc.log.debug(wc.LOG_DNS, "%s sending DNS query %s",
+                     self, wc.strformat.indent(self.query))
         wire = self.query.to_wire()
         if self.tcp:
             l = len(wire)
@@ -504,10 +504,10 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             wire = self.read(1024)
         response = wc.dns.message.from_wire(
                  wire, keyring=self.query.keyring, request_mac=self.query.mac)
-        wc.log.debug(wc.LOG_DNS, "got DNS response %s", response)
         if not self.query.is_response(response):
-            wc.log.warn(wc.LOG_DNS, 'Wrong response %s to query %s',
-                        response, self.query)
+            wc.log.warn(wc.LOG_DNS, '%s wrong response %s to query %s',
+                        self, wc.strformat.indent(response),
+                        wc.strformat.indent(self.query))
             # Oops, this doesn't answer the right question.  This can
             # happen because we're using UDP, and UDP replies might end
             # up in the wrong place: open conn A, send question to A,
@@ -519,6 +519,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # Anyway, if this is the answer to a different question,
             # we ignore this read, and let the timeout take its course
             return
+        wc.log.debug(wc.LOG_DNS, "%s got DNS response %s",
+                     self, wc.strformat.indent(response))
         # check truncate flag
         if (response.flags & wc.dns.flags.TC) != 0:
             # don't handle truncated packets; try to switch to TCP
@@ -526,17 +528,17 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             if self.tcp:
                 # socket.error((84, ''))
                 wc.log.warn(wc.LOG_DNS,
-                            'Truncated TCP DNS packet: %s from %s for %r',
-                            response, self.nameserver, self.hostname)
-                self.handle_error("dns error: truncated TCP packet")
+                            '%s truncated TCP DNS packet from %s',
+                            self, self.nameserver)
+                self.handle_error("DNS error: truncated TCP packet")
             else:
                 wc.log.warn(wc.LOG_DNS,
-                            'truncated UDP DNS packet from %s for %r',
-                            self.nameserver, self.hostname)
+                            '%s truncated UDP DNS packet from %s',
+                            self, self.nameserver,)
             # we ignore this read, and let the timeout take its course
             return
 
-        if response.rcode()!=wc.dns.rcode.NOERROR:
+        if response.rcode() != wc.dns.rcode.NOERROR:
             callback, self.callback = self.callback, None
             callback(self.hostname,
                      DnsResponse('error', 'not found .. %s' % self))
@@ -547,9 +549,10 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             name = wc.dns.name.from_text(self.hostname)
             answer = wc.dns.resolver.Answer(
                                    name, self.rdtype, self.rdclass, response)
-            wc.log.debug(wc.LOG_DNS, "DNS answer %s", answer)
+            wc.log.debug(wc.LOG_DNS, "%s DNS answer %s",
+                         self, wc.strformat.indent(answer))
         except wc.dns.resolver.NoAnswer:
-            wc.log.warn(wc.LOG_DNS, "No answer: %s", response)
+            wc.log.warn(wc.LOG_DNS, "%s no answer", self)
             callback, self.callback = self.callback, None
             callback(self.hostname,
                      DnsResponse('error', 'not found .. %s' % self))
@@ -559,9 +562,10 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                     if hasattr(rdata, "address")]
         callback, self.callback = self.callback, None
         if ip_addrs:
-            # doh, verisign has a catch-all ip 64.94.110.11 for
-            # .com and .net domains
-            # note: this is disabled until they switch it back on ;)
+            # Verisign had a catch-all IP 64.94.110.11 for invalid
+            # .com and .net domains.
+            # This is disabled and left as an example what to do
+            # in such cases.
             #if self.hostname[-4:] in ('.com','.net') and \
             #   '64.94.110.11' in ip_addrs:
             #    callback(self.hostname, DnsResponse('error', 'not found'))
