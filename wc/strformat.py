@@ -134,6 +134,14 @@ def wrap (text, width, **kwargs):
     return os.linesep.join(ret)
 
 
+def indent (text, indent_string="  "):
+    """
+    Indent each line of text with the given indent string.
+    """
+    lines = str(text).splitlines()
+    return os.linesep.join(["%s%s" % (indent_string, x) for x in lines])
+
+
 def get_line_number (s, index):
     """
     Return the line number of s[index]. Lines are assumed to be separated
