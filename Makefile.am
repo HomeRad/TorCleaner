@@ -31,9 +31,6 @@ PYLINTFILES = $(filter-out $(PYLINTIGNORE),$(PYFILES))
 TESTFILES :=
 # "runit" service directory
 SERVICEDIR := /etc/webcleaner/service
-# ZOPE3 subversion repository checkout directory (for comparing ZPT dirs)
-# $ svn co svn://svn.zope.org/repos/main/Zope3/trunk/src/zope
-ZOPE_SVN := /home/calvin/src/zope-svn_
 # run unittests on check
 TESTS = test/test.sh
 
@@ -46,7 +43,6 @@ clean-local: clean-log
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 	rm -f config/magic.mime.mgc
-	rm -f webcleaner-md5sums.txt
 	rm -f _webcleaner2_configdata.py
 	rm -f crossbuild.log localbuild.log
 # delete possible aborted dist build
@@ -98,43 +94,36 @@ dist-hook: MANIFEST
 	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(VERSION).tar.gz
 	rm -f $(distdir)/_webcleaner2_configdata.py
-	rm -f webcleaner-md5sums.txt
 
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
-	(cd test/filter && md5sum *.zap > filter-md5sums.txt)
-	for f in webcleaner-$(VERSION).tar.gz; do \
-	  if [ ! -f $$f ]; then break; fi; \
-	  md5sum $$f > webcleaner-md5sums.txt; \
-	  gpg --detach-sign --armor $$f; \
-	done
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
 
 releasecheck:
-	@if egrep "xx\.|xxxx|\.xx" ChangeLog > /dev/null; then \
+	@if egrep -i "xx\.|xxxx|\.xx" ChangeLog > /dev/null; then \
 	  echo "Could not release: edit ChangeLog release date"; false; \
 	fi
 	@if ! grep 'adminuser="admin"' config/webcleaner.conf > /dev/null; then \
 	  echo "Could not release: add admin user to config"; false; \
 	fi
 
-release: releasecheck dist upload homepage
-	mozilla -remote "openUrl(https://sourceforge.net/projects/webcleaner,new-tab)"
-	@echo "Make SF release and press return..."
-	@read
+release: releasecheck distclean dist sign_distfiles homepage
+	@echo "Starting releaseforge..."
+	@releaseforge
 	@echo "Uploading new WebCleaner Homepage..."
 	$(MAKE) -C ~/public_html/webcleaner.sf.net upload
 	@echo "Register at Python Package Index..."
 	$(PYTHON) setup.py register
 
-upload:
-	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
-	-ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).win32-py2.4.exe
+sign_distfiles:
+	for f in dist/*; do \
+	  if [ ! -f $${f}.asc ]; then \
+	    gpg --detach-sign --armor $$f; \
+	  fi; \
+	done
 
 homepage: homepage-zapper
-	-cp webcleaner-md5sums.txt $(HTMLDIR)/htdocs/
 	$(MAKE) -C doc/en homepage
-	$(MAKE) -C $(HTMLDIR) chmod
 
 homepage-zapper: md5sums
 	cp config/*.zap config/*.dtd config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/filter/
@@ -168,12 +157,6 @@ update-blacklists:
 reindent:
 	$(PYTHON) config/reindent.py -r -v wc
 
-zptdiff:
-	@for d in tal tales pagetemplate; do \
-	  for f in wc/webgui/$$d/*.py; do \
-	    diff -u $(ZOPE_SVN)/$$d/`basename $$f` $$f; \
-	  done; \
-	done | less
-
 .PHONY: localbuild distclean deb_signed update-blacklists
-.PHONY: md5sums pycheck pylint ccheck installservice homepage upload
+.PHONY: md5sums pycheck pylint ccheck installservice homepage
+.PHONY: sign_distfiles
