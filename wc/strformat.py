@@ -67,7 +67,7 @@ def is_ascii (s):
     try:
         s.encode('ascii', 'strict')
         return True
-    except UnicodeEncodeError:
+    except (UnicodeEncodeError, UnicodeDecodeError):
         return False
 
 
