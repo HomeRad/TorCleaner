@@ -6,7 +6,6 @@ Used and modified by Bastian Kleineidam for WebCleaner
 """
 
 import select
-import re
 import time
 
 import wc
@@ -15,32 +14,6 @@ import wc.configuration
 
 
 TIMERS = [] # list of (time, function)
-
-is_http = re.compile(r"(?i)^HTTP/(?P<major>\d+)\.(?P<minor>\d+)$").search
-
-
-def fix_http_version (protocol):
-    """
-    Sanitize http protocol version string.
-    """
-    return "HTTP/%d.%d" % get_http_version(protocol)
-
-
-def get_http_version (protocol):
-    """
-    Return http version number as a tuple.
-    """
-    mo = is_http(protocol)
-    if mo:
-        f = (int(mo.group("major")), int(mo.group("minor")))
-        if f > (1, 1):
-            wc.log.warn(wc.LOG_PROXY,
-                        "unsupported HTTP version %s", str(f))
-            f = (1, 1)
-        return f
-    wc.log.warn(wc.LOG_PROXY,
-                "invalid HTTP version %r, assuming 1.0", protocol)
-    return (1, 0)
 
 
 def make_timer (delay, callback):
