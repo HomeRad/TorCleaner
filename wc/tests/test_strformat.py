@@ -92,6 +92,7 @@ class TestStrFormat (unittest.TestCase):
     def test_is_ascii (self):
         self.assert_(wc.strformat.is_ascii("abcd./"))
         self.assert_(not wc.strformat.is_ascii("ä"))
+        self.assert_(not wc.strformat.is_ascii(u"ä"))
 
 
 def test_suite ():
