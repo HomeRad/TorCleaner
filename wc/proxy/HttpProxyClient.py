@@ -4,6 +4,7 @@ Internal http client.
 """
 
 import urlparse
+import wc.proxy.http
 import wc.proxy.Headers
 import wc.proxy.HttpServer
 import wc.proxy.HttpClient
@@ -90,15 +91,16 @@ class HttpProxyClient (object):
         self.server = server
         assert self.server.connected
         wc.log.debug(wc.LOG_PROXY, '%s server_response %r', self, response)
-        protocol, status, msg = \
-               wc.proxy.HttpServer.get_response_data(response, self.args[0])
+        version, status, msg = \
+               wc.proxy.http.parse_http_response(response, self.args[0])
+        # XXX check version
         wc.log.debug(wc.LOG_PROXY, '%s response %s %d %s',
-                     self, protocol, status, msg)
+                     self, version, status, msg)
         if status in (302, 301):
             self.isredirect = True
         elif not (200 <= status < 300):
             wc.log.error(wc.LOG_PROXY, "%s got %s status %d %r",
-                         self, protocol, status, msg)
+                         self, version, status, msg)
             self.finish()
 
     def server_content (self, data):

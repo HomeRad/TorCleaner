@@ -19,6 +19,7 @@ import wc.filter.rating
 import wc.proxy
 import wc.proxy.Server
 import wc.proxy.auth
+import wc.proxy.http
 import wc.proxy.Headers
 import wc.proxy.ServerPool
 
@@ -33,27 +34,6 @@ FilterStages = [
     wc.filter.STAGE_RESPONSE_MODIFY,
     wc.filter.STAGE_RESPONSE_ENCODE,
 ]
-
-is_http_status = re.compile(r'^\d\d\d$').search
-def get_response_data (response, url):
-    """
-    Parse a response status line into tokens (protocol, status, msg).
-    """
-    parts = response.split(None, 2)
-    if len(parts) == 2:
-        wc.log.warn(wc.LOG_PROXY, "Empty response message from %r", url)
-        parts += ['Bummer']
-    elif len(parts) != 3:
-        wc.log.warn(wc.LOG_PROXY, "Invalid response %r from %r",
-                    response, url)
-        parts = ['HTTP/1.0', "200", 'Ok']
-    if not is_http_status(parts[1]):
-        wc.log.warn(wc.LOG_PROXY, "Invalid http statuscode %r from %r",
-                    parts[1], url)
-        parts[1] = "200"
-    parts[1] = int(parts[1])
-    return parts
-
 
 def flush_decoders (decoders):
     """
@@ -228,15 +208,17 @@ class HttpServer (wc.proxy.Server.Server):
         if i < 0:
             return
         self.response = self.read(i+1).strip()
-        if self.response.lower().startswith('http'):
+        if self.response.lower().startswith('http/'):
             # Okay, we got a valid response line
-            protocol, self.statuscode, tail = \
-                                   get_response_data(self.response, self.url)
+            version, status, tail = \
+                   wc.proxy.http.parse_http_response(self.response, self.url)
+            # XXX reject invalid HTTP version
             # reconstruct cleaned response
-            self.response = "%s %d %s" % (protocol, self.statuscode, tail)
+            ver = "HTTP/%d.%d" % version
+            self.response = "%s %d %s" % (ver, status, tail)
+            self.statuscode = status
             # Let the server pool know what version this is
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr,
-                                         wc.proxy.get_http_version(protocol))
+            wc.proxy.ServerPool.serverpool.set_http_version(self.addr,version)
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
@@ -248,7 +230,7 @@ class HttpServer (wc.proxy.Server.Server):
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
             wc.log.warn(wc.LOG_PROXY,
-                        _('invalid or missing response from %r: %r'),
+                        'invalid or missing response from %r: %r',
                         self.url, self.response)
             wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (1, 0))
             # put the read bytes back to the buffer
@@ -258,7 +240,7 @@ class HttpServer (wc.proxy.Server.Server):
             # http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
             if not wc.proxy.Headers.is_header(self.response):
                 wc.log.warn(wc.LOG_PROXY,
-                          _("missing headers in response from %r"), self.url)
+                            "missing headers in response from %r", self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
             # fix the response
             self.response = "%s 200 Ok" % self.protocol

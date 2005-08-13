@@ -29,19 +29,6 @@ import wc.webgui.webconfig
 import wc.google
 
 
-_all_methods = ['GET', 'HEAD', 'CONNECT', 'POST', 'PUT']
-def is_http_method (s):
-    """
-    Return True if s is a valid HTTP request method.
-    """
-    if len(s)<7:
-        # not enough data, say yes for now
-        return True
-    for m in _all_methods:
-        if s.startswith(m):
-            return True
-    return False
-
 FilterStages = [
     wc.filter.STAGE_REQUEST_DECODE,
     wc.filter.STAGE_REQUEST_MODIFY,
@@ -157,15 +144,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.error(400, _("Can't parse request"))
             return
         if not self.allow.method(self.method):
-            self.error(405, _("Method Not Allowed"))
+            self.error(405, _("Method not allowed"))
             return
         # fix broken url paths
         self.url = wc.url.url_norm(self.url)[0]
         if not self.url:
             self.error(400, _("Empty URL"))
             return
-        self.protocol = wc.proxy.fix_http_version(protocol)
-        self.http_ver = wc.proxy.get_http_version(self.protocol)
+        self.http_ver = wc.proxy.http.parse_http_version(protocol)
+        self.protocol = "HTTP/%d.%d" % self.http_ver
         # build request
         request = "%s %s %s" % (self.method, self.url, self.protocol)
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, request)
