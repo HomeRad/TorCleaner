@@ -1,2 +1,3 @@
 #!/bin/sh
-test/run.sh webcleaner --config=localconfig --no-file-logs
+CONFIG=${1:-localconfig}
+test/run.sh webcleaner --config=$CONFIG --no-file-logs
