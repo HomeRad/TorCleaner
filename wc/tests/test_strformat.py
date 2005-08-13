@@ -94,6 +94,11 @@ class TestStrFormat (unittest.TestCase):
         self.assert_(not wc.strformat.is_ascii("ä"))
         self.assert_(not wc.strformat.is_ascii(u"ä"))
 
+    def test_indent (self):
+        s = "bla"
+        self.assertEquals(wc.strformat.indent(s, ""), s)
+        self.assertEquals(wc.strformat.indent(s, " "), " "+s)
+
 
 def test_suite ():
     """
