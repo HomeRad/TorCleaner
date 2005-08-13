@@ -31,6 +31,7 @@ from wc.ip import lookup_ips as _lookup_ips
 from wc.ip import resolve_host as _resolve_host
 from wc.ip import hosts2map as _hosts2map
 from wc.proxy.dns_lookups import resolver as _resolver
+from wc.strformat import is_ascii as _is_ascii
 
 # config vars
 info = {
@@ -61,6 +62,12 @@ error = {
     'parentproxyport': False,
     'timeout': False,
     'addallowed': False,
+    'adminuser': False,
+    'adminpass': False,
+    'proxyuser': False,
+    'proxypass': False,
+    'parentproxyuser': False,
+    'parentproxypass': False,
 }
 config['filterdict'] = {}
 for _i in filtermodules:
@@ -133,7 +140,7 @@ def _exec_form (form, lang):
         val = _getval(form, 'adminpass')
         # ignore dummy values
         if val != u'__dummy__':
-            _form_adminpass(base64.encodestring(val).strip(), res)
+            _form_adminpass(base64.b64encode(val), res)
     elif config['adminpass']:
         config['adminpass'] = u''
         config.write_proxyconf()
@@ -152,7 +159,7 @@ def _exec_form (form, lang):
         val = _getval(form, 'proxypass')
         # ignore dummy values
         if val != u'__dummy__':
-            _form_proxypass(base64.encodestring(val).strip())
+            _form_proxypass(base64.b64encode(val))
     elif config['proxypass']:
         config['proxypass'] = u''
         config.write_proxyconf()
@@ -210,7 +217,7 @@ def _exec_form (form, lang):
         val = _getval(form, 'parentproxypass')
         # ignore dummy values
         if val != u'__dummy__':
-            _form_parentproxypass(base64.encodestring(val).strip())
+            _form_parentproxypass(base64.b64encode(val))
     elif config['parentproxypass']:
         config['parentproxypass'] = u''
         config.write_proxyconf()
@@ -294,7 +301,9 @@ def _form_sslgateway (enable):
 
 
 def _form_adminuser (adminuser, res):
-    if adminuser != config['adminuser']:
+    if not _is_ascii(adminuser):
+        error['adminuser'] = True
+    elif adminuser != config['adminuser']:
         config['adminuser'] = adminuser
         config.write_proxyconf()
         info['adminuser'] = True
@@ -302,7 +311,9 @@ def _form_adminuser (adminuser, res):
 
 
 def _form_adminpass (adminpass, res):
-    if adminpass != config['adminpass']:
+    if not _is_ascii(adminpass):
+        error['adminpass'] = True
+    elif adminpass != config['adminpass']:
         config['adminpass'] = adminpass
         config.write_proxyconf()
         info['adminpass'] = True
@@ -311,14 +322,18 @@ def _form_adminpass (adminpass, res):
 
 
 def _form_proxyuser (proxyuser):
-    if proxyuser != config['proxyuser']:
+    if not _is_ascii(proxyuser):
+        error['proxyuser'] = True
+    elif proxyuser != config['proxyuser']:
         config['proxyuser'] = proxyuser
         config.write_proxyconf()
         info['proxyuser'] = True
 
 
 def _form_proxypass (proxypass):
-    if proxypass != config['proxypass']:
+    if not _is_ascii(proxypass):
+        error['proxypass'] = True
+    elif proxypass != config['proxypass']:
         config['proxypass'] = proxypass
         config.write_proxyconf()
         info['proxypass'] = True
@@ -348,14 +363,18 @@ def _form_parentproxyport (parentproxyport):
 
 
 def _form_parentproxyuser (parentproxyuser):
-    if parentproxyuser != config['parentproxyuser']:
+    if not _is_ascii(parentproxyuser):
+        error['parentproxyuser'] = True
+    elif parentproxyuser != config['parentproxyuser']:
         config['parentproxyuser'] = parentproxyuser
         config.write_proxyconf()
         info['parentproxyuser'] = True
 
 
 def _form_parentproxypass (parentproxypass):
-    if parentproxypass != config['parentproxypass']:
+    if not _is_ascii(parentproxypass):
+        error['parentproxypass'] = True
+    elif parentproxypass != config['parentproxypass']:
         config['parentproxypass'] = parentproxypass
         config.write_proxyconf()
         info['parentproxypass'] = True

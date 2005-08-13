@@ -30,6 +30,7 @@ import wc
 import wc.log
 import wc.ip
 import wc.decorators
+import wc.strformat
 
 ConfigCharset = "iso-8859-1"
 
@@ -114,6 +115,15 @@ filtermodules = [
 ]
 filtermodules.sort()
 
+# names of config values that have to be in ASCII
+ascii_values = [
+    "adminuser",
+    "adminpass",
+    "proxyuser",
+    "proxypass",
+    "parentproxyuser",
+    "parentproxypass",
+]
 
 class Configuration (dict):
     """
@@ -137,6 +147,7 @@ class Configuration (dict):
         """
         Reset to default values.
         """
+        self['configversion'] = '0.10'
         # The bind address specifies on which address the socket should
         # listen.
         # The default empty string represents INADDR_ANY which means to
@@ -185,6 +196,12 @@ class Configuration (dict):
         Read proxy configuration.
         """
         WConfigParser(self.configfile, self).parse()
+        # make sure that usernames and passwords are ASCII, or there
+        # can be encoding errors
+        for name in ascii_values:
+            if not wc.strformat.is_ascii(self[name]):
+                msg = "The %r configuration value must be ASCII." % name
+                raise TypeError(msg)
 
     def write_proxyconf (self):
         """
@@ -194,24 +211,21 @@ class Configuration (dict):
         lines.append('<?xml version="1.0" encoding="%s"?>' % ConfigCharset)
         lines.append('<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">')
         lines.append('<webcleaner')
-        lines.append(' configversion="%s"' % \
+        lines.append(' configversion="%s"' %
                      xmlquoteattr(self['configversion']))
         lines.append(' bindaddress="%s"' % xmlquoteattr(self['bindaddress']))
         lines.append(' port="%d"' % self['port'])
         lines.append(' sslport="%d"' % self['sslport'])
-        if self['sslgateway']:
-            lines.append(' sslgateway="%d"' % self['sslgateway'])
+        lines.append(' sslgateway="%d"' % self['sslgateway'])
         lines.append(' adminuser="%s"' % xmlquoteattr(self['adminuser']))
         lines.append(' adminpass="%s"' % xmlquoteattr(self['adminpass']))
         lines.append(' proxyuser="%s"' % xmlquoteattr(self['proxyuser']))
         lines.append(' proxypass="%s"' % xmlquoteattr(self['proxypass']))
-        if self['parentproxy']:
-            lines.append(' parentproxy="%s"' %
-                         xmlquoteattr(self['parentproxy']))
+        lines.append(' parentproxy="%s"' % xmlquoteattr(self['parentproxy']))
         lines.append(' parentproxyuser="%s"' %
-                xmlquoteattr(self['parentproxyuser']))
+                     xmlquoteattr(self['parentproxyuser']))
         lines.append(' parentproxypass="%s"' %
-                xmlquoteattr(self['parentproxypass']))
+                     xmlquoteattr(self['parentproxypass']))
         lines.append(' parentproxyport="%d"' % self['parentproxyport'])
         lines.append(' timeout="%d"' % self['timeout'])
         lines.append(' gui_theme="%s"' % xmlquoteattr(self['gui_theme']))
