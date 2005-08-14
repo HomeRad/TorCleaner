@@ -19,8 +19,28 @@ HTTP related utility functions.
 """
 
 import re
+import wc
+import wc.log
 
-is_http_status = re.compile(r'^\d\d\d$').search
+def parse_http_request (request):
+    """
+    Parse a HTTP request line into tokens.
+
+    @return: (method, url, version)
+    @rtype: (string, string, (int, int))
+    """
+    method = ""
+    url = ""
+    version = (2, 0)
+    parts = request.split()
+    if len(parts) == 3:
+        method = parts[0].upper()
+        url = parts[1]
+        version = parse_http_version(parts[2])
+    return (method, url, version)
+
+
+is_http_status = re.compile(r'^[1-5]\d\d$').search
 def parse_http_response (response, url):
     """
     Parse a HTTP response status line into tokens.
@@ -41,15 +61,21 @@ def parse_http_response (response, url):
                     parts[1], url)
         parts[1] = "200"
     parts[1] = int(parts[1])
-    version = parts[0][5:]
-    parts[0] = parse_http_version(parts[0])
+    version = parts[0].upper()
+    parts[0] = parse_http_version(version)
     return parts
 
 
 def parse_http_version (version):
+    """
+    Parse a HTTP version string.
+
+    @return: (major, minor)
+    @rtype: (int, int)
+    """
     # set to invalid version
     res = (2,0)
-    if version.lower().startswith("http/") and "." in version:
+    if version.startswith("HTTP/") and "." in version:
         major, minor = version[5:].split(".", 1)
         try:
             major = int(major)
