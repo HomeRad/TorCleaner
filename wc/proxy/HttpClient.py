@@ -184,11 +184,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()
         # enforce a maximum url length
-        if len(self.url) > 2048:
+        if len(self.url) > 8192:
             wc.log.warn(wc.LOG_PROXY,
                          "%s request url length %d chars is too long",
                          self, len(self.url))
-            self.error(400, _("URL too long"),
+            self.error(414, _("URL too long"),
                        txt=_('URL length limit is %d bytes.') % 2048)
             return False
         if len(self.url) > 1024:
