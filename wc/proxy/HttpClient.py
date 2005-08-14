@@ -75,7 +75,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.bytes_remaining = None # for content only
         self.content = ''
         self.compress = "identity" # acceptable compression for client
-        self.protocol = 'HTTP/1.0'
+        self.protocol = 'HTTP/1.1'
+        self.method = ''
         self.url = ''
         self.needs_redirect = False
 
@@ -136,25 +137,15 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if i < 0:
             return
         # self.read(i) is not including the newline
-        self.request = self.read(i)
-        # basic request checking (more will be done below)
-        try:
-            self.method, self.url, protocol = self.request.split()
-        except ValueError:
-            self.error(400, _("Can't parse request"))
+        # still strip() it from whitespace
+        request = self.read(i).strip()
+        method, url, version = wc.proxy.http.parse_http_request(request)
+        # check request; sets self.method, self.url, self.version
+        if not self.check_request(method, url, version):
+            # error has been sent
             return
-        if not self.allow.method(self.method):
-            self.error(405, _("Method not allowed"))
-            return
-        # fix broken url paths
-        self.url = wc.url.url_norm(self.url)[0]
-        if not self.url:
-            self.error(400, _("Empty URL"))
-            return
-        self.http_ver = wc.proxy.http.parse_http_version(protocol)
-        self.protocol = "HTTP/%d.%d" % self.http_ver
         # build request
-        request = "%s %s %s" % (self.method, self.url, self.protocol)
+        request = "%s %s HTTP/1.1" % (self.method, self.url)
         wc.log.debug(wc.LOG_PROXY, "%s request %r", self, request)
         # filter request
         stage = wc.filter.STAGE_REQUEST
@@ -168,6 +159,23 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         wc.log.info(wc.LOG_ACCESS, '%s - %s - %s', self.addr[0],
                     time.ctime(time.time()), self.request)
         self.state = 'headers'
+
+    def check_request (self, method, url, version):
+        res = True
+        if not self.allow.method(method):
+            self.error(405, _("Method not allowed"))
+            res = False
+        self.method = method
+        # fix broken url paths
+        self.url = wc.url.url_norm(url)[0]
+        if not self.url:
+            self.error(400, _("Empty URL"))
+            res = False
+        self.version = version
+        if not ((0, 9) <= self.version <= (1, 1)):
+            self.error(505, _("HTTP version not supported"))
+            res = False
+        return res
 
     def fix_request (self):
         """
@@ -238,7 +246,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                        self.localhost, [stage],
                        clientheaders=clientheaders,
                        headers=msg)
-        self.set_persistent(msg, self.http_ver)
+        self.set_persistent(msg, self.version)
         self.mangle_request_headers(msg)
         self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
         # filter headers
@@ -473,7 +481,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 # without content length the client can not determine
                 # when all data is sent
                 self.persistent = False
-            #self.set_persistent(headers, self.http_ver)
+            #self.set_persistent(headers, self.version)
             # note: headers is a WcMessage object, not a dict
             self.write("".join(headers.headers))
             self.write('\r\n')
