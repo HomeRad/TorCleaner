@@ -75,7 +75,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.bytes_remaining = None # for content only
         self.content = ''
         self.compress = "identity" # acceptable compression for client
-        self.protocol = 'HTTP/1.1'
+        self.version = (1, 1)
         self.method = ''
         self.url = ''
         self.needs_redirect = False
@@ -95,7 +95,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 err = "%s (%s)" % (err, txt)
             form = None
             # this object will call server_connected at some point
-            wc.webgui.webconfig.WebConfig(self, '/error.html', form, self.protocol,
+            protocol = "HTTP/%d.%d" % self.version
+            wc.webgui.webconfig.WebConfig(self, '/error.html', form, protocol,
                       self.headers, localcontext={'error': err,},
                       status=status, msg=msg, auth=auth)
 
@@ -155,6 +156,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.request = request
         # final request checking
         if not self.fix_request():
+            # error has been sent
             return
         wc.log.info(wc.LOG_ACCESS, '%s - %s - %s', self.addr[0],
                     time.ctime(time.time()), self.request)
@@ -171,10 +173,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         if not self.url:
             self.error(400, _("Empty URL"))
             res = False
-        self.version = version
-        if not ((0, 9) <= self.version <= (1, 1)):
+        if not ((0, 9) <= version <= (1, 1)):
             self.error(505, _("HTTP version not supported"))
             res = False
+        self.version = version
         return res
 
     def fix_request (self):
@@ -182,14 +184,14 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         Try to fix requests. Return False on error, else True.
         """
         # refresh with filtered request data
-        self.method, self.url, self.protocol = self.request.split()
+        self.method, self.url, protocol = self.request.split()
         # enforce a maximum url length
-        if len(self.url) > 8192:
+        if len(self.url) > wc.proxy.Allowed.MAX_URL_LEN:
             wc.log.warn(wc.LOG_PROXY,
                          "%s request url length %d chars is too long",
                          self, len(self.url))
             self.error(414, _("URL too long"),
-                       txt=_('URL length limit is %d bytes.') % 2048)
+        txt=_('URL length limit is %d bytes.') % wc.proxy.Allowed.MAX_URL_LEN)
             return False
         if len(self.url) > 1024:
             wc.log.warn(wc.LOG_PROXY,
@@ -267,7 +269,12 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.bytes_remaining = None
         if self.bytes_remaining is None:
             self.persistent = False
-        if not self.hostname and self.headers.has_key('Host'):
+        if not self.headers.has_key('Host'):
+            if self.version == (1, 1):
+                wc.log.error(wc.LOG_PROXY, "%s missing Host: header", self)
+                self.error(400, _("Bad Request"))
+                return
+        elif not self.hostname:
             if self.method == 'CONNECT':
                 defaultport = 443
             else:
@@ -275,15 +282,16 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             host = self.headers['Host']
             self.hostname, self.port = urllib.splitnport(host, defaultport)
         if not self.hostname:
-            wc.log.warn(wc.LOG_PROXY, "%s missing hostname in request", self)
+            wc.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
             self.error(400, _("Bad Request"))
+            return
         # local request?
         if self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
            self.port == wc.configuration.config['port']:
             # this is a direct proxy call, jump directly to content
             self.state = 'content'
             return
-        # add missing host headers for HTTP/1.1
+        # add missing host headers for HTTP/1.0
         if not self.headers.has_key('Host'):
             wc.log.warn(wc.LOG_PROXY,
                         "%s request without Host header encountered", self)
@@ -331,7 +339,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             headers = wc.proxy.Headers.WcMessage()
             headers['Content-Type'] = 'text/plain\r'
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
-                 '%s 200 OK' % self.protocol, 200, headers, '')
+                 'HTTP/%d.%d 200 OK' % self.version, 200, headers, '')
             return
         if self.needs_redirect:
             self.state = 'done'
@@ -339,7 +347,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             headers['Content-Type'] = 'text/plain\r'
             headers['Location'] = '%s\r' % self.url
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
-                '%s 302 Found' % self.protocol, 302, headers, '')
+                'HTTP/%d.%d 302 Found' % self.version, 302, headers, '')
             return
         self.state = 'content'
 
@@ -492,7 +500,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """
         wc.log.debug(wc.LOG_PROXY, '%s try_google %r', self, response)
         form = None
-        wc.webgui.webconfig.WebConfig(self, '/google.html', form, self.protocol,
+        protocol = "HTTP/%d.%d" % self.version
+        wc.webgui.webconfig.WebConfig(self, '/google.html', form, protocol,
                      self.headers,
                      localcontext=wc.google.get_google_context(url, response))
 
@@ -586,7 +595,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # get cgi form data
         form = self.get_form_data()
         # this object will call server_connected at some point
-        wc.webgui.webconfig.WebConfig(self, self.url, form, self.protocol, self.headers)
+        protocol = "HTTP/%d.%d" % self.version
+        wc.webgui.webconfig.WebConfig(self, self.url, form, protocol, self.headers)
 
     def get_form_data (self):
         """
