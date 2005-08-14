@@ -7,6 +7,8 @@ import wc
 import wc.configuration
 
 
+MAX_URL_LEN = 8192
+
 class AllowedHttpClient (object):
     """
     Allowance data for http clients.
@@ -20,7 +22,7 @@ class AllowedHttpClient (object):
         self.schemes = ['http', 'https'] # 'nntps' is untested
 
         self.connect_ports = [443] # 563 (NNTP over SSL) is untested
-        self.http_ports = [80, 81, 8080, 8081, 3128]
+        self.http_ports = [80, 81, 8000, 8080, 8081, 3128]
         self.public_docs = [
           '/blocked.html',
           '/blocked.png',
