@@ -52,7 +52,7 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     fi
 fi
 
-PYTHON=python2.3
+PYTHON=python2.4
 if which $PYTHON >/dev/null 2>&1; then
     DIRLIST="/usr/lib/$PYTHON/site-packages/wc"
     for i in $DIRLIST; do
