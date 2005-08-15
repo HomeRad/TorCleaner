@@ -5,6 +5,9 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/class/python-distutils.mk
 
+DEB_PYTHON_COMPILE_VERSION = 2.4
+
+PYTHON = python$(DEB_PYTHON_COMPILE_VERSION)
 PACKAGE := webcleaner
 BASE := debian/$(PACKAGE)
 DOCDIR := $(BASE)/usr/share/doc/$(PACKAGE)
@@ -20,6 +23,7 @@ DEB_MAKE_INSTALL_TARGET =
 DEB_DESTDIR = $(BASE)
 
 makebuilddir/webcleaner::
+	$(PYTHON) setup.py sdist --manifest-only
 # for CVS build regenerate ./configure
 	@if ! test -f ./configure; then ./autogen.sh; fi
 
