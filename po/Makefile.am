@@ -1,4 +1,4 @@
-PYTHON = env PYTHONPATH=$(top_srcdir) python
+PYTHON = env PYTHONPATH=$(top_srcdir) python2.4
 XGETTEXT := xgettext
 MSGFMT := msgfmt
 MSGMERGE := msgmerge
