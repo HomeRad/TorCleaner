@@ -8,7 +8,7 @@ EXTRA_DIST = wc/tests \
 	wc/magic/tests
 
 # python settings
-PYVER := 2.5
+PYVER := 2.4
 PYTHON := python$(PYVER)
 # homepage directory
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
