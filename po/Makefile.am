@@ -17,6 +17,7 @@ LANGUAGES = de
 
 all: template
 
+.PHONY: mofiles
 mofiles:
 	for la in $(LANGUAGES); do \
 	  if [ ! -d $(LDIR)/$$la/LC_MESSAGES ]; then \
@@ -28,6 +29,7 @@ mofiles:
 %.po:	$(TEMPLATE)
 	$(MSGMERGE) -U --suffix=.bak $@ $<
 
+.PHONY: template
 template: $(TEMPLATE)
 $(TEMPLATE): $(POSOURCES) $(TEMPLATES)
 	$(XGETTEXT) -w 80 --default-domain=$(PACKAGE) --language=Python \
