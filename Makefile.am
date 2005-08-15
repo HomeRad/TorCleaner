@@ -8,7 +8,7 @@ EXTRA_DIST = wc/tests \
 	wc/magic/tests
 
 # python settings
-PYVER := 2.4
+PYVER := 2.5
 PYTHON := python$(PYVER)
 # homepage directory
 HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
@@ -48,13 +48,16 @@ clean-local: clean-log
 # delete possible aborted dist build
 	rm -rf webcleaner-$(VERSION)
 
+.PHONY: cvsclean
 cvsclean:
 	find . -name \.\#\* -exec rm -f {} \;
 
+.PHONY: clean-log
 clean-log:
 	rm -f webcleaner*.log* webcleaner.err*
 
 # to build in the current directory
+.PHONY: localbuild
 localbuild: all MANIFEST
 	$(MAKE) -C wc/HtmlParser
 	$(PYTHON) setup.py build
@@ -62,10 +65,12 @@ localbuild: all MANIFEST
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/
 
+.PHONY: crossdist
 crossdist: distclean
 	./crossbuild.sh
 
 # cross compilation Linux -> Win32 script
+.PHONY: crossbuild
 crossbuild: all MANIFEST
 # build the .exe
 	CC=/usr/bin/i586-mingw32msvc-gcc \
@@ -83,6 +88,7 @@ distclean-local:
 	rm -f MANIFEST _*_configdata.*
 
 # ready for upload, signed with my GPG key
+.PHONY: deb_signed
 deb_signed: clean
 	env CVSROOT=:ext:calvin@cvs.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -r"fakeroot --" -I.cvsignore
 
@@ -95,10 +101,12 @@ dist-hook: MANIFEST
 	rm -f $(distdir)/webcleaner-$(VERSION).tar.gz
 	rm -f $(distdir)/_webcleaner2_configdata.py
 
+.PHONY: md5sums
 md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
 
+.PHONY: releasecheck
 releasecheck:
 	@if egrep -i "xx\.|xxxx|\.xx" ChangeLog > /dev/null; then \
 	  echo "Could not release: edit ChangeLog release date"; false; \
@@ -107,6 +115,7 @@ releasecheck:
 	  echo "Could not release: add admin user to config"; false; \
 	fi
 
+.PHONY: release
 release: releasecheck distclean dist sign_distfiles homepage
 	@echo "Starting releaseforge..."
 	@releaseforge
@@ -115,6 +124,7 @@ release: releasecheck distclean dist sign_distfiles homepage
 	@echo "Register at Python Package Index..."
 	$(PYTHON) setup.py register
 
+.PHONY: sign_distfiles
 sign_distfiles:
 	for f in dist/*; do \
 	  if [ ! -f $${f}.asc ]; then \
@@ -122,24 +132,30 @@ sign_distfiles:
 	  fi; \
 	done
 
+.PHONY: homepage
 homepage: homepage-zapper
 	$(MAKE) -C doc/en homepage
 
+.PHONY: homepage-zapper
 homepage-zapper: md5sums
 	cp config/*.zap config/*.dtd config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/filter/
 	@for d in ads aggressive violence; do \
 	  cp config/blacklists/$$d/*.gz $(HTMLDIR)/htdocs/filter/blacklists/$$d/; \
 	done
 
+.PHONY: pycheck
 pycheck: localbuild
 	$(PYCHECKER) $(PYCHECKEROPTS) $(PYFILES) $(TESTFILES)
 
+.PHONY: pylint
 pylint: localbuild
 	$(PYLINT) $(PYLINTOPTS) $(PYLINTFILES) $(TESTFILES)
 
+.PHONY: ccheck
 ccheck:
 	-splint $(SPLINTOPTS) wc/js/jslib.c
 
+.PHONY: installservice
 installservice:
 	install -d $(SERVICEDIR)/log
 	install -m 0755 service/webcleaner/run2 $(SERVICEDIR)/run
@@ -150,13 +166,12 @@ installservice:
 
 test/test.sh:	localbuild
 
-# (re)generate webcleaner rules
+# (re)generate webcleaner blacklists
+.PHONY: update-blacklists
 update-blacklists:
 	test/run.sh config/bl2wc.py
 
+.PHONY: reindent
 reindent:
 	$(PYTHON) config/reindent.py -r -v wc
 
-.PHONY: localbuild distclean deb_signed update-blacklists
-.PHONY: md5sums pycheck pylint ccheck installservice homepage
-.PHONY: sign_distfiles
