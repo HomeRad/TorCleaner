@@ -2,7 +2,7 @@ Source: webcleaner
 Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@debian.org>
-Standards-Version: 3.6.1
+Standards-Version: 3.6.2
 Build-Depends: python2.4-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), gettext, cdbs
 
 Package: webcleaner
