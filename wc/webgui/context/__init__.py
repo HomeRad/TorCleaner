@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-For each template/<theme>/<file>.html there is a context/<file>_html.py
+For each templates/<theme>/<file>.html there is a context/<file>_html.py
 module delivering the page content values.
 """
 

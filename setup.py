@@ -93,7 +93,7 @@ class MyInstall (install, object):
             if attr == 'install_data':
                 cdir = os.path.join(val, 'share', 'webcleaner', 'config')
                 data.append('config_dir = %r' % cnormpath(cdir))
-                tdir = os.path.join(val, 'share', 'webcleaner', 'template')
+                tdir = os.path.join(val, 'share', 'webcleaner', 'templates')
                 data.append('template_dir = %r' % cnormpath(tdir))
             data.append("%s = %r" % (attr, cnormpath(val)))
         self.distribution.create_conf_file(data, directory=self.install_lib)
