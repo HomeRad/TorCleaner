@@ -82,8 +82,11 @@ stuff, but the other JavaScript functions still work as usual.
 
 Exact HTML filtering has another good side-effect: it is possible to
 detect and prevent known security flaws in HTML processors. Several
-known buffer overflow exploits or Denial of Service attacks are detected
-and fixed by the HtmlSecurity class.
+known (but not all!) buffer overflow exploits or Denial of Service
+attacks are detected and fixed by the HtmlSecurity class.
+
+If you find an HTML exploit that is not covered by the security filter,
+please let me know.
 
 Furthermore, WebCleaner can filter SSL traffic used in ``https://`` URLs.
 See the `SSL gateway`_ documentation for more info.
