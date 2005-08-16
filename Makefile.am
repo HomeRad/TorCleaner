@@ -116,7 +116,7 @@ releasecheck:
 	fi
 
 .PHONY: release
-release: releasecheck distclean dist sign_distfiles homepage
+release: releasecheck clean dist sign_distfiles homepage
 	@echo "Starting releaseforge..."
 	@releaseforge
 	@echo "Uploading new WebCleaner Homepage..."
