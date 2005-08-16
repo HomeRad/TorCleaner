@@ -1,0 +1,13 @@
+Embedded Mozilla JS code (named "spidermonkey") taken from CVS[1]
+directory js/src.
+[1] :pserver:anonymous@cvs-mirror.mozilla.org:/cvsroot
+
+Homepage:
+http://www.mozilla.org/js/spidermonkey/
+
+Embedding documentation:
+http://www.mozilla.org/js/spidermonkey/apidoc/jsguide.html
+
+Javascript documentation:
+http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference
+
