@@ -1,7 +1,7 @@
 SUBDIRS			= fdlibm
 
 INCLUDES		= -I$(top_srcdir) -I$(top_builddir)
-EXTRA_DIST		= js.msg jsopcode.tbl
+EXTRA_DIST		= js.msg jsopcode.tbl README
 
 BUILT_SOURCES		= jsautocfg.h
 
