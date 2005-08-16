@@ -47,7 +47,8 @@ include config/*.conf
 include config/*.dtd
 include config/*.py
 include config/magic.mime
-recursive-include config/blacklists *.gz README
+recursive-include config/blacklists *.gz
+include config/blacklists/README
 include templates/classic/*.html
 include templates/classic/*.txt
 include templates/classic/*.png
