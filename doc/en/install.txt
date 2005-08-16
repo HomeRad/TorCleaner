@@ -74,7 +74,7 @@ Direct download links are in brackets.
 5. *Optional (used for NTLM authentication)*
    Download Python Crypto Module from
    http://www.amk.ca/python/code/crypto.html
-   [http://webcleaner.sourceforge.net/pycrypto-2.0.win32-py2.4.exe]
+   [http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.4.exe]
 
 6. *Optional (used for SSL connections)*
    Install OpenSSL and PyOpenSSL for Windows from
