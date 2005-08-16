@@ -1,6 +1,7 @@
 include MANIFEST.in
 include README
 include TODO
+include bdist.bat
 include crossbuild.sh
 include webcleaner
 include install-webcleaner.py
@@ -71,7 +72,6 @@ include wc/proxy/auth/tests/*.py
 include test*.py
 include po/*.po
 include po/*.pot
-include po/*.py
 include wc/dns/tests/example*
 include wc/dns/ChangeLog
 include wc/HtmlParser/*.h
