@@ -190,6 +190,16 @@ def walk_with_symlinks(top, func, arg):
                 walk_with_symlinks(name, func, arg)
 
 
+def has_path_component (path, name):
+    drive, path = os.path.splitdrive(path)
+    head, tail = os.path.split(path)
+    while head and tail:
+        if tail == name:
+            return True
+        head, tail = os.path.split(head)
+    return False
+
+
 def get_test_files(cfg):
     """Return a list of test module filenames."""
     matcher = compile_matcher(cfg.pathname_regex)
@@ -213,7 +223,7 @@ def get_test_files(cfg):
         for idx in remove:
             del files[idx]
         # Skip non-test directories, but look for tests.py and/or ftests.py
-        if os.path.basename(dir) != test_name:
+        if not has_path_component(dir, test_name):
             if test_name + '.py' in files:
                 path = os.path.join(dir, test_name + '.py')
                 if matcher(path[baselen:]):
