@@ -24,6 +24,7 @@ import cStringIO as StringIO
 
 import wc
 import wc.log
+import wc.http.header
 import wc.magic
 import wc.proxy.decoder.UnchunkStream
 import wc.proxy.decoder.GunzipStream
@@ -50,7 +51,7 @@ def get_wc_client_headers (host):
     """
     Get default webcleaner proxy request headers.
     """
-    headers = WcMessage()
+    headers = wc.http.header.WcMessage()
     headers['Host'] = '%s\r' % host
     headers['Accept-Encoding'] = 'gzip;q=1.0, deflate;q=0.9, identity;q=0.5\r'
     headers['Connection'] = 'Keep-Alive\r'
