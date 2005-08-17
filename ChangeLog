@@ -1,3 +1,9 @@
+2.31 "" (release xx.xx.xxxx)
+
+  * Added missing http:// scheme to google.html error page.
+    Type: bugfix
+    Changed: wc/google.py, templates/classic/google.html
+
 2.30 "Dear Wendy" (released 16.8.2005)
 
   * Fix attribute error in allowance check.
