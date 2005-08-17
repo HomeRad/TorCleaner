@@ -38,7 +38,7 @@ class test_multiheader_clen_toclient (ProxyTest):
         ]
         if content:
             headers.append("Content-Length: %d" % len(content))
-            headers.append("Content-Length: %d" % len(content)-5)
+            headers.append("Content-Length: %d" % (len(content)-5))
         return headers
 
     def check_request_headers (self, request):
@@ -62,7 +62,7 @@ class test_multiheader_clen_toserver (ProxyTest):
         return [
             "Content-Type: text/plain",
             "Content-Length: %d" % len(content),
-            "Content-Length: %d" % len(content)-5,
+            "Content-Length: %d" % (len(content)-5),
         ]
 
     def check_response_headers (self, response):
