@@ -1,7 +1,5 @@
 TODO
 
-- recompile pycrypto installer .exe with version 2.0.1
-
 - streaming clamav scanning, try to detect virii immediately
 
 - rework the HTML GUI using mini-tabs and styled checkboxes.
