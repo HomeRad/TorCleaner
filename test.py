@@ -213,11 +213,14 @@ def get_test_files(cfg):
     def visit(ignored, dir, files):
         # Ignore files starting with a dot.
         # Do not not descend into subdirs containing a dot.
+        # Ignore versioning system files
         remove = []
         for idx, file in enumerate(files):
             if file.startswith('.'):
                 remove.append(idx)
             elif '.' in file and os.path.isdir(os.path.join(dir, file)):
+                remove.append(idx)
+            elif file in ["CVS", ".svn"]:
                 remove.append(idx)
         remove.reverse()
         for idx in remove:
