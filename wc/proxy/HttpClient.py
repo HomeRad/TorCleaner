@@ -321,7 +321,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # add missing host headers for HTTP/1.0
         if not self.headers.has_key('Host'):
             wc.log.warn(wc.LOG_PROXY,
-                        "%s request without Host header encountered", self)
+                 "%s HTTP/1.0 request without Host header encountered", self)
         if self.port != 80:
             self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
         else:
