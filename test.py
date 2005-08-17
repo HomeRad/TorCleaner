@@ -63,8 +63,7 @@ Options:
   --search-in dir       limit directory tree walk to dir (optimisation)
   --immediate-errors    show errors as soon as they happen (default)
   --delayed-errors      show errors after all unit tests were run
-  --resource name       enable given resource; currently only 'network'
-                        is allowed
+  --resource name       enable given resource
 """
 #
 # This script borrows ideas from Zope 3's test runner heavily.  It is smaller
@@ -85,8 +84,6 @@ from sets import Set
 
 __metaclass__ = type
 
-
-Resources = ['network']
 
 class TestSkipped (Exception):
     """Test skipped.
@@ -718,7 +715,7 @@ class CustomTestResult(unittest._TextTestResult):
         self.__super_printErrors()
 
     def printSkipped (self):
-        self.printErrorList("SKIP", self.skipped)
+        self.printErrorList("SKIPPED", self.skipped)
 
     def formatError(self, err):
         return "".join(format_exception(basedir=self.cfg.basedir,
@@ -737,6 +734,21 @@ class CustomTestResult(unittest._TextTestResult):
         w("%s: %s" % (kind, description))
         w(c('separator', self.separator2))
         w(self.formatError(err))
+        w()
+
+    def printSkip (self, kind, test, err):
+        w = self.stream.writeln
+        if self.cfg.colorize:
+            c = colorize
+        else:
+            c = lambda texttype, text: text
+        w()
+        w(c('separator', self.separator1))
+        kind = c('fail', kind)
+        description = c('longtestname', self.getDescription(test))
+        w("%s: %s" % (kind, description))
+        w(c('separator', self.separator2))
+        w(str(err[1]))
         w()
 
     def addFailure(self, test, err):
@@ -758,9 +770,7 @@ class CustomTestResult(unittest._TextTestResult):
 
     def addSkipped(self, test, err):
         if self.cfg.immediate_errors:
-            self.printTraceback("SKIPPED", test, err)
-        if self.cfg.postmortem:
-            pdb.post_mortem(sys.exc_info()[2])
+            self.printSkip("SKIP", test, err)
         self.skipped.append((test, self.formatError(err)))
 
     def printErrorList(self, flavour, errors):
@@ -928,11 +938,6 @@ def main(argv):
         elif k == '--coverage':
             cfg.coverage = True
         elif k == '--resource':
-            if v not in Resources:
-                print >> sys.stderr, ('%s: argument to --resource (%s) must'
-                                      ' be one of %s'
-                                      % (argv[0], v, str(Resources)))
-                return 1
             cfg.resources.append(v)
         elif k == '--level':
             try:
