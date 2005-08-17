@@ -334,20 +334,20 @@ class ProxyTest (unittest.TestCase):
         self.check_request_headers(request)
         self.check_request_content(request)
 
-    def check_request_method (self, response):
-        self.assertEquals(response.method, self.get_request_method())
+    def check_request_method (self, request):
+        self.assertEquals(request.method, self.get_request_method())
 
-    def check_request_uri (self, response):
-        self.assertEquals(response.uri, self.get_request_uri())
+    def check_request_uri (self, request):
+        self.assertEquals(request.uri, self.get_request_uri())
 
-    def check_request_version (self, response):
-        self.assertEquals(response.version, self.get_request_version())
+    def check_request_version (self, request):
+        self.assertEquals(request.version, self.get_request_version())
 
-    def check_request_headers (self, response):
+    def check_request_headers (self, request):
         pass
 
-    def check_request_content (self, response):
-        self.assertEquals(response.content, self.get_request_content())
+    def check_request_content (self, request):
+        self.assertEquals(request.content, self.get_request_content())
 
     def get_response (self):
         """
@@ -356,7 +356,8 @@ class ProxyTest (unittest.TestCase):
         @rtype: HttpResponse
         """
         version = self.get_response_version()
-        status, msg = self.get_response_status()
+        status = self.get_response_status()
+        msg = self.get_response_message(status)
         content = self.get_response_content()
         headers = self.get_response_headers(content)
         return HttpResponse(version, status, msg, headers, content=content)
@@ -365,7 +366,10 @@ class ProxyTest (unittest.TestCase):
         return (1, 1)
 
     def get_response_status (self):
-        return (200, "Ok")
+        return 200
+
+    def get_response_message (self, status):
+        return "Ok"
 
     def get_response_content (self):
         return "hui"
@@ -433,19 +437,20 @@ class ProxyTest (unittest.TestCase):
         self.check_response_content(response)
 
     def check_response_version (self, response):
-        self.assertEqual(response.version, (1, 1))
+        self.assertEqual(response.version, self.get_response_version())
 
     def check_response_status (self, response):
-        self.assertEqual(response.status, 200)
+        self.assertEqual(response.status, self.get_response_status())
 
     def check_response_message (self, response):
-        self.assert_(response.msg)
+        msg = self.get_response_message(response.status)
+        self.assertEqual(response.msg, msg)
 
     def check_response_headers (self, response):
         pass
 
     def check_response_content (self, response):
-        self.assert_(response.content)
+        self.assertEqual(response.content, self.get_response_content())
 
     def start_test (self):
         """
