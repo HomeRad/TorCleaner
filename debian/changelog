@@ -1,8 +1,10 @@
 webcleaner (2.31-0.1) unstable; urgency=low
 
   * New upstream release.
+  * Depend on python2.4-pyopenssl to be able to generate SSL
+    certificates in postinstall
 
- -- Bastian Kleineidam <calvin@debian.org>  Wed, 17 Aug 2005 10:49:04 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Wed, 17 Aug 2005 14:58:19 +0200
 
 webcleaner (2.30-0.1) unstable; urgency=low
 

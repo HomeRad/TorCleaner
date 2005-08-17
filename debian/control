@@ -7,8 +7,8 @@ Build-Depends: python2.4-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9), gettext
 
 Package: webcleaner
 Architecture: any
-Depends: python2.4, debconf (>= 1.2.9), runit, webcleaner-common (>= ${Source-Version})
-Recommends: python2.4-imaging, python2.4-pyopenssl
+Depends: python2.4, python2.4-pyopenssl, debconf (>= 1.2.9), runit, webcleaner-common (>= ${Source-Version})
+Recommends: python2.4-imaging
 Suggests: python2.4-crypto, python2.4-psyco, clamav-daemon
 Description: a filtering HTTP proxy
  Features:
