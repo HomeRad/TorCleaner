@@ -34,7 +34,7 @@ import wc
 import wc.log
 import wc.configuration
 import wc.filter.rules
-import wc.proxy.Headers
+import wc.http.header
 
 # filter stages
 
@@ -147,11 +147,11 @@ def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
     Init external state objects.
     """
     if clientheaders is None:
-        clientheaders = wc.proxy.Headers.WcMessage()
+        clientheaders = wc.http.header.WcMessage()
     if serverheaders is None:
-        serverheaders = wc.proxy.Headers.WcMessage()
+        serverheaders = wc.http.header.WcMessage()
     if headers is None:
-        headers = wc.proxy.Headers.WcMessage()
+        headers = wc.http.header.WcMessage()
     attrheaders = {
         'client': clientheaders,
         'server': serverheaders,

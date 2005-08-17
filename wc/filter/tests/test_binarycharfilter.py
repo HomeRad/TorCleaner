@@ -38,7 +38,7 @@ class TestBinaryCharFilter (unittest.TestCase):
         wc.configuration.config.init_filter_modules()
 
     def filt (self, data, result):
-        headers = wc.proxy.Headers.WcMessage()
+        headers = wc.http.header.WcMessage()
         headers['Content-Type'] = "text/html"
         attrs = get_filterattrs("", "localhost", [STAGE_RESPONSE_MODIFY],
                                 serverheaders=headers, headers=headers)

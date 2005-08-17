@@ -123,7 +123,7 @@ def get_headers (url, status, auth, clientheaders):
     """
     Get proxy headers to send.
     """
-    headers = wc.proxy.Headers.WcMessage()
+    headers = wc.http.header.WcMessage()
     headers['Server'] = 'Proxy\r'
     if auth:
         if status == 407:

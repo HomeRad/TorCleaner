@@ -50,7 +50,7 @@ def get_header_challenges (headers, key):
     Get parsed challenge(s) out of headers[key].
     """
     auths = {}
-    for auth in headers.getallmatchingheadervalues(key):
+    for auth in headers.getheaders(key):
         wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
@@ -101,7 +101,7 @@ def get_header_credentials (headers, key):
     Return parsed credentials out of headers[key].
     """
     creds = {}
-    for cred in headers.getallmatchingheadervalues(key):
+    for cred in headers.getheaders(key):
         wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)

@@ -19,7 +19,7 @@ Internal http client.
 """
 
 import urlparse
-import wc.proxy.http
+import wc.http
 import wc.proxy.Headers
 import wc.proxy.HttpServer
 import wc.proxy.HttpClient
@@ -107,7 +107,7 @@ class HttpProxyClient (object):
         assert self.server.connected
         wc.log.debug(wc.LOG_PROXY, '%s server_response %r', self, response)
         version, status, msg = \
-               wc.proxy.http.parse_http_response(response, self.args[0])
+               wc.http.parse_http_response(response, self.args[0])
         # XXX check version
         wc.log.debug(wc.LOG_PROXY, '%s response %s %d %s',
                      self, version, status, msg)

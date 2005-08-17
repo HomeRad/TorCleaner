@@ -42,10 +42,10 @@ import wc.url
 import wc.magic
 import wc.filter
 import wc.filter.rating
+import wc.http
 import wc.proxy
 import wc.proxy.Server
 import wc.proxy.auth
-import wc.proxy.http
 import wc.proxy.Headers
 import wc.proxy.ServerPool
 
@@ -103,7 +103,7 @@ class HttpServer (wc.proxy.Server.Server):
         self.method = None
         self.document = ''
         self.response = ''
-        self.headers = wc.proxy.Headers.WcMessage()
+        self.headers = wc.http.header.WcMessage()
         # Handle each of these, left to right
         self.decoders = []
         # for persistent connections
@@ -237,7 +237,7 @@ class HttpServer (wc.proxy.Server.Server):
         if self.response.lower().startswith('http/'):
             # Okay, we got a valid response line
             version, status, tail = \
-                   wc.proxy.http.parse_http_response(self.response, self.url)
+                   wc.http.parse_http_response(self.response, self.url)
             # XXX reject invalid HTTP version
             # reconstruct cleaned response
             ver = "HTTP/%d.%d" % version
@@ -295,7 +295,7 @@ class HttpServer (wc.proxy.Server.Server):
             return
         # get headers
         fp = StringIO.StringIO(self.read(m.end()))
-        msg = wc.proxy.Headers.WcMessage(fp)
+        msg = wc.http.header.WcMessage(fp)
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
@@ -410,7 +410,7 @@ class HttpServer (wc.proxy.Server.Server):
         query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
         response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
-        headers = wc.proxy.Headers.WcMessage()
+        headers = wc.http.header.WcMessage()
         # XXX content type adaption?
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://%s:%d/rated.html?%s\r' % \

@@ -24,7 +24,7 @@ import wc
 import wc.configuration
 import wc.filter.html.JSFilter
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
-from wc.proxy.Headers import WcMessage
+from wc.http.header import WcMessage
 
 
 class TestRewriter (unittest.TestCase):

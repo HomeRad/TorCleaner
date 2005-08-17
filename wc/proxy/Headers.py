@@ -30,62 +30,6 @@ import wc.proxy.decoder.GunzipStream
 import wc.proxy.decoder.DeflateStream
 
 
-class WcMessage (rfc822.Message, object):
-    """
-    Represents a single RFC 2822-compliant message, adding functions
-    handling multiple headers with the same name.
-    """
-
-    def __init__ (self, fp=None, seekable=True):
-        """
-        Initialize message reading from given optional file descriptor.
-        """
-        if fp is None:
-            fp = StringIO.StringIO()
-        super(WcMessage, self).__init__(fp, seekable=seekable)
-
-    def getallmatchingheadervalues (self, name):
-        """
-        Return a list of all header values for the given header name.
-        """
-        name = name.lower() + ':'
-        n = len(name)
-        vals = []
-        val = ""
-        hit = False
-        for line in self.headers:
-            if line[:n].lower() == name:
-                val = line[n:].strip()
-                hit = True
-            elif line[:1].isspace() and hit:
-                val += " "+line.strip()
-            else:
-                if hit:
-                    vals.append(val)
-                val = ""
-                hit = False
-        return vals
-
-    def addheader (self, name, value):
-        """
-        Add given header name and value to the end of the header list.
-        Multiple headers with the same name are supported.
-        """
-        self.headers.append("%s: %s\r\n" % (name, value))
-
-    def __contains__(self, name):
-        """
-        Determine whether a message contains the named header.
-        """
-        return name.lower() in self.dict
-
-    def __str__ (self):
-        return "\n".join([ repr(s) for s in self.headers ])
-
-    def copy (self):
-        return WcMessage(fp=StringIO.StringIO("".join(self.headers)))
-
-
 def get_content_length (headers, default=None):
     """
     Get content length as int or None on error.
@@ -125,19 +69,13 @@ def remove_headers (headers, to_remove):
             del headers[h]
 
 
-def remove_double_entries (headers, name):
-    values = headers.getallmatchingheadervalues(name)
-    if len(values) > 1:
-        headers[name] = values[0]
-
-
 def has_header_value (headers, name, value):
     """
     Return true iff headers contain given value, case of key or value
     is not important.
     """
     value = value.lower()
-    for val in headers.getallmatchingheadervalues(name):
+    for val in headers.getheaders(name):
         if val.lower() == value:
             return True
     return False
@@ -171,15 +109,9 @@ def client_set_headers (headers):
 
 
 def client_remove_double_entries (headers):
-    # first check for double entries
-    for name in headers.keys():
-        values = headers.getallmatchingheadervalues(name)
-        if len(values) > 1:
-            wc.log.warn(wc.LOG_PROXY, "Double %s header values: %s",
-                        name, str(values))
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
-        remove_double_entries(headers, name)
+        headers.remove_multiple_headers(name)
 
 
 def client_remove_hop_by_hop_headers (headers):
@@ -187,8 +119,8 @@ def client_remove_hop_by_hop_headers (headers):
     Remove hop-by-hop headers.
     """
     to_remove = ['Proxy-Connection', 'Connection', 'Upgrade', 'Trailer', 'TE']
-    hs = headers.getallmatchingheadervalues('Connection') + \
-         headers.getallmatchingheadervalues('Proxy-Connection')
+    hs = headers.getheaders('Connection') + \
+         headers.getheaders('Proxy-Connection')
     for h in hs:
         for v in h.split(','):
             if v not in to_remove:

@@ -148,7 +148,7 @@ class ClientServerMatchmaker (object):
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol, 301,
-              wc.proxy.Headers.WcMessage(
+              wc.http.header.WcMessage(
                     StringIO.StringIO('Content-type: text/plain\r\n'
                                       'Location: %s\r\n\r\n' % new_url)),
                _('Host %s is an abbreviation for %s')%(hostname, answer.data))
@@ -224,7 +224,7 @@ class ClientServerMatchmaker (object):
             return
         if self.method == 'CONNECT':
             self.state = 'response'
-            headers = wc.proxy.Headers.WcMessage()
+            headers = wc.http.header.WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
             if wc.configuration.config['sslgateway']:
                 server.client_send_request(self.method, self.protocol,

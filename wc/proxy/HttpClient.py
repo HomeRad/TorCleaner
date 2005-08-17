@@ -38,6 +38,7 @@ import cStringIO as StringIO
 import wc
 import wc.log
 import wc.configuration
+import wc.http
 import wc.url
 import wc.proxy.StatefulConnection
 import wc.proxy.ClientServerMatchmaker
@@ -166,7 +167,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # self.read(i) is not including the newline
         # still strip() it from whitespace
         request = self.read(i).strip()
-        method, url, version = wc.proxy.http.parse_http_request(request)
+        method, url, version = wc.http.parse_http_request(request)
         # check request; sets self.method, self.url, self.version
         if not self.check_request(method, url, version):
             # error has been sent
@@ -261,7 +262,7 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         i += 4 # Skip over newline terminator
         # the first 2 chars are the newline of request
         fp = StringIO.StringIO(self.read(i)[2:])
-        msg = wc.proxy.Headers.WcMessage(fp)
+        msg = wc.http.header.WcMessage(fp)
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
@@ -362,14 +363,14 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
            wc.proxy.Headers.client_get_max_forwards(self.headers) == 0:
             # XXX display options ?
             self.state = 'done'
-            headers = wc.proxy.Headers.WcMessage()
+            headers = wc.http.header.WcMessage()
             headers['Content-Type'] = 'text/plain\r'
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
                  'HTTP/%d.%d 200 OK' % self.version, 200, headers, '')
             return
         if self.needs_redirect:
             self.state = 'done'
-            headers = wc.proxy.Headers.WcMessage()
+            headers = wc.http.header.WcMessage()
             headers['Content-Type'] = 'text/plain\r'
             headers['Location'] = '%s\r' % self.url
             wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
