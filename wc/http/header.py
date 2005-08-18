@@ -37,6 +37,8 @@ class WcMessage (rfc822.Message, object):
         values = self.getheaders(name)
         if len(values) > 1:
             self[name] = values[0]
+            return True
+        return False
 
     def addheader (self, name, value):
         """
