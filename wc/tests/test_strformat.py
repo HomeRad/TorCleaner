@@ -99,6 +99,11 @@ class TestStrFormat (unittest.TestCase):
         self.assertEquals(wc.strformat.indent(s, ""), s)
         self.assertEquals(wc.strformat.indent(s, " "), " "+s)
 
+    def test_stripall (self):
+        self.assertEquals(wc.strformat.stripall("a\tb"), "ab")
+        self.assertEquals(wc.strformat.stripall(" a\t b"), "ab")
+        self.assertEquals(wc.strformat.stripall(" \r\na\t \nb\r"), "ab")
+
 
 def test_suite ():
     """
