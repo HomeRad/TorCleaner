@@ -443,14 +443,19 @@ class ProxyTest (unittest.TestCase):
         self.assertEqual(response.status, self.get_response_status())
 
     def check_response_message (self, response):
-        msg = self.get_response_message(response.status)
-        self.assertEqual(response.msg, msg)
+        # only check if status is what one expected
+        if response.status == self.get_response_status():
+            msg = self.get_response_message(response.status)
+            self.assertEqual(response.msg, msg)
 
     def check_response_headers (self, response):
+        # no standard checks here
         pass
 
     def check_response_content (self, response):
-        self.assertEqual(response.content, self.get_response_content())
+        # only check if status is what one expected
+        if response.status == self.get_response_status():
+            self.assertEqual(response.content, self.get_response_content())
 
     def start_test (self):
         """
