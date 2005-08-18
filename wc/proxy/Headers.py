@@ -112,7 +112,8 @@ def client_set_headers (headers):
 def client_remove_double_entries (headers):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
-        headers.remove_multiple_headers(name)
+        if headers.remove_multiple_headers(name):
+            wc.log.warn(wc.LOG_PROXY, "removed multiple %r headers", name);
 
 
 def client_remove_hop_by_hop_headers (headers):
