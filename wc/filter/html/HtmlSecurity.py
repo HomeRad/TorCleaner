@@ -277,6 +277,12 @@ class HtmlSecurity (object):
                           "Explorer ITS Protocol Zone Bypass Vulnerability"
                     wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
                     attrs['data'] = url[:i]
+        if attrs.has_key('classid'):
+            classid = attrs['classid'].upper()
+            if 'EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F' in classid:
+                msg = "Detected IE msdds.dll overflow attack."
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
+                del attrs['classid']
 
     def object_end (self):
         """
