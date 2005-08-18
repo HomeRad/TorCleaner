@@ -103,18 +103,24 @@ def client_set_headers (headers):
     """
     Modify client request headers.
     """
-    client_remove_double_entries(headers)
+    client_remove_multiple_headers(headers)
     client_remove_hop_by_hop_headers(headers)
     remove_warning_headers(headers)
     set_via_header(headers)
 
 
-def client_remove_double_entries (headers):
+def client_remove_multiple_headers (headers):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
         if headers.remove_multiple_headers(name):
-            wc.log.warn(wc.LOG_PROXY, "removed multiple %r headers", name);
+            wc.log.warn(wc.LOG_PROXY, "multiple %r client headers", name);
 
+
+def server_remove_multiple_headers (headers):
+    # remove dangerous double entries
+    for name in ['Content-Length', 'Age', 'Date', 'Host']:
+        if headers.remove_multiple_headers(name):
+            wc.log.warn(wc.LOG_PROXY, "multiple %r server headers", name);
 
 def client_remove_hop_by_hop_headers (headers):
     """
@@ -182,6 +188,7 @@ def server_set_headers (headers):
     """
     Modify server response headers.
     """
+    server_remove_multiple_headers(headers)
     server_remove_hop_by_hop_headers(headers)
     set_via_header(headers)
     server_set_date_header(headers)
