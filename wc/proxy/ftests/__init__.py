@@ -319,7 +319,7 @@ class ProxyTest (unittest.TestCase):
         lines.extend(("", ""))
         data = "\r\n".join(lines)
         if request.content:
-            data += content
+            data += request.content
         return data
 
     def check_request (self, request):
