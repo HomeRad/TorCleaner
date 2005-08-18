@@ -230,3 +230,13 @@ def strtimezone ():
     else:
         zone = time.timezone
     return "%+04d" % int(-zone/3600)
+
+
+_sub_ws = re.compile(r"\s+").sub
+def stripall (s):
+    """
+    Remove all whitespace from given string.
+    """
+    if not s:
+        return s
+    return _sub_ws("", s)
