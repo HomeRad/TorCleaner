@@ -49,9 +49,6 @@ class HtmlSecurity (object):
 
     def __init__ (self):
         self.in_winhelp = False # inside object tag calling WinHelp
-        # running on MacOS or MacOSX
-        self.macintosh = os.name == 'mac' or \
-              (os.name == 'posix' and sys.platform.startswith('darwin'))
 
     # scan methods
 
@@ -231,20 +228,22 @@ class HtmlSecurity (object):
         """
         Check <meta> start tag.
         """
-        if attrs.has_key('content') and self.macintosh:
-            # prevent CVE-2002-0153
-            if attrs.get('http-equiv', '').lower() == 'refresh':
+        if attrs.has_key('content'):
+            # prevent redirect to non-http file
+            refresh = attrs.get('http-equiv', attrs.get('name', ''))
+            if refresh.lower() == 'refresh':
+                # lowercase and strip all whitespace
                 url = attrs['content'].lower()
-                if ";" in url:
-                    url = url.split(";", 1)[1]
-                if url.startswith('url='):
-                    url = url[4:]
-                if url.startswith('file:/'):
-                    msg = "%s %r\n Detected and prevented local file " \
-                          "redirection"
-                    wc.log.warn(wc.LOG_FILTER, msg, htmlfilter,
-                                attrs['content'])
-                    del attrs['content']
+                url = wc.strformat.stripall(url)
+                # content can be "1;url=http://;url=javascript:alert('boo')"
+                # so be sure to check all urls
+                for url in url.split(";url="):
+                    if not url.startswith('http://'):
+                        msg = "%s %r\n Detected invalid redirection."
+                        wc.log.warn(wc.LOG_FILTER, msg, htmlfilter,
+                                    attrs['content'])
+                        del attrs['content']
+                        break
 
     def object_start (self, attrs, htmlfilter):
         """
