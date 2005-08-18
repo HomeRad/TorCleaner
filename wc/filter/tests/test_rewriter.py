@@ -80,6 +80,17 @@ class TestRewriter (unittest.TestCase):
         self.filt("""<meta http-equiv="Refrish">""",
                   """<meta http-equiv="Refrish">""")
 
+    def testMetaRefresh3 (self):
+        """
+        Javascript refresh.
+        """
+        self.filt("""<meta name="Refresh" """ +
+                  """content="1;url=http://;url=javascript:alert('boo')">""",
+                  """<meta name="Refresh">""")
+        self.filt("""<meta http-equiv="Refresh" """ +
+                  """content="1; url =http://;url=jaVaScrIpt:alert('boo')">""",
+                  """<meta http-equiv="Refresh">""")
+
     def testShortcutIcon (self):
         """
         Shortcut icon.
