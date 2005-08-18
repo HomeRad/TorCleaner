@@ -21,14 +21,17 @@ Test handling of multiple headers.
 from wc.proxy.ftests import ProxyTest, make_suite
 
 
-class test_multiheader_clen_toclient (ProxyTest):
+class test_multiheader_clen_toSrv (ProxyTest):
     """
     Only one Content-Length is allowed. This disables HTTP request
     smuggling attacks.
     """
 
-    def test_multiheader_clen_toclient (self):
+    def test_multiheader_clen_toSrv (self):
         self.start_test()
+
+    def get_request_method (self):
+        return "POST"
 
     def get_request_headers (self, content):
         port = self.server.socket.getsockname()[1]
@@ -38,8 +41,11 @@ class test_multiheader_clen_toclient (ProxyTest):
         ]
         if content:
             headers.append("Content-Length: %d" % len(content))
-            headers.append("Content-Length: %d" % (len(content)-5))
+            headers.append("Content-Length: %d" % (len(content)-1))
         return headers
+
+    def get_request_content (self):
+        return "hulla"
 
     def check_request_headers (self, request):
         num_found = 0
@@ -49,20 +55,20 @@ class test_multiheader_clen_toclient (ProxyTest):
         self.assert_(num_found < 2)
 
 
-class test_multiheader_clen_toserver (ProxyTest):
+class test_multiheader_clen_toClt (ProxyTest):
     """
     Only one Content-Length is allowed. This disables HTTP request
     smuggling attacks.
     """
 
-    def test_multiheader_clen_toserver (self):
+    def test_multiheader_clen_toClt (self):
         self.start_test()
 
     def get_response_headers (self, content):
         return [
             "Content-Type: text/plain",
             "Content-Length: %d" % len(content),
-            "Content-Length: %d" % (len(content)-5),
+            "Content-Length: %d" % (len(content)-1),
         ]
 
     def check_response_headers (self, response):
