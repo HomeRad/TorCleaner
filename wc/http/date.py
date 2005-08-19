@@ -47,7 +47,7 @@ def get_date_rfc1123 (timesecs):
     Example: Sun, 06 Nov 1994 08:49:37 GMT
     """
     year, month, day, hh, mm, ss, wd, y, z = time.gmtime(timesecs)
-    return "%s, %02d %3s %4d %02d:%02d:%02d GMT" % \
+    return "%s, %02d %s %04d %02d:%02d:%02d GMT" % \
         (wkdayname[wd], day, monthname[month], year, hh, mm, ss)
 
 def parse_date_rfc1123 (datestring):
@@ -76,7 +76,7 @@ def get_date_rfc850 (timesecs):
     Example: Sunday, 06-Nov-94 08:49:37 GMT
     """
     year, month, day, hh, mm, ss, wd, y, z = time.gmtime(timesecs)
-    return "%s, %02d-%3s-%2d %02d:%02d:%02d GMT" % \
+    return "%s, %02d-%s-%02d %02d:%02d:%02d GMT" % \
         (weekdayname[wd], day, monthname[month], year % 100, hh, mm, ss)
 
 def parse_date_rfc850 (datestring):
