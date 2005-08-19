@@ -105,7 +105,7 @@ def parse_http_warning (warning):
         warnagent, warning = warning.split(None, 1)
         warntext, warning = split_quoted_string(warning)
         if warning:
-            warndate = split_quoted_string(warning)
+            warndate, warning = split_quoted_string(warning)
             warndate = wc.http.date.parse_http_date(warndate)
         else:
             warndate = None
