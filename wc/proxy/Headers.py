@@ -19,12 +19,15 @@ Header mangling.
 """
 
 import re
+import time
 import rfc822
 import cStringIO as StringIO
 
 import wc
 import wc.log
+import wc.http
 import wc.http.header
+import wc.http.date
 import wc.magic
 import wc.proxy.decoder.UnchunkStream
 import wc.proxy.decoder.GunzipStream
@@ -93,10 +96,21 @@ def set_via_header (headers):
 
 def remove_warning_headers (headers):
     """
-    Remove warning headers.
+    Remove old warning headers.
     """
-    # XXX todo
-    pass
+    tokeep = []
+    date = wc.http.date.parse_http_date(headers['Date'])
+    for warning in headers.getheaders("Warning"):
+        warncode, warnagent, warntext, warndate = \
+            wc.http.parse_http_warning(warning)
+        if warndate is None or warndate == date:
+            tokeep.append(warning)
+        else:
+            wc.log.debug(wc.LOG_PROXY, "delete warning %s from %s",
+                         warning, headers)
+    del headers['Warning']
+    for warning in tokeep:
+        headers.addheader('Warning', warning)
 
 
 def client_set_headers (headers):
@@ -105,7 +119,6 @@ def client_set_headers (headers):
     """
     client_remove_multiple_headers(headers)
     client_remove_hop_by_hop_headers(headers)
-    remove_warning_headers(headers)
     set_via_header(headers)
 
 
@@ -208,9 +221,9 @@ def server_set_date_header (headers):
     """
     Add rfc2822 date if it was missing.
     """
-    if not 'Date' in headers:
-        from email import Utils
-        headers['Date'] = "%s\r" % Utils.formatdate()
+    if 'Date' not in headers:
+        now = time.time()
+        headers['Date'] = "%s\r" % wc.http.date.get_date_rfc1123(now)
 
 
 def server_set_content_headers (headers, mime_types, url):
@@ -219,7 +232,7 @@ def server_set_content_headers (headers, mime_types, url):
     """
     origmime = headers.get('Content-Type', None)
     if not origmime:
-        wc.log.warn(wc.LOG_PROXY, _("Missing content type in %r"), url)
+        wc.log.warn(wc.LOG_PROXY, "Missing content type in %r", url)
     if not mime_types:
         return
     matching_mimes = [m for m in mime_types
