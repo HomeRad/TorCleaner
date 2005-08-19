@@ -94,12 +94,16 @@ class HttpData (object):
         """
         Test if header with given name is stored.
         """
+        return self.num_headers(name) > 0
+
+    def num_headers (self, name):
         # HTTP headers are case insensitive
+        num = 0
         key = name.lower()
         for header in self.headers:
             if header.lower().startswith("%s:" % key):
-                return True
-        return False
+                num += 1
+        return num
 
     def get_header (self, name):
         """
