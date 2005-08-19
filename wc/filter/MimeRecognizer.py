@@ -40,8 +40,10 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         """
         stages = [wc.filter.STAGE_RESPONSE_DECODE]
         super(MimeRecognizer, self).__init__(stages=stages)
-        # minimal number of bytes before we start mime recognition
-        self.minimal_size_bytes = 1024
+        # minimal number of bytes to start mime recognition
+        self.minimal_size_bytes = 5
+        # sufficient number of bytes to start mime recognition
+        self.sufficient_size_bytes = 1024
 
     def filter (self, data, attrs):
         """
@@ -54,7 +56,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         if buf.closed:
             return data
         buf.write(data)
-        if buf.tell() >= self.minimal_size_bytes:
+        if buf.tell() >= self.sufficient_size_bytes:
             return self.recognize(buf, attrs)
         return ''
 
@@ -69,7 +71,11 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         if buf.closed:
             return data
         buf.write(data)
-        return self.recognize(buf, attrs)
+        if buf.tell() >= self.minimal_size_bytes:
+            return self.recognize(buf, attrs)
+        data = buf.getvalue()
+        buf.close()
+        return data
 
     def recognize (self, buf, attrs):
         """
