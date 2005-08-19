@@ -25,8 +25,8 @@ class TestDate (unittest.TestCase):
     def test_rfc1123 (self):
         now = time.time()
         d = wc.http.date.get_date_rfc1123(now)
-	s = "Sat, 12 Feb 2005 11:12:13 GMT"
-        t = (2005, 2, 12, 11, 12, 13, 5, 43, 0)
+	s = "Sat, 12 Feb 0005 11:12:13 GMT"
+        t = (0005, 2, 12, 11, 12, 13, 5, 43, 0)
         self.assertEquals(wc.http.date.parse_date_rfc1123(s), t)
 	s = "Sat, 01 Nov 2099 01:02:03 GMT"
         t = (2099, 11, 1, 1, 2, 3, 5, 305, 0)
@@ -37,8 +37,8 @@ class TestDate (unittest.TestCase):
     def test_rfc850 (self):
         now = time.time()
         d = wc.http.date.get_date_rfc850(now)
-	s = "Saturday, 12-Feb-99 11:12:13 GMT"
-        t = (1999, 2, 12, 11, 12, 13, 5, 43, 0)
+	s = "Saturday, 12-Feb-09 11:12:13 GMT"
+        t = (2009, 2, 12, 11, 12, 13, 5, 43, 0)
         self.assertEquals(wc.http.date.parse_date_rfc850(s), t)
         s = "Saturday, 01-Nov-05 01:02:03 GMT"
         t = (2005, 11, 1, 1, 2, 3, 5, 305, 0)
