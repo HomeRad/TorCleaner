@@ -50,6 +50,16 @@ class TestBasic (unittest.TestCase):
         parsed = [(1, 1), 200, "glork bla"]
         self.assertEquals(wc.http.parse_http_response(response, url), parsed)
 
+    def test_quoted_string (self):
+        s = '"a b c d"  foo bla'
+        self.assertEquals(wc.http.split_quoted_string(s),
+                          ('a b c d', 'foo bla'))
+        s = r'"a b\" \\ \a\b\ c d" foo bla'
+        self.assertEquals(wc.http.split_quoted_string(s),
+                          (r'a b" \ ab c d', 'foo bla'))
+        s = "'a' b"
+        self.assertRaises(ValueError, wc.http.split_quoted_string, s)
+
 
 def test_suite ():
     """

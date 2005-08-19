@@ -86,3 +86,49 @@ def parse_http_version (version):
             pass
     return res
 
+
+def parse_http_warning (warning):
+    """
+    Grammar for a warning:
+    Warning    = "Warning" ":" 1#warning-value
+    warning-value = warn-code SP warn-agent SP warn-text [SP warn-date]
+    warn-code  = 3DIGIT
+    warn-agent = ( host [ ":" port ] ) | pseudonym
+                    ; the name or pseudonym of the server adding
+                    ; the Warning header, for use in debugging
+    warn-text  = quoted-string
+    warn-date  = <"> HTTP-date <">
+    """
+    try:
+        warncode, warning = warning.split(None, 1)
+        warncode = int(warncode)
+        warnagent, warning = warning.split(None, 1)
+        warntext, warning = split_quoted_string(warning)
+        if warning:
+            warndate = split_quoted_string(warning)
+            warndate = wc.http.date.parse_http_date(warndate)
+        else:
+            warndate = None
+    except ValueError, OverflowError:
+        return None
+    return warncode, warnagent, warntext, warndate
+
+
+def split_quoted_string (s):
+    if not s.startswith('"'):
+        raise ValueError("No quoted string found")
+    quoted = ""
+    i = 1
+    escape = False
+    while i < len(s):
+        if s[i] == '\\' and not escape:
+            escape = True
+            i += 1
+            continue
+        if s[i] == '"' and not escape:
+            break
+        quoted += s[i]
+        escape = False
+        i += 1
+    return (quoted, s[i+1:].lstrip())
+

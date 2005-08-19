@@ -121,3 +121,25 @@ def parse_date_asctime (datestring):
         t = time.strptime(datestring, "%a %b  %d %H:%M:%S %Y %Z")
     locale.setlocale(locale.LC_TIME, curlocale)
     return t
+
+
+def parse_http_date (datestring):
+    """
+    Try to parse HTTP-date.
+    @return: the parsed date or None on error
+    @rtype: time.struct_time or None
+    """
+    try:
+        return parse_date_rfc1123(datestring)
+    except ValueError:
+        pass
+    try:
+        return parse_date_rfc850(datestring)
+    except ValueError:
+        pass
+    try:
+        return parse_date_asctime(datestring)
+    except ValueError:
+        pass
+    return None
+
