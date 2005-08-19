@@ -28,11 +28,30 @@
 """
 Encoding_chunked, amitp@cs.stanford.edu, March 2000
 Deal with Transfer-encoding: chunked [HTTP/1.1].
+
+Grammar for a chunked-encoded message body:
+Chunked-Body   = *chunk
+                 last-chunk
+                 trailer
+                 CRLF
+
+chunk          = chunk-size [ chunk-extension ] CRLF
+                 chunk-data CRLF
+chunk-size     = 1*HEX
+last-chunk     = 1*("0") [ chunk-extension ] CRLF
+
+chunk-extension= *( ";" chunk-ext-name [ "=" chunk-ext-val ] )
+chunk-ext-name = token
+chunk-ext-val  = token | quoted-string
+chunk-data     = chunk-size(OCTET)
+trailer        = *(entity-header CRLF)
 """
 
 import re
+import cStringIO as StringIO
 import wc
 import wc.log
+
 
 match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
 
@@ -47,10 +66,11 @@ class UnchunkStream (object):
        we're reading up to bytes_remaining elements of data
     """
 
-    def __init__ (self):
+    def __init__ (self, headers):
         """
         Initialize internal buffers and flags.
         """
+        self.headers = headers
         self.buf = ''
         self.bytes_remaining = None
         self.closed = False
@@ -73,17 +93,16 @@ class UnchunkStream (object):
         wc.log.debug(wc.LOG_NET, "chunked data %r", s)
         self.buf += s
         s = ''
-
         while self.buf and not self.closed:
             # Keep looking for alternating chunk lengths and chunk content
             if self.bytes_remaining is None:
                 # We want to find a chunk length
-                i = self.buf.find('\n')
+                i = self.buf.find('\r\n')
                 if i >= 0:
                     # We have a line; let's hope it's a chunk length
                     line = self.buf[:i].strip()
                     # Remove this line from the buffer
-                    self.buf = self.buf[i+1:]
+                    self.buf = self.buf[i+2:]
                     if line:
                         # NOTE: chunklen can be followed by ";.*"
                         mo = match_bytes(line)
@@ -98,8 +117,8 @@ class UnchunkStream (object):
                         if self.bytes_remaining == 0:
                             # End of stream
                             self.closed = True
-                            # XXX: at this point, we should read
-                            # footers until we get to a blank line
+                            # at this point, read footers until a blank line
+                            self.read_footers()
                 else:
                     break
             if self.bytes_remaining is not None:
@@ -115,10 +134,21 @@ class UnchunkStream (object):
         wc.log.debug(wc.LOG_NET, "decoded chunk %r", s)
         return s
 
+    def read_footers (self):
+        i = self.buf.find('\r\n\r\n')
+        if i > 0:
+            fp = StringIO.StringIO(self.buf[:i])
+            self.buf = self.buf[i+4:]
+            msg = wc.http.header.WcMessage(fp)
+            fp.close()
+            for name in msg:
+                for value in msg.getheaders(name):
+                    self.headers.addheader(name, value)
+
     def flush (self):
         """
         Flush internal buffers and return flushed data.
         """
-        s = self.buf.strip()
+        s = self.buf
         self.buf = ''
         return s
