@@ -16,7 +16,10 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import unittest
+import time
 import wc.http
+import wc.http.date
+
 
 class TestBasic (unittest.TestCase):
 
@@ -59,6 +62,16 @@ class TestBasic (unittest.TestCase):
                           (r'a b" \ ab c d', 'foo bla'))
         s = "'a' b"
         self.assertRaises(ValueError, wc.http.split_quoted_string, s)
+
+    def test_warning (self):
+        now = time.time()
+        date = wc.http.date.get_date_rfc1123(now)
+        datewarn= '119 smee "hulla" "%s"' % date
+        warn = '119 smee "wulla"'
+        self.assertEquals(wc.http.parse_http_warning(warn),
+                          (119, "smee", "wulla", None))
+        self.assertEquals(wc.http.parse_http_warning(datewarn),
+                          (119, "smee", "hulla", time.gmtime(now)))
 
 
 def test_suite ():
