@@ -4,6 +4,10 @@
     Type: bugfix
     Changed: wc/google.py, templates/classic/google.html
 
+  * Only try to recognize MIME type if enough data is available.
+    Type: bugfix
+    Changed: wc/filter/MimeRecognizer.py
+
 2.30 "Dear Wendy" (released 16.8.2005)
 
   * Fix attribute error in allowance check.
