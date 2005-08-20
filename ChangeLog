@@ -8,6 +8,10 @@
     Type: bugfix
     Changed: wc/filter/MimeRecognizer.py
 
+  * Ensure that HTML tag and attribute names are ASCII safe.
+    Type: feature
+    Changed: wc/HtmlParser/htmllex.l
+
 2.30 "Dear Wendy" (released 16.8.2005)
 
   * Fix attribute error in allowance check.
