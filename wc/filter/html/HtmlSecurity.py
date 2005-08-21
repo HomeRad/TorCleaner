@@ -84,7 +84,7 @@ class HtmlSecurity (object):
             # subtract common units
             if val.endswith("%"):
                 l -= 1
-            elif val.endswith("pt"):
+            elif val.endswith("pt") or val.endswith("px"):
                 l -= 2
             if len(val) > maxlen:
                 msg = "%s %r\n Detected a too large %s attribute value"
