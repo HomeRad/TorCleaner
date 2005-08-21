@@ -92,7 +92,7 @@ def set_via_header (headers):
     """
     Set "Via:" header.
     """
-    headers.addheader("Via", "1.1 unknown")
+    headers.addheader("Via", "1.1 unknown\r")
 
 
 def remove_warning_headers (headers):
@@ -113,7 +113,7 @@ def remove_warning_headers (headers):
                          warning, headers)
     del headers['Warning']
     for warning in tokeep:
-        headers.addheader('Warning', warning)
+        headers.addheader('Warning', warning+"\r")
 
 
 forbidden_trailer_names = ["transfer-encoding", "content-length", "trailer"]
@@ -133,7 +133,7 @@ def check_trailer_headers (headers):
             tokeep.append(trailer)
     del headers['Trailer']
     for trailer in tokeep:
-        headers.addheader('Trailer', trailer)
+        headers.addheader('Trailer', trailer+'\r')
 
 
 def client_set_headers (headers):
