@@ -86,7 +86,7 @@ class HtmlSecurity (object):
                 l -= 1
             elif val.endswith("pt") or val.endswith("px"):
                 l -= 2
-            if len(val) > maxlen:
+            if l > maxlen:
                 msg = "%s %r\n Detected a too large %s attribute value"
                 msg += " (length %d > %d)" % (len(val), maxlen)
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
