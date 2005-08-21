@@ -66,11 +66,10 @@ class UnchunkStream (object):
        we're reading up to bytes_remaining elements of data
     """
 
-    def __init__ (self, headers):
+    def __init__ (self):
         """
         Initialize internal buffers and flags.
         """
-        self.headers = headers
         self.buf = ''
         self.bytes_remaining = None
         self.closed = False
@@ -135,15 +134,23 @@ class UnchunkStream (object):
         return s
 
     def read_footers (self):
+        i = self.buf.find('\r\n')
+        if i >= 0:
+            line = self.buf[:i].strip()
+            if not line:
+                self.buf = self.buf[i+2:]
+                return
+        # read headers
         i = self.buf.find('\r\n\r\n')
-        if i > 0:
+        if i >= 0:
             fp = StringIO.StringIO(self.buf[:i])
             self.buf = self.buf[i+4:]
             msg = wc.http.header.WcMessage(fp)
             fp.close()
             for name in msg:
                 for value in msg.getheaders(name):
-                    self.headers.addheader(name, value)
+                    pass
+                    # XXX self.headers.addheader(name, value)
 
     def flush (self):
         """
