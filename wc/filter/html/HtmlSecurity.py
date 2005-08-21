@@ -56,6 +56,7 @@ class HtmlSecurity (object):
         """
         Delegate to individual start tag handlers.
         """
+        assert wc.strformat.is_ascii(tag)
         fun = "%s_start" % tag
         if hasattr(self, fun):
             getattr(self, fun)(attrs, htmlfilter)
@@ -64,6 +65,7 @@ class HtmlSecurity (object):
         """
         Delegate to individual end tag handlers.
         """
+        assert wc.strformat.is_ascii(tag)
         fun = "%s_end" % tag
         if hasattr(self, fun):
             getattr(self, fun)()
