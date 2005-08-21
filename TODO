@@ -1,5 +1,7 @@
 TODO
 
+- functional tests
+
 - streaming clamav scanning, try to detect virii immediately
 
 - rework the HTML GUI using mini-tabs and styled checkboxes.
@@ -88,13 +90,6 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
 
 - use IPpy.py
 
-- filter replace values should also have the opportunity to use
-  dynamic values, like the request domain URL or the complete URL.
-  A use case would be referrer spoofing to use the request domain
-  instead of a fixed value.
-  With this it would be possible to not remove the referrer header,
-  but replace it with the request domain URL
-
 - suggestion from mail:
  filter lists from http://phroggy.com/bannerfilter/
  Check bannerfilter's update.sh for more infos.
@@ -147,3 +142,31 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
      callback(self.hostname, DnsResponse('found', ip_addrs)) 
  exceptions.TypeError: 'NoneType' object is not callable
 
+- > post-install script gives this error and than after I can't get ssl to work:
+Traceback (most recent call last):
+
+ File "C:\Python24\Scripts\webcleaner-certificates", line 113, in ?
+
+   main(sys.argv[1:])
+
+ File "C:\Python24\Scripts\webcleaner-certificates", line 105, in main
+
+   install_ssl_certs(configdir)
+
+ File "C:\Python24\Scripts\webcleaner-certificates", line 61, in 
+install_ssl_certs
+
+   wc.proxy.ssl.create_certificates(configdir)
+
+ File "C:\Python24\Lib\site-packages\wc\proxy\ssl.py", line 109, in 
+create_certificates
+
+   careq = createCertRequest(cakey, CN='Certificate Authority')
+
+ File "C:\Python24\Lib\site-packages\wc\proxy\ssl.py", line 179, in 
+createCertRequest
+
+   setattr(subj, key, value)
+
+OpenSSL.crypto.Error: [('asn1 encoding routines', 'ASN1_mbstring_ncopy', 
+'invalid universalstring length')]

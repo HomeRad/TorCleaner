@@ -12,6 +12,11 @@
     Type: feature
     Changed: wc/HtmlParser/htmllex.l
 
+  * Ability to use placeholders when replacing header values. The
+    "Referer:" header for example is now always the request domain.
+    Type: feature
+    Changed: wc/filter/Header.py
+
 2.30 "Dear Wendy" (released 16.8.2005)
 
   * Fix attribute error in allowance check.
