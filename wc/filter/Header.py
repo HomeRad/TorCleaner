@@ -19,6 +19,7 @@ Add or delete HTTP headers.
 """
 
 import re
+import string
 import sets
 
 import wc
@@ -101,5 +102,10 @@ class Header (wc.filter.Filter.Filter):
         for name, val in attrs['header_add'][stage]:
             wc.log.debug(wc.LOG_FILTER,
                          "%s adding header %r: %r", self, name, val)
+            if "$" in val:
+                # substitute template
+                d = {"host": attrs['headers']['client'].get('Host', '')}
+                t = string.Template(val)
+                val = t.safe_substitute(d)
             data[name] = val+"\r"
         return data
