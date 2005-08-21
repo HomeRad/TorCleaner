@@ -1,14 +1,12 @@
 TODO
 
+- JS at the top: http://lucene.apache.org/nutch/index.html
+
 - functional tests
 
 - streaming clamav scanning, try to detect virii immediately
 
 - rework the HTML GUI using mini-tabs and styled checkboxes.
-
-- use privoxy's entries in default.action.master
-
-- add privoxy's UNBLOCK_REFERRER entries to dontmatch list of referrer rule
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
@@ -45,8 +43,6 @@ Traceback (most recent call last):
   File "/home/calvin/projects/webcleaner/wc/proxy/HttpClient.py", line 516, in server_content
     assert self.server, "%s server_content(%r) had no server" % \
 AssertionError: <client:closed   being read> server_content('\xfc\
-
-- use http://www.geocities.com/pierceive/adblock/
 
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
@@ -89,30 +85,6 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
   Big problem: how do we decide when to send out IPv6 DNS queries?
 
 - use IPpy.py
-
-- suggestion from mail:
- filter lists from http://phroggy.com/bannerfilter/
- Check bannerfilter's update.sh for more infos.
- http://phroggy.com/bannerfilter/banners.data
- http://phroggy.com/bannerfilter/popups.data
- http://phroggy.com/bannerfilter/frames.data
- http://phroggy.com/bannerfilter/exceptions.data
- 
- Also well known lists are in guarding.p2p format, for example
- available from:
- 
- DIR_WWW="http://methlabs.org/sync"
- #Anti-P2P/ Ads/Spyware/ Govt/Military
- FILE_DL="guarding_all.p2p.zip"
- #Anti-P2P/ Ads/Spyware
- #FILE_DL="guarding_plus.p2p.zip"
- #Anti-P2P
- #FILE_DL="guarding.p2p.zip"
- #Ads/Spyware
- #FILE_DL="antiads.txt.zip"
- #Govt/Military
- #FILE_DL="govandmil.txt.zip"
- FILE_EX="guarding.p2p"
 
 - Problem on WinXP box:
  The instance's SvcRun() method failed 
