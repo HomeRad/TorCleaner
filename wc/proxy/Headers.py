@@ -19,6 +19,7 @@ Header mangling.
 """
 
 import re
+import sets
 import time
 import rfc822
 import cStringIO as StringIO
@@ -279,9 +280,10 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
     Set encoding headers.
     """
     bytes_remaining = get_content_length(headers)
+    to_remove = sets.Set()
     # remove content length
     if rewrite:
-        remove_headers(headers, ['Content-Length'])
+        to_remove.add('Content-Length')
     # add decoders
     if headers.has_key('Transfer-Encoding'):
         # chunked encoded
@@ -291,15 +293,15 @@ def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
               "unknown transfer encoding %r, assuming chunked encoding", tenc)
         decoders.append(wc.proxy.decoder.UnchunkStream.UnchunkStream())
         # remove encoding header
-        to_remove = ["Transfer-Encoding"]
+        to_remove.add("Transfer-Encoding")
         if headers.has_key("Content-Length"):
             wc.log.warn(wc.LOG_PROXY,
                         'chunked encoding should not have Content-Length')
-            to_remove.append("Content-Length")
-            bytes_remaining = None
-        remove_headers(headers, to_remove)
+            to_remove.add("Content-Length")
+        bytes_remaining = None
         # add warning
         headers['Warning'] = "214 Transformation applied\r"
+    remove_headers(headers, to_remove)
     # only decompress on rewrite
     if not rewrite:
         return bytes_remaining
