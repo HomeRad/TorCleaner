@@ -98,6 +98,8 @@ def remove_warning_headers (headers):
     """
     Remove old warning headers.
     """
+    if "Warning" not in headers:
+        return
     tokeep = []
     date = wc.http.date.parse_http_date(headers['Date'])
     for warning in headers.getheaders("Warning"):
@@ -111,6 +113,26 @@ def remove_warning_headers (headers):
     del headers['Warning']
     for warning in tokeep:
         headers.addheader('Warning', warning)
+
+
+forbidden_trailer_names = ["transfer-encoding", "content-length", "trailer"]
+def check_trailer_headers (headers):
+    """
+    Message header fields listed in the Trailer header field MUST NOT
+    include the following header fields:
+      . Transfer-Encoding
+      . Content-Length
+      . Trailer
+    """
+    if "Trailer" not in headers:
+        return
+    tokeep = []
+    for trailer in headers.getheaders("Trailer"):
+        if trailer.lower() not in forbidden_trailer_names:
+            tokeep.append(trailer)
+    del headers['Trailer']
+    for trailer in tokeep:
+        headers.addheader('Trailer', trailer)
 
 
 def client_set_headers (headers):
@@ -206,6 +228,7 @@ def server_set_headers (headers):
     set_via_header(headers)
     server_set_date_header(headers)
     remove_warning_headers(headers)
+    check_trailer_headers(headers)
 
 
 def server_remove_hop_by_hop_headers (headers):
