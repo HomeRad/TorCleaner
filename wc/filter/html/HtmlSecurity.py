@@ -79,7 +79,13 @@ class HtmlSecurity (object):
         # Note that a maxlen of 4 is recommended to also allow
         # percentages like '100%'.
         if attrs.has_key(name):
-            val = attrs[name]
+            val = attrs[name].lower()
+            l = len(val)
+            # subtract common units
+            if val.endswith("%"):
+                l -= 1
+            elif val.endswith("pt"):
+                l -= 2
             if len(val) > maxlen:
                 msg = "%s %r\n Detected a too large %s attribute value"
                 msg += " (length %d > %d)" % (len(val), maxlen)
