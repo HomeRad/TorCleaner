@@ -15,27 +15,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-Apply rule to specific urls.
+Apply rule to specific URLs.
 """
 
 import re
 import wc
-import wc.filter.rules.Rule
+import wc.filter.rules.MimeRule
 import wc.XmlUtils
 
 
-class UrlRule (wc.filter.rules.Rule.Rule):
+class UrlRule (wc.filter.rules.MimeRule.MimeRule):
     """
-    Rule which applies only to urls which match a regular expression.
+    Rule which applies only to URLs which match a regular expression.
     """
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, matchurls=None, nomatchurls=None):
+                  disable=0, matchurls=None, nomatchurls=None, mimes=None):
         """
         Initialize rule attributes.
         """
         super(UrlRule, self).__init__(sid=sid, titles=titles,
-                                   descriptions=descriptions, disable=disable)
+                     descriptions=descriptions, disable=disable, mimes=mimes)
         if matchurls is None:
             self.matchurls = []
         else:
@@ -45,9 +45,9 @@ class UrlRule (wc.filter.rules.Rule.Rule):
         else:
             self.nomatchurls = nomatchurls
 
-    def applies_to (self, url):
+    def applies_to_url (self, url):
         """
-        Return True iff this rule can be applied to given url.
+        Return True iff this rule can be applied to given URL.
         """
         for mo in self.matchurls_ro:
             if mo.search(url):
@@ -71,7 +71,7 @@ class UrlRule (wc.filter.rules.Rule.Rule):
 
     def compile_data (self):
         """
-        Compile url regular expressions.
+        Compile regular expressions.
         """
         super(UrlRule, self).compile_data()
         self.compile_matchurls()
@@ -91,7 +91,7 @@ class UrlRule (wc.filter.rules.Rule.Rule):
 
     def matchestoxml (self, prefix=u""):
         """
-        Match url rule data as XML for storing.
+        Match URL rule data as XML for storing.
         """
         m = [u"%s<matchurl>%s</matchurl>" % \
              (prefix, wc.XmlUtils.xmlquote(r)) for r in self.matchurls]
@@ -104,6 +104,8 @@ class UrlRule (wc.filter.rules.Rule.Rule):
         Return ending part of XML serialization with title and matches.
         """
         s = u">\n"+self.title_desc_toxml(prefix=u"  ")
+        if self.mimes:
+            s += u"\n"+self.mimestoxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         s += u"\n</%s>" % self.get_name()

@@ -88,7 +88,7 @@ class XmlRewriter (wc.filter.Filter.Filter):
         xmlrules = []
         htmlrules = []
         for rule in self.rules:
-            if not rule.applies_to(url):
+            if not rule.applies_to_url(url):
                 continue
             if rule.get_name() == u'xmlrewrite':
                 xmlrules.append(rule)

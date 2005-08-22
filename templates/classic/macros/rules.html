@@ -43,6 +43,30 @@
 </table>
 <hr noshade size="1">
 
+<!-- MIME types (used below) -->
+<h2>MIME type</h2>
+<table summary="">
+<div metal:define-macro="mimetype">
+<tr valign="top"><td>
+<label for="rule_mimetypes" i18n:translate="">MIME type</label><sup><a
+ href="#footnote1" class="footnote" title="see footnote 1"
+ i18n:attributes="title">1)</a></sup>:
+</td><td>
+<select name="rule_mimetypes" id="rule_mimetypes" multiple size="3"
+ i18n:attributes="title"
+ title="List of MIME types this rule should apply to">
+<option tal:repeat="url currule/mimes" tal:attributes="value url"
+ tal:content="url">text/html</option>
+</select><br>
+<input type="submit" name="delmimetypes" value="Remove selected" 
+ class="submit" i18n:attributes="value"><br>
+<input class="text" type="text" name="newmimetype" value=""><br>
+<input type="submit" name="addmimetype" value="Add new" class="submit"
+ i18n:attributes="value">
+</td></tr>
+</div>
+</table>
+
 <!-- matchurl and dontmatchurl (used below) -->
 <h2>Match url</h2>
 <table summary="">
@@ -134,6 +158,9 @@
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
 </tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
 </tr>
@@ -221,6 +248,9 @@ Regex footnote
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
 </tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
 </tr>
@@ -272,6 +302,9 @@ Regex footnote
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
 </tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
 </tr>
@@ -310,6 +343,9 @@ Regex footnote
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
 </tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
 </tr>
@@ -341,6 +377,9 @@ Regex footnote
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
 </tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
 </tr>
@@ -359,6 +398,9 @@ Regex footnote
 <table metal:define-macro="antivirus" summary="">
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
+</tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
 </tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
@@ -379,6 +421,9 @@ Regex footnote
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
 </tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
 </tr>
@@ -397,6 +442,9 @@ Regex footnote
 <table metal:define-macro="rating" summary="">
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
+</tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
 </tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
@@ -461,6 +509,9 @@ Regex footnote
 <tr metal:use-macro="rulemacros/titledesc">
 Rule title and description
 </tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
 <tr metal:use-macro="rulemacros/matchurl">
 Rule (don't) match url
 </tr>
@@ -494,6 +545,9 @@ Regex footnote
 <table metal:define-macro="htmlrewrite" summary="">
 <tr metal:use-macro="rulemacros/titledesc">
 <td>Rule title and description</td>
+</tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
 </tr>
 <tr metal:use-macro="rulemacros/matchurl">
 <td>Rule (don't) match url</td>
@@ -594,6 +648,9 @@ Regex footnote
 <table metal:define-macro="xmlrewrite" summary="">
 <tr metal:use-macro="rulemacros/titledesc">
 <td>Rule title and description</td>
+</tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
 </tr>
 <tr metal:use-macro="rulemacros/matchurl">
 <td>Rule (don't) match url</td>

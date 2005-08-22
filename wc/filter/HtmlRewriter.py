@@ -84,7 +84,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         # look if headers already have rating info
         opts = {'comments': True, 'javascript': False}
         for rule in self.rules:
-            if not rule.applies_to(url):
+            if not rule.applies_to_url(url):
                 continue
             if rule.get_name() == 'htmlrewrite':
                 rewrites.append(rule)

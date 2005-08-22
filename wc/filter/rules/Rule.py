@@ -300,3 +300,9 @@ class Rule (object):
         Short info for gui display.
         """
         return u"%s #%s" % (self.get_name().capitalize(), self.sid)
+
+    def applies_to_url (self, url):
+        return True
+
+    def applies_to_mime (self, mime):
+        return True

@@ -126,7 +126,7 @@ class VirusFilter (wc.filter.Filter.Filter):
             return {}
         d = super(VirusFilter, self).get_attrs(url, localhost, stages, headers)
         # weed out the rules that don't apply to this url
-        rules = [ rule for rule in self.rules if rule.applies_to(url) ]
+        rules = [rule for rule in self.rules if rule.applies_to_url(url)]
         if not rules:
             return d
         conf = get_clamav_conf()

@@ -62,6 +62,7 @@ info = {
     "ruledown": False,
     "ruletitle": False,
     "ruledesc": False,
+    "rulemimetype": False,
     "rulematchurl": False,
     "rulenomatchurl": False,
     "ruleurl": False,
@@ -190,6 +191,10 @@ def _exec_form (form, lang):
         _form_removerule(currule)
 
     # rule specific submit buttons
+    elif currule and form.has_key('addmimetype'):
+        _form_rule_addmimetype(form)
+    elif currule and form.has_key('delmimetypes'):
+        _form_rule_delmimetypes(form)
     elif currule and form.has_key('addmatchurl'):
         _form_rule_addmatchurl(form)
     elif currule and form.has_key('delmatchurls'):
@@ -562,6 +567,28 @@ def _form_rule_titledesc (form, lang):
     if desc != currule.descriptions[lang]:
         currule.descriptions[lang] = desc
         info['ruledesc'] = True
+
+
+def _form_rule_addmimetype (form):
+    if not form.has_key('newmimetype'):
+        return
+    mimetype = _getval(form, 'newmimetype').strip()
+    if mimetype not in currule.mimes:
+        currule.mimes.append(mimetype)
+        currule.compile_mimes()
+        curfolder.write()
+        info['rulemimetype'] = True
+
+
+def _form_rule_delmimetypes (form):
+    toremove = [u for u in _getlist(form, 'rule_mimetypes')
+                if u in currule.mimes]
+    if toremove:
+        for mime in toremove:
+            currule.mimes.remove(mime)
+        currule.compile_mimes()
+        curfolder.write()
+        info['rulemimetype'] = True
 
 
 def _form_rule_addmatchurl (form):
