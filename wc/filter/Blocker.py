@@ -203,7 +203,7 @@ class Blocker (wc.filter.Filter.Filter):
         """
         url = attrs['url']
         mime = attrs['mime']
-        if mime is None:
+        if not mime:
             mime = "text/html"
         parts = wc.url.url_split(url)
         wc.log.debug(wc.LOG_FILTER, "block filter working on url %r", url)
