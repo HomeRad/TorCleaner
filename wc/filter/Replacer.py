@@ -48,6 +48,7 @@ class Replacer (wc.filter.Filter.Filter):
         if not attrs.has_key('replacer_buf') or not data:
             return data
         buf = attrs['replacer_buf']
+        buf.mime = attrs['mime']
         charset = attrs.get('charset', DefaultCharset)
         return self.replace(data, charset, buf)
 
@@ -58,6 +59,7 @@ class Replacer (wc.filter.Filter.Filter):
         if not attrs.has_key('replacer_buf'):
             return data
         buf = attrs['replacer_buf']
+        buf.mime = attrs['mime']
         charset = attrs.get('charset', DefaultCharset)
         if data:
             data = self.replace(data, charset, buf)
@@ -98,6 +100,7 @@ class Buf (object):
         """
         self.rules = rules
         self.buf = u""
+        self.mime = None
 
     def replace (self, data):
         """
@@ -117,7 +120,7 @@ class Buf (object):
         Scan for replacements.
         """
         for rule in self.rules:
-            if rule.search:
+            if rule.search and rule.applies_to_mime(self.mime):
                 self.buf = rule.search_ro.sub(rule.replacement, self.buf)
 
     def flush (self):
