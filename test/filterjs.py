@@ -1,6 +1,5 @@
 #!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
-"""filter JavaScript."""
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
@@ -16,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Filter JavaScript.
+"""
 
 __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
