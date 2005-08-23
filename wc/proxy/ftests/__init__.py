@@ -47,20 +47,10 @@ import unittest
 import socket
 import select
 import BaseHTTPServer
+import wc.proxy
 
 
 ###################### utility functions ######################
-
-def readable (sock):
-    """
-    Check if socket is readable.
-    """
-    try:
-        r, w, e = select.select([sock], [], [], 0.5)
-        return (sock in r)
-    except select.error:
-        return False
-
 
 def decode (encoding, data):
     """
@@ -186,7 +176,7 @@ class HttpClient (object):
         Read until no more data is available.
         """
         data = ""
-        while readable(self.socket):
+        while wc.proxy.readable_socket(self.socket):
             s = self.socket.recv(4096)
             if not s:
                 break
@@ -471,7 +461,7 @@ class ProxyTest (unittest.TestCase):
         try:
             data = self.construct_request_data(self.get_request())
             self.client.send_data(data)
-            if readable(self.server.socket):
+            if wc.proxy.readable_socket(self.server.socket):
                 self.server.handle_request()
             else:
                 # the proxy answered already without connecting to the server
