@@ -63,29 +63,32 @@ def _main ():
         f = sys.stdin
     else:
         f = file(fname)
-    logfile = os.path.join(confdir, "logging.conf")
-    wc.initlog(logfile, wc.Name, filelogs=False)
-    wc.configuration.config = wc.configuration.init(confdir=confdir)
-    wc.configuration.config.init_filter_modules()
-    wc.proxy.dns_lookups.init_resolver()
-    headers = wc.http.header.WcMessage()
-    content_type = get_content_type(fname, f)
-    headers['Content-Type'] = content_type
-    attrs = wc.filter.get_filterattrs(fname, "127.0.0.1",
+    try:
+        logfile = os.path.join(confdir, "logging.conf")
+        wc.initlog(logfile, wc.Name, filelogs=False)
+        wc.configuration.config = wc.configuration.init(confdir=confdir)
+        wc.configuration.config.init_filter_modules()
+        wc.proxy.dns_lookups.init_resolver()
+        headers = wc.http.header.WcMessage()
+        content_type = get_content_type(fname, f)
+        headers['Content-Type'] = content_type
+        attrs = wc.filter.get_filterattrs(fname, "127.0.0.1",
                                       [wc.filter.STAGE_RESPONSE_MODIFY],
                                       headers=headers, serverheaders=headers)
-    if profiling:
-        import hotshot
-        profile = hotshot.Profile("filter.prof")
-        profile.runcall(_filter, f, attrs)
-        profile.close()
-        import hotshot.stats
-        stats = hotshot.stats.load("filter.prof")
-        stats.strip_dirs()
-        stats.sort_stats('time', 'calls')
-        stats.print_stats(25)
-    else:
-        _filter(f, attrs)
+        if profiling:
+            import hotshot
+            profile = hotshot.Profile("filter.prof")
+            profile.runcall(_filter, f, attrs)
+            profile.close()
+            import hotshot.stats
+            stats = hotshot.stats.load("filter.prof")
+            stats.strip_dirs()
+            stats.sort_stats('time', 'calls')
+            stats.print_stats(25)
+        else:
+            _filter(f, attrs)
+    finally:
+        f.close()
 
 
 def _filter (f, attrs):

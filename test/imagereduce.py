@@ -21,24 +21,32 @@ import os
 import stat
 import mimetypes
 import cStringIO as StringIO
+import wc
+import wc.http.header
 
 def _main ():
     """
-    USAGE: test/run.sh test/imagereduce.py image.{gif,png,..} > reduced.jpg
+    USAGE: test/run.sh test/imagereduce.py <confdir> <img-file> > reduced.jpg
     """
-    if len(sys.argv)!=2:
-        print _main.__doc__
+    if len(sys.argv) != 3:
+        print _main.__doc__.strip()
         sys.exit(1)
-    f = sys.argv[1]
-    data = file(f).read()
-    from test import initlog
-    initlog("test/logging.conf")
-    import wc
-    wc.configuration.config = wc.configuration.init()
-    wc.config['filters'] = ['ImageReducer']
-    wc.config.init_filter_modules()
-    from wc.proxy.Headers import WcMessage
-    headers = WcMessage(StringIO(''))
+    confdir = sys.argv[1]
+    fname = sys.argv[2]
+    if fname == "-":
+        f = sys.stdin
+    else:
+        f = file(fname)
+    try:
+       data = f.read()
+    finally:
+        f.close()
+    logfile = os.path.join(confdir, "logging.conf")
+    wc.initlog(logfile, wc.Name, filelogs=False)
+    wc.configuration.config = wc.configuration.init(confdir=confdir)
+    wc.configuration.config.init_filter_modules()
+    wc.proxy.dns_lookups.init_resolver()
+    headers = wc.http.header.WcMessage(StringIO(''))
     headers['Content-Type'] = mimetypes.guess_type(f)[0]
     headers['Content-Size'] = os.stat(f)[stat.ST_SIZE]
     from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY

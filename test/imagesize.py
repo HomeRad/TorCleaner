@@ -23,9 +23,11 @@ from StringIO import StringIO
 from wc.update import open_url
 
 def _main ():
-    "USAGE: test/run.sh test/imagesize.py <url> [bufsize]"
-    if len(sys.argv)!=2:
-        print _main.__doc__
+    """"
+    USAGE: test/run.sh test/imagesize.py <url> [bufsize]
+    """
+    if len(sys.argv) != 2:
+        print _main.__doc__.strip()
         sys.exit(1)
     bufsize = 6000
     url = sys.argv[1]

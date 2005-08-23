@@ -155,9 +155,11 @@ def proxyrequest4 (url, port):
 
 
 def _main ():
-    """USAGE: test/run.sh test/getssl.py <https url>"""
+    """
+    USAGE: test/run.sh test/getssl.py <https url>
+    """
     if len(sys.argv) != 2:
-        print _main.__doc__
+        print _main.__doc__.strip()
         sys.exit(1)
     #request1(sys.argv[1])
     import wc.configuration

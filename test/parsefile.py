@@ -21,7 +21,7 @@ def _main (args):
     USAGE: test/run.sh test/parsefile.py test.html.
     """
     if len(args) < 1:
-        print _main.__doc__
+        print _main.__doc__.strip()
         sys.exit(1)
     from wc.HtmlParser.htmllib import HtmlPrinter, HtmlPrettyPrinter
     if args[0] == "-p":

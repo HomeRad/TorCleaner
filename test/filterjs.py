@@ -56,24 +56,29 @@ class JSFilter (wc.js.JSListener.JSListener):
 
 
 def _main ():
-    """USAGE: test/run.sh test/filterjs.py <.js file>"""
-    if len(sys.argv)!=2:
-        print _main.__doc__
+    """
+    USAGE: test/run.sh test/filterjs.py <configdir> <.js file>
+    """
+    if len(sys.argv) != 3:
+        print _main.__doc__.strip()
         sys.exit(1)
-    fname = sys.argv[1]
+    confdir = sys.argv[1]
+    fname = sys.argv[2]
     if fname=="-":
         f = sys.stdin
     else:
         f = file(fname)
-    from test import initlog, disable_rating_rules
-    initlog("test/logging.conf")
-    wc.configuration.config = wc.configuration.init()
-    disable_rating_rules(wc.config)
-    wc.config['filters'] = ['Replacer', 'Rewriter', 'BinaryCharFilter']
-    wc.config.init_filter_modules()
-    script = f.read()
-    ver = 1.1
-    JSFilter(script, ver)
+    try:
+        logfile = os.path.join(confdir, "logging.conf")
+        wc.initlog(logfile, wc.Name, filelogs=False)
+        wc.configuration.config = wc.configuration.init(confdir=confdir)
+        wc.configuration.config.init_filter_modules()
+        wc.proxy.dns_lookups.init_resolver()
+        script = f.read()
+        ver = 1.1
+        JSFilter(script, ver)
+    finally:
+        f.close()
 
 
 if __name__=='__main__':

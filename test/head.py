@@ -21,10 +21,12 @@ Print headers of an URL.
 
 
 def _main ():
-    """USAGE: test/run.sh test/head.py <url>"""
+    """
+    USAGE: test/run.sh test/head.py <url>
+    """
     import httplib, urlparse, sys
-    if len(sys.argv)!=2:
-        print _main.__doc__
+    if len(sys.argv) != 2:
+        print _main.__doc__.strip()
         sys.exit(1)
     url = sys.argv[1]
     parts = urlparse.urlsplit(url)
