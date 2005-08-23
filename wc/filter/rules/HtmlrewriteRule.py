@@ -35,6 +35,7 @@ partvalnames = [
     'tagname',
     'attr',
     'attrval',
+    'attrname',
     'complete',
     'enclosed',
 ]
@@ -43,6 +44,7 @@ partnames = {
     'tagname': _("Tag name"),
     'attr': _("Attribute"),
     'attrval': _("Attribute value"),
+    'attrname': _("Attribute name"),
     'complete': _("Complete tag"),
     'enclosed': _("Enclosed block"),
 }
@@ -244,6 +246,9 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                     elif self.part == wc.filter.html.ATTRVAL:
                         # backreferences are replaced
                         newattrs[attr] = mo.expand(self.replacement)
+                    elif self.part == wc.filter.html.ATTRNAME:
+                        newattr = mo.expand(self.replacement)
+                        newattrs[newattr] = val
                     else:
                         wc.log.error(wc.LOG_FILTER,
                                      "Invalid part value %s", self.part)
