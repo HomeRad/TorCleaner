@@ -79,6 +79,7 @@ def _main ():
         profile = hotshot.Profile("filter.prof")
         profile.runcall(_filter, f, attrs)
         profile.close()
+        import hotshot.stats
         stats = hotshot.stats.load("filter.prof")
         stats.strip_dirs()
         stats.sort_stats('time', 'calls')
