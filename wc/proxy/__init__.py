@@ -39,8 +39,28 @@ import wc.log
 import wc.configuration
 
 
-TIMERS = [] # list of (time, function)
+def readable_socket (sock, timeout=0.5):
+    """
+    Check if socket is readable.
+    @param sock: the socket to check
+    @type sock: socket object of file descriptor suitable for select() call
+    @param timeout: how long to wait for readable data; if timeout is None
+      or negative the function blocks; a zero timeout only polls for data
+    @type timeout: number or None
+    @return: True if data can be read from socket
+    @rtype: bool
+    """
+    try:
+        if timeout is None or timeout < 0.0:
+            r, w, e = select.select([sock], [], [])
+        else:
+            r, w, e = select.select([sock], [], [], timeout)
+        return (sock in r)
+    except select.error:
+        return False
 
+
+TIMERS = [] # list of (time, function)
 
 def make_timer (delay, callback):
     """
