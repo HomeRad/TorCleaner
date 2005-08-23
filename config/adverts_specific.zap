@@ -280,4 +280,9 @@
   <title lang="en">Blog ads</title>
   <attr>blogads\.com</attr>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.45">
+  <title lang="en">Slashdot RSS ad</title>
+  <attr>http://rss\.slashdot\.org/~a/Slashdot/</attr>
+</htmlrewrite>
 </folder>
