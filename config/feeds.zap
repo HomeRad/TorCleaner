@@ -4,14 +4,22 @@
 <title lang="en">RSS Feeds</title>
 
 <xmlrewrite sid="wc.41"
- selector="/rdf:RDF/item/description">
+ selector="/rdf:RDF/item/description"
+ replacetype="rsshtml">
   <title lang="en">RDF description</title>
   <description lang="en">Filter HTML in the content of RDF item descriptions.</description>
 </xmlrewrite>
 
 <xmlrewrite sid="wc.42"
- selector="/rss/channel/item/description">
+ selector="/rss/channel/item/description"
+ replacetype="rsshtml">
   <title lang="en">RSS description</title>
   <description lang="en">Filter HTML in the content of RSS item descriptions.</description>
 </xmlrewrite>
+
+<replace sid="wc.46"
+ search="(?s)Advertisement.*&lt;/a&gt;">
+  <title lang="en">Securityfocus ad</title>
+  <matchurl>securityfocus\.org/rss</matchurl>
+</replace>
 </folder>
