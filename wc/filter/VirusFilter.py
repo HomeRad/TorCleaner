@@ -148,12 +148,38 @@ class ClamdScanner (object):
         """
         self.infected = []
         self.errors = []
-        self.clamav_conf = clamav_conf
-        self.sock, host = self.clamav_conf.new_connection()
+        self.sock, self.host = clamav_conf.new_connection()
         self.sock_rcvbuf = \
              self.sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
-        self.wsock = self.clamav_conf.new_scansock(self.sock,
-                                                   self.sock_rcvbuf, host)
+        self.wsock = self.new_scansock()
+
+    def new_scansock (self):
+        """
+        Return a connected socket for sending scan data to it.
+        """
+        port = None
+        try:
+            self.sock.sendall("STREAM")
+            port = None
+            for i in range(60):
+                data = self.sock.recv(self.rcvbuf)
+                i = data.find("PORT")
+                if i != -1:
+                    port = int(data[i+5:])
+                    break
+        except socket.error:
+            self.sock.close()
+            raise
+        if port is None:
+            raise Exception, _("Clamd is not ready for stream scanning")
+        sockinfo = get_sockinfo(self.host, port=port)
+        wsock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            wsock.connect(sockinfo[0][4])
+        except socket.error:
+            wsock.close()
+            raise
+        return wsock
 
     def scan (self, data):
         """
@@ -177,18 +203,18 @@ class ClamdScanner (object):
 
 
 _clamav_conf = None
-def init_clamav_conf ():
+def init_clamav_conf (conf):
     """
     Initialize clamav configuration.
     """
-    conf = wc.configuration.config['clamavconf']
-    if conf:
-        if os.path.exists(conf):
-            global _clamav_conf
-            _clamav_conf = ClamavConfig(conf)
-        else:
-            wc.log.warn(wc.LOG_FILTER,
-                        "No ClamAV config file found at %r.", conf)
+    if not conf:
+        # clamav was not configured
+        return
+    if os.path.exists(conf):
+        global _clamav_conf
+        _clamav_conf = ClamavConfig(conf)
+    else:
+        wc.log.warn(wc.LOG_FILTER, "No ClamAV config file found at %r.", conf)
 
 
 def get_clamav_conf ():
@@ -285,30 +311,3 @@ class ClamavConfig (dict):
             raise
         return sock
 
-    def new_scansock (self, sock, rcvbuf, host):
-        """
-        Return a connected socket for sending scan data to it.
-        """
-        port = None
-        try:
-            sock.sendall("STREAM")
-            port = None
-            for i in range(60):
-                data = sock.recv(rcvbuf)
-                i = data.find("PORT")
-                if i != -1:
-                    port = int(data[i+5:])
-                    break
-        except socket.error:
-            sock.close()
-            raise
-        if port is None:
-            raise Exception, _("Clamd is not ready for stream scanning")
-        sockinfo = get_sockinfo(host, port=port)
-        wsock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            wsock.connect(sockinfo[0][4])
-        except socket.error:
-            wsock.close()
-            raise
-        return wsock
