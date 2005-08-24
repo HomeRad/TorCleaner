@@ -139,7 +139,7 @@ class Compress (wc.filter.Filter.Filter):
         encoding = encoding.strip().lower()
         if 'gzip' not in accepts:
             # browser does not accept gzip encoding
-            assert not attrs['compressobj'], "unexpected gzip compress object"
+            assert not attrs['compressobj'], "unexpected gzip compress object: "+headers
         elif encoding and encoding not in _compress_encs:
             attrs['compressobj'] = get_compress_object()
             headers['data']['Content-Encoding'] = encoding+', gzip\r'
