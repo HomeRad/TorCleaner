@@ -79,7 +79,7 @@ def reload_config ():
     config.read_filterconf()
     config.init_filter_modules()
     wc.proxy.dns_lookups.init_resolver()
-    wc.filter.VirusFilter.init_clamav_conf()
+    wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
     pending_reload = False
 
 

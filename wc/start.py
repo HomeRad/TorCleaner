@@ -43,7 +43,7 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
     if abort is not None:
         abort(False)
     config.init_filter_modules()
-    wc.filter.VirusFilter.init_clamav_conf()
+    wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
     wc.proxy.dns_lookups.init_resolver()
     # psyco library for speedup
     try:
