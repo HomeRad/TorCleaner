@@ -37,7 +37,9 @@ class Replacer (wc.filter.Filter.Filter):
         """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['replace']
-        mimes = ['text/html', 'text/javascript', 'application/x-javascript']
+        mimes = ['text/html',
+                 'text/xml', 'application/xml', 'application/atom+xml',
+                 'text/javascript', 'application/x-javascript',]
         super(Replacer, self).__init__(stages=stages, mimes=mimes,
                                        rulenames=rulenames)
 
