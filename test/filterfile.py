@@ -28,7 +28,7 @@ import wc.proxy
 import wc.proxy.dns_lookups
 import wc.http.header
 
-profiling = True
+profiling = False
 
 extensions = {
     ".html": "text/html",
@@ -55,7 +55,7 @@ def _main ():
     USAGE: test/run.sh test/filterfile.py <config dir> <filename>
     """
     if len(sys.argv) != 3:
-        print _main.__doc__
+        print _main.__doc__.strip()
         sys.exit(1)
     confdir = sys.argv[1]
     fname = sys.argv[2]
