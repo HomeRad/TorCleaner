@@ -23,6 +23,20 @@
 </div>
 </div>
 
+<div metal:define-macro="regexfoot2">
+<div class="footnote">
+<sup id="footnote1" title="footnote 1"
+ i18n:attributes="title">1)</sup>
+<span i18n:translate="">The supplied value resembles a
+<a href="http://www.amk.ca/python/howto/regex/">regular expression</a>.</span>
+<br>
+<sup id="footnote2" title="footnote 2"
+ i18n:attributes="title">2)</sup>
+<span i18n:translate="">If value is empty, the name is treated as a
+<a href="http://www.amk.ca/python/howto/regex/">regular expression</a>.</span>
+</div>
+</div>
+
 <!-- title and description (used below) -->
 <h2>Title and description</h2>
 <table summary="">
@@ -255,7 +269,9 @@ Rule MIME types
 Rule (don't) match url
 </tr>
 <tr valign="top"><td>
-<label for="rule_headername" i18n:translate="">Header name</label>:
+<label for="rule_headername" i18n:translate="">Header name</label><sup><a
+ href="#footnote2" class="footnote" title="see footnote 2"
+ i18n:attributes="title">2)</a></sup>:
 </td><td>
 <input type="text" class="text" name="rule_headername" id="rule_headername"
  value="x-meta" tal:attributes="value currule/name">
@@ -289,8 +305,8 @@ Rule (don't) match url
 <tr><td colspan="2">
 <input type="submit" class="submit" name="apply" value="Apply"
  i18n:attributes="value">
-<div metal:use-macro="rulemacros/regexfoot">
-Regex footnote
+<div metal:use-macro="rulemacros/regexfoot2">
+Regex footnote2
 </div>
 </td></tr>
 </table>
