@@ -44,6 +44,7 @@ def remove_html_comments (script):
     return script.strip()
 
 
+script_sub = re.compile(r"(?i)</script\s*>").sub
 def escape_js (script):
     """
     Escape HTML stuff in JS script.
@@ -74,6 +75,7 @@ def escape_js (script):
             escape = False
         i += 1
     script = script.replace('-->', '--&#62;')
+    script = script_sub("&#60;/script&#62;", script)
     return script
 
 
