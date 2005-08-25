@@ -1,10 +1,12 @@
 TODO
 
+- no refresh (empty page on search) at http://gdataonline.com/seekhash.php
+
 - JS at the top: http://lucene.apache.org/nutch/index.html
+  and at: http://the.taoofmac.com/space/Python/Grimoire
+  Possible reason: unquoted </script> in JS text.
 
 - functional tests
-
-- streaming clamav scanning, try to detect virii immediately
 
 - rework the HTML GUI using mini-tabs and styled checkboxes.
 
@@ -142,3 +144,9 @@ createCertRequest
 
 OpenSSL.crypto.Error: [('asn1 encoding routines', 'ASN1_mbstring_ncopy', 
 'invalid universalstring length')]
+
+- Streaming clamav scanning, try to detect virii immediately
+  Note: clamav does _not_ support streaming, so this is currently not
+  possible. We have to wait until all data is received, then scan it,
+  and only after that we can be sure the data is virus-clean.
+
