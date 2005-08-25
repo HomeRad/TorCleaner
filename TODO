@@ -2,13 +2,11 @@ TODO
 
 - no refresh (empty page on search) at http://gdataonline.com/seekhash.php
 
-- JS at the top: http://lucene.apache.org/nutch/index.html
-  and at: http://the.taoofmac.com/space/Python/Grimoire
-  Possible reason: unquoted </script> in JS text.
-
 - functional tests
 
 - rework the HTML GUI using mini-tabs and styled checkboxes.
+
+- rule for removing comments from JS and CSS
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
