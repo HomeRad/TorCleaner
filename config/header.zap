@@ -26,15 +26,6 @@
   <replacement>http://$host/</replacement>
 </header>
 
-<header sid="wc.315"
- name="X-Meta"
- filterstage="both">
-  <title lang="de">Entferne 'x-meta'</title>
-  <title lang="en">Remove 'x-meta'</title>
-  <description lang="de">Was zur Hölle sind x-meta Daten? Jedenfalls etwas das ich nicht brauche.</description>
-  <description lang="en">What the hell are x-meta tags? Definitely not something I need.</description>
-</header>
-
 <header sid="wc.316"
  name="Via"
  filterstage="both">
@@ -55,12 +46,12 @@ Diese Daten können private Informationen enthalten (z.B.wenn Sie bestimmte Sprac
 </header>
 
 <header sid="wc.318"
- name="X-Forwarded-For"
- filterstage="request">
+ name="^X-(Forwarded-For|Junk|N|meta)$"
+ filterstage="both">
   <title lang="de">Entferne 'X-Forwared-For'</title>
-  <title lang="en">Remove 'X-Forwarded-For'</title>
+  <title lang="en">Remove 'X-&lt;something&gt;'</title>
   <description lang="de">Dieses Kopfdatum wird von vielen Proxy Servern (z.B. Squid) benutzt, um zu notieren, für wen eine Anfrage weitergeleitet wurde.</description>
-  <description lang="en">This header is used by many proxy servers (e.g., Squid) to note whom a request has been forwarded for</description>
+  <description lang="en">Remove unused X-&lt;something&gt; headers.</description>
 </header>
 
 <header sid="wc.319"
