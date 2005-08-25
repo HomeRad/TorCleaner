@@ -22,4 +22,10 @@
   <title lang="en">Securityfocus ad</title>
   <matchurl>securityfocus\.org/rss</matchurl>
 </replace>
+
+<htmlrewrite sid="wc.45">
+  <title lang="en">OSDN RSS ads</title>
+  <description lang="en">Ads in RSS feeds of freshmeat and slashdot.</description>
+  <attr>http://rss\.(slashdot\.org|freshmeat\.net)/~a/(Slashdot|freshmeat)/</attr>
+</htmlrewrite>
 </folder>
