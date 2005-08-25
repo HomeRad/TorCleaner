@@ -24,7 +24,7 @@ import wc.XmlUtils
 import wc.filter.rules
 
 
-def compileRegex (obj, attr, fullmatch=False):
+def compileRegex (obj, attr, fullmatch=False, flags=0):
     """
     Regex-compile object attribute into <attr>_ro.
     """
@@ -33,7 +33,7 @@ def compileRegex (obj, attr, fullmatch=False):
         if val:
             if fullmatch:
                 val = "^%s$" % val
-            setattr(obj, attr+"_ro", re.compile(val))
+            setattr(obj, attr+"_ro", re.compile(val, flags))
 
 
 class LangDict (dict):
