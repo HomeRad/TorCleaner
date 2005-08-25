@@ -6,7 +6,8 @@
 <description lang="en">Add, delete and modify HTTP headers.</description>
 
 <header sid="wc.313"
- name="User-Agent">
+ name="User-Agent"
+ filterstage="request">
   <title lang="de">Eigener 'User-Agent'</title>
   <title lang="en">Change 'User-Agent'</title>
   <description lang="de">Der user-agent ist das am meisten benutzte HTTP Kopfdatum zur Browserunterscheidung. Einige Seiten werden nicht richtig dargestellt wenn der falsche Browser erkannt wird.</description>
@@ -16,18 +17,13 @@
 </header>
 
 <header sid="wc.314"
- name="Referer">
-  <title lang="de">Entferne 'Referer'</title>
+ name="Referer"
+ filterstage="request">
+  <title lang="de">Ersetze 'Referer'</title>
   <title lang="en">Replace 'Referer'</title>
-  <description lang="de">Entferne das Referer Kopfdatum. Einige Seiten funktionieren mit dieser Einstellung nicht.</description>
+  <description lang="de">Ersetze das Referer Kopfdatum. Einige Seiten funktionieren mit dieser Einstellung nicht.</description>
   <description lang="en">Replace the Referer header. Some sites may not work with this option, because they check the referer. In this case add them to "Don't match URL" list and write me an email.</description>
-  <nomatchurl>printerfriendly\.abcnews\.com</nomatchurl>
-  <nomatchurl>/cgi-bin/fosi\.cgi</nomatchurl>
-  <nomatchurl>\.ask\.com</nomatchurl>
-  <nomatchurl>www\.amazon\.de/exec/obidos/clipserve/</nomatchurl>
-  <nomatchurl>\.lufthansa\.</nomatchurl>
-  <nomatchurl>www\.nba\.com</nomatchurl>
-  <replacement>http://www.google.com/</replacement>
+  <replacement>http://$host/</replacement>
 </header>
 
 <header sid="wc.315"
@@ -49,7 +45,8 @@
 </header>
 
 <header sid="wc.317" disable="1"
- name="Accept.*">
+ name="Accept.*"
+ filterstage="request">
   <title lang="de">Entferne 'Accept*'</title>
   <title lang="en">Remove 'Accepts*'</title>
   <description lang="de">Dies ist paranoid. Die meisten Browser senden Accept, Accept-Language, Accept-Encoding und Accept-Charset Kopfdaten. 
@@ -58,7 +55,8 @@ Diese Daten können private Informationen enthalten (z.B.wenn Sie bestimmte Sprac
 </header>
 
 <header sid="wc.318"
- name="X-Forwarded-For">
+ name="X-Forwarded-For"
+ filterstage="request">
   <title lang="de">Entferne 'X-Forwared-For'</title>
   <title lang="en">Remove 'X-Forwarded-For'</title>
   <description lang="de">Dieses Kopfdatum wird von vielen Proxy Servern (z.B. Squid) benutzt, um zu notieren, für wen eine Anfrage weitergeleitet wurde.</description>
@@ -66,7 +64,8 @@ Diese Daten können private Informationen enthalten (z.B.wenn Sie bestimmte Sprac
 </header>
 
 <header sid="wc.319"
- name="From$">
+ name="From$"
+ filterstage="request">
   <title lang="de">Entferene 'From'</title>
   <title lang="en">Remove 'From'</title>
   <description lang="de">Entferne das From Kopfdatum, welches ansonsten den Absender einer Anfrage enthält.</description>
@@ -74,7 +73,8 @@ Diese Daten können private Informationen enthalten (z.B.wenn Sie bestimmte Sprac
 </header>
 
 <header sid="wc.321"
- name="UA-.*">
+ name="UA-.*"
+ filterstage="request">
   <title lang="de">Entferne 'UA-*'</title>
   <title lang="en">Remove 'UA-*'</title>
   <description lang="de">Diese User-Agent Kopfdaten sind unüblich und veraltet. Sie enthalten Informationen über den Rechner des Benutzers.</description>
@@ -82,7 +82,8 @@ Diese Daten können private Informationen enthalten (z.B.wenn Sie bestimmte Sprac
 </header>
 
 <header sid="wc.320"
- name="Client-ip">
+ name="Client-ip"
+ filterstage="request">
   <title lang="de">Entferne 'Client-Ip'</title>
   <title lang="en">Remove 'Client-Ip'</title>
   <description lang="de">Das Client-ip Kopfdatum enthält die Rechnernummer des Benutzers.</description>
