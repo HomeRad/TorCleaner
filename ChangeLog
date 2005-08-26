@@ -22,6 +22,26 @@
     Type: bugfix
     Changed: wc/filter/rules/HtmlrewriteRule.py
 
+  * Updated spidermonkey JavaScript library from upstream CVS as of
+    20050826.
+    Type: feature
+    Changed: libjs/*
+
+  * Filter updates:
+    - remove more X-<something> response headers
+    - remove OSDN feed ads (slashdot and freshmeat)
+    Type: feature
+    Changed: config/*.zap
+
+  * Added framework for HTTP/1.1 RFC compliance tests. Also added some
+    tests.
+    Type: feature
+    Added: wc/proxy/ftests/*.py
+
+  * HTTP/1.1 compliant handling of Warning: headers.
+    Type: feature
+    Changed: wc/proxy/Headers.py
+
 2.30 "Dear Wendy" (released 16.8.2005)
 
   * Fix attribute error in allowance check.
