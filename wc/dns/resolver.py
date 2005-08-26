@@ -116,6 +116,9 @@ class Answer(object):
         self.rrset = rrset
         self.expiration = time.time() + min_ttl
 
+    def __str__ (self):
+        return str(self.rrset)
+
     def __getattr__(self, attr):
         if attr == 'name':
             return self.rrset.name
