@@ -62,7 +62,7 @@ class Server (wc.proxy.StatefulConnection.StatefulConnection):
         """
         try:
             return self.connect(self.addr)
-        except (socket.timeout, socket.error):
+        except socket.error:
             # we never connected, but still the socket is in the socket map
             # so remove it
             self.del_channel()
