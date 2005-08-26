@@ -104,13 +104,16 @@ def remove_warning_headers (headers):
     tokeep = []
     date = wc.http.date.parse_http_date(headers['Date'])
     for warning in headers.getheaders("Warning"):
-        warncode, warnagent, warntext, warndate = \
-            wc.http.parse_http_warning(warning)
-        if warndate is None or warndate == date:
-            tokeep.append(warning)
+        parsed = wc.http.parse_http_warning(warning)
+        if parsed is None:
+            wc.log.warn(wc.LOG_PROXY, "could not parse warning %r", warning)
         else:
-            wc.log.debug(wc.LOG_PROXY, "delete warning %s from %s",
-                         warning, headers)
+            warncode, warnagent, warntext, warndate = parsed
+            if warndate is None or warndate == date:
+                tokeep.append(warning)
+            else:
+                wc.log.debug(wc.LOG_PROXY, "delete warning %s from %s",
+                             warning, headers)
     del headers['Warning']
     for warning in tokeep:
         headers.addheader('Warning', warning+"\r")
