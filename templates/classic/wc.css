@@ -1,7 +1,8 @@
 
 body {
     font-family: Verdana, Helvetica, Arial, sans-serif;
-    background: #fff7ee;/*#f7ebd3;*//*fdf9f4*/
+    font-size: 90%;
+    background: #fff7ee;
     margin: 0;
     padding: 0;
 /* These work in IE only, changes the look of the scrollbar + textareas */
@@ -58,55 +59,32 @@ a:hover {
     color: black;
 }
 
-div.tabs {
-    /* Navigational Plone Tabs(tm), implemented by customizing the a tag - they are surprisingly elegant. The power of CSS runs strong in these :) */
-    background: transparent;
-    border-collapse: collapse;
-    border-bottom-width: 1px;
-    border-bottom-style: dotted;
-    border-bottom-color: #f86821;
-    border-top-width: 1px;
-    border-top-style: dotted;
-    border-top-color: #f86821;
-    padding-top: 0em;
-    padding-bottom: 0em;
-    padding-left: 2em;
-    padding-right: 0em;
-    /*white-space: nowrap; */
-    white-space: normal;
+ul#minitabs {
+    list-style: none;
+    margin: 0;
+    padding: 7px 0;
+    border-bottom: 1px solid #CCC;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
 }
-
-div.tabs a {
-    /* The normal, unselected tabs. They are all links */
-    color: #222222;
-    background: transparent;
-    border-left-width: 10px;
-    border-left-style: solid;
-    border-left-color: #f86821;
-    font-weight: normal;
-    /*height: 1.2em;*/
-    padding-top: 0em;
-    padding-bottom: 0em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    margin-right: 1em;
+ul#minitabs li {
+    display: inline;
+    margin: 0 5px;
+}
+ul#minitabs a {
     text-decoration: none;
+    padding: 0 0 3px;
+    border-bottom: 4px solid #FFF;
+    color: #555555;
 }
-
-div.tabs a.selected {
-    /* The selected tab. There's only one of this */
-    color: #222222;
-    background: #f8c218;
-    border-left-width: 10px;
-    border-left-style: solid;
-    border-left-color: #f85b0d;
-    font-weight: normal;
+ul#minitabs a#current {
+    border-color: #F60;
+    color:black;
 }
-
-div.tabs a:hover {
+ul#minitabs a:hover {
+    border-color: #F60;
     color: black;
-    background: #f8c218;
-    border-color: #f85b0d;
 }
 
 div.content {

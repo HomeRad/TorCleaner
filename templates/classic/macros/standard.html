@@ -13,57 +13,59 @@
  -->
 
 <!-- navigation -->
-<div class="tabs" metal:define-macro="nav">
+<div metal:define-macro="nav">
 <p class="skip"><a accesskey="2" href="#main"
  i18n:translate="">Skip to main content</a></p>
-<a href="index.html" class="plain" accesskey="1"
+<ul id="minitabs">
+<li><a href="index.html" accesskey="1"
  tal:condition="not:nav/index_html"
  tal:attributes="href string:index.html.${lang}"
  tal:content="AppName">WebCleaner</a>
-<a href="index.html" class="selected" accesskey="1"
+<a href="index.html" id="current" accesskey="1"
  tal:condition="nav/index_html"
  tal:attributes="href string:index.html.${lang}"
- tal:content="AppName">WebCleaner</a>
-<a href="config.html" class="plain"
+ tal:content="AppName">WebCleaner</a></li>
+<li><a href="config.html"
  tal:condition="not:nav/config_html"
  tal:attributes="href string:config.html.${lang}"
  i18n:translate="">Proxy configuration</a>
-<a href="config.html" class="selected"
+<a href="config.html" id="current"
  tal:condition="nav/config_html"
  tal:attributes="href string:config.html.${lang}"
- i18n:translate="">Proxy configuration</a>
-<a href="filterconfig.html" class="plain"
+ i18n:translate="">Proxy configuration</a></li>
+<li><a href="filterconfig.html"
  tal:condition="not:nav/filterconfig_html"
  tal:attributes="href string:filterconfig.html.${lang}"
  i18n:translate="">Filter configuration</a>
-<a href="filterconfig.html" class="selected"
+<a href="filterconfig.html" id="current"
  tal:condition="nav/filterconfig_html"
  tal:attributes="href string:filterconfig.html.${lang}"
- i18n:translate="">Filter configuration</a>
-<a href="update.html" class="plain"
+ i18n:translate="">Filter configuration</a></li>
+<li><a href="update.html"
  tal:condition="not:nav/update_html"
  tal:attributes="href string:update.html.${lang}"
  i18n:translate="">Filter update</a>
-<a href="update.html" class="selected"
+<a href="update.html" id="current"
  tal:condition="nav/update_html"
  tal:attributes="href string:update.html.${lang}"
- i18n:translate="">Filter update</a>
-<a href="rating.html" class="plain"
+ i18n:translate="">Filter update</a></li>
+<li><a href="rating.html"
  tal:condition="not:nav/rating_html"
  tal:attributes="href string:rating.html.${lang}"
  i18n:translate="">Content rating</a>
-<a href="rating.html" class="selected"
+<a href="rating.html" id="current"
  tal:condition="nav/rating_html"
  tal:attributes="href string:rating.html.${lang}"
- i18n:translate="">Content rating</a>
-<a href="help.html" class="plain"
+ i18n:translate="">Content rating</a></li>
+<li><a href="help.html"
  tal:condition="not:nav/help_html"
  tal:attributes="href string:help.html.${lang}"
  i18n:translate="">Help</a>
-<a href="help.html" class="selected"
+<a href="help.html" id="current"
  tal:condition="nav/help_html"
  tal:attributes="href string:help.html.${lang}"
- i18n:translate="">Help</a>
+ i18n:translate="">Help</a></li>
+</ul>
 </div>
 
 <!-- footer -->
