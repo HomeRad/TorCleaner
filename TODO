@@ -1,12 +1,13 @@
 TODO
 
-- no refresh (empty page on search) at http://gdataonline.com/seekhash.php
+- some servers have a list of IP addrs, not just one
+  If one of those did not connect (check ECONNREFUSED), try the other ones.
+
+- empty page on search at http://gdataonline.com/seekhash.php
 
 - functional tests
 
 - rework the HTML GUI using mini-tabs and styled checkboxes.
-
-- rule for removing comments from JS and CSS
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
@@ -148,3 +149,5 @@ OpenSSL.crypto.Error: [('asn1 encoding routines', 'ASN1_mbstring_ncopy',
   possible. We have to wait until all data is received, then scan it,
   and only after that we can be sure the data is virus-clean.
 
+- Remove all comments from JavaScript: use internal scanner, and reconstruct
+  the script with token data.
