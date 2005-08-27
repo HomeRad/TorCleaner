@@ -721,6 +721,9 @@ def _form_apply_antivirus (form):
 def _form_apply_nocomments (form):
     pass
 
+def _form_apply_nojscomments (form):
+    pass
+
 
 def _form_apply_rating (form):
     # rating categories

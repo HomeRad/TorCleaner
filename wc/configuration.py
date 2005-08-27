@@ -363,6 +363,7 @@ rulenames = (
   u'image',
   u'imagereduce',
   u'nocomments',
+  u'nojscomments',
   u'javascript',
   u'replace',
   u'rating',

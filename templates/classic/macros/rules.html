@@ -453,6 +453,28 @@ Regex footnote
 </table>
 <hr noshade size="1">
 
+<!-- NojscommentsRule -->
+<h2>NojscommentsRule</h2>
+<table metal:define-macro="nojscomments" summary="">
+<tr metal:use-macro="rulemacros/titledesc">
+Rule title and description
+</tr>
+<tr metal:use-macro="rulemacros/mimetype">
+Rule MIME types
+</tr>
+<tr metal:use-macro="rulemacros/matchurl">
+Rule (don't) match url
+</tr>
+<tr><td colspan="2">
+<input type="submit" class="submit" name="apply" value="Apply"
+ i18n:attributes="value">
+<div metal:use-macro="rulemacros/regexfoot">
+Regex footnote
+</div>
+</td></tr>
+</table>
+<hr noshade size="1">
+
 <!-- RatingRule -->
 <h2>RatingRule</h2>
 <table metal:define-macro="rating" summary="">
