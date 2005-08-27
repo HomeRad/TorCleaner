@@ -21,9 +21,15 @@ JavaScript helper classes and a Spidermonkey wrapper module.
 import re
 
 
+def clean (script, jscomments=True):
+    script = escape_js(remove_html_comments(script))
+    if not jscomments:
+        script = remove_js_comments(script)
+    return u"\n<!--\n%s\n//-->\n" % script
+
+
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
 _end_js_comment = re.compile(r"\s*//[^\r\n]*-->[ \t]*$").search
-
 def remove_html_comments (script):
     """
     Remove leading and trailing HTML comments from the script text.
@@ -42,6 +48,18 @@ def remove_html_comments (script):
         else:
             script = script[:mo.start()]
     return script.strip()
+
+
+def remove_js_comments (script):
+    """
+    XXX use spidermonkey scanner here
+    """
+    comment = False
+    res = []
+    for line in script.splitlines():
+        if not line.lstrip().startswith('//'):
+            res.append(line)
+    return "\n".join(res)
 
 
 script_sub = re.compile(r"(?i)</script\s*>").sub
