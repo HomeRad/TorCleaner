@@ -58,6 +58,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.javascript = opts['javascript']
         self.level = opts.get('level', 0)
         self.comments = opts['comments']
+        self.jscomments = opts['jscomments']
         self.url = url or "unknown"
         self.localhost = localhost
         self.js_src = False
@@ -147,6 +148,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_env.listeners.append(self)
         # start recursive html filter (used by js_process_data)
         handler = self.new_instance(comments=self.comments,
+            jscomments=self.jscomments,
             javascript=self.javascript, level=self.level+1)
         self.js_htmlparser = wc.filter.html.HtmlParser.HtmlParser(handler)
         handler.htmlparser = self.js_htmlparser
@@ -259,8 +261,8 @@ class JSFilter (wc.js.JSListener.JSListener):
             del self.htmlparser.tagbuf[-1]
             return
         # put correctly quoted script data into buffer
-        self.htmlparser.tagbuf[-1][1] = \
-                         u"\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
+        script = wc.js.clean(script, jscomments=self.jscomments)
+        self.htmlparser.tagbuf[-1][1] = script
         # execute script
         self.jsScript(script, ver, item)
 
@@ -356,8 +358,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                  [wc.filter.html.STARTTAG, u"script",
                   {'type': 'text/javascript'}])
             # norm html comments
-            script = wc.js.remove_html_comments(self.js_script)
-            script = u"\n<!--\n%s\n//-->\n" % wc.js.escape_js(script)
+            script = wc.js.clean(self.js_script, jscomments=self.jscomments)
             self.htmlparser.tagbuf.append(
                                    [wc.filter.html.DATA, script])
             # Note: <script src=""> could be missing an end tag,

@@ -196,7 +196,7 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         localhost = "localhost"
         filt = wc.filter.html.HtmlFilter.HtmlFilter
         handler = filt(htmlrules, ratings, url, localhost,
-                       comments=False, javascript=False)
+                       comments=False, jscomments=False, javascript=False)
         p = wc.filter.html.HtmlParser.HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state

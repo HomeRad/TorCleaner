@@ -82,7 +82,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         rewrites = []
         ratings = []
         # look if headers already have rating info
-        opts = {'comments': True, 'javascript': False}
+        opts = {'comments': True, 'jscomments': True, 'javascript': False}
         for rule in self.rules:
             if not rule.applies_to_url(url):
                 continue
@@ -90,6 +90,8 @@ class HtmlRewriter (wc.filter.Filter.Filter):
                 rewrites.append(rule)
             elif rule.get_name() == 'nocomments':
                 opts['comments'] = False
+            elif rule.get_name() == 'nojscomments':
+                opts['jscomments'] = False
             elif rule.get_name() == 'javascript':
                 opts['javascript'] = True
             elif rule.get_name() == 'rating':
