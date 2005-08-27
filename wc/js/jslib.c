@@ -1,4 +1,5 @@
 /* Spidermonkey JavaScript wrapper class, ported from BFilter.
+   Homepage: http://www.mozilla.org/js/spidermonkey/
    Copyright for BFilter follows:
 
    BFilter - a smart ad-filtering web proxy
@@ -27,6 +28,11 @@
 #define XP_UNIX
 #endif
 #include <jsapi.h>
+
+/* size for JS_NewRuntime() */
+#define RUNTIME_SIZE 0x400000L
+/* size for JS_NewContext() */
+#define STACK_CHUNK_SIZE 8192
 
 /* javascript exception */
 static PyObject* JSError;
@@ -558,10 +564,10 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     self->plugin_class.name = "Plugin";
     self->branch_cnt = 0;
     /* init JS engine */
-    if (!(self->runtime=JS_NewRuntime(500L*1024L))) {
+    if (!(self->runtime=JS_NewRuntime(RUNTIME_SIZE))) {
         return shutdown(self, "Could not initialize JS runtime");
     }
-    if (!(self->ctx=JS_NewContext(self->runtime, 8192))) {
+    if (!(self->ctx=JS_NewContext(self->runtime, STACK_CHUNK_SIZE))) {
         return shutdown(self, "Could not initialize JS context");
     }
 
