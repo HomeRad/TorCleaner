@@ -86,9 +86,8 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
         # and port to clients, so we have to handle this
         if not self.scheme:
             self.scheme = "https"
-        if not self.allow.scheme(self.scheme):
-            wc.log.warn(wc.LOG_PROXY, "%s forbidden scheme %r encountered",
-                        self, self.scheme)
+        if not self.allow.is_allowed(self.method, self.scheme, self.port):
+            wc.log.warn(wc.LOG_PROXY, "Unallowed request %s", self.url)
             self.error(403, _("Forbidden"))
             return False
         # request is ok
