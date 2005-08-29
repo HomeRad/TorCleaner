@@ -1,4 +1,4 @@
-2.31 "" (release xx.xx.xxxx)
+2.31 "Nothing" (release 29.8.2005)
 
   * Added missing http:// scheme to google.html error page.
     Type: bugfix
@@ -23,9 +23,13 @@
     Changed: wc/filter/rules/HtmlrewriteRule.py
 
   * Updated spidermonkey JavaScript library from upstream CVS as of
-    20050826.
+    20050828.
     Type: feature
     Changed: libjs/*
+
+  * Updated blacklist filters as of 20050828.
+    Type: feature
+    Changed: config/blacklist*
 
   * Filter updates:
     - remove more X-<something> response headers
@@ -41,6 +45,16 @@
   * HTTP/1.1 compliant handling of Warning: headers.
     Type: feature
     Changed: wc/proxy/Headers.py
+
+  * Make the SSL certificate name length a multiple of 4 to work around
+    a bug in the pyopenssl wrapper which accidently identifies strings
+    as UniversalStrings when they are in fact not.
+    Type: bugfix
+    Changed: wc/proxy/ssl.py
+
+  * Use CSS mini-tabs in the HTML interface navigation.
+    Type: feature
+    Changed: templates/classic/wc.css, templates/classic/macros/standards.html
 
 2.30 "Dear Wendy" (released 16.8.2005)
 
