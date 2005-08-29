@@ -1,5 +1,11 @@
 TODO
 
+- language selection in the web interface is gone.
+
+- SSL gateway is broken.
+  Use case:
+  https://bugzilla.mozilla.org/show_bug.cgi?id=217527
+
 - some servers have a list of IP addrs, not just one
   If one of those did not connect (check ECONNREFUSED), try the other ones.
 
@@ -47,10 +53,6 @@ AssertionError: <client:closed   being read> server_content('\xfc\
 
 - Mac OS X support for network interface list:
   http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
-
-- SSL gateway is broken.
-  Use case:
-  https://bugzilla.mozilla.org/show_bug.cgi?id=217527
 
 - invalid js url:
 http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
@@ -114,35 +116,6 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
  567, in process_read
      callback(self.hostname, DnsResponse('found', ip_addrs)) 
  exceptions.TypeError: 'NoneType' object is not callable
-
-- > post-install script gives this error and than after I can't get ssl to work:
-Traceback (most recent call last):
-
- File "C:\Python24\Scripts\webcleaner-certificates", line 113, in ?
-
-   main(sys.argv[1:])
-
- File "C:\Python24\Scripts\webcleaner-certificates", line 105, in main
-
-   install_ssl_certs(configdir)
-
- File "C:\Python24\Scripts\webcleaner-certificates", line 61, in 
-install_ssl_certs
-
-   wc.proxy.ssl.create_certificates(configdir)
-
- File "C:\Python24\Lib\site-packages\wc\proxy\ssl.py", line 109, in 
-create_certificates
-
-   careq = createCertRequest(cakey, CN='Certificate Authority')
-
- File "C:\Python24\Lib\site-packages\wc\proxy\ssl.py", line 179, in 
-createCertRequest
-
-   setattr(subj, key, value)
-
-OpenSSL.crypto.Error: [('asn1 encoding routines', 'ASN1_mbstring_ncopy', 
-'invalid universalstring length')]
 
 - Streaming clamav scanning, try to detect virii immediately
   Note: clamav does _not_ support streaming, so this is currently not
