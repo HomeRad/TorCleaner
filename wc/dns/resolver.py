@@ -356,7 +356,7 @@ class Resolver(object):
         import wc.dns.ifconfig
         ifc = wc.dns.ifconfig.IfConfig()
         return [ifc.getAddr(iface) for iface in ifc.getInterfaceList() \
-                if ifc.isUp(iface) and not ifc.isLoopback(iface)]
+                if ifc.isUp(iface)]
 
     def add_addrinfo (self, host, interface=False):
         try:
