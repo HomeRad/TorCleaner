@@ -131,11 +131,19 @@ def install_shortcuts ():
             sys.exit()
     lib_dir = distutils.sysconfig.get_python_lib(plat_specific=1)
     dest_dir = os.path.join(prg, "WebCleaner")
-    try:
+    if not os.path.exists(dest_dir):
         os.mkdir(dest_dir)
-        directory_created(dest_dir)
-    except OSError:
-        pass
+    directory_created(dest_dir)
+    # create configuration shortcut
+    path = os.path.join(dest_dir, "Configure WebCleaner.URL")
+    f = open(path, "w")
+    try:
+        f.write("[InternetShortcut]\r\n")
+        f.write("URL=http://localhost:8080/\r\n")
+    finally:
+        f.close()
+    file_created(path)
+    # create uninstall shortcut
     target = os.path.join(sys.prefix, "RemoveWebCleaner.exe")
     path = os.path.join(dest_dir, "Uninstall WebCleaner.lnk")
     arguments = "-u " + os.path.join(sys.prefix, "WebCleaner-wininst.log")
