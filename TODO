@@ -7,7 +7,7 @@ TODO
 
 - functional tests
 
-- rework the HTML GUI using mini-tabs and styled checkboxes.
+- rework the HTML GUI using styled checkboxes.
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
@@ -149,5 +149,5 @@ OpenSSL.crypto.Error: [('asn1 encoding routines', 'ASN1_mbstring_ncopy',
   possible. We have to wait until all data is received, then scan it,
   and only after that we can be sure the data is virus-clean.
 
-- Remove all comments from JavaScript: use internal scanner, and reconstruct
-  the script with token data.
+- Remove all comments from JavaScript: use spidermonkey scanner, and
+  reconstruct the script with token data.
