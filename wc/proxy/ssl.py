@@ -106,7 +106,9 @@ def get_clientctx (configdir):
 def create_certificates (configdir):
     """Create certificates and private keys for webcleaner"""
     cakey = createKeyPair(TYPE_RSA, 1024)
-    careq = createCertRequest(cakey, CN='Certificate Authority')
+    # note: the CN name should be a multiple of 4 since the pyopenssl
+    # wrapper has a bug treating some strings as UniversalString
+    careq = createCertRequest(cakey, CN='Certificate    Authority')
     # five years
     cacert = createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5))
     f = file(os.path.join(configdir, 'CA.pkey'), 'w')
