@@ -126,7 +126,7 @@ release: releasecheck clean dist sign_distfiles homepage
 
 .PHONY: sign_distfiles
 sign_distfiles:
-	for f in dist/*; do \
+	for f in webcleaner-$(VERSION).tar.gz webcleaner*.exe; do \
 	  if [ ! -f $${f}.asc ]; then \
 	    gpg --detach-sign --armor $$f; \
 	  fi; \
