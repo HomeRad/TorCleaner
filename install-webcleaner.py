@@ -1,13 +1,15 @@
 # -*- coding: iso-8859-1 -*-
 # snatched from pythoncard CVS
+# Documentation is at:
+# http://docs.python.org/dist/postinstallation-script.html
 
 # THIS FILE IS ONLY FOR USE WITH MS WINDOWS
 # It is run as parts of the bdist_wininst installer
 # Be sure to build the installer with
-# 'python setup.py --install-script=install-linkchecker.py'
+# 'python setup.py --install-script=install-webcleaner.py'
 # or insert this into setup.cfg:
 # [bdist_wininst]
-# install-script=install-linkchecker.py
+# install-script=install-webcleaner.py
 
 import sys
 if not sys.platform.startswith('win'):
