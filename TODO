@@ -2,6 +2,8 @@ TODO
 
 - language selection in the web interface is gone.
 
+- update the web documentation
+
 - SSL gateway is broken.
   Use case:
   https://bugzilla.mozilla.org/show_bug.cgi?id=217527
