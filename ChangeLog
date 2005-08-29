@@ -1,4 +1,4 @@
-2.31 "Nothing" (release 29.8.2005)
+2.31 "Nothing" (release 30.8.2005)
 
   * Added missing http:// scheme to google.html error page.
     Type: bugfix
@@ -55,6 +55,11 @@
   * Use CSS mini-tabs in the HTML interface navigation.
     Type: feature
     Changed: templates/classic/wc.css, templates/classic/macros/standards.html
+
+  * The Windows installer generates now an Internet Shortcut pointing
+    to the configuration web page.
+    Type: feature
+    Changed: install-webcleaner.py
 
 2.30 "Dear Wendy" (released 16.8.2005)
 
