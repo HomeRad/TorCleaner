@@ -587,14 +587,6 @@ msgstr ""
 #, python-format
 msgid "Invalid command %r."
 msgstr ""
-#: ../templates/classic/macros/rules.html:513
-#: ../templates/classic/macros/rules.html:527
-#: ../templates/classic/rating.html:46
-#: ../templates/classic/rating.html:63
-#: ../templates/classic/rating.html:113
-#: ../templates/classic/rating.html:116
-msgid ""
-msgstr ""
 
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91

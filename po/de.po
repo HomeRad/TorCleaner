@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-08-15 23:21+0200\n"
-"PO-Revision-Date: 2004-12-27 23:37+0100\n"
+"POT-Creation-Date: 2005-08-29 16:50+0200\n"
+"PO-Revision-Date: 2005-08-29 18:55+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,75 @@ msgstr "zlib Fehler: nicht in gzip Format, deaktiviere gunzip"
 #: ../wc/proxy/decoder/GunzipStream.py:89
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr "zlib Fehler: unbekannte Komprimierungsart, deaktiviere gunzip"
+
+#: ../wc/proxy/HttpClient.py:120
+#, python-format
+msgid "Proxy Error %d %s"
+msgstr "Proxy Fehler %d %s"
+
+#: ../wc/proxy/HttpClient.py:195
+msgid "Method not allowed"
+msgstr "Anfrage nicht erlaubt"
+
+#: ../wc/proxy/HttpClient.py:201
+msgid "Empty URL"
+msgstr "Leere URL"
+
+#: ../wc/proxy/HttpClient.py:204
+msgid "HTTP version not supported"
+msgstr "HTTP Version wird nicht unterstützt"
+
+#: ../wc/proxy/HttpClient.py:220
+#: ../wc/proxy/SslClient.py:71
+msgid "URL too long"
+msgstr "URL zu lang"
+
+#: ../wc/proxy/HttpClient.py:221
+#: ../wc/proxy/SslClient.py:72
+#, python-format
+msgid "URL length limit is %d bytes."
+msgstr "URL Längenbegrenzung ist %d Byte."
+
+#: ../wc/proxy/HttpClient.py:249
+#: ../wc/proxy/SslClient.py:91
+msgid "Forbidden"
+msgstr "Verboten"
+
+#: ../wc/proxy/HttpClient.py:302
+#: ../wc/proxy/HttpClient.py:313
+msgid "Bad Request"
+msgstr "Schlechte Anfrage"
+
+#: ../wc/proxy/HttpClient.py:334
+#: ../wc/proxy/HttpClient.py:347
+#: ../wc/proxy/HttpClient.py:359
+msgid "Proxy Authentication Required"
+msgstr "Proxy Authorisierung benötigt"
+
+#: ../wc/proxy/HttpClient.py:466
+#: ../wc/proxy/HttpServer.py:412
+msgid "Moved Temporarily"
+msgstr "Vorübergehend verschoben"
+
+#: ../wc/proxy/HttpClient.py:595
+msgid "Invalid Method"
+msgstr "Ungültige Anfrage"
+
+#: ../wc/proxy/HttpClient.py:603
+#: ../wc/proxy/HttpClient.py:609
+#: ../wc/proxy/HttpClient.py:620
+#: ../wc/webgui/webconfig.py:64
+msgid "Authentication Required"
+msgstr "Authorisierung benötigt"
+
+#: ../wc/proxy/HttpServer.py:336
+msgid "redirection to localhost"
+msgstr "Weiterleitung zu localhost"
+
+#: ../wc/proxy/HttpServer.py:467
+#, python-format
+msgid "server received %d bytes more than content-length"
+msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
 
 #: ../wc/proxy/ClientServerMatchmaker.py:154
 #, python-format
@@ -64,88 +133,22 @@ msgstr "Keine Antwort vom Server"
 
 #: ../wc/proxy/ClientServerMatchmaker.py:284
 msgid "Server did not respond"
-msgstr ""
+msgstr "Server hat nicht geantwortet"
 
-#: ../wc/proxy/Headers.py:281
-#, python-format
-msgid "Missing content type in %r"
-msgstr "Fehlender Inhaltstyp in %r"
-
-#: ../wc/proxy/Headers.py:292
+#: ../wc/proxy/Headers.py:273
 #, python-format
 msgid "Change content type of %r from %r to %r"
 msgstr "Setze Inhaltstyp in %r von %r nach %r"
 
-#: ../wc/proxy/Headers.py:295
+#: ../wc/proxy/Headers.py:276
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr "Setze Content-Type von %r nach %r"
 
-#: ../wc/proxy/Headers.py:347
+#: ../wc/proxy/Headers.py:329
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr "Nicht unterstütztes Encoding: %r"
-
-#: ../wc/proxy/HttpClient.py:119
-#, python-format
-msgid "Proxy Error %d %s"
-msgstr "Proxy Fehler %d %s"
-
-#: ../wc/proxy/HttpClient.py:194
-msgid "Method not allowed"
-msgstr "Anfrage nicht erlaubt"
-
-#: ../wc/proxy/HttpClient.py:200
-msgid "Empty URL"
-msgstr "Leere URL"
-
-#: ../wc/proxy/HttpClient.py:203
-msgid "HTTP version not supported"
-msgstr ""
-
-#: ../wc/proxy/HttpClient.py:219 ../wc/proxy/SslClient.py:71
-msgid "URL too long"
-msgstr "URL zu lang"
-
-#: ../wc/proxy/HttpClient.py:220 ../wc/proxy/SslClient.py:72
-#, python-format
-msgid "URL length limit is %d bytes."
-msgstr "URL Längenbegrenzung ist %d Byte."
-
-#: ../wc/proxy/HttpClient.py:248 ../wc/proxy/SslClient.py:92
-msgid "Forbidden"
-msgstr "Verboten"
-
-#: ../wc/proxy/HttpClient.py:301 ../wc/proxy/HttpClient.py:312
-msgid "Bad Request"
-msgstr "Schlechte Anfrage"
-
-#: ../wc/proxy/HttpClient.py:333 ../wc/proxy/HttpClient.py:346
-#: ../wc/proxy/HttpClient.py:358
-msgid "Proxy Authentication Required"
-msgstr "Proxy Authorisierung benötigt"
-
-#: ../wc/proxy/HttpClient.py:465 ../wc/proxy/HttpServer.py:412
-msgid "Moved Temporarily"
-msgstr "Vorübergehend verschoben"
-
-#: ../wc/proxy/HttpClient.py:594
-msgid "Invalid Method"
-msgstr "Ungültige Anfrage"
-
-#: ../wc/proxy/HttpClient.py:602 ../wc/proxy/HttpClient.py:608
-#: ../wc/proxy/HttpClient.py:619 ../wc/webgui/webconfig.py:64
-msgid "Authentication Required"
-msgstr "Authorisierung benötigt"
-
-#: ../wc/proxy/HttpServer.py:336
-msgid "redirection to localhost"
-msgstr "Weiterleitung zu localhost"
-
-#: ../wc/proxy/HttpServer.py:467
-#, python-format
-msgid "server received %d bytes more than content-length"
-msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
 
 #: ../wc/filter/rules/FolderRule.py:100
 #, python-format
@@ -180,27 +183,31 @@ msgstr "aktualisiere Regel %s:"
 msgid "Unknown page"
 msgstr "Unbekannte Seite"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:42
+#: ../wc/filter/rules/HtmlrewriteRule.py:43
 msgid "Tag"
 msgstr "Tag"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:43
+#: ../wc/filter/rules/HtmlrewriteRule.py:44
 msgid "Tag name"
 msgstr "Tag Name"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:44
+#: ../wc/filter/rules/HtmlrewriteRule.py:45
 msgid "Attribute"
 msgstr "Attribut"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:45
+#: ../wc/filter/rules/HtmlrewriteRule.py:46
 msgid "Attribute value"
 msgstr "Attributwert"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:46
+#: ../wc/filter/rules/HtmlrewriteRule.py:47
+msgid "Attribute name"
+msgstr "Attributname"
+
+#: ../wc/filter/rules/HtmlrewriteRule.py:48
 msgid "Complete tag"
 msgstr "Ganzes Tag"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:47
+#: ../wc/filter/rules/HtmlrewriteRule.py:49
 msgid "Enclosed block"
 msgstr "Enthaltener Text"
 
@@ -255,30 +262,23 @@ msgstr "Ungültig"
 msgid "Maximum data size (%s) exceeded"
 msgstr "Maximale Datengröße (%s) überschritten"
 
-#: ../wc/filter/VirusFilter.py:222
-msgid "You have to disable ScannerDaemonOutputFormat"
-msgstr "Sie müssen ScannerDaemonOutputFormat deaktivieren"
-
-#: ../wc/filter/VirusFilter.py:224
-msgid ""
-"Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
-msgstr ""
-"Clamd ist nicht richt konfiguriert: sowohl TCPSocket als auch LocalSocket "
-"sindaktiviert."
-
-#: ../wc/filter/VirusFilter.py:257
-msgid ""
-"You have to enable either TCPSocket or LocalSocket in your Clamd "
-"configuration"
-msgstr ""
-"Sie müssen entwender TCPSocket oder LocalSocket in Ihrer Clamd "
-"Konfigurationaktivieren"
-
-#: ../wc/filter/VirusFilter.py:306
+#: ../wc/filter/VirusFilter.py:174
 msgid "Clamd is not ready for stream scanning"
 msgstr "Clamd ist nicht bereit zum Prüfen eines Datenstroms"
 
-#: ../wc/filter/html/JSFilter.py:354
+#: ../wc/filter/VirusFilter.py:248
+msgid "You have to disable ScannerDaemonOutputFormat"
+msgstr "Sie müssen ScannerDaemonOutputFormat deaktivieren"
+
+#: ../wc/filter/VirusFilter.py:250
+msgid "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
+msgstr "Clamd ist nicht richt konfiguriert: sowohl TCPSocket als auch LocalSocket sindaktiviert."
+
+#: ../wc/filter/VirusFilter.py:283
+msgid "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
+msgstr "Sie müssen entwender TCPSocket oder LocalSocket in Ihrer Clamd Konfigurationaktivieren"
+
+#: ../wc/filter/html/JSFilter.py:356
 #, python-format
 msgid "error fetching script from %r"
 msgstr "Fehler beim Laden von %r"
@@ -287,13 +287,18 @@ msgstr "Fehler beim Laden von %r"
 msgid "updating filters"
 msgstr "aktualisiere Filter"
 
-#: ../wc/update.py:226 ../wc/update.py:236
+#: ../wc/update.py:226
+#: ../wc/update.py:236
 #, python-format
 msgid "error fetching %s"
 msgstr "Fehler beim Laden von %s"
 
-#: ../wc/update.py:227 ../wc/update.py:237 ../wc/update.py:276
-#: ../wc/update.py:284 ../wc/update.py:321 ../wc/update.py:337
+#: ../wc/update.py:227
+#: ../wc/update.py:237
+#: ../wc/update.py:276
+#: ../wc/update.py:284
+#: ../wc/update.py:321
+#: ../wc/update.py:337
 #: ../wc/update.py:341
 msgid "done"
 msgstr "fertig"
@@ -316,10 +321,13 @@ msgstr "füge neuen Filter %s hinzu"
 #: ../wc/update.py:266
 #, python-format
 msgid "Incompatible folder version %s, must be %s"
-msgstr ""
+msgstr "Inkompatible Ordnerversion %s, muss %s sein"
 
-#: ../wc/update.py:275 ../wc/update.py:282 ../wc/update.py:311
-#: ../wc/update.py:315 ../wc/update.py:336
+#: ../wc/update.py:275
+#: ../wc/update.py:282
+#: ../wc/update.py:311
+#: ../wc/update.py:315
+#: ../wc/update.py:336
 #, python-format
 msgid "error fetching %s:"
 msgstr "Fehler beim Laden von %s:"
@@ -418,7 +426,8 @@ msgstr "Der %s Dienst kann pausieren."
 msgid "inserting %s"
 msgstr "füge %s ein"
 
-#: ../wc/configuration.py:511 ../wc/configuration.py:591
+#: ../wc/configuration.py:512
+#: ../wc/configuration.py:592
 #, python-format
 msgid "unknown tag name %r"
 msgstr "Unbekannter Tagname %r"
@@ -428,6 +437,8 @@ msgid ""
 "Psyco is installed but not used since the version is too old.\n"
 "Psyco >= 1.4 is needed."
 msgstr ""
+"Psyco ist installiert, wird aber nicht benutzt da die Version zu alt ist.\n"
+"Psyco >= 1.4 wird benötigt."
 
 #: ../wc/webgui/webconfig.py:41
 msgid "Ok"
@@ -446,7 +457,7 @@ msgstr "Interner Fehler"
 msgid "%s error"
 msgstr "%s error"
 
-#: ../wc/webgui/context/filterconfig_html.py:391
+#: ../wc/webgui/context/filterconfig_html.py:396
 msgid "No title"
 msgstr "Überschrift"
 
@@ -523,8 +534,7 @@ msgstr ""
 "\n"
 "BEFEHLE\n"
 "start [-f <Konfiguration>]\n"
-"        Starte den %(service)s Dienst, optional mit alternativer "
-"Konfiguration.\n"
+"        Starte den %(service)s Dienst, optional mit alternativer Konfiguration.\n"
 "stop\n"
 "        Stoppe den %(service)s Dienst.\n"
 "restart\n"
@@ -546,8 +556,7 @@ msgstr ""
 "--password passwort\n"
 "        Das Passwort für den Benutzer\n"
 "--startup [manual|auto|disabled]\n"
-"        Wann der Dienst gestartet werden soll. Standard ist manuell "
-"(manual)\n"
+"        Wann der Dienst gestartet werden soll. Standard ist manuell (manual)\n"
 "--interactive\n"
 "        Erlaub Interaktion mit dem Desktop.\n"
 
@@ -609,17 +618,20 @@ msgstr "drücken Sie Return, um fortzufahren..."
 msgid "%(appname)s Proxy"
 msgstr "%(appname)s Proxy"
 
-#: ../webcleaner:147 ../webcleaner-certificates:94
+#: ../webcleaner:147
+#: ../webcleaner-certificates:94
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr "Unbekannte Option %(option)r"
 
-#: ../webcleaner:163 ../webcleaner:182
+#: ../webcleaner:163
+#: ../webcleaner:182
 #, python-format
 msgid "Unknown command %r"
 msgstr "Unbekannter Befehl %r"
 
-#: ../webcleaner:169 ../webcleaner-certificates:101
+#: ../webcleaner:169
+#: ../webcleaner-certificates:101
 msgid "No command given."
 msgstr "Kein Befehl angegeben."
 
@@ -634,8 +646,7 @@ msgid ""
 "        This should be the same directory as given in \"%(name)s -d\"\n"
 "\n"
 "Commands:\n"
-"install - generate and install %(app)s SSL certificates if not already "
-"there\n"
+"install - generate and install %(app)s SSL certificates if not already there\n"
 "remove  - remove %(app)s SSL certificates\n"
 msgstr ""
 "Benutzung: webcleaner-certificates <Kommando>\n"
@@ -646,8 +657,7 @@ msgstr ""
 "        Das Verzeichnis sollte dasselbe sein wie in \"%(name)s -d\"\n"
 "\n"
 "Kommandos:\n"
-"install - generiere und installiere %(app)s SSL Zertifikate falls noch nicht "
-"vorhanden\n"
+"install - generiere und installiere %(app)s SSL Zertifikate falls noch nicht vorhanden\n"
 "remove - lösche %(app)s SSL Zertifikate\n"
 
 #: ../webcleaner-certificates:58
@@ -665,7 +675,8 @@ msgstr "Konnte %r nicht löschen: %s"
 msgid "Invalid command %r."
 msgstr "Unbekannter Befehl %r."
 
-#: ../templates/classic/google.html:5 ../templates/classic/google.html:91
+#: ../templates/classic/google.html:5
+#: ../templates/classic/google.html:91
 msgid "${appname} Google Selection"
 msgstr "${appname} Google Auswahl"
 
@@ -673,7 +684,8 @@ msgstr "${appname} Google Auswahl"
 msgid "${appname} configuration"
 msgstr "${appname} Konfiguration"
 
-#: ../templates/classic/error.html:5 ../templates/classic/error.html:9
+#: ../templates/classic/error.html:5
+#: ../templates/classic/error.html:9
 msgid "${appname} error"
 msgstr "${appname} error"
 
@@ -702,11 +714,7 @@ msgid "${appname} update script"
 msgstr "${appname} Aktualisierungsskript"
 
 #: ../templates/classic/help.html:67
-msgid ""
-"${appname} uses a modular filter design allowing a lot of flexibility for "
-"different uses.<br> Each module has a list if mime types and a list of which "
-"parts of request/response challenge it applies to. And each module can be "
-"further customized by separate rules in the filter configuration."
+msgid "${appname} uses a modular filter design allowing a lot of flexibility for different uses.<br> Each module has a list if mime types and a list of which parts of request/response challenge it applies to. And each module can be further customized by separate rules in the filter configuration."
 msgstr ""
 "${appname} benutzt ein modulares Filterdesign welches\n"
 "eine Menge flexibler Anwendungsmöglichkeiten erlaubt.<br>\n"
@@ -719,34 +727,17 @@ msgid "${appname} web interface main page"
 msgstr "${appname} Weboberfläche Hauptseite"
 
 #: ../templates/classic/help.html:195
-msgid ""
-"A HTML rewrite rule applies to one specified HTML tag and can replace (or "
-"delete if the replacement data is empty) parts of or the complete tag. The "
-"tag name is a case insensitive string.<br> If attributes are given, they "
-"must match too before the rule applies."
+msgid "A HTML rewrite rule applies to one specified HTML tag and can replace (or delete if the replacement data is empty) parts of or the complete tag. The tag name is a case insensitive string.<br> If attributes are given, they must match too before the rule applies."
 msgstr ""
-"Eine HTML Rewrite-Regel wird auf ein angegebenes HTML-Tag angewendet und kann "
-"Teile oder das ganze Tag ersetzen (oder löschen wenn der\n"
+"Eine HTML Rewrite-Regel wird auf ein angegebenes HTML-Tag angewendet und kann Teile oder das ganze Tag ersetzen (oder löschen wenn der\n"
 "angegebene Ersatz leer ist). Der Tagname ist unempfindlich gegenüber\n"
 "Groß- und Kleinschreibung.<br>\n"
-"Falls Attribute angegeben sind müssen diese auch zum Inhalt passen ehe diese "
-"Regel\n"
+"Falls Attribute angegeben sind müssen diese auch zum Inhalt passen ehe diese Regel\n"
 "zutrifft."
 
 #: ../templates/classic/help.html:306
-msgid ""
-"A block rule specifies regular expressions for urls which must be blocked."
-"<br> The replacement URL specifies the URL to show when the block matches. "
-"If none is given a default block message is shown.<br> Back references to "
-"matched subgroups can be specified in the replacement url with a backslash "
-"and the subgroup number (ie. , , ...)."
-msgstr ""
-"Eine Block Regel gibt Reguläre Ausdrücke für URLs an welche geblockt werden "
-"müssen.<br> Die Ersatz-URL gibt die URL an welche stattdessen angezeigt "
-"werden soll wenn die Regel zutrifft. Falls keines angegeben wurde wird eine "
-"Standardnachricht angezeigt.<br> Referenzen auf zugeordnete Untergruppen "
-"können in der Ersatz-URL durch einen umgekehrten Schrägstrich und die "
-"Untergruppennummer angegeben werden (z.B. \\1, \\2, ...)."
+msgid "A block rule specifies regular expressions for urls which must be blocked.<br> The replacement URL specifies the URL to show when the block matches. If none is given a default block message is shown.<br> Back references to matched subgroups can be specified in the replacement url with a backslash and the subgroup number (ie. , , ...)."
+msgstr "Eine Block Regel gibt Reguläre Ausdrücke für URLs an welche geblockt werden müssen.<br> Die Ersatz-URL gibt die URL an welche stattdessen angezeigt werden soll wenn die Regel zutrifft. Falls keines angegeben wurde wird eine Standardnachricht angezeigt.<br> Referenzen auf zugeordnete Untergruppen können in der Ersatz-URL durch einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden (z.B. \\1, \\2, ...)."
 
 #: ../templates/classic/accessibility.html:49
 msgid "Access key 0"
@@ -772,7 +763,7 @@ msgstr "Tastaturkommandos"
 msgid "Accessibility pages"
 msgstr "Zugänglichkeitseiten"
 
-#: ../templates/classic/macros/standard.html:83
+#: ../templates/classic/macros/standard.html:85
 #: ../templates/classic/accessibility.html:12
 #: ../templates/classic/accessibility.html:50
 msgid "Accessibility statement"
@@ -782,13 +773,16 @@ msgstr "Zugänglichkeitserklärung"
 msgid "Accessibility statement for ${appname}"
 msgstr "Zugänglichkeitserklärung für ${appname}"
 
-#: ../templates/classic/help.html:200 ../templates/classic/help.html:272
+#: ../templates/classic/help.html:200
+#: ../templates/classic/help.html:272
 msgid "Action"
 msgstr "Aktion"
 
-#: ../templates/classic/config.html:333 ../templates/classic/config.html:372
-#: ../templates/classic/macros/rules.html:64
-#: ../templates/classic/macros/rules.html:81
+#: ../templates/classic/config.html:333
+#: ../templates/classic/config.html:372
+#: ../templates/classic/macros/rules.html:78
+#: ../templates/classic/macros/rules.html:102
+#: ../templates/classic/macros/rules.html:119
 msgid "Add new"
 msgstr "Neu hinzufügen"
 
@@ -798,10 +792,9 @@ msgstr "Neue Regel zu aktuellem Ordner hinzufügen"
 
 #: ../templates/classic/help.html:116
 msgid "Add, modify and delete HTTP headers of request and response."
-msgstr ""
-"Hinzufügen, Ändern und Löschen von HTTP Headern bei Anfrage und Antwort."
+msgstr "Hinzufügen, Ändern und Löschen von HTTP Headern bei Anfrage und Antwort."
 
-#: ../templates/classic/macros/rules.html:554
+#: ../templates/classic/macros/rules.html:646
 msgid "Add/replace attribute"
 msgstr "Attribut hinzufügen/ersetzen"
 
@@ -823,7 +816,7 @@ msgstr "Administrator"
 
 #: ../templates/classic/config.html:436
 msgid "Admin user must have only ASCII characters."
-msgstr ""
+msgstr "Administratorname darf nur aus ASCII-Zeichen bestehen."
 
 #: ../templates/classic/config.html:406
 msgid "Admin user successfully changed."
@@ -843,10 +836,7 @@ msgid "Administrator username"
 msgstr "Administrator"
 
 #: ../templates/classic/adminpass.html:30
-msgid ""
-"After that, restart ${appname} and click on the configuration link below. "
-"Your new credentials for the configuration are:<br> username ${adminuser}"
-"<br> password ${adminpass}<br>"
+msgid "After that, restart ${appname} and click on the configuration link below. Your new credentials for the configuration are:<br> username ${adminuser}<br> password ${adminpass}<br>"
 msgstr ""
 "Starten Sie danach ${appname} neu und klicken auf die unten stehende\n"
 "Verknüpfung zur Konfiguration.\n"
@@ -854,7 +844,8 @@ msgstr ""
 "Benutzername <b>${adminuser}</b><br>\n"
 "Passwort <b>${adminpass}</b><br>"
 
-#: ../templates/classic/config.html:38 ../templates/classic/config.html:40
+#: ../templates/classic/config.html:38
+#: ../templates/classic/config.html:40
 msgid "All hosts"
 msgstr "Alle Rechner"
 
@@ -874,43 +865,35 @@ msgstr "Erlaubte(r) Rechner wurde(n) erfolgreich entfernt."
 msgid "Allowed hosts"
 msgstr "Erlaubte Rechner"
 
-#: ../templates/classic/macros/rules.html:422
+#: ../templates/classic/macros/rules.html:508
 msgid "Allowed limit"
 msgstr "Erlaubnisgrenze"
 
-#: ../templates/classic/config.html:224 ../templates/classic/config.html:287
-msgid ""
-"Always change the complete password since the displayed value is only a "
-"dummy."
-msgstr ""
-"Ändern sie stets das ganze Passwort, da der angezeigte Wert nur ein "
-"Platzhalter ist."
+#: ../templates/classic/config.html:224
+#: ../templates/classic/config.html:287
+msgid "Always change the complete password since the displayed value is only a dummy."
+msgstr "Ändern sie stets das ganze Passwort, da der angezeigte Wert nur ein Platzhalter ist."
 
 #: ../templates/classic/help.html:263
-msgid ""
-"An XML rewrite rule applies to one specific XML tag and can replace (or "
-"delete) parts of or the complete tag. The selector is a simplified XPath "
-"expression of the form <code><i>(</i>/<i>tag)+</i></code> where a tag is of "
-"the form <code><i>name</i>([<i>attr</i>=<i>val(</i>,<i>attr</i>=<i>val)*</i>]"
-"<i>)?</i></code>. Tag names, attributes and values are case sensitive.<br> "
-"Example: <code>/rss/channel/item/description</code> selects the <code>&lt;"
-"description&gt;</code> XML tag in an RSS new feed."
+msgid "An XML rewrite rule applies to one specific XML tag and can replace (or delete) parts of or the complete tag. The selector is a simplified XPath expression of the form <code><i>(</i>/<i>tag)+</i></code> where a tag is of the form <code><i>name</i>([<i>attr</i>=<i>val(</i>,<i>attr</i>=<i>val)*</i>]<i>)?</i></code>. Tag names, attributes and values are case sensitive.<br> Example: <code>/rss/channel/item/description</code> selects the <code>&lt;description&gt;</code> XML tag in an RSS new feed."
 msgstr ""
 
 #: ../templates/classic/help.html:314
-msgid ""
-"An allow rule specifies regular expressions for urls which must be allowed, "
-"even if a matching block rule exists."
-msgstr ""
-"Eine allow-Regel gibt reguläre Ausdrücke für URL an die zugelassen werden "
-"müssen, auch wenn bereits eine zutreffende Block-Regel existiert."
+msgid "An allow rule specifies regular expressions for urls which must be allowed, even if a matching block rule exists."
+msgstr "Eine allow-Regel gibt reguläre Ausdrücke für URL an die zugelassen werden müssen, auch wenn bereits eine zutreffende Block-Regel existiert."
 
-#: ../templates/classic/help.html:78 ../templates/classic/help.html:88
-#: ../templates/classic/help.html:97 ../templates/classic/help.html:109
-#: ../templates/classic/help.html:117 ../templates/classic/help.html:126
-#: ../templates/classic/help.html:136 ../templates/classic/help.html:146
-#: ../templates/classic/help.html:154 ../templates/classic/help.html:164
-#: ../templates/classic/help.html:174 ../templates/classic/help.html:185
+#: ../templates/classic/help.html:78
+#: ../templates/classic/help.html:88
+#: ../templates/classic/help.html:97
+#: ../templates/classic/help.html:109
+#: ../templates/classic/help.html:117
+#: ../templates/classic/help.html:126
+#: ../templates/classic/help.html:136
+#: ../templates/classic/help.html:146
+#: ../templates/classic/help.html:154
+#: ../templates/classic/help.html:164
+#: ../templates/classic/help.html:174
+#: ../templates/classic/help.html:185
 msgid "Applies to"
 msgstr "Trifft zu auf"
 
@@ -919,23 +902,24 @@ msgid "Applies to all pages starting with url?"
 msgstr "Gilt für alle Seiten die mit dieser URL beginnen?"
 
 #: ../templates/classic/config.html:388
-#: ../templates/classic/macros/rules.html:144
-#: ../templates/classic/macros/rules.html:209
-#: ../templates/classic/macros/rules.html:260
-#: ../templates/classic/macros/rules.html:298
-#: ../templates/classic/macros/rules.html:329
-#: ../templates/classic/macros/rules.html:348
-#: ../templates/classic/macros/rules.html:367
-#: ../templates/classic/macros/rules.html:386
-#: ../templates/classic/macros/rules.html:449
-#: ../templates/classic/macros/rules.html:483
-#: ../templates/classic/macros/rules.html:583
-#: ../templates/classic/macros/rules.html:630
+#: ../templates/classic/macros/rules.html:185
+#: ../templates/classic/macros/rules.html:250
+#: ../templates/classic/macros/rules.html:306
+#: ../templates/classic/macros/rules.html:347
+#: ../templates/classic/macros/rules.html:381
+#: ../templates/classic/macros/rules.html:403
+#: ../templates/classic/macros/rules.html:425
+#: ../templates/classic/macros/rules.html:447
+#: ../templates/classic/macros/rules.html:469
+#: ../templates/classic/macros/rules.html:535
+#: ../templates/classic/macros/rules.html:572
+#: ../templates/classic/macros/rules.html:675
+#: ../templates/classic/macros/rules.html:725
 #: ../templates/classic/rating.html:69
 msgid "Apply"
 msgstr "Übernehmen"
 
-#: ../templates/classic/macros/rules.html:508
+#: ../templates/classic/macros/rules.html:600
 msgid "Attributes"
 msgstr "Attribute"
 
@@ -944,27 +928,18 @@ msgid "Back to update overview"
 msgstr "Zurück zur Aktualisierungsübersicht"
 
 #: ../templates/classic/help.html:323
-msgid ""
-"Block images with a certain size by replacing them with a transparent 1x1 "
-"image."
-msgstr ""
-"Blockiert Bilder einer bestimmten Größe und ersetzt diese durch ein "
-"transparentes 1x1 Bild."
+msgid "Block images with a certain size by replacing them with a transparent 1x1 image."
+msgstr "Blockiert Bilder einer bestimmten Größe und ersetzt diese durch ein transparentes 1x1 Bild."
 
 #: ../templates/classic/help.html:85
-msgid ""
-"Block or allow specific sites by URL name. Before matching a URL the "
-"hostname and path is unquoted to avoid spoofing attacks."
-msgstr ""
-"Blockiere oder erlaube bestimmte Seiten nach URL Name. Bevor eine URL "
-"zutrifft wird der Rechnername und der Pfad dekodiert, um Verschleierungs-"
-"Attacken zu vermeiden."
+msgid "Block or allow specific sites by URL name. Before matching a URL the hostname and path is unquoted to avoid spoofing attacks."
+msgstr "Blockiere oder erlaube bestimmte Seiten nach URL Name. Bevor eine URL zutrifft wird der Rechnername und der Pfad dekodiert, um Verschleierungs-Attacken zu vermeiden."
 
 #: ../templates/classic/blocked.html:22
 msgid "Blocked by ${ruletitle}."
 msgstr "Blockiert von ${ruletitle}."
 
-#: ../templates/classic/macros/rules.html:292
+#: ../templates/classic/macros/rules.html:341
 msgid "Blocked image URL"
 msgstr "Blockierte Bild URL"
 
@@ -972,16 +947,14 @@ msgstr "Blockierte Bild URL"
 msgid "Browser configuration"
 msgstr "Browser Konfiguration"
 
-#: ../templates/classic/macros/rules.html:421
+#: ../templates/classic/macros/rules.html:507
 #: ../templates/classic/rating.html:39
 msgid "Category"
 msgstr "Kategorie"
 
 #: ../templates/classic/config.html:222
 msgid "Changes to this option require a proxy restart to take effect."
-msgstr ""
-"Änderungen dieser Option erfordern einen Proxy-Neustart, um wirksam zu "
-"werden."
+msgstr "Änderungen dieser Option erfordern einen Proxy-Neustart, um wirksam zu werden."
 
 #: ../templates/classic/config.html:410
 msgid "ClamAV config successfully changed."
@@ -992,22 +965,20 @@ msgid "Clamav Config"
 msgstr "Clamav Konfiguration"
 
 #: ../templates/classic/help.html:95
-msgid ""
-"Compression of documents with good compression ratio like HTML, WAV, etc."
-msgstr ""
-"Komprimierung von Dokumenten mit guter Komprimierungsrate wie z.B. HTML, "
-"WAV, etc."
+msgid "Compression of documents with good compression ratio like HTML, WAV, etc."
+msgstr "Komprimierung von Dokumenten mit guter Komprimierungsrate wie z.B. HTML, WAV, etc."
 
 #: ../templates/classic/config.html:104
 msgid "Connection timeout in seconds"
 msgstr "Verbindungszeitüberschreitung in Sekunden"
 
-#: ../templates/classic/rated.html:9 ../templates/classic/rated.html:14
+#: ../templates/classic/rated.html:9
+#: ../templates/classic/rated.html:14
 msgid "Content rated by ${appname}"
 msgstr "Inhalt gesperrt von ${appname}"
 
-#: ../templates/classic/macros/standard.html:51
-#: ../templates/classic/macros/standard.html:55
+#: ../templates/classic/macros/standard.html:52
+#: ../templates/classic/macros/standard.html:56
 msgid "Content rating"
 msgstr "Inhaltsbewertung"
 
@@ -1018,21 +989,15 @@ msgstr "Inhaltsbewertung für ${appname}"
 
 #: ../templates/classic/help.html:124
 msgid "Convert images to low quality JPEG files to reduce bandwidth"
-msgstr ""
-"Konvertiere Bilder zu JPEG Bilddateien niedriger Qualität, um Bandbreite zu "
-"sparen"
+msgstr "Konvertiere Bilder zu JPEG Bilddateien niedriger Qualität, um Bandbreite zu sparen"
 
 #: ../templates/classic/google.html:117
 msgid "Coral Cache for"
 msgstr "Coral Cache für"
 
 #: ../templates/classic/help.html:107
-msgid ""
-"Deanimates GIFs and removes all unwanted GIF image extensions (for example "
-"GIF comments)."
-msgstr ""
-"Deanimiert GIF Bilder und löscht alle unerwünschten GIF "
-"Bilderweiterungsdaten (wie z.B. GIF Kommentare)."
+msgid "Deanimates GIFs and removes all unwanted GIF image extensions (for example GIF comments)."
+msgstr "Deanimiert GIF Bilder und löscht alle unerwünschten GIF Bilderweiterungsdaten (wie z.B. GIF Kommentare)."
 
 #: ../templates/classic/help.html:277
 msgid "Defined replacement types"
@@ -1040,20 +1005,26 @@ msgstr ""
 
 #: ../templates/classic/rating.html:103
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: ../templates/classic/rating.html:99
 msgid "Delete this rating"
 msgstr "Lösche diese Bewertung"
 
-#: ../templates/classic/macros/rules.html:37
-#: ../templates/classic/macros/rules.html:115
-#: ../templates/classic/help.html:75 ../templates/classic/help.html:84
-#: ../templates/classic/help.html:94 ../templates/classic/help.html:106
-#: ../templates/classic/help.html:115 ../templates/classic/help.html:123
-#: ../templates/classic/help.html:134 ../templates/classic/help.html:144
-#: ../templates/classic/help.html:152 ../templates/classic/help.html:160
-#: ../templates/classic/help.html:170 ../templates/classic/help.html:180
+#: ../templates/classic/macros/rules.html:51
+#: ../templates/classic/macros/rules.html:153
+#: ../templates/classic/help.html:75
+#: ../templates/classic/help.html:84
+#: ../templates/classic/help.html:94
+#: ../templates/classic/help.html:106
+#: ../templates/classic/help.html:115
+#: ../templates/classic/help.html:123
+#: ../templates/classic/help.html:134
+#: ../templates/classic/help.html:144
+#: ../templates/classic/help.html:152
+#: ../templates/classic/help.html:160
+#: ../templates/classic/help.html:170
+#: ../templates/classic/help.html:180
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -1081,7 +1052,7 @@ msgstr "Bild von inaktiver Regel"
 msgid "Don't filter hosts"
 msgstr "Nicht zu filternde Rechner"
 
-#: ../templates/classic/macros/rules.html:68
+#: ../templates/classic/macros/rules.html:106
 msgid "Don't match urls"
 msgstr "Nicht zutreffende URLs"
 
@@ -1092,7 +1063,7 @@ msgstr "Nach unten"
 
 #: ../templates/classic/rating.html:97
 msgid "Edit"
-msgstr ""
+msgstr "Editieren"
 
 #: ../templates/classic/rating.html:95
 msgid "Edit this rating"
@@ -1152,44 +1123,44 @@ msgid "Example ClamAV config file:"
 msgstr ""
 
 #: ../templates/classic/help.html:327
-msgid ""
-"Execute and filter JavaScript (JS) in HTML pages using the integrated "
-"Spidermonkey JS engine. The filter deletes popups and places dynamic content "
-"emitted with document.write() into the HTML file."
-msgstr ""
-"Ausführen und Filtern von JavaScript (JS) in HTML Seiten durch die "
-"integrierte Spidermonkey JS Bibliothek. Der Filter löscht Popups und "
-"schreibt dynamischen Inhalt generiert durch document.write() in die HTML "
-"Seite."
+msgid "Execute and filter JavaScript (JS) in HTML pages using the integrated Spidermonkey JS engine. The filter deletes popups and places dynamic content emitted with document.write() into the HTML file."
+msgstr "Ausführen und Filtern von JavaScript (JS) in HTML Seiten durch die integrierte Spidermonkey JS Bibliothek. Der Filter löscht Popups und schreibt dynamischen Inhalt generiert durch document.write() in die HTML Seite."
 
-#: ../templates/classic/macros/rules.html:405
+#: ../templates/classic/macros/rules.html:491
 msgid "Fallback URL"
 msgstr "Ersatz-URL"
 
-#: ../templates/classic/macros/standard.html:89
+#: ../templates/classic/macros/standard.html:91
 #: ../templates/classic/accessibility.html:48
 msgid "Feedback"
 msgstr "Feedback"
 
-#: ../templates/classic/feedback.html:13 ../templates/classic/feedback.html:19
+#: ../templates/classic/feedback.html:13
+#: ../templates/classic/feedback.html:19
 msgid "Feedback for ${appname}"
 msgstr "Feedback für ${appname}"
 
-#: ../templates/classic/macros/rules.html:120
+#: ../templates/classic/macros/rules.html:158
 msgid "Filename"
 msgstr "Dateiname"
 
-#: ../templates/classic/macros/standard.html:35
-#: ../templates/classic/macros/standard.html:39
+#: ../templates/classic/macros/standard.html:36
+#: ../templates/classic/macros/standard.html:40
 msgid "Filter configuration"
 msgstr "Filterkonfiguration"
 
-#: ../templates/classic/help.html:80 ../templates/classic/help.html:90
-#: ../templates/classic/help.html:102 ../templates/classic/help.html:111
-#: ../templates/classic/help.html:119 ../templates/classic/help.html:130
-#: ../templates/classic/help.html:140 ../templates/classic/help.html:148
-#: ../templates/classic/help.html:156 ../templates/classic/help.html:166
-#: ../templates/classic/help.html:176 ../templates/classic/help.html:187
+#: ../templates/classic/help.html:80
+#: ../templates/classic/help.html:90
+#: ../templates/classic/help.html:102
+#: ../templates/classic/help.html:111
+#: ../templates/classic/help.html:119
+#: ../templates/classic/help.html:130
+#: ../templates/classic/help.html:140
+#: ../templates/classic/help.html:148
+#: ../templates/classic/help.html:156
+#: ../templates/classic/help.html:166
+#: ../templates/classic/help.html:176
+#: ../templates/classic/help.html:187
 #: ../templates/classic/help.html:191
 msgid "Filter configuration rules"
 msgstr "Filterkonfigurationsregeln"
@@ -1198,8 +1169,8 @@ msgstr "Filterkonfigurationsregeln"
 msgid "Filter https traffic through a local SSL server"
 msgstr "Filtere https Daten über einen lokalen SSL Server"
 
-#: ../templates/classic/macros/standard.html:43
-#: ../templates/classic/macros/standard.html:47
+#: ../templates/classic/macros/standard.html:44
+#: ../templates/classic/macros/standard.html:48
 msgid "Filter update"
 msgstr "Filteraktualisierung"
 
@@ -1252,8 +1223,8 @@ msgstr "Ordner erfolgreich umbenannt."
 msgid "Folders"
 msgstr "Ordner"
 
-#: ../templates/classic/macros/standard.html:81
-#: ../templates/classic/macros/standard.html:112
+#: ../templates/classic/macros/standard.html:83
+#: ../templates/classic/macros/standard.html:114
 msgid "Generated by ${appname} ${version}"
 msgstr "Generiert durch ${appname} ${version}"
 
@@ -1269,30 +1240,29 @@ msgstr "Gehe zur Bewertung:"
 msgid "Go to rule:"
 msgstr "Gehe zur Regel:"
 
-#: ../templates/classic/google.html:101 ../templates/classic/google.html:109
+#: ../templates/classic/google.html:101
+#: ../templates/classic/google.html:109
 msgid "Google Cache for"
 msgstr "Google Cache für"
 
-#: ../templates/classic/macros/rules.html:240
+#: ../templates/classic/macros/rules.html:286
 msgid "Header filters"
 msgstr "Header filtert"
 
-#: ../templates/classic/macros/rules.html:228
+#: ../templates/classic/macros/rules.html:272
 msgid "Header name"
 msgstr "Header Name"
 
-#: ../templates/classic/macros/rules.html:242
+#: ../templates/classic/macros/rules.html:288
 msgid "Header rules apply either to client request, server request or both"
-msgstr ""
-"Regen für Kopfdaten gelten entweder für Browser Anfragen, Server Anfragen "
-"oder für beide."
+msgstr "Regen für Kopfdaten gelten entweder für Browser Anfragen, Server Anfragen oder für beide."
 
-#: ../templates/classic/macros/rules.html:234
+#: ../templates/classic/macros/rules.html:280
 msgid "Header value"
 msgstr "Header Wert"
 
-#: ../templates/classic/macros/standard.html:59
-#: ../templates/classic/macros/standard.html:63
+#: ../templates/classic/macros/standard.html:60
+#: ../templates/classic/macros/standard.html:64
 msgid "Help"
 msgstr "Hilfe"
 
@@ -1317,10 +1287,7 @@ msgid "Htmlrewrite attribute(s) removed."
 msgstr "Htmlrewrite Attribut(e) wurde(n) gelöscht."
 
 #: ../templates/classic/feedback.html:20
-msgid ""
-"I wrote this software to get rid of advertisings. If you still see advert "
-"images on pages you surf on, you are free to send me the url of those pages "
-"and I will include filters to remove the adverts."
+msgid "I wrote this software to get rid of advertisings. If you still see advert images on pages you surf on, you are free to send me the url of those pages and I will include filters to remove the adverts."
 msgstr ""
 "Ich habe dieses Progamm geschrieben, um Werbung zu entfernen.\n"
 "Falls sie immer noch Werbebanner auf Seiten sehen, können sie mir eine\n"
@@ -1328,54 +1295,34 @@ msgstr ""
 "zu entfernen."
 
 #: ../templates/classic/help.html:201
-msgid ""
-"If there is no replacement given the specified tag part will be removed, "
-"else it will be replaced.<br> Back references to matched subgroups can be "
-"specified in the replacement string with a backslash and the subgroup number "
-"(ie. , , ...)."
-msgstr ""
-"Falls kein Ersatzwert angegeben wurde wird das angegebene Tag gelöscht, "
-"ansonsten wird es ersetzt.<br> Referenzen auf zugeordnete Untergruppen "
-"können im Ersatzwert durch einen umgekehrten Schrägstrich und die "
-"Untergruppennummer angegeben werden (z.B. \\1, \\2, ...)."
+msgid "If there is no replacement given the specified tag part will be removed, else it will be replaced.<br> Back references to matched subgroups can be specified in the replacement string with a backslash and the subgroup number (ie. , , ...)."
+msgstr "Falls kein Ersatzwert angegeben wurde wird das angegebene Tag gelöscht, ansonsten wird es ersetzt.<br> Referenzen auf zugeordnete Untergruppen können im Ersatzwert durch einen umgekehrten Schrägstrich und die Untergruppennummer angegeben werden (z.B. \\1, \\2, ...)."
+
+#: ../templates/classic/macros/rules.html:35
+msgid "If value is empty, the name is treated as a <a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
+msgstr "Falls der Wert leer ist, wird der Name als ein <a href=\"http://www.amk.ca/python/howto/regex/\">regulärer Ausdruck</a> behandelt."
 
 #: ../templates/classic/accessibility.html:25
-msgid ""
-"If you have any questions or comments about the accessibility of these "
-"pages, feel free to email me at <a href=\"mailto:calvin@users.sf.net"
-"\">calvin@users.sf.net</a>."
-msgstr ""
-"Falls sie Vorschläge oder Kommentare zur Zugänglichkeit dieser Seiten haben, "
-"können sie mich unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf."
-"net</a> erreichen."
+msgid "If you have any questions or comments about the accessibility of these pages, feel free to email me at <a href=\"mailto:calvin@users.sourceforge.net\">calvin@users.sourceforge.net</a>."
+msgstr "Falls sie Vorschläge oder Kommentare zur Zugänglichkeit dieser Seiten haben, können sie mich unter <a href=\"mailto:calvin@users.sourceforge.net\">calvin@users.sourceforge.net</a> erreichen."
 
 #: ../templates/classic/feedback.html:27
-msgid ""
-"If you have any suggestions or comments about ${appname}, feel free to email "
-"me at <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a>."
-msgstr ""
-"Falls sie Vorschläge oder Kommentare zu ${appname} haben, können sie mich "
-"unter <a href=\"mailto:calvin@users.sf.net\">calvin@users.sf.net</a> "
-"erreichen."
+msgid "If you have any suggestions or comments about ${appname}, feel free to email me at <a href=\"mailto:calvin@users.sourceforge.net\">calvin@users.sourceforge.net</a>."
+msgstr "Falls sie Vorschläge oder Kommentare zu ${appname} haben, können sie mich unter <a href=\"mailto:calvin@users.sourceforge.net\">calvin@users.sourceforge.net</a> erreichen."
 
 #: ../templates/classic/help.html:257
-msgid ""
-"If you specified zero or more than one attributes to match, 'attr' and "
-"'attrvalue' replace the first occuring or matching attribute or nothing."
-msgstr ""
-"Falls Sie keines oder mehr als ein Attribut angegeben haben, ersetzen die "
-"'attr' und 'attrvalue' Teile entweder das zuerst vorkommende Attribut oder "
-"gar keines."
+msgid "If you specified zero or more than one attributes to match, 'attr' and 'attrvalue' replace the first occuring or matching attribute or nothing."
+msgstr "Falls Sie keines oder mehr als ein Attribut angegeben haben, ersetzen die 'attr' und 'attrvalue' Teile entweder das zuerst vorkommende Attribut oder gar keines."
 
-#: ../templates/classic/macros/rules.html:317
+#: ../templates/classic/macros/rules.html:369
 msgid "Image JPEG quality"
 msgstr "JPEG Bildqualität"
 
-#: ../templates/classic/macros/rules.html:285
+#: ../templates/classic/macros/rules.html:334
 msgid "Image height"
 msgstr "Bildhöhe"
 
-#: ../templates/classic/macros/rules.html:279
+#: ../templates/classic/macros/rules.html:328
 msgid "Image width"
 msgstr "Bildbreite"
 
@@ -1490,12 +1437,12 @@ msgid "Invalid url."
 msgstr "Ungültige URL."
 
 #: ../templates/classic/rating.html:136
-msgid ""
-"Invalid url. The url has to start with <code>http://</code>, <code>https://</"
-"code> or <code>ftp://</code>."
-msgstr ""
-"Ungültige URL. Die URL muss mit <code>http://</code>, <code>https://</code> "
-"oder <code>ftp://</code> beginnen."
+msgid "Invalid url. The url has to start with <code>http://</code>, <code>https://</code> or <code>ftp://</code>."
+msgstr "Ungültige URL. Die URL muss mit <code>http://</code>, <code>https://</code> oder <code>ftp://</code> beginnen."
+
+#: ../templates/classic/macros/rules.html:69
+msgid "List of MIME types this rule should apply to"
+msgstr "Liste von MIME-Typen, auf die diese Regel zutreffen soll"
 
 #: ../templates/classic/config.html:353
 msgid "List of domain names the proxy must not filter."
@@ -1505,11 +1452,11 @@ msgstr "Liste von Domainnamen die dieser Proxy nicht filtern darf"
 msgid "List of hosts allowed to use this proxy."
 msgstr "Liste der Rechner die diesen Proxy benutzen dürfen"
 
-#: ../templates/classic/macros/rules.html:72
+#: ../templates/classic/macros/rules.html:110
 msgid "List of urls this rule must not apply to"
 msgstr "Liste von URLs die diese Regel nicht betreffen soll"
 
-#: ../templates/classic/macros/rules.html:55
+#: ../templates/classic/macros/rules.html:93
 msgid "List of urls this rule should apply to"
 msgstr "Liste von URLs auf die diese Regel zutreffen soll"
 
@@ -1517,11 +1464,15 @@ msgstr "Liste von URLs auf die diese Regel zutreffen soll"
 msgid "Location of the Clamav Antivirus software configuration file"
 msgstr "Ort der Clamav Antivirus Software Konfigurationsdatei."
 
+#: ../templates/classic/macros/rules.html:65
+msgid "MIME type"
+msgstr "MIME-Typ"
+
 #: ../templates/classic/rating.html:108
 msgid "Mail"
-msgstr ""
+msgstr "Email"
 
-#: ../templates/classic/macros/rules.html:51
+#: ../templates/classic/macros/rules.html:89
 msgid "Match urls"
 msgstr "Zutreffende URLs"
 
@@ -1529,7 +1480,7 @@ msgstr "Zutreffende URLs"
 msgid "Matching"
 msgstr "Zuordnung"
 
-#: ../templates/classic/macros/rules.html:323
+#: ../templates/classic/macros/rules.html:375
 msgid "Minimum image size"
 msgstr "Minimale Bildgröße"
 
@@ -1538,24 +1489,12 @@ msgid "Modified"
 msgstr "Geändert"
 
 #: ../templates/classic/help.html:318
-msgid ""
-"Modify HTTP headers. If the replacement value is empty, the header is "
-"deleted, else it gets replaced or added if it did not exist before."
-msgstr ""
-"Verändere HTTP Header. Falls der Ersatzwert leer ist, wird der Header "
-"gelöscht. Ansonsten wird er ersetzt oder hinzugefügt falls er vorher noch "
-"nicht existierte."
+msgid "Modify HTTP headers. If the replacement value is empty, the header is deleted, else it gets replaced or added if it did not exist before."
+msgstr "Verändere HTTP Header. Falls der Ersatzwert leer ist, wird der Header gelöscht. Ansonsten wird er ersetzt oder hinzugefügt falls er vorher noch nicht existierte."
 
 #: ../templates/classic/accessibility.html:36
-msgid ""
-"Most browsers support jumping to specific links by typing keys defined on "
-"the web site. On Windows, you can press ${alt-key} + an access key; on "
-"Macintosh, you can press ${control-key} + an access key."
-msgstr ""
-"Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen "
-"von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können "
-"sie ${alt-key} + Tastaturkommando tippen, unter Macintosh können sie "
-"${control-key} + Tastaturkommando tippen."
+msgid "Most browsers support jumping to specific links by typing keys defined on the web site. On Windows, you can press ${alt-key} + an access key; on Macintosh, you can press ${control-key} + an access key."
+msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können sie ${alt-key} + Tastaturkommando tippen, unter Macintosh können sie ${control-key} + Tastaturkommando tippen."
 
 #: ../templates/classic/filterconfig.html:44
 msgid "Move folder down"
@@ -1573,8 +1512,8 @@ msgstr "Regel nach unten schieben"
 msgid "Move rule up"
 msgstr "Regel nach oben schieben"
 
-#: ../templates/classic/macros/rules.html:514
-#: ../templates/classic/macros/rules.html:539
+#: ../templates/classic/macros/rules.html:606
+#: ../templates/classic/macros/rules.html:631
 msgid "Name"
 msgstr "Name"
 
@@ -1614,16 +1553,15 @@ msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
 msgid "Nofilter host(s) successfully removed."
 msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
 
-#: ../templates/classic/help.html:81 ../templates/classic/help.html:103
-#: ../templates/classic/help.html:112 ../templates/classic/help.html:131
+#: ../templates/classic/help.html:81
+#: ../templates/classic/help.html:103
+#: ../templates/classic/help.html:112
+#: ../templates/classic/help.html:131
 msgid "None"
 msgstr "Keine"
 
 #: ../templates/classic/help.html:338
-msgid ""
-"One activated Rating rule enables the content rating system in ${appname}. "
-"Several distinct content rating services including the one defined by "
-"${appname} itself can be configured."
+msgid "One activated Rating rule enables the content rating system in ${appname}. Several distinct content rating services including the one defined by ${appname} itself can be configured."
 msgstr ""
 "Eine aktivierte Bewertungsregel schaltet das Bewertungssytem in\n"
 "${appname} ein. Mehrere unterschiedliche Bewertungsdienstleister\n"
@@ -1667,23 +1605,12 @@ msgid "Parent proxy user successfully changed."
 msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
 
 #: ../templates/classic/help.html:161
-msgid ""
-"Parse HTML code and rewrite single tags, attributes and values. Execute and "
-"filter JavaScript. Parse and filter content rated pages. Filter HTML "
-"comments."
-msgstr ""
-"Parse HTML Daten und schreibe einzelne Tags, Attribute und Werte um. Führt "
-"JavaScript aus und filtert es. Parst in Seiten angegebene Inhaltsbewertungen "
-"und filtert diese Seiten. Filtert HTML Kommentare."
+msgid "Parse HTML code and rewrite single tags, attributes and values. Execute and filter JavaScript. Parse and filter content rated pages. Filter HTML comments."
+msgstr "Parse HTML Daten und schreibe einzelne Tags, Attribute und Werte um. Führt JavaScript aus und filtert es. Parst in Seiten angegebene Inhaltsbewertungen und filtert diese Seiten. Filtert HTML Kommentare."
 
 #: ../templates/classic/help.html:171
-msgid ""
-"Parse XML code and rewrite single tags, attributes and values. Plus there is "
-"the ability to filter embedded HTML content, often occuring in RSS feeds."
-msgstr ""
-"Parse XML Daten und schreibe einzelne Tags, Attribute und Werte um. Zudem "
-"existiert die Möglichkeit, HTML Inhalte zu filtern, welche oft in RSS "
-"Nachrichten vorkommen."
+msgid "Parse XML code and rewrite single tags, attributes and values. Plus there is the ability to filter embedded HTML content, often occuring in RSS feeds."
+msgstr "Parse XML Daten und schreibe einzelne Tags, Attribute und Werte um. Zudem existiert die Möglichkeit, HTML Inhalte zu filtern, welche oft in RSS Nachrichten vorkommen."
 
 #: ../templates/classic/help.html:145
 msgid "Parse and evaluate content rating system header values."
@@ -1702,25 +1629,19 @@ msgid "Password used for proxy authentitaction"
 msgstr "Passwort zur Proxy Authentifizierung"
 
 #: ../templates/classic/adminpass.html:22
-msgid ""
-"Please open the file ${configfile} and replace the line ${lineold} with:"
-msgstr ""
-"Bitte bearbeiten Sie die Datei ${configfile} und ersetzen Sie die Zeile "
-"${lineold} mit:"
+msgid "Please open the file ${configfile} and replace the line ${lineold} with:"
+msgstr "Bitte bearbeiten Sie die Datei ${configfile} und ersetzen Sie die Zeile ${lineold} mit:"
 
 #: ../templates/classic/rated.html:20
 msgid "Please point your browser somewhere else or"
 msgstr "Bitte besuchen Sie eine andere Internetseite oder"
 
 #: ../templates/classic/rating_mail.html:35
-msgid ""
-"Please specify an SMTP host to send the mail to. If unsure, leave it at "
-"<code>localhost</code>."
-msgstr ""
-"Geben Sie bitte einen SMTP Rechnernamen ein, an den die Email versandt wird. "
-"Falls Sie unsicher sind, lassen Sie <code>localhost</code> stehen."
+msgid "Please specify an SMTP host to send the mail to. If unsure, leave it at <code>localhost</code>."
+msgstr "Geben Sie bitte einen SMTP Rechnernamen ein, an den die Email versandt wird. Falls Sie unsicher sind, lassen Sie <code>localhost</code> stehen."
 
-#: ../templates/classic/config.html:54 ../templates/classic/config.html:249
+#: ../templates/classic/config.html:54
+#: ../templates/classic/config.html:249
 msgid "Port number"
 msgstr "Portnummer"
 
@@ -1740,12 +1661,13 @@ msgstr "Portnummer auf der dieser Proxy auf Anfragen wartet"
 msgid "Port successfully changed."
 msgstr "Portnummer erfolgreich geändert."
 
-#: ../templates/classic/macros/standard.html:27
-#: ../templates/classic/macros/standard.html:31
+#: ../templates/classic/macros/standard.html:28
+#: ../templates/classic/macros/standard.html:32
 msgid "Proxy configuration"
 msgstr "Proxykonfiguration"
 
-#: ../templates/classic/config.html:293 ../templates/classic/help.html:65
+#: ../templates/classic/config.html:293
+#: ../templates/classic/help.html:65
 msgid "Proxy filter modules"
 msgstr "Proxy Filtermodule"
 
@@ -1775,7 +1697,7 @@ msgstr "Proxy Benutzer"
 
 #: ../templates/classic/config.html:432
 msgid "Proxy user must have only ASCII characters."
-msgstr ""
+msgstr "Proxybenutzername darf nur aus ASCII-Zeichen bestehen."
 
 #: ../templates/classic/config.html:408
 msgid "Proxy user successfully changed."
@@ -1797,7 +1719,7 @@ msgstr "Kategorie der Inhaltsbewertung wurde erfolgreich geändert."
 msgid "Rating data mailed successfully."
 msgstr "Mail zur Inhaltsbewertung wurde erfolgreich versendet."
 
-#: ../templates/classic/macros/rules.html:411
+#: ../templates/classic/macros/rules.html:497
 msgid "Rating limits for ${service}:"
 msgstr "Bewertungsgrenzen für ${service}:"
 
@@ -1810,20 +1732,14 @@ msgid "Rating successfully updated."
 msgstr "Bewertung erfolgreich geändert."
 
 #: ../templates/classic/index.html:21
-msgid ""
-"Read the help for information on how to set up your browser to work with "
-"${appname}."
+msgid "Read the help for information on how to set up your browser to work with ${appname}."
 msgstr ""
 "Lesen Sie die Hilfe um zu erfahren welche\n"
 "Einstellungen Ihr Browser benötigt, um mit ${appname} zusammenzuarbeiten."
 
 #: ../templates/classic/help.html:332
-msgid ""
-"Remove comments from HTML source. Comments inside &lt;script&gt; or &lt;"
-"style&gt; tags are not removed."
-msgstr ""
-"Lösche Kommentare aus dem HTML Quelltext. Kommentare innerhalb von &lt;"
-"script&gt; or &lt;style&gt; Tags werden nicht gelöscht."
+msgid "Remove comments from HTML source. Comments inside &lt;script&gt; or &lt;style&gt; tags are not removed."
+msgstr "Lösche Kommentare aus dem HTML Quelltext. Kommentare innerhalb von &lt;script&gt; or &lt;style&gt; Tags werden nicht gelöscht."
 
 #: ../templates/classic/filterconfig.html:131
 msgid "Remove folder"
@@ -1837,13 +1753,15 @@ msgstr "Entferne Bilder bestimmter Breite und/oder Höhe."
 msgid "Remove rule"
 msgstr "Regel löschen"
 
-#: ../templates/classic/config.html:322 ../templates/classic/config.html:361
-#: ../templates/classic/macros/rules.html:61
-#: ../templates/classic/macros/rules.html:78
+#: ../templates/classic/config.html:322
+#: ../templates/classic/config.html:361
+#: ../templates/classic/macros/rules.html:75
+#: ../templates/classic/macros/rules.html:99
+#: ../templates/classic/macros/rules.html:116
 msgid "Remove selected"
 msgstr "Lösche Auswahl"
 
-#: ../templates/classic/macros/rules.html:534
+#: ../templates/classic/macros/rules.html:626
 msgid "Remove selected attributes"
 msgstr "Lösche ausgewählte Attribute"
 
@@ -1852,14 +1770,10 @@ msgid "Rename folder"
 msgstr "Ordner umbenennen"
 
 #: ../templates/classic/help.html:76
-msgid ""
-"Replace illegal binary characters in HTML code like the quote chars often "
-"found in Microsoft pages."
-msgstr ""
-"Ersetze illegale Zeichen in HTML code wie z.B. Anführungszeichen wie man sie "
-"oft in Microsoft Seiten findet."
+msgid "Replace illegal binary characters in HTML code like the quote chars often found in Microsoft pages."
+msgstr "Ersetze illegale Zeichen in HTML code wie z.B. Anführungszeichen wie man sie oft in Microsoft Seiten findet."
 
-#: ../templates/classic/macros/rules.html:565
+#: ../templates/classic/macros/rules.html:657
 msgid "Replace part"
 msgstr "Ersetzter Teil"
 
@@ -1871,20 +1785,20 @@ msgstr "Ersetze reguläre Ausdrücke in HTML oder JavaScript Seiten."
 msgid "Replace regular expressions in data streams."
 msgstr "Ersetze reguläre Ausdrücke in Daten."
 
-#: ../templates/classic/macros/rules.html:609
+#: ../templates/classic/macros/rules.html:704
 msgid "Replace type"
 msgstr "Ersatztyp"
 
-#: ../templates/classic/macros/rules.html:577
-#: ../templates/classic/macros/rules.html:623
+#: ../templates/classic/macros/rules.html:669
+#: ../templates/classic/macros/rules.html:718
 msgid "Replace value"
 msgstr "Zu ersetzender Text"
 
-#: ../templates/classic/macros/rules.html:476
+#: ../templates/classic/macros/rules.html:565
 msgid "Replacement"
 msgstr "Ersetzter Teil"
 
-#: ../templates/classic/macros/rules.html:202
+#: ../templates/classic/macros/rules.html:243
 msgid "Replacement URL"
 msgstr "Ersetzte URL"
 
@@ -1896,27 +1810,18 @@ msgstr "Anfrage und Antwort Header aller Mime-Typen."
 msgid "Request url of all mime types."
 msgstr "Anfrage URL aller Mime-Typen."
 
-#: ../templates/classic/help.html:127 ../templates/classic/help.html:137
-msgid ""
-"Response content data of all image types supported by the Python Imaging "
-"Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm."
-msgstr ""
-"Antwortdaten von allen Bildformaten die von der Python Imaging Library "
-"unterstützt werden: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm."
+#: ../templates/classic/help.html:127
+#: ../templates/classic/help.html:137
+msgid "Response content data of all image types supported by the Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm."
+msgstr "Antwortdaten von allen Bildformaten die von der Python Imaging Library unterstützt werden: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm."
 
 #: ../templates/classic/help.html:110
 msgid "Response content data of mime types image/gif"
 msgstr "Antwortdaten des Mimetyps image/gif"
 
 #: ../templates/classic/help.html:98
-msgid ""
-"Response content data of mime types text/*, application/postscript, "
-"application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav, "
-"image/x-portable-*map, x-world/x-vrml."
-msgstr ""
-"Antwortdaten mit Mime-Typ text/*, application/postscript, application/pdf, "
-"application/x-dvi, audio/basic, audio/midi, audio/x-wav, image/x-portable-"
-"*map, x-world/x-vrml."
+msgid "Response content data of mime types text/*, application/postscript, application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav, image/x-portable-*map, x-world/x-vrml."
+msgstr "Antwortdaten mit Mime-Typ text/*, application/postscript, application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav, image/x-portable-*map, x-world/x-vrml."
 
 #: ../templates/classic/help.html:79
 msgid "Response content data of text/html mime type."
@@ -1926,7 +1831,8 @@ msgstr "Antwortdaten mit Mime-Typ text/html"
 msgid "Response data of html and javascript"
 msgstr "Antwortdaten von HTML oder JavaScript"
 
-#: ../templates/classic/help.html:165 ../templates/classic/help.html:175
+#: ../templates/classic/help.html:165
+#: ../templates/classic/help.html:175
 #: ../templates/classic/help.html:186
 msgid "Response data of html pages"
 msgstr "Antwortdaten von HTML Seiten"
@@ -2081,17 +1987,14 @@ msgid "Saved ratings"
 msgstr "Gespeicherte Bewertungen"
 
 #: ../templates/classic/help.html:181
-msgid ""
-"Scan all data with the ClamAv virus scanner (which must be installed on the "
-"proxy host). For performance reasonse there is a maximum size of 4 MB. If an "
-"object exceeds that size the proxy gives an error."
+msgid "Scan all data with the ClamAv virus scanner (which must be installed on the proxy host). For performance reasonse there is a maximum size of 4 MB. If an object exceeds that size the proxy gives an error."
 msgstr ""
 
 #: ../templates/classic/google.html:151
 msgid "Search Google"
 msgstr "Suche mit Google"
 
-#: ../templates/classic/macros/rules.html:468
+#: ../templates/classic/macros/rules.html:557
 msgid "Search for"
 msgstr "Suche nach"
 
@@ -2100,65 +2003,20 @@ msgid "Search in ${site}"
 msgstr "Suche in ${site}"
 
 #: ../templates/classic/help.html:28
-msgid ""
-"Select <b>Edit -&gt; Preferences -&gt; Advanced -&gt; Proxies</b>.<br> "
-"Activate <b>Manual proxy configuration</b>.<br> Under <b>HTTP Proxy</b> "
-"enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>HTTPS "
-"Proxy</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under "
-"<b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> "
-"to use your new settings."
-msgstr ""
-"Wählen Sie <b>Bearbeiten -&gt; Einstellungen -&gt; Erweitert -&gt; Proxies</"
-"b>.<br> Aktivieren Sie <b>Manuelle Proxy-Konfiguration</b>.<br> Unter "
-"<b>HTTP-Proxy</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist "
-"${port}.<br> Unter <b>HTTPS-Proxy</b> geben Sie <i>localhost</i> ein, der "
-"<b>Port</b> ist ${port}.<br> Unter <b>Kein Proxy für</b> geben Sie "
-"<i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen "
-"Einstellungen zu verwenden."
+msgid "Select <b>Edit -&gt; Preferences -&gt; Advanced -&gt; Proxies</b>.<br> Activate <b>Manual proxy configuration</b>.<br> Under <b>HTTP Proxy</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>HTTPS Proxy</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
+msgstr "Wählen Sie <b>Bearbeiten -&gt; Einstellungen -&gt; Erweitert -&gt; Proxies</b>.<br> Aktivieren Sie <b>Manuelle Proxy-Konfiguration</b>.<br> Unter <b>HTTP-Proxy</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>HTTPS-Proxy</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Kein Proxy für</b> geben Sie <i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu verwenden."
 
 #: ../templates/classic/help.html:52
-msgid ""
-"Select <b>File -&gt; Preferences -&gt; Network -&gt; Proxy servers</b>.<br> "
-"Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}."
-"<br> Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is "
-"${port}.<br> Activate <b>Do not use Proxy on the adresses below</b> and "
-"enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new "
-"settings."
-msgstr ""
-"Wählen Sie <b>Datei -&gt; Einstellungen -&gt; Netzwerk -&gt; Proxyserver</b>."
-"<br> Aktivieren Sie <b>HTTP</b> und geben Sie <i>localhost</i> ein, der "
-"<b>Port</b> ist ${port}.<br> Aktivieren Sie <b>HTTPS</b> und geben Sie "
-"<i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Aktivieren Sie "
-"<b>Proxyserver für folgende Adressen nicht benutzen</b> und geben Sie "
-"<i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen "
-"Einstellungen zu übernehmen."
+msgid "Select <b>File -&gt; Preferences -&gt; Network -&gt; Proxy servers</b>.<br> Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>Do not use Proxy on the adresses below</b> and enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
+msgstr "Wählen Sie <b>Datei -&gt; Einstellungen -&gt; Netzwerk -&gt; Proxyserver</b>.<br> Aktivieren Sie <b>HTTP</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Aktivieren Sie <b>HTTPS</b> und geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Aktivieren Sie <b>Proxyserver für folgende Adressen nicht benutzen</b> und geben Sie <i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu übernehmen."
 
 #: ../templates/classic/help.html:43
-msgid ""
-"Select <b>Tools -&gt; Internet Options -&gt; Connections</b>.<br> Click on "
-"<b>LAN Settings</b>. If you have a dialup connection to the internet, select "
-"your dialup connection and click on <b>Settings</b>.<br> Activate <b>Use a "
-"proxy server</b>.<br> If activated, deactivate <b>Bypass proxy server for "
-"local addresses</b>.<br> Click on <b>Advanced</b>.<br> Under <b>HTTP</b> "
-"enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>Secure</b> "
-"enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Click <b>Ok</b> to "
-"use your new settings."
-msgstr ""
-"Wählen Sie <b>Extras -&gt; Internetoptionen -&gt; Verbindungen</b><br> "
-"Klicken Sie auf <b>LAN-Einstellungen</b>. Falls Sie eine DFÜ oder VPN "
-"Verbindung haben, wählen Sie die entsprechende Verbindung aus und klicken "
-"Sie unter DFÜ- und VPN-Einstellungen auf <b>Einstellungen</b>.<br> "
-"Aktivieren Sie <b>Proxyserver verwenden</b>.<br> Falls aktiviert, "
-"deaktivieren Sie <b>Proxyserver für lokale Adressen umgehen</b>.<br> Klicken "
-"Sie auf <b>Erweitert</b>.Unter <b>HTTP</b> geben Sie <i>localhost</i> ein, "
-"der <b>Port</b> ist ${port}.<br> Unter <b>Secure</b> geben Sie <i>localhost</"
-"i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Ausnahmen</b> geben Sie "
-"<i>localhost; 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b> um die neuen "
-"Einstellungen zu übernehmen."
+msgid "Select <b>Tools -&gt; Internet Options -&gt; Connections</b>.<br> Click on <b>LAN Settings</b>. If you have a dialup connection to the internet, select your dialup connection and click on <b>Settings</b>.<br> Activate <b>Use a proxy server</b>.<br> If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br> Click on <b>Advanced</b>.<br> Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Click <b>Ok</b> to use your new settings."
+msgstr "Wählen Sie <b>Extras -&gt; Internetoptionen -&gt; Verbindungen</b><br> Klicken Sie auf <b>LAN-Einstellungen</b>. Falls Sie eine DFÜ oder VPN Verbindung haben, wählen Sie die entsprechende Verbindung aus und klicken Sie unter DFÜ- und VPN-Einstellungen auf <b>Einstellungen</b>.<br> Aktivieren Sie <b>Proxyserver verwenden</b>.<br> Falls aktiviert, deaktivieren Sie <b>Proxyserver für lokale Adressen umgehen</b>.<br> Klicken Sie auf <b>Erweitert</b>.Unter <b>HTTP</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Secure</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Ausnahmen</b> geben Sie <i>localhost; 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b> um die neuen Einstellungen zu übernehmen."
 
 #: ../templates/classic/help.html:262
 msgid "Selector"
-msgstr ""
+msgstr "Selektor"
 
 #: ../templates/classic/rating_mail.html:42
 msgid "Send"
@@ -2170,70 +2028,42 @@ msgid "Skip to main content"
 msgstr "Zum Hauptinhalt springen"
 
 #: ../templates/classic/update.html:20
-msgid ""
-"The <b>Update filter configuration</b> button downloads new filter files "
-"from ${url} and merges their changes into the current configuration.<br> If "
-"something has changed, the new filter configuration files are saved and "
-"reloaded into the proxy."
-msgstr ""
-"Der Knopf <b>Aktualisierung der Filterkonfiguration</b> lädt neue "
-"Filterdateien von ${url} und fügt ihre Änderungen in die aktuelle "
-"Konfiguration ein.<br> Falls etwas geändert wurde, wird die neue "
-"Filterkonfiguration gespeichert und in den Proxy neu geladen."
+msgid "The <b>Update filter configuration</b> button downloads new filter files from ${url} and merges their changes into the current configuration.<br> If something has changed, the new filter configuration files are saved and reloaded into the proxy."
+msgstr "Der Knopf <b>Aktualisierung der Filterkonfiguration</b> lädt neue Filterdateien von ${url} und fügt ihre Änderungen in die aktuelle Konfiguration ein.<br> Falls etwas geändert wurde, wird die neue Filterkonfiguration gespeichert und in den Proxy neu geladen."
 
 #: ../templates/classic/adminpass.html:16
-msgid ""
-"The administrator password was not yet initialized. This password protects "
-"the web configuration pages. Without an administrator password, every user "
-"can change the proxy configuration."
-msgstr ""
-"Das Administratorpasswort wurde noch nicht initialisiert. Dieses Passwort "
-"schützt die Seiten der Webkonfiguration. Ohne ein Administratorpasswort kann "
-"jeder Benutzer die Proxy-Konfiguration ändern."
+msgid "The administrator password was not yet initialized. This password protects the web configuration pages. Without an administrator password, every user can change the proxy configuration."
+msgstr "Das Administratorpasswort wurde noch nicht initialisiert. Dieses Passwort schützt die Seiten der Webkonfiguration. Ohne ein Administratorpasswort kann jeder Benutzer die Proxy-Konfiguration ändern."
 
 #: ../templates/classic/adminpass.html:32
 msgid "The configuration also allows you to change the password."
 msgstr "Die Konfiguration erlaubt Ihnen auch, das Passwort zu ändern."
 
 #: ../templates/classic/rated.html:16
-msgid ""
-"The content of the requested page ${url} was rated for the following reason:"
-msgstr ""
-"Der Inhalt der angeforderten Seite ${url} wurde aus folgendem Grund gesperrt:"
+msgid "The content of the requested page ${url} was rated for the following reason:"
+msgstr "Der Inhalt der angeforderten Seite ${url} wurde aus folgendem Grund gesperrt:"
 
 #: ../templates/classic/macros/rules.html:21
-msgid ""
-"The supplied value resembles a <a href=\"http://www.amk.ca/python/howto/"
-"regex/\">regular expression</a>."
-msgstr ""
-"Der Wert ist ein <a href=\"http://www.amk.ca/python/howto/regex/\">regulärer "
-"Ausdruck</a>."
+#: ../templates/classic/macros/rules.html:30
+msgid "The supplied value resembles a <a href=\"http://www.amk.ca/python/howto/regex/\">regular expression</a>."
+msgstr "Der Wert ist ein <a href=\"http://www.amk.ca/python/howto/regex/\">regulärer Ausdruck</a>."
 
 #: ../templates/classic/rating.html:124
 msgid "There are no url ratings saved."
 msgstr "Es sind keine URL Bewertungen gespeichert."
 
-#: ../templates/classic/macros/standard.html:73
-#: ../templates/classic/macros/standard.html:104
+#: ../templates/classic/macros/standard.html:75
+#: ../templates/classic/macros/standard.html:106
 msgid "This page is also available in"
 msgstr "Diese Seite ist auch verfügbar auf"
 
 #: ../templates/classic/restart.html:23
-msgid ""
-"This proxy is restarting. You will be redirected to the new <a href="
-"\"\">main configuration page</a> automatically in 10 seconds."
-msgstr ""
-"Der Proxy startet neu. Sie werden in 10 Sekunden automatisch zur neuen <a "
-"href=\"\">Hauptseite</a> weitergeleitet."
+msgid "This proxy is restarting. You will be redirected to the new <a href=\"\">main configuration page</a> automatically in 10 seconds."
+msgstr "Der Proxy startet neu. Sie werden in 10 Sekunden automatisch zur neuen <a href=\"\">Hauptseite</a> weitergeleitet."
 
 #: ../templates/classic/accessibility.html:21
-msgid ""
-"This statement and almost all implemented techniques for accessible web "
-"sites are from Mark Pilgrims ${accessibility-link}."
-msgstr ""
-"Diese Erklärung sowie fast alle implementierten Techniken für "
-"behindertengerechte Webseiten stammen von Mark Pilgrims ${accessibility-"
-"link}."
+msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims ${accessibility-link}."
+msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Webseiten stammen von Mark Pilgrims ${accessibility-link}."
 
 #: ../templates/classic/config.html:104
 msgid "Timeout"
@@ -2243,13 +2073,14 @@ msgstr "Zeitüberschreitung"
 msgid "Timeout sucessfully changed."
 msgstr "Zeitüberschreitung wurde erfolgreich geändert."
 
-#: ../templates/classic/macros/rules.html:31
-#: ../templates/classic/macros/rules.html:110
+#: ../templates/classic/macros/rules.html:45
+#: ../templates/classic/macros/rules.html:148
 msgid "Title"
 msgstr "Überschrift"
 
-#: ../templates/classic/macros/rules.html:94
-#: ../templates/classic/rating.html:24 ../templates/classic/rating.html:85
+#: ../templates/classic/macros/rules.html:132
+#: ../templates/classic/rating.html:24
+#: ../templates/classic/rating.html:85
 msgid "URL"
 msgstr "URL"
 
@@ -2286,12 +2117,12 @@ msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
 msgid "Username used for proxy authentication"
 msgstr "Benutzername zur Proxy Authentifizierung"
 
-#: ../templates/classic/macros/rules.html:515
-#: ../templates/classic/macros/rules.html:547
+#: ../templates/classic/macros/rules.html:607
+#: ../templates/classic/macros/rules.html:639
 msgid "Value"
 msgstr "Wert"
 
-#: ../templates/classic/macros/standard.html:89
+#: ../templates/classic/macros/standard.html:91
 msgid "WebCleaner feedback information"
 msgstr "WebCleaner Feedback Information"
 
@@ -2306,60 +2137,35 @@ msgid "What it does when replacement is <i>foo</i>"
 msgstr "Ausgeführte Aktion falls der Ersatzwert <i>foo</i> ist"
 
 #: ../templates/classic/rating_mail.html:28
-msgid ""
-"When you klick on the send button below, the following information will be "
-"mailed to the author of ${appname} at ${email}:"
+msgid "When you klick on the send button below, the following information will be mailed to the author of ${appname} at ${email}:"
 msgstr ""
 "Wenn Sie unten auf Senden klicken, wird die folgende\n"
 "Information dem Autor von ${appname} an die Adresse\n"
 "${email} geschickt:"
 
-#: ../templates/classic/macros/rules.html:602
+#: ../templates/classic/macros/rules.html:697
 msgid "XML Selector"
-msgstr ""
+msgstr "XML Selektor"
 
 #: ../templates/classic/feedback.html:24
-msgid ""
-"You can of course always add your own filter rules, they will not be touched "
-"on a filter update."
-msgstr ""
-"Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden "
-"bei einer Filteraktualisierung nicht gelöscht."
+msgid "You can of course always add your own filter rules, they will not be touched on a filter update."
+msgstr "Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden bei einer Filteraktualisierung nicht gelöscht."
 
 #: ../templates/classic/rating.html:18
-msgid ""
-"You can rate and review web pages according to several given categories."
-msgstr ""
-"Sie können Webseiten nachschlagen und anhand einiger Kategorien bewerten."
+msgid "You can rate and review web pages according to several given categories."
+msgstr "Sie können Webseiten nachschlagen und anhand einiger Kategorien bewerten."
 
 #: ../templates/classic/rating_mail.html:20
-msgid ""
-"You can send me changed or new page ratings per email so I can review them "
-"and include the changes into an updated rating database."
-msgstr ""
-"Sie können mir geänderte oder neue Seitenbewertungen per Mail schicken so "
-"daß ich diese anschauen und in eine aktualisierte Bewertungsdatenbank "
-"einfügen kann."
+msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
+msgstr "Sie können mir geänderte oder neue Seitenbewertungen per Mail schicken so daß ich diese anschauen und in eine aktualisierte Bewertungsdatenbank einfügen kann."
 
 #: ../templates/classic/config.html:379
-msgid ""
-"You can specify complete domains or only their last parts with a leading "
-"dot. For example <code>.intra</code> will match any hosts ending with <code>."
-"intra</code>."
-msgstr ""
-"Sie könne ganze Domains oder nur den letzten Teil davon mit einem Punkt am "
-"Anfang angeben. Zum Beispiel trifft <code>.intra</code> auf alle "
-"Rechnernamen zu, die auf <code>.intra</code> enden."
+msgid "You can specify complete domains or only their last parts with a leading dot. For example <code>.intra</code> will match any hosts ending with <code>.intra</code>."
+msgstr "Sie könne ganze Domains oder nur den letzten Teil davon mit einem Punkt am Anfang angeben. Zum Beispiel trifft <code>.intra</code> auf alle Rechnernamen zu, die auf <code>.intra</code> enden."
 
 #: ../templates/classic/config.html:340
-msgid ""
-"You can specify network masks for whole subnets. For example "
-"<code>192.168.1.1/8</code> (local subnet) or <code>1.1.1.1/0</code> (every "
-"host)."
-msgstr ""
-"Sie können Netzwerkmasken für ganze Subnetze angeben. Zum Beispiel "
-"<code>192.168.1.1/8</code> (lokales Subnetz) oder <code>1.1.1.1/0</code> "
-"(jeder Rechner)."
+msgid "You can specify network masks for whole subnets. For example <code>192.168.1.1/8</code> (local subnet) or <code>1.1.1.1/0</code> (every host)."
+msgstr "Sie können Netzwerkmasken für ganze Subnetze angeben. Zum Beispiel <code>192.168.1.1/8</code> (lokales Subnetz) oder <code>1.1.1.1/0</code> (jeder Rechner)."
 
 #: ../templates/classic/help.html:20
 msgid "You have to configure your web browser to use ${appname} as a proxy."
@@ -2371,7 +2177,7 @@ msgstr ""
 msgid "Your request"
 msgstr "Ihre Anfrage"
 
-#: ../templates/classic/macros/standard.html:83
+#: ../templates/classic/macros/standard.html:85
 msgid "accessibility features of these pages"
 msgstr "Zugänglichkeitseigenschaften dieser Seiten"
 
@@ -2397,14 +2203,17 @@ msgstr "Strg-Taste"
 
 #: ../templates/classic/config.html:221
 #: ../templates/classic/macros/rules.html:19
+#: ../templates/classic/macros/rules.html:28
 msgid "footnote 1"
 msgstr "Fußnote 1"
 
 #: ../templates/classic/config.html:223
+#: ../templates/classic/macros/rules.html:33
 msgid "footnote 2"
 msgstr "Fußnote 2"
 
-#: ../templates/classic/config.html:225 ../templates/classic/config.html:286
+#: ../templates/classic/config.html:225
+#: ../templates/classic/config.html:286
 msgid "footnote 3"
 msgstr "Fußnote 3"
 
@@ -2428,18 +2237,18 @@ msgstr "Ersatztyp"
 msgid "replace value"
 msgstr "Ersatzwert"
 
-#: ../templates/classic/macros/rules.html:249
-#: ../templates/classic/macros/rules.html:251
+#: ../templates/classic/macros/rules.html:295
+#: ../templates/classic/macros/rules.html:297
 msgid "request"
 msgstr "Anfrage"
 
-#: ../templates/classic/macros/rules.html:245
-#: ../templates/classic/macros/rules.html:247
+#: ../templates/classic/macros/rules.html:291
+#: ../templates/classic/macros/rules.html:293
 msgid "request and response"
 msgstr "Anfrage und Antwort"
 
-#: ../templates/classic/macros/rules.html:253
-#: ../templates/classic/macros/rules.html:255
+#: ../templates/classic/macros/rules.html:299
+#: ../templates/classic/macros/rules.html:301
 msgid "response"
 msgstr "Antwort"
 
@@ -2461,21 +2270,27 @@ msgstr "return window.confirm('Diesen Ordner wirklich löschen?')"
 msgid "return window.confirm('Really remove this rule?')"
 msgstr "return window.confirm('Diese Regel wirklich löschen?')"
 
-#: ../templates/classic/config.html:33 ../templates/classic/config.html:58
-#: ../templates/classic/config.html:72 ../templates/classic/config.html:88
-#: ../templates/classic/macros/rules.html:51
-#: ../templates/classic/macros/rules.html:68
-#: ../templates/classic/macros/rules.html:94
-#: ../templates/classic/macros/rules.html:468
-#: ../templates/classic/macros/rules.html:547
+#: ../templates/classic/config.html:33
+#: ../templates/classic/config.html:58
+#: ../templates/classic/config.html:72
+#: ../templates/classic/config.html:88
+#: ../templates/classic/macros/rules.html:65
+#: ../templates/classic/macros/rules.html:89
+#: ../templates/classic/macros/rules.html:106
+#: ../templates/classic/macros/rules.html:132
+#: ../templates/classic/macros/rules.html:557
+#: ../templates/classic/macros/rules.html:639
 msgid "see footnote 1"
 msgstr "siehe Fußnote 1"
 
-#: ../templates/classic/config.html:131 ../templates/classic/config.html:159
+#: ../templates/classic/config.html:131
+#: ../templates/classic/config.html:159
+#: ../templates/classic/macros/rules.html:272
 msgid "see footnote 2"
 msgstr "siehe Fußnote 2"
 
-#: ../templates/classic/config.html:205 ../templates/classic/config.html:274
+#: ../templates/classic/config.html:205
+#: ../templates/classic/config.html:274
 msgid "see footnote 3"
 msgstr "siehe Fußnote 3"
 
@@ -2490,3 +2305,4 @@ msgstr "siehe Fußnote 5"
 #: ../templates/classic/rated.html:21
 msgid "supply a different rating for this page"
 msgstr "ändern Sie die Bewertung dieser Seite"
+
