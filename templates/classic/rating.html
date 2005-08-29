@@ -45,7 +45,7 @@ several given categories.</p>
 <tr tal:repeat="category categories">
 <td tal:define="global catname category/name"><label
  tal:attributes="for string:category_${catname}"
- tal:content="catname" i18n:translate="">violence</label>
+ tal:content="catname">violence</label>
 </td>
 <!-- category values -->
 <td tal:condition="not:category/iterable" colspan="3">
@@ -60,7 +60,7 @@ several given categories.</p>
 ><input type="radio"
  tal:condition="not:values/?catname/?value"
  tal:attributes="name string:category_${catname};value value"
->&nbsp;<span tal:content="value" i18n:translate="">Mild</span>
+>&nbsp;<span tal:content="value">Mild</span>
 </td>
 </tr>
 </tbody>
@@ -110,10 +110,10 @@ several given categories.</p>
 </tr></table></td>
 <td><a href="#" tal:attributes="href rurl"
  tal:content="rurl">http://imadoofus.com</a></td>
-<td><span i18n:translate="" tal:content="rating/generic">True</span></td>
+<td><span tal:content="rating/generic">True</span></td>
 <td><span
  tal:repeat="category rating/category_values/keys">
-<span tal:content="category" i18n:translate="">violence</span>="<span
+<span tal:content="category">violence</span>="<span
  tal:replace="rating/category_values/?category">0</span>"
 </span>
 </td>

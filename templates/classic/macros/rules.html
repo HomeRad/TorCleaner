@@ -511,7 +511,7 @@ Rule (don't) match url
 <tbody>
 <tr tal:repeat="category categories">
 <td tal:define="global catname category/name"
- tal:content="catname" i18n:translate="">violence</td>
+ tal:content="catname">violence</td>
 <td tal:condition="not:category/iterable" colspan="3">
 <input type="text" size="4"
  tal:attributes="name string:category_${catname};value currule/values/?catname"
@@ -524,7 +524,7 @@ Rule (don't) match url
 ><input type="radio"
  tal:condition="not:currule/values/?catname/?value"
  tal:attributes="name string:category_${catname};value value"
->&nbsp;<span tal:content="value" i18n:translate="">Mild</span>
+>&nbsp;<span tal:content="value">Mild</span>
  </td>
 </tr>
 </tbody>
