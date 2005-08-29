@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
 "POT-Creation-Date: 2005-08-29 16:50+0200\n"
-"PO-Revision-Date: 2005-08-29 18:55+0100\n"
+"PO-Revision-Date: 2005-08-29 21:34+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1120,7 +1120,7 @@ msgstr "Fehler beim Mailversand."
 
 #: ../templates/classic/config.html:226
 msgid "Example ClamAV config file:"
-msgstr ""
+msgstr "Beispieldatei für ClamAV Konfiguration:"
 
 #: ../templates/classic/help.html:327
 msgid "Execute and filter JavaScript (JS) in HTML pages using the integrated Spidermonkey JS engine. The filter deletes popups and places dynamic content emitted with document.write() into the HTML file."
@@ -1988,7 +1988,7 @@ msgstr "Gespeicherte Bewertungen"
 
 #: ../templates/classic/help.html:181
 msgid "Scan all data with the ClamAv virus scanner (which must be installed on the proxy host). For performance reasonse there is a maximum size of 4 MB. If an object exceeds that size the proxy gives an error."
-msgstr ""
+msgstr "Überprüfe alle Daten mit dem ClamAv Virus Scanner (dieser muss auf dem Proxy Rechner installiert sein). Aus Performancegründen gibt es eine Maximale Größe von 4 MB. Falls ein Objekt diese Größe übersteigt gibt der Proxy einen Fehler aus."
 
 #: ../templates/classic/google.html:151
 msgid "Search Google"
