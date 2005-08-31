@@ -38,7 +38,8 @@ MANIFEST: MANIFEST.in setup.py
 	$(PYTHON) setup.py sdist --manifest-only
 
 clean-local: clean-log
-	-$(PYTHON) setup.py clean --all #  ignore errors for this command
+# ignore errors for python clean
+	-$(PYTHON) setup.py clean --all
 	rm -f wc/HtmlParser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
@@ -82,7 +83,7 @@ crossbuild: all MANIFEST
 	  2>&1 | tee --append crossbuild.log
 
 distclean-local:
-	rm -rf dist build # just to be sure: clean build dir too
+	rm -rf dist build share
 	rm -f webcleaner-$(VERSION).tar.gz
 	rm -f webcleaner-$(VERSION).tar.gz.asc
 	rm -f MANIFEST _*_configdata.*
