@@ -25,6 +25,7 @@
   <nomatchurl>coverviewer\.(sourceforge|sf)\.net</nomatchurl>
   <nomatchurl>www\.eviltrash\.net</nomatchurl>
   <nomatchurl>www\.flumserberg\.ch</nomatchurl>
+  <nomatchurl>www\.bad-meyer\.de</nomatchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.370"
