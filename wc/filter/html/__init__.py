@@ -337,6 +337,7 @@ KnownInvalidTags = {
     "u2uforen" : None, # www.heise.de
     "update" : None, # slashdot.org
     "htmlpromo" : None, # www.pcworld.com
+    "noindex": None, # atomz.com software
 }
 
 
