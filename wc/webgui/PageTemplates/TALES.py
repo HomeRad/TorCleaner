@@ -278,6 +278,8 @@ class Context (object):
 
     def translate (self, domain, msgid, mapping=None,
                   context=None, target_language=None, default=None):
+        wc.log.debug(wc.LOG_TALES, "Translate %r for %r with %s",
+                     msgid, domain, str(self.i18n))
         if context is None:
             context = self.contexts.get('here')
         return self.i18n.translate(domain, msgid,
