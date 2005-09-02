@@ -1,5 +1,14 @@
 2.32 "" (release xx.xx.xxxx)
 
+  * Add <noindex> to known invalid HTML tag list. This avoids warnings
+    when such a tag is encountered.
+    Type: feature
+    Changed: wc/filter/html/__init__.py
+
+  * Fix translation of web GUI pages.
+    Type: bugfix
+    Changed: wc/__init__.py
+
 2.31 "Nothing" (release 30.8.2005)
 
   * Added missing http:// scheme to google.html error page.
