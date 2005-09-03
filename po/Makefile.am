@@ -18,15 +18,11 @@ MOFILES=$(patsubst %, %.mo, $(LANGUAGES) )
 
 all: $(MOFILES)
 
-# for development: copy the generated .mo files to a local share dir
-.PHONY: copymofiles
-copymofiles: $(MOFILES)
-	for la in $(LANGUAGES); do \
-	  if [ ! -d $(SHAREDIR)/$$la/LC_MESSAGES ]; then \
-	    mkdir -p $(SHAREDIR)/$$la/LC_MESSAGES; \
-	  fi; \
-          cp $$la.mo $(SHAREDIR)/$$la/LC_MESSAGES/$(PACKAGE).mo; \
-        done
+%.mo:	%.po
+	$(MSGFMT) -c --statistics -o $@ $<
+
+%.po:	$(TEMPLATE)
+	$(MSGMERGE) -U --suffix=.bak $@ $<
 
 .PHONY: template
 template: $(TEMPLATE)
@@ -36,11 +32,15 @@ $(TEMPLATE): $(POSOURCES) $(TEMPLATES)
           --keyword=_n:1,2 -o $(TEMPLATE) $(POSOURCES)
 	$(TALGETTEXT) -u $(TEMPLATE) $(TEMPLATES)
 
-%.po:	$(TEMPLATE)
-	$(MSGMERGE) -U --suffix=.bak $@ $<
-
-%.mo:	%.po
-	$(MSGFMT) -c --statistics -o $@ $<
+# for development: copy the generated .mo files to a local share dir
+.PHONY: copymofiles
+copymofiles: $(MOFILES)
+	for la in $(LANGUAGES); do \
+	  if [ ! -d $(SHAREDIR)/$$la/LC_MESSAGES ]; then \
+	    mkdir -p $(SHAREDIR)/$$la/LC_MESSAGES; \
+	  fi; \
+          install -m 0644 $$la.mo $(SHAREDIR)/$$la/LC_MESSAGES/$(PACKAGE).mo; \
+        done
 
 clean-local:
 	rm -f *.mo *.bak *.poedit
