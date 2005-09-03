@@ -119,7 +119,7 @@ def _filter (f, attrs):
             # background downloading if javascript is too slow
             print >>sys.stderr, "Test: oooooops"
             break
-    print "Filtered:", filtered
+    print filtered,
 
 
 if __name__=='__main__':
