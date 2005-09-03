@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-08-29 16:50+0200\n"
+"POT-Creation-Date: 2005-09-02 23:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -587,7 +587,6 @@ msgstr ""
 #, python-format
 msgid "Invalid command %r."
 msgstr ""
-
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91
 msgid "${appname} Google Selection"
@@ -1875,7 +1874,7 @@ msgid "Saved ratings"
 msgstr ""
 
 #: ../templates/classic/help.html:181
-msgid "Scan all data with the ClamAv virus scanner (which must be installed on the proxy host). For performance reasonse there is a maximum size of 4 MB. If an object exceeds that size the proxy gives an error."
+msgid "Scan all data with the ClamAv virus scanner (which must be installed on the proxy host). For performance reasons there is a maximum size of 4 MB. If an object exceeds that size the proxy gives an error."
 msgstr ""
 
 #: ../templates/classic/google.html:151
