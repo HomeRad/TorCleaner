@@ -1,4 +1,4 @@
-SUBDIRS = libjs service
+SUBDIRS = libjs service po
 DIST_SUBDIRS = $(SUBDIRS) doc po
 EXTRA_DIST = wc/tests \
 	wc/dns/tests \
@@ -61,6 +61,7 @@ clean-log:
 .PHONY: localbuild
 localbuild: all MANIFEST
 	$(MAKE) -C wc/HtmlParser
+	$(MAKE) -C po copymofiles
 	$(PYTHON) setup.py build
 	cp -f build/lib.linux-i686-$(PYVER)/wc/HtmlParser/htmlsax.so wc/HtmlParser/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
