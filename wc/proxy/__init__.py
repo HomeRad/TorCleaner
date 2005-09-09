@@ -100,14 +100,10 @@ def proxy_poll (timeout=0.0):
     """
     handlerCount = 0
     if wc.proxy.Dispatcher.socket_map:
-        r = [x for x in wc.proxy.Dispatcher.socket_map.itervalues()
-             if x.readable()]
-        w = [x for x in wc.proxy.Dispatcher.socket_map.itervalues()
-             if x.writable()]
         e = wc.proxy.Dispatcher.socket_map.values()
-        wc.log.debug(wc.LOG_PROXY, "select with %f timeout:", timeout)
-        for x in e:
-            wc.log.debug(wc.LOG_PROXY, "  %s", x)
+        r = [x for x in e if x.readable()]
+        w = [x for x in e if x.writable()]
+        wc.log.debug(wc.LOG_PROXY, "select with %f timeout", timeout)
         try:
             (r, w, e) = select.select(r, w, e, timeout)
         except select.error, why:
@@ -125,20 +121,22 @@ def proxy_poll (timeout=0.0):
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
-            # note: do _not_ put this if in a list filter
+            wc.log.debug(wc.LOG_PROXY, "poll handle write %s", x)
+            # note: do not put the following "if" in a list filter
             if not x.writable():
+                wc.log.debug(wc.LOG_PROXY, "not writable %s", x)
                 continue
             t = time.time()
-            wc.log.debug(wc.LOG_PROXY, "%s poll handle write", x)
             x.handle_write_event()
             handlerCount += 1
             _slow_check(x, t, 'wslow')
         for x in r:
-            # note: do _not_ put this if in a list filter
+            wc.log.debug(wc.LOG_PROXY, "poll handle read %s", x)
+            # note: do not put the following "if" in a list filter
             if not x.readable():
+                wc.log.debug(wc.LOG_PROXY, "not readable %s", x)
                 continue
             t = time.time()
-            wc.log.debug(wc.LOG_PROXY, "%s poll handle read", x)
             x.handle_read_event()
             handlerCount += 1
             _slow_check(x, t, 'rslow')
