@@ -147,7 +147,7 @@ class HttpServer (wc.proxy.Server.Server):
         if hasattr(self.socket, "state_string"):
             # SSL status string
             extra += " (%s)" % self.socket.state_string()
-        return '<%s:%-8s %s>' % ('server', self.state, extra)
+        return '<%s:%-8s %s>' % (self.__class__.__name__, self.state, extra)
 
     def process_connect (self):
         """
