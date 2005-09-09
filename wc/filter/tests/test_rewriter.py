@@ -238,6 +238,14 @@ class TestRewriter (unittest.TestCase):
         self.filt("""<a href="file://server%stext"></a>""" % percents,
                   """<a></a>""")
 
+    def testHrefDashes (self):
+        """
+        Mozilla Firefox dashes-in-hostname crash.
+        """
+        dashes = "-" * 44
+        self.filt("""<a href=https:%s >""" % dashes,
+                  """<a>""")
+
     def testITSVuln (self):
         """
         Microsoft Internet Explorer ITS Protocol Zone Bypass Vulnerability.

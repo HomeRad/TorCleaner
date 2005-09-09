@@ -35,11 +35,25 @@ import wc.url
 
 def _has_lots_of_percents (url):
     """
-    Return True iff url has more than 10 percent chars in a row.
+    Return True iff URL has more than 10 percent chars in a row.
     """
     if not url:
         return False
     return '%'*11 in url
+
+
+def _has_dashes_in_hostname (url):
+    """
+    Return True iff URL hostname has more than 1 consecutive dash.
+    """
+    i = url.find(":")
+    if i == -1:
+        return False
+    host = url[i+1:].lstrip("/")
+    i = host.find("/")
+    if i != -1:
+        host = host[:i]
+    return "--" in host
 
 
 class HtmlSecurity (object):
@@ -104,9 +118,9 @@ class HtmlSecurity (object):
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
                 del attrs[name]
 
-    def _check_percent_url (self, attrs, name, htmlfilter):
+    def _check_url (self, attrs, name, htmlfilter):
         """
-        Check if url has too much percent chars.
+        Check if url has suspicious patterns.
         """
         if attrs.has_key(name):
             url = attrs[name]
@@ -116,6 +130,12 @@ class HtmlSecurity (object):
                       "encoding overflow crash"
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
                 del attrs[name]
+            if _has_dashes_in_hostname(url):
+                # prevent firefox crash
+                msg = "%s %r\n Detected and prevented Firefox " \
+                      "dashes-in-hostname overflow crash"
+                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
+                del attrs[name]
 
     # tag specific scan methods, sorted alphabetically
 
@@ -123,7 +143,7 @@ class HtmlSecurity (object):
         """
         Check <a> start tag.
         """
-        self._check_percent_url(attrs, 'href', htmlfilter)
+        self._check_url(attrs, 'href', htmlfilter)
 
     def body_start (self, attrs, htmlfilter):
         """
@@ -201,9 +221,9 @@ class HtmlSecurity (object):
         Check <img> start tag.
         """
         # sanitize *src values
-        self._check_percent_url(attrs, 'src', htmlfilter)
+        self._check_url(attrs, 'src', htmlfilter)
         self._check_javascript_url(attrs, 'src', htmlfilter)
-        self._check_percent_url(attrs, 'lowsrc', htmlfilter)
+        self._check_url(attrs, 'lowsrc', htmlfilter)
         self._check_javascript_url(attrs, 'lowsrc', htmlfilter)
         # sanitize width/height values
         self._check_attr_size(attrs, 'width', htmlfilter)
