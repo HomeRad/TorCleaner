@@ -213,7 +213,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         """
         Try to fix requests. Return False on error, else True.
         """
-        # refresh with filtered request data
+        # Refresh with filtered request data.
+        # Assumes that the request now has correct syntax.
         self.method, self.url, protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > wc.proxy.Allowed.MAX_URL_LEN:
@@ -308,12 +309,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 self.error(400, _("Bad Request"))
                 return
         elif not self.hostname:
-            if self.method == 'CONNECT':
-                defaultport = 443
-            else:
-                defaultport = 80
             host = self.headers['Host']
-            self.hostname, self.port = urllib.splitnport(host, defaultport)
+            self.hostname, self.port = urllib.splitnport(host, self.port)
         if not self.hostname:
             wc.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
             self.error(400, _("Bad Request"))
