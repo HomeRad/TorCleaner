@@ -61,7 +61,7 @@ def get_serverctx (configdir):
     if serverctx is None:
         # Initialize context
         serverctx = SSL.Context(SSL.SSLv23_METHOD)
-        #serverctx.set_options(SSL.OP_NO_SSLv2)
+        serverctx.set_options(SSL.OP_NO_SSLv2)
         # Demand a certificate
         #serverctx.set_verify(SSL.VERIFY_PEER|SSL.VERIFY_FAIL_IF_NO_PEER_CERT,
         #                     verify_server_cb)
