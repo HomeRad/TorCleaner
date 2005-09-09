@@ -86,6 +86,7 @@ class ClientServerMatchmaker (object):
         mime type, regardless of the Content-Type header value.
         This is useful for JavaScript fetching and blocked pages.
         """
+        self.do_ssl = wc.configuration.config['sslgateway']
         self.sslserver = sslserver
         self.client = client
         self.localhost = client.localhost
@@ -99,7 +100,6 @@ class ClientServerMatchmaker (object):
         self.state = 'dns'
         self.server_busy = 0
         self.method, self.url, self.protocol = self.request.split()
-        do_ssl = wc.configuration.config['sslgateway']
         # prepare DNS lookup
         if wc.configuration.config['parentproxy']:
             self.hostname = wc.configuration.config['parentproxy']
@@ -109,7 +109,7 @@ class ClientServerMatchmaker (object):
                 auth = wc.configuration.config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r" % auth
         else:
-            if do_ssl and self.method == 'CONNECT':
+            if self.do_ssl and self.method == 'CONNECT':
                 # delegate to SSL gateway
                 self.hostname = 'localhost'
                 self.port = wc.configuration.config['sslport']
@@ -199,8 +199,7 @@ class ClientServerMatchmaker (object):
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
             try:
-                do_ssl = wc.configuration.config['sslgateway']
-                if self.sslserver and do_ssl:
+                if self.do_ssl and self.sslserver:
                     import wc.proxy.SslServer
                     klass = wc.proxy.SslServer.SslServer
                 else:
