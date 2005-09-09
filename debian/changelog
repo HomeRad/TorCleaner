@@ -1,8 +1,9 @@
 webcleaner (2.32-0.1) unstable; urgency=low
 
   * New upstream version
+  * Install .mo files into the package to have translations available
 
- -- Bastian Kleineidam <calvin@debian.org>  Mon, 29 Aug 2005 23:48:40 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  9 Sep 2005 20:14:09 +0200
 
 webcleaner (2.31-0.1) unstable; urgency=low
 
