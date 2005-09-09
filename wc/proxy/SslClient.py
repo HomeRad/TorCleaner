@@ -43,23 +43,6 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
         super(SslClient, self).__init__(sock, addr)
         self.allow = wc.proxy.Allowed.AllowedSslClient()
 
-    def __repr__ (self):
-        extra = ""
-        if hasattr(self, "persistent") and self.persistent:
-            extra += "persistent "
-        if hasattr(self, "request") and self.request:
-            try:
-                extra += self.request.split()[1]
-            except IndexError:
-                extra += '???'+self.request
-        else:
-            extra += 'being read'
-        if self.socket:
-            extra += " (%s)" % self.socket.state_string()
-        if not self.connected:
-            extra += " (unconnected)"
-        return '<%s:%-8s %s>' % ('sslclient', self.state, extra)
-
     def fix_request (self):
         # refresh with filtered request data
         self.method, self.url, self.protocol = self.request.split()

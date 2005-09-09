@@ -50,23 +50,6 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         # attempt connect
         self.try_connect()
 
-    def __repr__ (self):
-        """
-        Object description.
-        """
-        extra = ""
-        if hasattr(self, "persistent") and self.persistent:
-            extra += "persistent "
-        if hasattr(self, "addr") and self.addr and self.addr[1] != 80:
-            portstr = ':%d' % self.addr[1]
-            extra += '%s%s' % (self.addr[0], portstr)
-        if hasattr(self.socket, "state_string"):
-            extra += " (%s)" % self.socket.state_string()
-        if not self.connected:
-            extra += " (unconnected)"
-        #if len(extra) > 46: extra = extra[:43] + '...'
-        return '<%s:%-8s %s>' % ('sslserver', self.state, extra)
-
     def mangle_request_headers (self):
         """
         Modify HTTP request headers.
