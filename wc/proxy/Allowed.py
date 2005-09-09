@@ -106,3 +106,4 @@ class AllowedSslClient (AllowedHttpClient):
         self.methods = ['GET', 'HEAD', 'POST']
         self.schemes = ['https']
         self.connect_ports = []
+        self.http_ports.append(443)
