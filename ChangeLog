@@ -9,6 +9,15 @@
     Type: bugfix
     Changed: wc/__init__.py
 
+  * Disable SSLv2 connections. SSLv2 is old and mostly unused.
+    Type: feature
+    Changed: wc/proxy/ssl.py
+
+  * Use correct port number for relative client request URLs.
+    This fixes the SSL gateway functionality.
+    Type: bugfix
+    Changed: wc/proxy/{Http,Ssl}Client.py
+
 2.31 "Nothing" (release 30.8.2005)
 
   * Added missing http:// scheme to google.html error page.
