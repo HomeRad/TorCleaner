@@ -92,11 +92,6 @@ def get_clientctx (configdir):
         # activate all (safe) bug option workarounds; see also
         # http://www.openssl.org/docs/ssl/SSL_CTX_set_options.html
         clientctx.set_options(SSL.OP_ALL)
-        # set TLS rollback bug flag; see
-        # http://www.mail-archive.com/openssl-dev@openssl.org/msg11212.html
-        # and as an example
-        # https://bugzilla.mozilla.org/show_bug.cgi?id=217527
-        clientctx.set_options(SSL.OP_TLS_ROLLBACK_BUG)
         clientctx.use_privatekey_file(os.path.join(configdir, 'client.pkey'))
         clientctx.use_certificate_file(os.path.join(configdir, 'client.cert'))
         clientctx.load_verify_locations(os.path.join(configdir, 'CA.cert'))
