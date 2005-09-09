@@ -43,38 +43,8 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
         super(SslClient, self).__init__(sock, addr)
         self.allow = wc.proxy.Allowed.AllowedSslClient()
 
-    def fix_request (self):
-        # refresh with filtered request data
-        self.method, self.url, self.protocol = self.request.split()
-        # enforce a maximum url length
-        if len(self.url) > 2048:
-            wc.log.error(wc.LOG_PROXY,
-                         "%s request url length %d chars is too long",
-                         self, len(self.url))
-            self.error(400, _("URL too long"),
-                       txt=_('URL length limit is %d bytes.') % 2048)
-            return False
-        if len(self.url) > 255:
-            wc.log.warn(wc.LOG_PROXY,
-                        "%s request url length %d chars is very long",
-                        self, len(self.url))
-        # and unquote again
-        self.url = wc.url.url_norm(self.url)[0]
-        self.scheme, self.hostname, self.port, self.document = \
-                                                wc.url.url_split(self.url)
-        # fix missing trailing /
-        if not self.document:
-            self.document = '/'
-        # some clients send partial URI's without scheme, hostname
-        # and port to clients, so we have to handle this
-        if not self.scheme:
-            self.scheme = "https"
-        if not self.allow.is_allowed(self.method, self.scheme, self.port):
-            wc.log.warn(wc.LOG_PROXY, "Unallowed request %s", self.url)
-            self.error(403, _("Forbidden"))
-            return False
-        # request is ok
-        return True
+    def get_default_scheme (self):
+        return "https"
 
     def server_request (self):
         assert self.state == 'receive', \

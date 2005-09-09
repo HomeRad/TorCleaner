@@ -245,14 +245,17 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         # some clients send partial URI's without scheme, hostname
         # and port to clients, so we have to handle this
         if not self.scheme:
-            # default scheme is http
-            self.scheme = 'http'
+            self.scheme = self.get_default_scheme()
+            self.port = wc.url.default_ports[self.scheme]
         if not self.allow.is_allowed(self.method, self.scheme, self.port):
-            wc.log.warn(wc.LOG_PROXY, "Unallowed request %s", self.url)
+            wc.log.warn(wc.LOG_PROXY, "Unallowed request %r", self.request)
             self.error(403, _("Forbidden"))
             return False
         # request is ok
         return True
+
+    def get_default_scheme (self):
+        return "http"
 
     def process_headers (self):
         """
