@@ -5,22 +5,22 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/class/python-distutils.mk
 
-DEB_PYTHON_COMPILE_VERSION = 2.4
+DEB_PYTHON_COMPILE_VERSION=2.4
 
-PYTHON = python$(DEB_PYTHON_COMPILE_VERSION)
-PACKAGE := webcleaner
-BASE := debian/$(PACKAGE)
-DOCDIR := $(BASE)/usr/share/doc/$(PACKAGE)
-SHAREDIR := $(BASE)/usr/share/$(PACKAGE)
-ETCDIR := $(BASE)/etc/$(PACKAGE)
-SERVICEDIR := $(ETCDIR)/service
+PYTHON=python$(DEB_PYTHON_COMPILE_VERSION)
+PACKAGE:=webcleaner
+BASE:=debian/$(PACKAGE)
+DOCDIR:=$(BASE)/usr/share/doc/$(PACKAGE)
+SHAREDIR:=$(BASE)/usr/share/$(PACKAGE)
+ETCDIR:=$(BASE)/etc/$(PACKAGE)
+SERVICEDIR:=$(ETCDIR)/service
 
 # exclude files with special permissions
-DEB_FIXPERMS_EXCLUDE += /etc/webcleaner/webcleaner.conf /var/log/webcleaner
+DEB_FIXPERMS_EXCLUDE+=/etc/webcleaner/webcleaner.conf /var/log/webcleaner
 # do not install with "make", but with "python setup.py install"
-DEB_MAKE_INSTALL_TARGET =
+DEB_MAKE_INSTALL_TARGET=
 # webcleaner gets the python files
-DEB_DESTDIR = $(BASE)
+DEB_DESTDIR=$(BASE)
 
 makebuilddir/webcleaner::
 	$(PYTHON) setup.py sdist --manifest-only
@@ -30,6 +30,8 @@ makebuilddir/webcleaner::
 binary-post-install/webcleaner-common::
 # move files
 	dh_movefiles --sourcedir=debian/webcleaner
+# install .mo files
+	install -m 0644 po/de.mo debian/webcleaner-common/usr/share/locale/de/LC_MESSAGES/webcleaner.mo
 # and cleanup after moving
 	rm -rf $(BASE)/usr/share/webcleaner/templates
 	rm -rf $(BASE)/usr/share/webcleaner/examples
