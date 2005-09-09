@@ -23,6 +23,9 @@ import httplib
 import urlparse
 import sys
 import socket
+import select
+import errno
+import time
 from OpenSSL import SSL
 
 def request1 (url):
@@ -73,26 +76,61 @@ def proxyrequest2 (url, port):
     from wc.proxy.ssl import get_clientctx
     parts = urlparse.urlsplit(url)
     host = parts[1]
+    addr = (host, port)
     #path = urlparse.urlunsplit(('', '', parts[2], parts[3], parts[4]))
     sock = create_socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setblocking(0)
+    while True:
+        err = sock.connect_ex(addr)
+        if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
+            continue
+        elif err in (0, errno.EISCONN, errno.EALREADY):
+            break
+        else:
+            raise socket.error, (err, errno.errorcode[err])
     sslctx = get_clientctx('localconfig')
     import OpenSSL.SSL
     sock = OpenSSL.SSL.Connection(sslctx, sock)
-    addr = (socket.gethostbyname('localhost'), port)
     sock.set_connect_state()
-    sock.connect(addr)
-    sock.do_handshake()
-    sock.write('GET %s HTTP/1.1\r\n' % url)
-    sock.write('Host: %s\r\n' % host)
-    sock.write('\r\n')
     while True:
         try:
-            print repr(sock.read(80))
-        except SSL.ZeroReturnError:
+            sock.do_handshake()
+            break
+        except OpenSSL.SSL.WantReadError:
+            time.sleep(0.2)
+        except OpenSSL.SSL.WantWriteError:
+            time.sleep(0.2)
+    sock_write(sock, 'GET %s HTTP/1.1\r\n' % url)
+    sock_write(sock, 'Host: %s\r\n' % host)
+    sock_write(sock, '\r\n')
+    while True:
+        try:
+            want_read(sock)
+        except OpenSSL.SSL.ZeroReturnError:
             # finished
             break
     sock.shutdown()
     sock.close()
+
+def sock_write (sock, data):
+    import OpenSSL.SSL
+    while True:
+        try:
+            num_written = sock.write(data)
+            print num_written, "bytes written"
+            break
+        except OpenSSL.SSL.WantReadError:
+            want_read(sock)
+
+def want_read (sock):
+    import OpenSSL.SSL
+    r, w, e = select.select([sock], [], [], 0.2)
+    if not r:
+        return
+    try:
+        print repr(sock.read(1024))
+    except OpenSSL.SSL.WantReadError:
+        pass
 
 
 def proxyrequest3 (url, port):
@@ -164,14 +202,14 @@ def _main ():
     #request1(sys.argv[1])
     import wc.configuration
     wc.configuration.config = wc.configuration.init("localconfig")
-    port = wc.configuration.config['port']
-    sslport = wc.configuration.config['sslport']
-    #print "Get %s from localhost:%d" % (sys.argv[1], sslport)
+    #port = wc.configuration.config['port']
+    sslport = 443
+    #sslport = wc.configuration.config['sslport']
+    print "Get %s (port %d)" % (sys.argv[1], sslport)
     #proxyrequest1(sys.argv[1], sslport)
-    #proxyrequest2(sys.argv[1], sslport)
+    proxyrequest2(sys.argv[1], sslport)
     #proxyrequest3(sys.argv[1], sslport)
-    print "Get %s from localhost:%d" % (sys.argv[1], port)
-    proxyrequest4(sys.argv[1], port)
+    #proxyrequest4(sys.argv[1], port)
 
 
 if __name__=='__main__':
