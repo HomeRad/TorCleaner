@@ -143,6 +143,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                 extra += '???'+self.request
         else:
             extra += 'being read'
+        if hasattr(self.socket, "state_string"):
+            # SSL status string
+            extra += " (%s)" % self.socket.state_string()
         return '<%s:%-8s %s>' % ('client', self.state, extra)
 
     def process_read (self):
