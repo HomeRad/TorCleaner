@@ -24,7 +24,7 @@ Features
 - Basic, Digest and (untested) NTLM proxy authentication support
 - per-host access control
 - HTTP/1.1 support (persistent connections, pipelining)
-- HTTPS proxy CONNECT and optional SSL gateway support
+- HTTPS support (both forwarding and filtering)
 
 WebCleaner is featured in the `Linux Magazine Issue 43`_.
 The `article`_ is downloadable as PDF.
@@ -56,7 +56,7 @@ Screenshots
 
    +----------------------------+----------------------------+
    | .. image:: shot1_thumb.jpg | .. image:: shot2_thumb.jpg |
-   |      :align: middle        |      :align: middle        |
+   |      :align: center        |      :align: center        |
    |      :target: shot1.png    |      :target: shot2.png    |
    +----------------------------+----------------------------+
    | Proxy configuration        | Filter configuration       |
@@ -82,7 +82,7 @@ stuff, but the other JavaScript functions still work as usual.
 
 Exact HTML filtering has another good side-effect: it is possible to
 detect and prevent known security flaws in HTML processors. Several
-known (but not all!) buffer overflow exploits or Denial of Service
+known (but not all) buffer overflow exploits or Denial of Service
 attacks are detected and fixed by the HtmlSecurity class.
 
 If you find an HTML exploit that is not covered by the security filter,
@@ -99,8 +99,11 @@ Configuration
 
 Assuming your proxy runs on port *8080*, point your browser to
 http://localhost:8080/ to configure the proxy.
-The underlying configuration format is a custom XML format which is
-explained in config/filter.dtd and config/webcleaner.dtd.
+The underlying configuration format is a custom XML format. It is
+specified by the files `filter.dtd`_ and `webcleaner.dtd`_.
+
+.. _filter.dtd: filter/filter.dtd
+.. _webcleaner.dtd: filter/webcleaner.dtd
 
 
 Running
@@ -157,29 +160,6 @@ mailing list at the `subscription page`_ or read the `list archives`_.
 .. _list archives:
    http://sourceforge.net/mailarchive/forum.php?forum=webcleaner-users
 
-Notes
-=====
-
-WebCleaner is *not* a HTTP compliant proxy because it modifies requests,
-headers and data. Modifications aside, the proxy tries to fulfill
-the HTTP/1.1 specifications found in RFC 2616.
-
-Surf performance will decrease, especially with the Rewriter and the
-Replacer module enabled. It will decrease further with JavaScript
-parsing enabled, since the proxy downloads and parses <script src="">
-tags in the background.
-
-The Rewriter module parses the HTML. It optimizes HTML by making
-tags and attribute names lowercase and removing some (but not all)
-ignorable whitespace.
-
-The warning "unsupported content encoding" could lead to corrupted
-HTML pages. WebCleaner tries to filter even unknown-encoded content
-to prevent Denial of Service attacks (eg webservers sending always an
-unknown content-encoding).
-Currently, this affects only the "compress" or "x-compress" encoding,
-because the LZW algorithm to uncompress such content is patented and
-therefore not included in WebCleaner. See http://burnallgifs.org/.
 
 .. image:: http://sourceforge.net/sflogo.php?group_id=7692&type=1
    :align: right

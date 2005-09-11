@@ -17,29 +17,21 @@ some suggestions that might be helpful.
 - You will need additional software packages to work with the
   `WebCleaner CVS`_ repository:
   
-  - cvs client (evidently ;)
-  - automake >= 1.8
+  - a cvs client
+  - automake >= 1.9
   - libtool
   - python docutils >= 3.3
   
   Instructions to pull the CVS version are at the `WebCleaner CVS`_
   repository page.
   After checking out the CVS tree, run ``./autogen.sh`` to generate
-  all the Makefiles.
+  all the Makefiles. Then run ``make localbuild`` to compile a
+  local version. To start the proxy run ``test/startdev.sh config``.
 
-- When generating patches, they should be against the latest released
-  version or the CVS tree.
-
-- Unified diffs are much more readable, for example you can use
-  ``diff -BurN webcleaner webcleaner_patched > mypatch.diff``, or
-  ``cvs diff -u`` if you work with the CVS version of WebCleaner.
-
-- A consistent programming style helps others read and understand
-  the code. For that Python has released a
-  `Style Guide for Python Code`_.
+- When you want to send me patches, try to make them against
+  the latest released version or the CVS tree.
+  For example you can use ``cvs diff -u > mypatch.diff`` to generate
+  a CVS diff.
 
 .. _WebCleaner CVS:
    http://sourceforge.net/cvs/?group_id=7692
-
-.. _Style Guide for Python Code:
-   http://www.python.org/peps/pep-0008.html

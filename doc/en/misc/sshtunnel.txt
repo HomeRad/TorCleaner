@@ -27,13 +27,10 @@ am talking about, leave these scripts alone!
       #!/bin/sh
       D=/etc/webcleaner
       O=$D/webcleaner.conf
-      N=$D/webcleaner.new
       R="s/^ allowedhosts=.*/ allowedhosts=\"localhost,$PPP_LOCAL\"/"
       test -f $O || exit 0
-      rm -f $N
-      sed  -e "$R" $O > $N
-      mv -f $N $O
-      /etc/init.d/webcleaner reload
+      sed  -i -e "$R" $O
+      /usr/bin/webcleaner-ctl restart
       -- end file /etc/ppp/ip-up.d/30webcleaner --
 
 3. copy this script on your work box my.atworkbox.com::
