@@ -195,7 +195,7 @@ Setup for Windows - compiling from source:
    Now change into the generated directory with
    ``% cd webcleaner-X.Y`` and configure and compile the JavaScript
    library:
-   ``% ./configure && make``.
+   ``% ./configure && make -C libjs``.
 
 5. Install OpenSSL and compile PyOpenSSL
    
@@ -214,6 +214,7 @@ Setup for Windows - compiling from source:
 6. Generate the WebCleaner installer
    
    Change to the webcleaner-X.Y directory and run
+   ``c:> python setup.py sdist --manifest-only`` and
    ``c:> python setup.py build -c mingw32 bdist_wininst``.
 
    This generates a binary installer
