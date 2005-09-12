@@ -135,9 +135,16 @@ class MyInstallData (install_data, object):
 
     def run (self):
         """
-        Adjust permissions on POSIX systems.
+        Install .mo files and adjust permissions on POSIX systems.
         """
+        # add .mo files to data files
+        for (_src, _dst) in list_message_files(self.distribution.get_name()):
+            _build_dst = os.path.join("build", _dst)
+            item = [os.path.dirname(_dst), [_build_dst]]
+            self.data_files.append(item)
+        # install data files
         super(MyInstallData, self).run()
+        # adjust permissions
         if os.name == 'posix' and not self.dry_run:
             # Make the data files we just installed world-readable,
             # and the directories world-executable as well.
@@ -352,11 +359,15 @@ class MyBuildExt (build_ext, object):
 
 
 def compress_library (upx, filename):
+    """
+    Compresses a dynamic library file with upx (currently only .dll
+    files are supported).
+    """
     log.info("upx-compressing %s", filename)
     os.system('%s -q --best "%s"' % (upx, filename))
 
 
-def list_message_files(package, suffix=".po"):
+def list_message_files (package, suffix=".po"):
     """
     Return list of all found message files and their installation paths.
     """
