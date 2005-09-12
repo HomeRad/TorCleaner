@@ -22,6 +22,11 @@
     Type: feature
     Changed: wc/filter/html/HtmlSecurity.py, wc/filter/tests/Rewriter.py
 
+  * Compiled extensions (.pyd) are now compressed with UPX. This
+    reduces the download size of the Windows .exe installer.
+    Type: feature
+    Changed: setup.py
+
 2.31 "Nothing" (release 30.8.2005)
 
   * Added missing http:// scheme to google.html error page.
