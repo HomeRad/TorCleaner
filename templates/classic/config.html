@@ -227,8 +227,7 @@ Enable the VirusFilter module.
 <code tal:content="clamavconf">/etc/clamav/clamd.conf</code>
 </div>
 </fieldset>
-</td>
-<td>
+<br>
 <!-- parent proxy settings -->
 <fieldset>
 <legend i18n:translate="">Parent proxy settings</legend>
@@ -271,8 +270,8 @@ Enable the VirusFilter module.
 <label i18n:attributes="title"
  title="Password used for parent proxy authentication"
  for="parentproxypass" i18n:translate="">Password</label>
- <sup><a href="#footnote3" class="footnote" title="see footnote 3"
- i18n:attributes="title">3)</a></sup>
+ <sup><a href="#footnote4" class="footnote" title="see footnote 4"
+ i18n:attributes="title">4)</a></sup>
 </td>
 <td>
 <input class="text" type="password" name="parentproxypass" value="__dummy__"
@@ -283,23 +282,89 @@ Enable the VirusFilter module.
 </tr>
 </table>
 <div class="footnote">
-<sup id="footnote3" title="footnote 3" i18n:attributes="title">3)</sup>
+<sup id="footnote4" title="footnote 4" i18n:attributes="title">4)</sup>
 <span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span>
 </div>
 </fieldset>
-<br>
+</td>
+<td>
 <!-- proxy filter modules settings -->
 <fieldset>
 <legend i18n:translate="">Proxy filter modules</legend>
-<div tal:repeat="module filtermodules">
-  <input tal:condition="config/filterdict/?module" checked
-   type="checkbox" class="checkbox"
-   tal:attributes="value module;name string:filter${module}">
-  <input tal:condition="not:config/filterdict/?module"
-   type="checkbox" class="checkbox"
-   tal:attributes="value module;name string:filter${module}">
-  <span tal:replace="module">SomeFilter</span>
-</div>
+<table rules="cols" border="0" cellpadding="3" cellspacing="0" summary="">
+<tr style="border-bottom:1px solid black;">
+<th></th>
+<th i18n:translate="">Name</th>
+<th i18n:translate="">Description</th>
+</tr>
+
+<tr style="border-bottom:1px solid black;" tal:define="module string:BinaryCharFilter">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Replace binary characters from HTML documents with their ASCII equivalent</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:Blocker">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Block URL requests and show a replacement URL instead.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:Compress">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Compress HTML pages.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:GifImage">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Deanimate GIF images.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:Header">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Add and replace HTTP header values.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:HtmlRewriter">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Modify HTML pages.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:ImageReducer">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Replace images with small, low-quality JPEGs.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:ImageSize">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Replace images having a certain width and height.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:MimeRecognizer">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Guess a missing content type.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:RatingHeader">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Evaluate content rating HTTP headers.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:Replacer">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Replace regular expressions in HTML and text data.</td>
+</tr>
+<tr style="border-bottom:1px solid black;" tal:define="module string:VirusFilter">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Scan content data for viruses.</td>
+</tr>
+<tr tal:define="module string:XmlRewriter">
+<td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
+and name</td>
+<td i18n:translate="">Modify XML pages.</td>
+</tr>
+
+</table>
 </fieldset>
 </td>
 </tr>
@@ -326,8 +391,8 @@ Enable the VirusFilter module.
 <tr>
 <td>
 <input class="text" type="text" name="newallowed" value="">
-<sup><a href="#footnote4" class="footnote" title="see footnote 4"
- i18n:attributes="title">4)</a></sup>
+<sup><a href="#footnote5" class="footnote" title="see footnote 5"
+ i18n:attributes="title">5)</a></sup>
 </td>
 <td>
 <input type="submit" name="addallowed" value="Add new" class="submit"
@@ -336,7 +401,7 @@ Enable the VirusFilter module.
 </tr>
 </table>
 <div class="footnote">
-<sup id="footnote4" title="footnote 4" i18n:attributes="title">4)</sup>
+<sup id="footnote5" title="footnote 5" i18n:attributes="title">5)</sup>
 <span i18n:translate="">You can specify network masks for whole subnets.
 For example <code>192.168.1.1/8</code> (local subnet) or
 <code>1.1.1.1/0</code> (every host).</span><br>
@@ -365,8 +430,8 @@ For example <code>192.168.1.1/8</code> (local subnet) or
 <tr>
 <td>
 <input class="text" type="text" name="newnofilter" value="">
-<sup><a href="#footnote5" class="footnote" title="see footnote 5"
- i18n:attributes="title">5)</a></sup>
+<sup><a href="#footnote6" class="footnote" title="see footnote 5"
+ i18n:attributes="title">6)</a></sup>
 </td>
 <td>
 <input type="submit" name="addnofilter" value="Add new" class="submit"
@@ -375,7 +440,7 @@ For example <code>192.168.1.1/8</code> (local subnet) or
 </tr>
 </table>
 <div class="footnote">
-<sup id="footnote5" title="footnote 5" i18n:attributes="title">5)</sup>
+<sup id="footnote6" title="footnote 6" i18n:attributes="title">6)</sup>
 <span i18n:translate="">You can specify complete domains or only their last
 parts with a leading dot. For example <code>.intra</code> will
 match any hosts ending with <code>.intra</code>.</span><br>

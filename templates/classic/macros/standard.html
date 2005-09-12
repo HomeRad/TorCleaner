@@ -12,6 +12,18 @@
   Note: the TAL contexts from the calling templates are used here
  -->
 
+<!-- filter module checkbox -->
+<div metal:define-macro="modulecheckbox">
+<td><input tal:condition="config/filterdict/?module" checked
+ type="checkbox" class="checkbox"
+ tal:attributes="value module;name string:filter${module}">
+<input tal:condition="not:config/filterdict/?module"
+ type="checkbox" class="checkbox"
+ tal:attributes="value module;name string:filter${module}"></td>
+<td><span tal:replace="module">Module</span><sup><a href="help.html"
+ tal:attributes="href string:help.html.${lang}#${module}">?</a></sup></td>
+</div>
+
 <!-- navigation -->
 <div metal:define-macro="nav">
 <p class="skip"><a accesskey="2" href="#main"
