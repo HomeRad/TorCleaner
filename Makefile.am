@@ -61,8 +61,8 @@ clean-log:
 .PHONY: localbuild
 localbuild: all MANIFEST
 	$(MAKE) -C wc/HtmlParser
-	$(MAKE) -C po copymofiles
 	$(PYTHON) setup.py build
+	ln -sf build/share share
 	cp -f build/lib.linux-i686-$(PYVER)/wc/HtmlParser/htmlsax.so wc/HtmlParser/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/
@@ -84,7 +84,8 @@ crossbuild: all MANIFEST
 	  2>&1 | tee --append crossbuild.log
 
 distclean-local:
-	rm -rf dist build share
+	rm -rf dist build
+	rm -f share
 	rm -f webcleaner-$(VERSION).tar.gz
 	rm -f webcleaner-$(VERSION).tar.gz.asc
 	rm -f MANIFEST _*_configdata.*
