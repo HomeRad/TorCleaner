@@ -71,7 +71,7 @@ parts of request/response challenge it applies to. And each module can
 be further customized by separate rules in the filter configuration.
 </p>
 
-<h3>BinaryCharFilter</h3>
+<h3><a name="BinaryCharFilter">BinaryCharFilter</a></h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Replace illegal binary characters in HTML code like
 the quote chars often found in Microsoft pages.</p>
@@ -80,7 +80,7 @@ the quote chars often found in Microsoft pages.</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
 <p i18n:translate="">None</p>
 
-<h3>Blocker</h3>
+<h3><a name="Blocker">Blocker</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Block or allow specific sites by URL name.
 Before matching a URL the hostname and path is unquoted to avoid
@@ -90,7 +90,7 @@ spoofing attacks.</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
 Block, Allow
 
-<h3>Compress</h3>
+<h3><a name="Compress">Compress</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Compression of documents with good compression ratio
 like HTML, WAV, etc.</p>
@@ -102,7 +102,7 @@ image/x-portable-*map, x-world/x-vrml.</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
 <p i18n:translate="">None</p>
 
-<h3>GifImage</h3>
+<h3><a name="GifImage">GifImage</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Deanimates GIFs and removes all unwanted GIF image
 extensions (for example GIF comments).</p>
@@ -111,7 +111,7 @@ extensions (for example GIF comments).</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
 <p i18n:translate="">None</p>
 
-<h3>Header</h3>
+<h3><a name="Header">Header</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Add, modify and delete HTTP headers of request and response.</p>
 <h4 i18n:translate="">Applies to</h4>
@@ -119,7 +119,17 @@ extensions (for example GIF comments).</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
 Header
 
-<h3>ImageReducer</h3>
+<h3><a name="HtmlRewriter">HtmlRewriter</h3>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Parse HTML code and rewrite single tags, attributes
+and values. Execute and filter JavaScript. Parse and filter content rated
+pages. Filter HTML comments.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response data of html pages</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Javascript, Nocomments, Rating, Htmlrewrite
+
+<h3><a name="ImageReducer">ImageReducer</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Convert images to low quality JPEG files to reduce
 bandwidth</p>
@@ -130,7 +140,7 @@ Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.
 <h4 i18n:translate="">Filter configuration rules</h4>
 <p i18n:translate="">None</p>
 
-<h3>ImageSize</h3>
+<h3><a name="ImageSize">ImageSize</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Remove images with certain width and/or height.</p>
 <h4 i18n:translate="">Applies to</h4>
@@ -140,7 +150,7 @@ Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.
 <h4 i18n:translate="">Filter configuration rules</h4>
 Image
 
-<h3>RatingHeader</h3>
+<h3><a name="RatingHeader">RatingHeader</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Parse and evaluate content rating system header values.</p>
 <h4 i18n:translate="">Applies to</h4>
@@ -148,7 +158,7 @@ Image
 <h4 i18n:translate="">Filter configuration rules</h4>
 Rating
 
-<h3>Replacer</h3>
+<h3><a name="Replacer">Replacer</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Replace regular expressions in data streams.</p>
 <h4 i18n:translate="">Applies to</h4>
@@ -156,27 +166,7 @@ Rating
 <h4 i18n:translate="">Filter configuration rules</h4>
 Replace
 
-<h3>HtmlRewriter</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Parse HTML code and rewrite single tags, attributes
-and values. Execute and filter JavaScript. Parse and filter content rated
-pages. Filter HTML comments.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response data of html pages</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Javascript, Nocomments, Rating, Htmlrewrite
-
-<h3>XmlRewriter</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Parse XML code and rewrite single tags, attributes
-and values. Plus there is the ability to filter embedded HTML content,
-often occuring in RSS feeds.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response data of html pages</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Htmlrewrite, Xmlrewrite
-
-<h3>VirusFilter</h3>
+<h3><a name="VirusFilter">VirusFilter</h3>
 <h4 i18n:translate="">Description</h4>
 <p i18n:translate="">Scan all data with the ClamAv virus scanner (which must
 be installed on the proxy host). For performance reasons there is a
@@ -186,6 +176,16 @@ error.</p>
 <p i18n:translate="">Response data of html pages</p>
 <h4 i18n:translate="">Filter configuration rules</h4>
 Antivirus
+
+<h3><a name="XmlRewriter">XmlRewriter</h3>
+<h4 i18n:translate="">Description</h4>
+<p i18n:translate="">Parse XML code and rewrite single tags, attributes
+and values. Plus there is the ability to filter embedded HTML content,
+often occuring in RSS feeds.</p>
+<h4 i18n:translate="">Applies to</h4>
+<p i18n:translate="">Response data of html pages</p>
+<h4 i18n:translate="">Filter configuration rules</h4>
+Htmlrewrite, Xmlrewrite
 
 
 <h2 i18n:translate="">Filter configuration rules</h2>
