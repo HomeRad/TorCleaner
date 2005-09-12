@@ -30,8 +30,6 @@ makebuilddir/webcleaner::
 binary-post-install/webcleaner-common::
 # move files
 	dh_movefiles --sourcedir=debian/webcleaner
-# install .mo files
-	install -m 0644 po/de.mo debian/webcleaner-common/usr/share/locale/de/LC_MESSAGES/webcleaner.mo
 # and cleanup after moving
 	rm -rf $(BASE)/usr/share/webcleaner/templates
 	rm -rf $(BASE)/usr/share/webcleaner/examples
