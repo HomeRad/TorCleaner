@@ -71,126 +71,169 @@ parts of request/response challenge it applies to. And each module can
 be further customized by separate rules in the filter configuration.
 </p>
 
-<h3><a name="BinaryCharFilter">BinaryCharFilter</a></h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Replace illegal binary characters in HTML code like
-the quote chars often found in Microsoft pages.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response content data of text/html mime type.</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-<p i18n:translate="">None</p>
+<table rules="cols" border="0" cellpadding="5" cellspacing="0" summary="">
+<thead>
+<tr style="border-bottom:1px solid black;">
+<th i18n:translate="">Name</th>
+<th i18n:translate="">Description</th>
+<th i18n:translate="">Applies to</th>
+<th i18n:translate="">Configuration rules</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid black;">
+<td><a name="BinaryCharFilter">BinaryCharFilter</a></td>
+<td i18n:translate="">Replace illegal binary characters in HTML code like
+the quote chars often found in Microsoft pages.</td>
+<td i18n:translate="">MIME types: text/html<br>
+HTTP stages: response content body
+</td>
+<td i18n:translate="">None</td>
+</tr>
 
-<h3><a name="Blocker">Blocker</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Block or allow specific sites by URL name.
+<tr style="border-bottom:1px solid black;">
+<td><a name="Blocker">Blocker</td>
+<td i18n:translate="">Block or allow specific sites by URL name.
 Before matching a URL the hostname and path is unquoted to avoid
-spoofing attacks.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Request url of all mime types.</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Block, Allow
+spoofing attacks.</td>
+<td i18n:translate="">
+MIME types: all<br>
+HTTP stages: request URL
+</td>
+<td>
+<a href="#BlockRule">Block</a>,
+<a href="#AllowRule">Allow</a>
+</td>
+</tr>
 
-<h3><a name="Compress">Compress</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Compression of documents with good compression ratio
-like HTML, WAV, etc.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response content data of mime types
-text/*, application/postscript, application/pdf, application/x-dvi,
-audio/basic, audio/midi, audio/x-wav,
-image/x-portable-*map, x-world/x-vrml.</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-<p i18n:translate="">None</p>
+<tr style="border-bottom:1px solid black;">
+<td><a name="Compress">Compress</td>
+<td i18n:translate="">Compression of documents with good compression ratio
+like HTML, WAV, etc.</td>
+<td i18n:translate="">MIME types: text/*, application/postscript,
+application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav,
+image/x-portable-*map, x-world/x-vrml<br>
+HTTP stages: response content body
+</td>
+<td i18n:translate="">None</td>
+</tr>
 
-<h3><a name="GifImage">GifImage</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Deanimates GIFs and removes all unwanted GIF image
-extensions (for example GIF comments).</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response content data of mime types image/gif</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-<p i18n:translate="">None</p>
+<tr style="border-bottom:1px solid black;">
+<td><a name="GifImage">GifImage</td>
+<td i18n:translate="">Deanimates GIFs and removes all unwanted GIF image
+extensions (for example GIF comments).</td>
+<td i18n:translate="">MIME types: image/gif<br>
+HTTP stages: response content body</td>
+<td i18n:translate="">None</td>
+</tr>
 
-<h3><a name="Header">Header</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Add, modify and delete HTTP headers of request and response.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Request and response headers of all mime types.</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Header
+<tr style="border-bottom:1px solid black;">
+<td><a name="Header">Header</td>
+<td i18n:translate="">Add, modify and delete HTTP headers of request and response.</td>
+<td i18n:translate="">MIME types: all<br>
+HTTP stages: request and response headers</td>
+<td>
+<a href="#HeaderRule">Header</a>
+</td>
+</tr>
 
-<h3><a name="HtmlRewriter">HtmlRewriter</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Parse HTML code and rewrite single tags, attributes
+<tr style="border-bottom:1px solid black;">
+<td><a name="HtmlRewriter">HtmlRewriter</td>
+<td i18n:translate="">Parse HTML code and rewrite single tags, attributes
 and values. Execute and filter JavaScript. Parse and filter content rated
-pages. Filter HTML comments.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response data of html pages</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Javascript, Nocomments, Rating, Htmlrewrite
+pages. Filter HTML comments.</td>
+<td i18n:translate="">MIME types: text/html<br>
+HTTP stages: response content body</td>
+<td>
+<a href="#JavascriptRule">Javascript</a>,
+<a href="#NocommentsRule">Nocomments</a>,
+<a href="#RatingRule">Rating</a>,
+<a href="#HtmlrewriteRule">Htmlrewrite</a>
+</td>
+</tr>
 
-<h3><a name="ImageReducer">ImageReducer</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Convert images to low quality JPEG files to reduce
-bandwidth</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response content data of all image types supported by the
-Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.
-</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-<p i18n:translate="">None</p>
+<tr style="border-bottom:1px solid black;">
+<th i18n:translate="">Name</th>
+<th i18n:translate="">Description</th>
+<th i18n:translate="">Applies to</th>
+<th i18n:translate="">Configuration rules</th>
+</tr>
 
-<h3><a name="ImageSize">ImageSize</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Remove images with certain width and/or height.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response content data of all image types supported by the
-Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm.
-</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Image
+<tr style="border-bottom:1px solid black;">
+<td><a name="ImageReducer">ImageReducer</td>
+<td i18n:translate="">Convert images to low quality JPEG files to reduce
+bandwidth</td>
+<td i18n:translate="">MIME types: all image types supported by the
+Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm<br>
+HTTP stages: response content body
+</td>
+<td i18n:translate="">None</td>
+</tr>
 
-<h3><a name="RatingHeader">RatingHeader</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Parse and evaluate content rating system header values.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response headers of all mime types.</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Rating
+<tr style="border-bottom:1px solid black;">
+<td><a name="ImageSize">ImageSize</td>
+<td i18n:translate="">Remove images with certain width and/or height.</td>
+<td i18n:translate="">MIME types: all image types supported by the
+Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm<br>
+HTTP stages: response content body
+</td>
+<td>
+<a href="#ImageRule">Image</a>
+</td>
+</tr>
 
-<h3><a name="Replacer">Replacer</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Replace regular expressions in data streams.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response data of html and javascript</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Replace
+<tr style="border-bottom:1px solid black;">
+<td><a name="RatingHeader">RatingHeader</td>
+<td i18n:translate="">Parse and evaluate content rating system header values.</td>
+<td i18n:translate="">MIME types: all<br>
+HTTP stages: response headers</td>
+<td>
+<a href="#RatingRule">Rating</a>
+</td>
+</tr>
 
-<h3><a name="VirusFilter">VirusFilter</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Scan all data with the ClamAv virus scanner (which must
+<tr style="border-bottom:1px solid black;">
+<td><a name="Replacer">Replacer</td>
+<td i18n:translate="">Replace regular expressions in data streams.</td>
+<td i18n:translate="">MIME types: text/html, (text|application)/javascript<br>
+HTTP stages: response content body</td>
+<td>
+<a href="#ReplaceRule">Replace</a>
+</td>
+</tr>
+
+<tr style="border-bottom:1px solid black;">
+<td><a name="VirusFilter">VirusFilter</td>
+<td i18n:translate="">Scan all data with the ClamAv virus scanner (which must
 be installed on the proxy host). For performance reasons there is a
 maximum size of 4 MB. If an object exceeds that size the proxy gives an
-error.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response data of html pages</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Antivirus
+error.</td>
+<td i18n:translate="">MIME types: text/html<br>
+HTTP stages: response content body</td>
+<td>
+<a href="#AntivirusRule">Antivirus</a>
+</td>
+</tr>
 
-<h3><a name="XmlRewriter">XmlRewriter</h3>
-<h4 i18n:translate="">Description</h4>
-<p i18n:translate="">Parse XML code and rewrite single tags, attributes
+<tr>
+<td><a name="XmlRewriter">XmlRewriter</td>
+<td i18n:translate="">Parse XML code and rewrite single tags, attributes
 and values. Plus there is the ability to filter embedded HTML content,
-often occuring in RSS feeds.</p>
-<h4 i18n:translate="">Applies to</h4>
-<p i18n:translate="">Response data of html pages</p>
-<h4 i18n:translate="">Filter configuration rules</h4>
-Htmlrewrite, Xmlrewrite
+often occuring in RSS feeds.</td>
+<td i18n:translate="">MIME types: text/html<br>
+HTTP stages: response content body</td>
+<td>
+<a href="#HtmlrewriteRule">Htmlrewrite</a>,
+<a href="#XmlrewriteRule">Xmlrewrite</a>
+</td>
+</tr>
 
+</tbody>
+</table>
 
 <h2 i18n:translate="">Filter configuration rules</h2>
 
-<h3>Htmlrewrite</h3>
+<h3><a name="HtmlrewriteRule">Htmlrewrite</a></h3>
 <h4 i18n:translate="">Matching</h4>
 <p i18n:translate="">A HTML rewrite rule applies to one specified HTML tag and
 can replace (or delete if the replacement data is empty) parts of or the
@@ -258,7 +301,7 @@ string with a backslash and the subgroup number (ie. \1, \2, ...).</p>
 to match, 'attr' and 'attrvalue' replace the first occuring or matching
 attribute or nothing.</p>
 
-<h3>Xmlrewrite</h3>
+<h3><a name="XmlrewriteRule">Xmlrewrite</a></h3>
 <h4 i18n:translate="">Selector</h4>
 <p i18n:translate="">An XML rewrite rule applies to one specific XML tag
 and can replace (or delete) parts of or the complete tag.
@@ -298,11 +341,11 @@ Htmlrewrite rules.</td>
 </tbody>
 </table>
 
-<h3>Replace</h3>
+<h3><a name="ReplaceRule">Replace</a></h3>
 <p i18n:translate="">Replace regular expressions in HTML or JavaScript
 pages.</p>
 
-<h3>Block</h3>
+<h3><a name="BlockRule">Block</a></h3>
 <p i18n:translate="">A block rule specifies regular expressions for urls
 which must be blocked.<br>
 The replacement URL specifies the URL to show when the block matches. If none
@@ -310,29 +353,45 @@ is given a default block message is shown.<br>
 Back references to matched subgroups can be specified in the replacement
 url with a backslash and the subgroup number (ie. \1, \2, ...).</p>
 
-<h3>Allow</h3>
+<h3><a name="BlockdomainsRule">Blockdomains</a></h3>
+<p i18n:translate="">Block a list of domains. The domain list is
+stored in an extern compressed file.</p>
+
+<h3><a name="BlockurlsRule">Blockurls</a></h3>
+<p i18n:translate="">Block a list of URLs. The URL list is
+stored in an extern compressed file.</p>
+
+<h3><a name="AllowRule">Allow</a></h3>
 <p i18n:translate="">An allow rule specifies regular expressions for urls
 which must be allowed, even if a matching block rule exists.</p>
 
-<h3>Header</h3>
+<h3><a name="AllowdomainsRule">Allowdomains</a></h3>
+<p i18n:translate="">Allow a list of domains. The domain list is
+stored in an extern compressed file.</p>
+
+<h3><a name="AllowurlsRule">Allowurls</a></h3>
+<p i18n:translate="">Allow a list of URLs. The URL list is
+stored in an extern compressed file.</p>
+
+<h3><a name="HeaderRule">Header</a></h3>
 <p i18n:translate="">Modify HTTP headers. If the replacement value is empty,
 the header is deleted, else it gets replaced or added if it did not exist
 before.</p>
 
-<h3>Image</h3>
+<h3><a name="ImageRule">Image</a></h3>
 <p i18n:translate="">Block images with a certain size by replacing
 them with a transparent 1x1 image.</p>
 
-<h3>Javascript</h3>
+<h3><a name="JavascriptRule">Javascript</a></h3>
 <p i18n:translate="">Execute and filter JavaScript (JS) in HTML pages using
 the integrated Spidermonkey JS engine. The filter deletes popups and places
 dynamic content emitted with document.write() into the HTML file.</p>
 
-<h3>Nocomments</h3>
+<h3><a name="NocommentsRule">Nocomments</a></h3>
 <p i18n:translate="">Remove comments from HTML source. Comments inside
 &lt;script&gt; or &lt;style&gt; tags are not removed.</p>
 
-<h3>Rating</h3>
+<h3><a name="RatingRule">Rating</a></h3>
 <p i18n:translate="">One activated Rating rule enables the content rating
 system in <span tal:replace="AppName" i18n:name="appname">WebCleaner</span>. Several distinct content rating services including
 the one defined by <span tal:replace="AppName" i18n:name="appname">WebCleaner</span> itself can be configured.</p>

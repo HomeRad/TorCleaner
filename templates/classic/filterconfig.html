@@ -151,7 +151,9 @@ filter rule configuration</title>
 <div tal:repeat="rule rulenames" tal:omit-tag="">
 <div tal:condition="ruletype/?rule" tal:omit-tag="">
 <div>
-<span tal:content="rule/capitalize">Javascript</span>
+<a href="help.html"
+ tal:attributes="href string:help.html.${lang}#${rule/capitalize}Rule"
+ tal:content="rule/capitalize">Javascript</a>
 <span i18n:translate="">Rule</span>
 </div>
 <div metal:use-macro="rulemacros/?rule">
