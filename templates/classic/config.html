@@ -26,7 +26,7 @@ proxy configuration</title>
 <table border="0" cellpadding="5" cellspacing="0" summary="">
 <tr>
 <td>
-<label for="bindaddress" i18n:translate=""
+<label for="selbindaddress" i18n:translate=""
  i18n:attributes="title"
  title="Network address the proxy should listen on."
  >Network address</label>
@@ -34,7 +34,7 @@ proxy configuration</title>
  i18n:attributes="title">1)</a></sup>
 </td>
 <td>
-<select name="bindaddress" id="bindaddress">
+<select name="bindaddress" id="selbindaddress">
 <option tal:condition="ifvalues/all_hosts" value="" selected
  i18n:translate="">All hosts</option>
 <option tal:condition="not:ifvalues/all_hosts" value=""
@@ -376,7 +376,7 @@ and name</td>
 <table border="0" cellpadding="5" cellspacing="0" summary="">
 <tr>
 <td>
-<select name="allowedhosts" id="allowedhosts" multiple size="5"
+<select name="allowedhosts" id="selallowedhosts" multiple size="5"
  i18n:attributes="title"
  title="List of hosts allowed to use this proxy.">
 <option tal:repeat="host config/allowedhosts" tal:attributes="value host"
@@ -415,7 +415,7 @@ For example <code>192.168.1.1/8</code> (local subnet) or
 <table border="0" cellpadding="5" cellspacing="0" summary="">
 <tr>
 <td>
-<select name="nofilterhosts" id="nofilterhosts" multiple size="5"
+<select name="nofilterhosts" id="selnofilterhosts" multiple size="5"
  i18n:attributes="title"
  title="List of domain names the proxy must not filter.">
 <option tal:repeat="host config/nofilterhosts" tal:attributes="value host"
