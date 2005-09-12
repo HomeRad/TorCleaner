@@ -11,7 +11,9 @@ TODO
 
 - functional tests
 
-- rework the HTML GUI using styled checkboxes.
+- rework the HTML GUI:
+  + styled checkboxes
+  + try -moz-border-radius:15px; for input text fields
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):

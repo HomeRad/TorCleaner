@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-09 20:11+0200\n"
+"POT-Creation-Date: 2005-09-12 14:02+0200\n"
 "PO-Revision-Date: 2005-08-29 21:34+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -773,7 +773,7 @@ msgstr "Tastaturkommandos"
 msgid "Accessibility pages"
 msgstr "Zugänglichkeitseiten"
 
-#: ../templates/classic/macros/standard.html:85
+#: ../templates/classic/macros/standard.html:95
 #: ../templates/classic/accessibility.html:12
 #: ../templates/classic/accessibility.html:50
 msgid "Accessibility statement"
@@ -787,7 +787,7 @@ msgstr "Zugänglichkeitserklärung für ${appname}"
 msgid "Action"
 msgstr "Aktion"
 
-#: ../templates/classic/config.html:333 ../templates/classic/config.html:372
+#: ../templates/classic/config.html:353 ../templates/classic/config.html:392
 #: ../templates/classic/macros/rules.html:78
 #: ../templates/classic/macros/rules.html:102
 #: ../templates/classic/macros/rules.html:119
@@ -811,11 +811,11 @@ msgstr "Attribut hinzufügen/ersetzen"
 msgid "Admin password"
 msgstr "Administrator Passwort"
 
-#: ../templates/classic/config.html:437
+#: ../templates/classic/config.html:457
 msgid "Admin password must have only ASCII characters."
 msgstr "Administratorpasswort darf lediglich ASCII Zeichen enthalten."
 
-#: ../templates/classic/config.html:407
+#: ../templates/classic/config.html:427
 msgid "Admin password successfully changed."
 msgstr "Administratorpasswort erfolgreich geändert."
 
@@ -823,11 +823,11 @@ msgstr "Administratorpasswort erfolgreich geändert."
 msgid "Admin user"
 msgstr "Administrator"
 
-#: ../templates/classic/config.html:436
+#: ../templates/classic/config.html:456
 msgid "Admin user must have only ASCII characters."
 msgstr "Administratorname darf nur aus ASCII-Zeichen bestehen."
 
-#: ../templates/classic/config.html:406
+#: ../templates/classic/config.html:426
 msgid "Admin user successfully changed."
 msgstr "Administrator erfolgreich geändert."
 
@@ -864,15 +864,15 @@ msgstr "Alle Rechner"
 msgid "All pages define the following access keys:"
 msgstr "Alle Seiten definieren folgende Tastaturkommandos:"
 
-#: ../templates/classic/config.html:420
+#: ../templates/classic/config.html:440
 msgid "Allowed host successfully added."
 msgstr "Erlaubter Rechner wurde erfolgreich hinzugefügt."
 
-#: ../templates/classic/config.html:421
+#: ../templates/classic/config.html:441
 msgid "Allowed host(s) successfully removed."
 msgstr "Erlaubte(r) Rechner wurde(n) erfolgreich entfernt."
 
-#: ../templates/classic/config.html:310
+#: ../templates/classic/config.html:330
 msgid "Allowed hosts"
 msgstr "Erlaubte Rechner"
 
@@ -920,7 +920,7 @@ msgstr "Trifft zu auf"
 msgid "Applies to all pages starting with url?"
 msgstr "Gilt für alle Seiten die mit dieser URL beginnen?"
 
-#: ../templates/classic/config.html:388
+#: ../templates/classic/config.html:408
 #: ../templates/classic/macros/rules.html:185
 #: ../templates/classic/macros/rules.html:250
 #: ../templates/classic/macros/rules.html:306
@@ -986,7 +986,7 @@ msgstr ""
 "Änderungen dieser Option erfordern einen Proxy-Neustart, um wirksam zu "
 "werden."
 
-#: ../templates/classic/config.html:410
+#: ../templates/classic/config.html:430
 msgid "ClamAV config successfully changed."
 msgstr "ClamAV Konfiguration erfolgreich geändert."
 
@@ -1009,8 +1009,8 @@ msgstr "Verbindungszeitüberschreitung in Sekunden"
 msgid "Content rated by ${appname}"
 msgstr "Inhalt gesperrt von ${appname}"
 
-#: ../templates/classic/macros/standard.html:52
-#: ../templates/classic/macros/standard.html:56
+#: ../templates/classic/macros/standard.html:62
+#: ../templates/classic/macros/standard.html:66
 msgid "Content rating"
 msgstr "Inhaltsbewertung"
 
@@ -1049,6 +1049,7 @@ msgstr "Löschen"
 msgid "Delete this rating"
 msgstr "Lösche diese Bewertung"
 
+#: ../templates/classic/config.html:299
 #: ../templates/classic/macros/rules.html:51
 #: ../templates/classic/macros/rules.html:153
 #: ../templates/classic/help.html:75 ../templates/classic/help.html:84
@@ -1068,7 +1069,7 @@ msgstr "Ordner deaktivieren"
 msgid "Disable rule"
 msgstr "Deaktiviere Regel"
 
-#: ../templates/classic/config.html:419
+#: ../templates/classic/config.html:439
 msgid "Disabled filter module(s) ${disabled-filter}."
 msgstr "Filter Modul(e) ${disabled-filter} wurde(n) deaktiviert."
 
@@ -1080,7 +1081,7 @@ msgstr "Bild für inaktiven Ordner"
 msgid "Disabled rule icon"
 msgstr "Bild von inaktiver Regel"
 
-#: ../templates/classic/config.html:349
+#: ../templates/classic/config.html:369
 msgid "Don't filter hosts"
 msgstr "Nicht zu filternde Rechner"
 
@@ -1142,7 +1143,7 @@ msgstr "Ordner aktivieren"
 msgid "Enable rule"
 msgstr "Aktiviere Regel"
 
-#: ../templates/classic/config.html:417
+#: ../templates/classic/config.html:437
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr "Filter Modul(e) ${enabled-filter} wurde(n) aktiviert."
 
@@ -1169,7 +1170,7 @@ msgstr ""
 msgid "Fallback URL"
 msgstr "Ersatz-URL"
 
-#: ../templates/classic/macros/standard.html:91
+#: ../templates/classic/macros/standard.html:101
 #: ../templates/classic/accessibility.html:48
 msgid "Feedback"
 msgstr "Feedback"
@@ -1182,8 +1183,8 @@ msgstr "Feedback für ${appname}"
 msgid "Filename"
 msgstr "Dateiname"
 
-#: ../templates/classic/macros/standard.html:36
-#: ../templates/classic/macros/standard.html:40
+#: ../templates/classic/macros/standard.html:46
+#: ../templates/classic/macros/standard.html:50
 msgid "Filter configuration"
 msgstr "Filterkonfiguration"
 
@@ -1201,8 +1202,8 @@ msgstr "Filterkonfigurationsregeln"
 msgid "Filter https traffic through a local SSL server"
 msgstr "Filtere https Daten über einen lokalen SSL Server"
 
-#: ../templates/classic/macros/standard.html:44
-#: ../templates/classic/macros/standard.html:48
+#: ../templates/classic/macros/standard.html:54
+#: ../templates/classic/macros/standard.html:58
 msgid "Filter update"
 msgstr "Filteraktualisierung"
 
@@ -1255,8 +1256,8 @@ msgstr "Ordner erfolgreich umbenannt."
 msgid "Folders"
 msgstr "Ordner"
 
-#: ../templates/classic/macros/standard.html:83
-#: ../templates/classic/macros/standard.html:114
+#: ../templates/classic/macros/standard.html:93
+#: ../templates/classic/macros/standard.html:124
 msgid "Generated by ${appname} ${version}"
 msgstr "Generiert durch ${appname} ${version}"
 
@@ -1276,6 +1277,10 @@ msgstr "Gehe zur Regel:"
 msgid "Google Cache for"
 msgstr "Google Cache für"
 
+#: ../templates/classic/config.html:318
+msgid "HTML"
+msgstr ""
+
 #: ../templates/classic/macros/rules.html:286
 msgid "Header filters"
 msgstr "Header filtert"
@@ -1294,8 +1299,8 @@ msgstr ""
 msgid "Header value"
 msgstr "Header Wert"
 
-#: ../templates/classic/macros/standard.html:60
-#: ../templates/classic/macros/standard.html:64
+#: ../templates/classic/macros/standard.html:70
+#: ../templates/classic/macros/standard.html:74
 msgid "Help"
 msgstr "Hilfe"
 
@@ -1395,7 +1400,7 @@ msgstr "Bildbreite"
 msgid "Internet Explorer"
 msgstr "Internet Explorer"
 
-#: ../templates/classic/config.html:428
+#: ../templates/classic/config.html:448
 msgid "Invalid SSL server port."
 msgstr "Ungültige SSL Server Portnummer."
 
@@ -1428,7 +1433,7 @@ msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
 msgid "Invalid folder move up id."
 msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
 
-#: ../templates/classic/config.html:431
+#: ../templates/classic/config.html:451
 msgid "Invalid host name."
 msgstr "Ungültiger Rechnername."
 
@@ -1456,11 +1461,11 @@ msgstr "Ungültiger oder fehlender SMTP Rechnername."
 msgid "Invalid or missing sender address."
 msgstr "Ungültige oder fehlende Absenderadresse."
 
-#: ../templates/classic/config.html:429
+#: ../templates/classic/config.html:449
 msgid "Invalid parent proxy port."
 msgstr "Ungültige übergeordnete Proxy Portnummer."
 
-#: ../templates/classic/config.html:427
+#: ../templates/classic/config.html:447
 msgid "Invalid proxy port."
 msgstr "Ungültige Proxy Portnummer."
 
@@ -1493,7 +1498,7 @@ msgstr "Ungültiger Regeltyp."
 msgid "Invalid selection index."
 msgstr "Ungültiger Auswahlindex."
 
-#: ../templates/classic/config.html:430
+#: ../templates/classic/config.html:450
 msgid "Invalid timeout value."
 msgstr "Ungültiger Timeoutwert."
 
@@ -1509,15 +1514,19 @@ msgstr ""
 "Ungültige URL. Die URL muss mit <code>http://</code>, <code>https://</code> "
 "oder <code>ftp://</code> beginnen."
 
+#: ../templates/classic/config.html:319
+msgid "It frobs the wozzle"
+msgstr ""
+
 #: ../templates/classic/macros/rules.html:69
 msgid "List of MIME types this rule should apply to"
 msgstr "Liste von MIME-Typen, auf die diese Regel zutreffen soll"
 
-#: ../templates/classic/config.html:353
+#: ../templates/classic/config.html:373
 msgid "List of domain names the proxy must not filter."
 msgstr "Liste von Domainnamen die dieser Proxy nicht filtern darf"
 
-#: ../templates/classic/config.html:314
+#: ../templates/classic/config.html:334
 msgid "List of hosts allowed to use this proxy."
 msgstr "Liste der Rechner die diesen Proxy benutzen dürfen"
 
@@ -1593,6 +1602,7 @@ msgstr "Regel nach unten schieben"
 msgid "Move rule up"
 msgstr "Regel nach oben schieben"
 
+#: ../templates/classic/config.html:297
 #: ../templates/classic/macros/rules.html:606
 #: ../templates/classic/macros/rules.html:631
 msgid "Name"
@@ -1626,11 +1636,11 @@ msgstr "Neue Regel"
 msgid "New rule successfully created."
 msgstr "Neue Regel wurde erfolgreich erstellt."
 
-#: ../templates/classic/config.html:422
+#: ../templates/classic/config.html:442
 msgid "Nofilter host successfully added."
 msgstr "Nicht zu filternder Rechner wurde erfolgreich hinzugefügt."
 
-#: ../templates/classic/config.html:423
+#: ../templates/classic/config.html:443
 msgid "Nofilter host(s) successfully removed."
 msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
 
@@ -1658,16 +1668,16 @@ msgstr "Opera 6"
 msgid "Page blocked by ${appname}"
 msgstr "Seite wurde blockiert von ${appname}"
 
-#: ../templates/classic/config.html:435
+#: ../templates/classic/config.html:455
 msgid "Parent proxy password must have only ASCII characters."
 msgstr ""
 "Passwort des übergeordneten Proxy darf lediglich ASCII Zeichen enthalten."
 
-#: ../templates/classic/config.html:414
+#: ../templates/classic/config.html:434
 msgid "Parent proxy password successfully changed."
 msgstr "Passwort des übergeordneten Proxy wurde erfolgreich geändert."
 
-#: ../templates/classic/config.html:412
+#: ../templates/classic/config.html:432
 msgid "Parent proxy port successfully changed."
 msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
 
@@ -1675,15 +1685,15 @@ msgstr "Übergeordnete Proxy Portnummer erfolgreich geändert."
 msgid "Parent proxy settings"
 msgstr "Übergeordnete Proxy Einstellungen"
 
-#: ../templates/classic/config.html:411
+#: ../templates/classic/config.html:431
 msgid "Parent proxy successfully changed."
 msgstr "Übergeordneter Proxy erfolgreich geändert."
 
-#: ../templates/classic/config.html:434
+#: ../templates/classic/config.html:454
 msgid "Parent proxy user must have only ASCII characters."
 msgstr "Übergeordneter Proxy Benutzer darf lediglich ASCII Zeichen enthalten."
 
-#: ../templates/classic/config.html:413
+#: ../templates/classic/config.html:433
 msgid "Parent proxy user successfully changed."
 msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
 
@@ -1757,12 +1767,12 @@ msgstr "Portnummer auf der der lokale SSL Server auf Anfragen wartet"
 msgid "Port number the proxy is listening on for requests"
 msgstr "Portnummer auf der dieser Proxy auf Anfragen wartet"
 
-#: ../templates/classic/config.html:404
+#: ../templates/classic/config.html:424
 msgid "Port successfully changed."
 msgstr "Portnummer erfolgreich geändert."
 
-#: ../templates/classic/macros/standard.html:28
-#: ../templates/classic/macros/standard.html:32
+#: ../templates/classic/macros/standard.html:38
+#: ../templates/classic/macros/standard.html:42
 msgid "Proxy configuration"
 msgstr "Proxykonfiguration"
 
@@ -1770,7 +1780,7 @@ msgstr "Proxykonfiguration"
 msgid "Proxy filter modules"
 msgstr "Proxy Filtermodule"
 
-#: ../templates/classic/config.html:403
+#: ../templates/classic/config.html:423
 msgid "Proxy network address successfully changed."
 msgstr "Proxy Netzwerkaddresse erfolgreich geändert."
 
@@ -1778,11 +1788,11 @@ msgstr "Proxy Netzwerkaddresse erfolgreich geändert."
 msgid "Proxy password"
 msgstr "Proxy Passwort"
 
-#: ../templates/classic/config.html:433
+#: ../templates/classic/config.html:453
 msgid "Proxy password must have only ASCII characters."
 msgstr "Proxypasswort darf lediglich ASCII Zeichen beinhalten."
 
-#: ../templates/classic/config.html:409
+#: ../templates/classic/config.html:429
 msgid "Proxy password successfully changed."
 msgstr "Proxypasswort erfolgreich geändert."
 
@@ -1794,11 +1804,11 @@ msgstr "Proxy Einstellungen"
 msgid "Proxy user"
 msgstr "Proxy Benutzer"
 
-#: ../templates/classic/config.html:432
+#: ../templates/classic/config.html:452
 msgid "Proxy user must have only ASCII characters."
 msgstr "Proxybenutzername darf nur aus ASCII-Zeichen bestehen."
 
-#: ../templates/classic/config.html:408
+#: ../templates/classic/config.html:428
 msgid "Proxy user successfully changed."
 msgstr "Proxybenutzer erfolgreich geändert."
 
@@ -1858,7 +1868,7 @@ msgstr "Entferne Bilder bestimmter Breite und/oder Höhe."
 msgid "Remove rule"
 msgstr "Regel löschen"
 
-#: ../templates/classic/config.html:322 ../templates/classic/config.html:361
+#: ../templates/classic/config.html:342 ../templates/classic/config.html:381
 #: ../templates/classic/macros/rules.html:75
 #: ../templates/classic/macros/rules.html:99
 #: ../templates/classic/macros/rules.html:116
@@ -1957,7 +1967,7 @@ msgstr "Antwortdaten von HTML Seiten"
 msgid "Response headers of all mime types."
 msgstr "Antwort Header von allem Mime-Typen."
 
-#: ../templates/classic/config.html:443
+#: ../templates/classic/config.html:463
 msgid "Restart proxy"
 msgstr "Proxy Neustart"
 
@@ -2094,7 +2104,7 @@ msgstr "SSL Zugang"
 msgid "SSL port number"
 msgstr "SSL Portnummer"
 
-#: ../templates/classic/config.html:405
+#: ../templates/classic/config.html:425
 msgid "SSL port successfully changed."
 msgstr "SSL Portnummer erfolgreich geändert."
 
@@ -2191,10 +2201,14 @@ msgstr "Selektor"
 msgid "Send"
 msgstr "Senden"
 
-#: ../templates/classic/macros/standard.html:17
+#: ../templates/classic/macros/standard.html:27
 #: ../templates/classic/accessibility.html:46
 msgid "Skip to main content"
 msgstr "Zum Hauptinhalt springen"
+
+#: ../templates/classic/config.html:317
+msgid "SomeFilter"
+msgstr ""
 
 #: ../templates/classic/update.html:20
 msgid ""
@@ -2241,8 +2255,8 @@ msgstr ""
 msgid "There are no url ratings saved."
 msgstr "Es sind keine URL Bewertungen gespeichert."
 
-#: ../templates/classic/macros/standard.html:75
-#: ../templates/classic/macros/standard.html:106
+#: ../templates/classic/macros/standard.html:85
+#: ../templates/classic/macros/standard.html:116
 msgid "This page is also available in"
 msgstr "Diese Seite ist auch verfügbar auf"
 
@@ -2267,7 +2281,7 @@ msgstr ""
 msgid "Timeout"
 msgstr "Zeitüberschreitung"
 
-#: ../templates/classic/config.html:415
+#: ../templates/classic/config.html:435
 msgid "Timeout sucessfully changed."
 msgstr "Zeitüberschreitung wurde erfolgreich geändert."
 
@@ -2275,6 +2289,10 @@ msgstr "Zeitüberschreitung wurde erfolgreich geändert."
 #: ../templates/classic/macros/rules.html:148
 msgid "Title"
 msgstr "Überschrift"
+
+#: ../templates/classic/config.html:298
+msgid "Type"
+msgstr ""
 
 #: ../templates/classic/macros/rules.html:132
 #: ../templates/classic/rating.html:24 ../templates/classic/rating.html:85
@@ -2319,7 +2337,7 @@ msgstr "Benutzername zur Proxy Authentifizierung"
 msgid "Value"
 msgstr "Wert"
 
-#: ../templates/classic/macros/standard.html:91
+#: ../templates/classic/macros/standard.html:101
 msgid "WebCleaner feedback information"
 msgstr "WebCleaner Feedback Information"
 
@@ -2369,7 +2387,7 @@ msgstr ""
 "daß ich diese anschauen und in eine aktualisierte Bewertungsdatenbank "
 "einfügen kann."
 
-#: ../templates/classic/config.html:379
+#: ../templates/classic/config.html:399
 msgid ""
 "You can specify complete domains or only their last parts with a leading "
 "dot. For example <code>.intra</code> will match any hosts ending with <code>."
@@ -2379,7 +2397,7 @@ msgstr ""
 "Anfang angeben. Zum Beispiel trifft <code>.intra</code> auf alle "
 "Rechnernamen zu, die auf <code>.intra</code> enden."
 
-#: ../templates/classic/config.html:340
+#: ../templates/classic/config.html:360
 msgid ""
 "You can specify network masks for whole subnets. For example "
 "<code>192.168.1.1/8</code> (local subnet) or <code>1.1.1.1/0</code> (every "
@@ -2399,7 +2417,7 @@ msgstr ""
 msgid "Your request"
 msgstr "Ihre Anfrage"
 
-#: ../templates/classic/macros/standard.html:85
+#: ../templates/classic/macros/standard.html:95
 msgid "accessibility features of these pages"
 msgstr "Zugänglichkeitseigenschaften dieser Seiten"
 
@@ -2438,11 +2456,11 @@ msgstr "Fußnote 2"
 msgid "footnote 3"
 msgstr "Fußnote 3"
 
-#: ../templates/classic/config.html:339
+#: ../templates/classic/config.html:359
 msgid "footnote 4"
 msgstr "Fußnote 4"
 
-#: ../templates/classic/config.html:378
+#: ../templates/classic/config.html:398
 msgid "footnote 5"
 msgstr "Fußnote 5"
 
@@ -2511,11 +2529,11 @@ msgstr "siehe Fußnote 2"
 msgid "see footnote 3"
 msgstr "siehe Fußnote 3"
 
-#: ../templates/classic/config.html:329
+#: ../templates/classic/config.html:349
 msgid "see footnote 4"
 msgstr "siehe Fußnote 4"
 
-#: ../templates/classic/config.html:368
+#: ../templates/classic/config.html:388
 msgid "see footnote 5"
 msgstr "siehe Fußnote 5"
 
