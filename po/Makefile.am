@@ -14,10 +14,12 @@ MYNAME:="Bastian Kleineidam <$(MYMAIL)>"
 SHAREDIR=$(top_srcdir)/share/locale
 # defined language (add new languages here)
 LANGUAGES=de
-MOFILES=$(patsubst %, %.mo, $(LANGUAGES) )
+POFILES=$(patsubst %, %.po, $(LANGUAGES) )
 
-all: $(MOFILES)
+all: $(POFILES)
 
+# The %.mo target is not used, but here for completeness. The setup.py
+# build command will generate the needed .mo files with wc/msgfmt.py.
 %.mo:	%.po
 	$(MSGFMT) -c --statistics -o $@ $<
 
@@ -31,16 +33,6 @@ $(TEMPLATE): $(POSOURCES) $(TEMPLATES)
           --copyright-holder=$(MYNAME) --msgid-bugs-address=$(MYMAIL) \
           --keyword=_n:1,2 -o $(TEMPLATE) $(POSOURCES)
 	$(TALGETTEXT) -u $(TEMPLATE) $(TEMPLATES)
-
-# for development: copy the generated .mo files to a local share dir
-.PHONY: copymofiles
-copymofiles: $(MOFILES)
-	for la in $(LANGUAGES); do \
-	  if [ ! -d $(SHAREDIR)/$$la/LC_MESSAGES ]; then \
-	    mkdir -p $(SHAREDIR)/$$la/LC_MESSAGES; \
-	  fi; \
-          install -m 0644 $$la.mo $(SHAREDIR)/$$la/LC_MESSAGES/$(PACKAGE).mo; \
-        done
 
 clean-local:
 	rm -f *.mo *.bak *.poedit
