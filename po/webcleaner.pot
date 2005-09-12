@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-13 00:29+0200\n"
+"POT-Creation-Date: 2005-09-13 01:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1028,8 +1028,12 @@ msgstr ""
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:53
+#: ../templates/classic/rating_mail.html:58
 msgid "Error sending mail."
+msgstr ""
+
+#: ../templates/classic/rating_mail.html:30
+msgid "Error: no rating for URL ${url} found."
 msgstr ""
 
 #: ../templates/classic/config.html:349
@@ -1289,11 +1293,11 @@ msgstr ""
 msgid "Invalid minimum size bytes value."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:54
+#: ../templates/classic/rating_mail.html:59
 msgid "Invalid or missing SMTP host."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:55
+#: ../templates/classic/rating_mail.html:60
 msgid "Invalid or missing sender address."
 msgstr ""
 
@@ -1305,7 +1309,7 @@ msgstr ""
 msgid "Invalid proxy port."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:52
+#: ../templates/classic/rating_mail.html:57
 msgid "Invalid rating."
 msgstr ""
 
@@ -1338,7 +1342,7 @@ msgstr ""
 msgid "Invalid timeout value."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:51
+#: ../templates/classic/rating_mail.html:56
 msgid "Invalid url."
 msgstr ""
 
@@ -1585,7 +1589,7 @@ msgstr ""
 msgid "Please point your browser somewhere else or"
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:35
+#: ../templates/classic/rating_mail.html:39
 msgid "Please specify an SMTP host to send the mail to. If unsure, leave it at <code>localhost</code>."
 msgstr ""
 
@@ -1664,7 +1668,7 @@ msgstr ""
 msgid "Rating category limit successfully changed."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:47
+#: ../templates/classic/rating_mail.html:52
 msgid "Rating data mailed successfully."
 msgstr ""
 
@@ -1890,7 +1894,7 @@ msgstr ""
 msgid "Rule url replacement successfully changed."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:38
+#: ../templates/classic/rating_mail.html:42
 msgid "SMTP host"
 msgstr ""
 
@@ -1946,7 +1950,7 @@ msgstr ""
 msgid "Selector"
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:42
+#: ../templates/classic/rating_mail.html:46
 msgid "Send"
 msgstr ""
 

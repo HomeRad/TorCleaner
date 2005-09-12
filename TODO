@@ -1,7 +1,5 @@
 TODO
 
-- update the web documentation
-
 - if an unknown port is forbidden (403 status), add an explaining message
 
 - some servers have a list of IP addrs, not just one
@@ -10,10 +8,6 @@ TODO
 - empty page on search at http://gdataonline.com/seekhash.php
 
 - functional tests
-
-- rework the HTML GUI:
-  + styled checkboxes
-  + try -moz-border-radius:15px; for input text fields
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-13 00:29+0200\n"
+"POT-Creation-Date: 2005-09-13 01:07+0200\n"
 "PO-Revision-Date: 2005-08-29 21:34+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -1180,9 +1180,14 @@ msgstr "Aktiviere Regel"
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr "Filter Modul(e) ${enabled-filter} wurde(n) aktiviert."
 
-#: ../templates/classic/rating_mail.html:53
+#: ../templates/classic/rating_mail.html:58
 msgid "Error sending mail."
 msgstr "Fehler beim Mailversand."
+
+#: ../templates/classic/rating_mail.html:30
+#, fuzzy
+msgid "Error: no rating for URL ${url} found."
+msgstr "Fehler: keine Aktualisierungen vorhanden."
 
 #: ../templates/classic/config.html:349
 #, fuzzy
@@ -1485,11 +1490,11 @@ msgstr "Ungültige Bildbreite."
 msgid "Invalid minimum size bytes value."
 msgstr "Ungültiger Wet für minimale Bildgröße."
 
-#: ../templates/classic/rating_mail.html:54
+#: ../templates/classic/rating_mail.html:59
 msgid "Invalid or missing SMTP host."
 msgstr "Ungültiger oder fehlender SMTP Rechnername."
 
-#: ../templates/classic/rating_mail.html:55
+#: ../templates/classic/rating_mail.html:60
 msgid "Invalid or missing sender address."
 msgstr "Ungültige oder fehlende Absenderadresse."
 
@@ -1501,7 +1506,7 @@ msgstr "Ungültige übergeordnete Proxy Portnummer."
 msgid "Invalid proxy port."
 msgstr "Ungültige Proxy Portnummer."
 
-#: ../templates/classic/rating_mail.html:52
+#: ../templates/classic/rating_mail.html:57
 msgid "Invalid rating."
 msgstr "Ungültige Bewertung."
 
@@ -1534,7 +1539,7 @@ msgstr "Ungültiger Auswahlindex."
 msgid "Invalid timeout value."
 msgstr "Ungültiger Timeoutwert."
 
-#: ../templates/classic/rating_mail.html:51
+#: ../templates/classic/rating_mail.html:56
 msgid "Invalid url."
 msgstr "Ungültige URL."
 
@@ -1827,7 +1832,7 @@ msgstr ""
 msgid "Please point your browser somewhere else or"
 msgstr "Bitte besuchen Sie eine andere Internetseite oder"
 
-#: ../templates/classic/rating_mail.html:35
+#: ../templates/classic/rating_mail.html:39
 msgid ""
 "Please specify an SMTP host to send the mail to. If unsure, leave it at "
 "<code>localhost</code>."
@@ -1908,7 +1913,7 @@ msgstr "Bewertung"
 msgid "Rating category limit successfully changed."
 msgstr "Kategorie der Inhaltsbewertung wurde erfolgreich geändert."
 
-#: ../templates/classic/rating_mail.html:47
+#: ../templates/classic/rating_mail.html:52
 msgid "Rating data mailed successfully."
 msgstr "Mail zur Inhaltsbewertung wurde erfolgreich versendet."
 
@@ -2148,7 +2153,7 @@ msgstr "Regel Titel wurde erfolgreich geändert."
 msgid "Rule url replacement successfully changed."
 msgstr "Regel URL-Ersatzwert wurde erfolgreich geändert."
 
-#: ../templates/classic/rating_mail.html:38
+#: ../templates/classic/rating_mail.html:42
 msgid "SMTP host"
 msgstr "SMTP Rechnername"
 
@@ -2257,7 +2262,7 @@ msgstr ""
 msgid "Selector"
 msgstr "Selektor"
 
-#: ../templates/classic/rating_mail.html:42
+#: ../templates/classic/rating_mail.html:46
 msgid "Send"
 msgstr "Senden"
 
