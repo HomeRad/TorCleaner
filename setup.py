@@ -32,6 +32,7 @@ import re
 import string
 import glob
 from distutils.core import setup, Extension, DEBUG
+from distutils.spawn import find_executable
 import distutils.dist
 import distutils.command
 from distutils.command.bdist_wininst import bdist_wininst
@@ -318,6 +319,7 @@ class MyBuildExt (build_ext, object):
     def build_extensions (self):
         """
         Add -std=gnu99 to build options if supported.
+        And compress extension libraries.
         """
         # For gcc >= 3 we can add -std=gnu99 to get rid of warnings.
         extra = []
@@ -332,6 +334,26 @@ class MyBuildExt (build_ext, object):
                 if opt not in ext.extra_compile_args:
                     ext.extra_compile_args.append(opt)
             self.build_extension(ext)
+        self.compress_extensions()
+
+    def compress_extensions (self):
+        """
+        Run UPX compression over built extension libraries.
+        """
+        # currently upx supports only .dll files
+        if os.name != 'nt':
+            return
+        upx = find_executable("upx")
+        if upx is None:
+            # upx not found
+            return
+        for filename in self.get_outputs():
+            compress_library(upx, filename)
+
+
+def compress_library (upx, filename):
+    log.info("upx-compressing %s", filename)
+    os.system('%s -q --best "%s"' % (upx, filename))
 
 
 def list_message_files(package, suffix=".po"):
@@ -382,10 +404,14 @@ class MyBuild (build, object):
         """
         for (_src, _dst) in list_message_files(self.distribution.get_name()):
             _build_dst = os.path.join("build", _dst)
-            self.mkpath(os.path.dirname(_build_dst))
-            self.announce("Compiling %s -> %s" % (_src, _build_dst))
-            from wc import msgfmt
-            msgfmt.make(_src, _build_dst)
+            destdir = os.path.dirname(_build_dst)
+            if not os.path.exists(destdir):
+                self.mkpath(destdir)
+            if not os.path.exists(_build_dst) or \
+              (os.path.getmtime(_build_dst) < os.path.getmtime(_src)):
+                log.info("compiling %s -> %s" % (_src, _build_dst))
+                from wc import msgfmt
+                msgfmt.make(_src, _build_dst)
 
     def run (self):
         check_manifest()
