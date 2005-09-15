@@ -338,6 +338,7 @@ KnownInvalidTags = {
     "update" : None, # slashdot.org
     "htmlpromo" : None, # www.pcworld.com
     "noindex": None, # atomz.com software
+    "quote": None, # xhtml 2.0 (draft)
 }
 
 
