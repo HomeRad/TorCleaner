@@ -34,6 +34,8 @@ class Header (wc.filter.Filter.Filter):
     Filter for adding, modifying and deleting headers.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Init stages and rulenames.

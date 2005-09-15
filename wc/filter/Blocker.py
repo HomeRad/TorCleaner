@@ -117,6 +117,8 @@ class Blocker (wc.filter.Filter.Filter):
     Block urls and show replacement data instead.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Load blocked/allowed urls/regex.

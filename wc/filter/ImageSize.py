@@ -35,6 +35,8 @@ class ImageSize (wc.filter.Filter.Filter):
     incoming GIF stream.
     """
 
+    enable = wc.HasPil
+
     def __init__ (self):
         """
         Initialize list of allowed sizes.

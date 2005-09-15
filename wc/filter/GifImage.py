@@ -44,6 +44,8 @@ class GifImage (wc.filter.Filter.Filter):
     incoming GIF stream.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Init stages and mimes.
@@ -106,6 +108,7 @@ class GifParser (object):
     using the patented algorithm and therefore does not have any such
     restrictions.
     """
+
     # parser states to allow reading image data in chunks
     # only if we have a large enough chunk we change to the next state
     SKIP = 0

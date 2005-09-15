@@ -32,6 +32,8 @@ class XmlRewriter (wc.filter.Filter.Filter):
     This filter can rewrite XML tags. It uses an expat parser.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Init stages and mimes.

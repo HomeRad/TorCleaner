@@ -125,6 +125,18 @@ ascii_values = [
     "parentproxypass",
 ]
 
+rewriting_filter_modules = [
+    'HtmlRewriter',
+    'Replacer',
+    'GifImage',
+    'Compress',
+    'ImageReducer',
+    'ImageSize',
+    'VirusFilter',
+    'BinaryCharFilter',
+    'XmlRewriter',
+]
+
 class Configuration (dict):
     """
     Hold all configuration data, inclusive filter rules.
@@ -308,14 +320,15 @@ class Configuration (dict):
         for filtername in self['filters']:
             # import filter module
             exec "from filter import %s" % filtername
-            # filter class has same name as module
+            # Filter class has same name as module.
             clazz = getattr(getattr(wc.filter, filtername), filtername)
+            if not clazz.enable:
+                # The filter is not enabled, probably due to missing
+                # dependencies.
+                continue
             # add content-rewriting mime types to special list
             instance = clazz()
-            if filtername in ['HtmlRewriter', 'Replacer', 'GifImage',
-                              'Compress', 'ImageReducer', 'ImageSize',
-                              'VirusFilter', 'BinaryCharFilter',
-                              'XmlRewriter']:
+            if filtername in rewriting_filter_modules:
                 self['mime_content_rewriting'].update(instance.mimes)
             self['filtermodules'].append(instance)
             for folder in self['folderrules']:

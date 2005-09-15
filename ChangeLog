@@ -1,6 +1,9 @@
 2.33 "" (release xx.xx.xxxx)
 
-  *
+  * Added enable class attr to filters, allowing them to be disabled
+    automatically if a needed dependency could not be loaded.
+    Type: feature
+    Changed: wc/configuration.py, wc/filters/*.py
 
 2.32 "Evil Aliens" (release 15.9.2005)
 

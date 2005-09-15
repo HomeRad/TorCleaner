@@ -50,6 +50,8 @@ class VirusFilter (wc.filter.Filter.Filter):
     Scan for virus signatures in a data stream.
     """
 
+    enable = True
+
     # 5 MB maximum file size, everything bigger will generate a proxy error
     MAX_FILE_BYTES = 1024L*1024L*5L
 

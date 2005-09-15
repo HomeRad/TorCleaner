@@ -29,6 +29,8 @@ class RatingHeader (wc.filter.Filter.Filter):
     Adds rating data supplied in 'Content-Rating' headers.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Initialize image reducer flags.

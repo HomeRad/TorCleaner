@@ -80,6 +80,8 @@ class Compress (wc.filter.Filter.Filter):
     Filter class compressing its input with zlib.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Set init compressor flag to True.

@@ -32,6 +32,8 @@ class BinaryCharFilter (wc.filter.Filter.Filter):
     with their correct HTML equivalent.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Initialize stages and mime list.

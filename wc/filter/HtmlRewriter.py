@@ -31,6 +31,8 @@ class HtmlRewriter (wc.filter.Filter.Filter):
     This filter can rewrite HTML tags. It uses a parser class.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Init stages and mimes.

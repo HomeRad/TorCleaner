@@ -31,6 +31,8 @@ class Replacer (wc.filter.Filter.Filter):
     Replace regular expressions in a data stream.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Initialize replacer flags.

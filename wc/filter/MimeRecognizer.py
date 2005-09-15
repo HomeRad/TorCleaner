@@ -34,6 +34,8 @@ class MimeRecognizer (wc.filter.Filter.Filter):
     Recognizes missing or wrong content type header of URLs request data.
     """
 
+    enable = True
+
     def __init__ (self):
         """
         Initialize image reducer flags.
