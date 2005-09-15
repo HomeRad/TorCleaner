@@ -625,7 +625,7 @@ if os.name == 'posix':
 myname = "Bastian Kleineidam"
 myemail = "calvin@users.sourceforge.net"
 setup (name = "webcleaner",
-       version = "2.32",
+       version = "2.33",
        description = "a filtering HTTP proxy",
        keywords = "proxy,server,http,filters,daemon",
        author = myname,
