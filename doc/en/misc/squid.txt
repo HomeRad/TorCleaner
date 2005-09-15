@@ -1,8 +1,12 @@
 .. meta::
-  :navigation.name: Squid configuration
+  :navigation.name: Example Squid configuration
 
 Squid example configuration
 ===========================
+
+Although not required for WebCleaner, it is sometimes desired to have
+a caching proxy. This configuration shows how to run the Squid
+caching proxy together with WebCleaner.
 
 /etc/squid.conf::
   
