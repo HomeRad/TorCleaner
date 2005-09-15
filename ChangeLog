@@ -1,4 +1,4 @@
-2.32 "" (release xx.xx.xxxx)
+2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
     when such a tag is encountered.
