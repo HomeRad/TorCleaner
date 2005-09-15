@@ -132,11 +132,13 @@ def parse_credentials (creds):
 
 def get_credentials (challenges, **attrs):
     """
-    Return a challenge response with supported authentication scheme
-    or None if challenge could not be fulfilled (eg on error or if
-    scheme is unsupported).
+    Craft a challenge response with credential data.
+
+    @return: a challenge response with supported authentication scheme,
+             or None on error or if scheme is unsupported.
     """
-    if 'NTLM' in challenges and wc.HasCrypto:
+    if 'NTLM' in challenges and \
+       wc.configuration.config['auth_ntlm'] and wc.HasCrypto:
         creds = get_ntlm_credentials(challenges['NTLM'][0], **attrs)
     elif 'Digest' in challenges:
         creds = get_digest_credentials(challenges['Digest'][0], **attrs)
@@ -150,7 +152,7 @@ def get_credentials (challenges, **attrs):
 
 def check_credentials (creds, **attrs):
     """
-    Check credentials agains given attributes.
+    Check credentials against given attributes.
     """
     wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s",
                  creds, attrs)
