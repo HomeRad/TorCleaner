@@ -1,6 +1,7 @@
 MANIFEST
 VERSION
 webcleaner-*.tar.gz*
+webcleaner-*.win32-py2.4.exe*
 build
 locale
 share
