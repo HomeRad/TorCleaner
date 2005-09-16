@@ -300,7 +300,7 @@ class Dispatcher (object):
             (r, w, e) = select.select([], [self.fileno()], [], 0.2)
         except select.error, why:
             # not yet ready
-            wc.log.debug(wc.LOG_PROXY, '%s connect error %s', self, str(why))
+            wc.log.debug(wc.LOG_PROXY, '%s connect not ready %s', self, str(why))
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
             return
         if self.fileno() not in w:
@@ -320,7 +320,7 @@ class Dispatcher (object):
         else:
             strerr = errno.errorcode[err]
             wc.log.info(wc.LOG_PROXY, '%s connect error %s', self, strerr)
-            self.handle_close()
+            self.handle_error(_("Connect error %s.") % strerr)
 
     def accept (self):
         """
