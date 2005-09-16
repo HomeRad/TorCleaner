@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-16 16:13+0200\n"
+"POT-Creation-Date: 2005-09-16 21:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -301,8 +301,8 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:64 ../wc/proxy/HttpClient.py:606
-#: ../wc/proxy/HttpClient.py:612 ../wc/proxy/HttpClient.py:623
+#: ../wc/webgui/webconfig.py:64 ../wc/proxy/HttpClient.py:609
+#: ../wc/proxy/HttpClient.py:615 ../wc/proxy/HttpClient.py:626
 msgid "Authentication Required"
 msgstr ""
 
@@ -401,50 +401,50 @@ msgstr ""
 msgid "unsupported encoding: %r"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:120
+#: ../wc/proxy/HttpClient.py:123
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:198
+#: ../wc/proxy/HttpClient.py:201
 msgid "Method not allowed"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:204
+#: ../wc/proxy/HttpClient.py:207
 msgid "Empty URL"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:207
+#: ../wc/proxy/HttpClient.py:210
 msgid "HTTP version not supported"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:224
+#: ../wc/proxy/HttpClient.py:227
 msgid "URL too long"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:225
+#: ../wc/proxy/HttpClient.py:228
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:253
+#: ../wc/proxy/HttpClient.py:256
 msgid "Forbidden"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:309 ../wc/proxy/HttpClient.py:316
+#: ../wc/proxy/HttpClient.py:312 ../wc/proxy/HttpClient.py:319
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:337 ../wc/proxy/HttpClient.py:350
-#: ../wc/proxy/HttpClient.py:362
+#: ../wc/proxy/HttpClient.py:340 ../wc/proxy/HttpClient.py:353
+#: ../wc/proxy/HttpClient.py:365
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:469 ../wc/proxy/HttpServer.py:415
+#: ../wc/proxy/HttpClient.py:472 ../wc/proxy/HttpServer.py:415
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:598
+#: ../wc/proxy/HttpClient.py:601
 msgid "Invalid Method"
 msgstr ""
 
@@ -452,7 +452,7 @@ msgstr ""
 msgid "redirection to localhost"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:470
+#: ../wc/proxy/HttpServer.py:474
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr ""

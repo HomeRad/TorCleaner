@@ -4,9 +4,9 @@
 .SH NAME
 webcleaner.conf \- Konfigurationsdatei für WebCleaner
 .SH BESCHREIBUNG
-\fBwebcleaner.conf\fP ist die Hauptkonfigurationsdatei für denWebCleaner 
-Proxy. Die Datei besitzt ein eigenes XML Format, welches der 
-Dokumentdefinition der Datei \fBwebcleaner.dtd\fP folgt.
+\fBwebcleaner.conf\fP ist die Hauptkonfigurationsdatei für den WebCleaner 
+Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokument 
+Definition der Datei \fBwebcleaner.dtd\fP folgt.
 .SH EINSTELLUNGEN
 .TP
 \fBversion\fP
@@ -19,8 +19,8 @@ Die Portnummer unter der der WebCleaner Proxy läuft.
 Die Portnummer für den WebCleaner SSL Server.
 .TP
 \fBsslgateway\fP
-Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummereinen SSL 
-Server starten, um HTTPS Daten weiterzuleiten und zufiltern.
+Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer einen SSL 
+Server starten, um HTTPS Daten weiterzuleiten und zu filtern.
 .TP
 \fBadminuser\fP
 Der Benutzername für die Proxy Konfigurationsoberfläche.
@@ -55,17 +55,17 @@ Zeitüberschreitungslimit für Verbindungen in Sekunden.
 Themenauswahl für die Weboberfläche.
 .TP
 \fBnofilterhosts\fP
-Kommaseparierte Liste von Rechnernamen für die Filtern deaktiviert ist.
+Komma separierte Liste von Rechnernamen für die Filtern deaktiviert ist.
 .TP
 \fBallowedhosts\fP
-Kommaseparierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen.
+Komma separierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen.
 .TP
 \fBauth_ntlm\fP
 Falls auf Eins gesetzt, wird mit NTLM Algorithmus authentifiziert.
 .TP
 \fBtry_google\fP
-Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitungeine 
-Seite mit Verweisen zum Google Cache der angeforderten Seitendargestellt.
+Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung eine 
+Seite mit Verweisen zum Google Cache der angeforderten Seiten dargestellt.
 .SH FILTER
 .TP
 \fBBlocker\fP
@@ -75,8 +75,8 @@ Blockiert bestimmte URLs. Dies ersetzt Werbebilder und \-frames.
 Komprimiert Dokumente mit guter Kompressionsrate (HTML, WAV, ...).
 .TP
 \fBBinaryCharFilter\fP
-Ersetzt einige Binärzeichen (besonders die illegalen 
-MicrosoftAnführungszeichen).
+Ersetzt einige Binärzeichen (besonders die illegalen Microsoft 
+Anführungszeichen).
 .TP
 \fBGifImage\fP
 Deanimiert GIF Bilder und entfernt GIF Kommentare.
@@ -92,7 +92,7 @@ Benutzer mit sehr niedriger Bandbreite.
 Filtere Bilder nach Größe.
 .TP
 \fBMimeRecognizer\fP
-Erkenne und korrigiere fehlende oder falsche Angaben imContent\-Type 
+Erkenne und korrigiere fehlende oder falsche Angaben im Content\-Type 
 Kopfdatum.
 .TP
 \fBPicsHeader\fP
@@ -124,5 +124,5 @@ Aktiviert den Clamav Virusfilter (falls Clamav installiert ist).
   </webcleaner>
 .SH "SIEHE AUCH"
 webcleaner(1)
-.SH AUTHOR
+.SH AUTOR
 Bastian Kleineidam <calvin@users.sourceforge.net>

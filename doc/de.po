@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2005-09-16 16:24+0200\n"
-"PO-Revision-Date: 2005-09-16 17:19+0100\n"
+"PO-Revision-Date: 2005-09-17 00:49+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,7 @@ msgstr "B<-d> I<Verzeichnis>, B<--configdir=>I<Verzeichnis>"
 # type: Plain text
 #: en/webcleaner-certificates.1:12
 msgid "Generate certificates in given directory instead of the default one for WebCleaner.  See also the option B<-d> in B<webcleaner(1)>."
-msgstr "Erstelle Zertifikate im angebenen Verzeichnis anstelle desStandardverzeichnisses.Siehe auch die Option B<-d> in B<webcleaner(1)>."
+msgstr "Erstelle Zertifikate im angegebenen Verzeichnis anstelle des Standardverzeichnisses.Siehe auch die Option B<-d> in B<webcleaner(1)>."
 
 # type: SH
 #: en/webcleaner-certificates.1:12
@@ -84,7 +84,7 @@ msgstr "B<install>"
 # type: Plain text
 #: en/webcleaner-certificates.1:18
 msgid "Generate and install WebCleaner SSL certificates for client and server authentification.  If the certificates exist already, do nothing."
-msgstr "Erstelle und installiere WebCleaner SSL Zertifikate für Klient- undServerauthentifizierung.Tue nichts, falls die Zertifikate schon existieren."
+msgstr "Erstelle und installiere WebCleaner SSL Zertifikate für Klient- und Serverauthentifizierung.Tue nichts, falls die Zertifikate schon existieren."
 
 # type: TP
 #: en/webcleaner-certificates.1:18
@@ -103,7 +103,7 @@ msgstr "Entferne alle vorher erstellten WebCleaner SSL Zertifikate."
 #: en/webcleaner.conf.5:123
 #, no-wrap
 msgid "AUTHOR"
-msgstr "AUTHOR"
+msgstr "AUTOR"
 
 # type: Plain text
 #: en/webcleaner-certificates.1:22
@@ -144,7 +144,7 @@ msgstr "BESCHREIBUNG"
 # type: Plain text
 #: en/webcleaner.1:12
 msgid "WebCleaner is a filtering HTTP proxy. You can encode, decode and modify each part of an HTTP request. WebCleaner enhances your privacy and efficiency on the web. It comes with several ready-to-use filters to remove advertisement and unwanted HTML content, compresses documents on-the-fly, disables animated GIF images and more."
-msgstr "WebCleaner ist ein filternder HTTP Proxy. Sie können jeden Teil einerHTTP Anfrage kodieren, dekodieren und verändern. WebCleaner erhöht die Effektivität und den Schutz der Privatsphäre im Internet.Es kommt mit mehreren gebrauchsfertigen Filtern, um Werbung und unerwünschten Inhalt zu entfernen, komprimiert Dokumente,deaktiviert animierte GIF-Bilder, und mehr."
+msgstr "WebCleaner ist ein filternder HTTP Proxy. Sie können jeden Teil einer HTTP Anfrage kodieren, dekodieren und verändern. WebCleaner erhöht die Effektivität und den Schutz der Privatsphäre im Internet.Es kommt mit mehreren gebrauchsfertigen Filtern, um Werbung und unerwünschten Inhalt zu entfernen, komprimiert Dokumente,deaktiviert animierte GIF-Bilder, und mehr."
 
 # type: TP
 #: en/webcleaner.1:13
@@ -155,12 +155,12 @@ msgstr "B<-h>, B<--help>"
 # type: Plain text
 #: en/webcleaner.1:16
 msgid "Print help text."
-msgstr "Gebe Hilfetext aus."
+msgstr "Gebe Hilfstext aus."
 
 # type: Plain text
 #: en/webcleaner.1:20
 msgid "Use given directory for configuration. It should include a B<webcleaner.conf> file and several .zap files."
-msgstr "Benutze das angegebene Konfigurationsverzeichnis. Es sollte eineB<webcleaner.conf> Datei beinhalten und mehrere .zap-Dateien."
+msgstr "Benutze das angegebene Konfigurationsverzeichnis. Es sollte eine B<webcleaner.conf> Datei beinhalten und mehrere .zap-Dateien."
 
 # type: TP
 #: en/webcleaner.1:20
@@ -182,12 +182,12 @@ msgstr "KONFIGURATION"
 # type: Plain text
 #: en/webcleaner.1:28
 msgid "To configure WebCleaner, point your favourite webbrowser to B<http://localhost:>I<port>B</> where I<port> is your configured WebCleaner port number (default 8080)."
-msgstr "Um WebCleaner zu konfigurieren, lassen Sie Ihren favorisierten Browser auf B<http://localhost:>I<port>B</> zeigen, wobeiI<port> die konfigurierte WebCleaner Portnummer ist (Standardist 8080)."
+msgstr "Um WebCleaner zu konfigurieren, lassen Sie Ihren favorisierten Browser auf B<http://localhost:>I<port>B</> zeigen, wobei I<port> die konfigurierte WebCleaner Portnummer ist (Standard ist 8080)."
 
 # type: Plain text
 #: en/webcleaner.1:31
 msgid "The underlying configuration format is a custom XML format which is explained in I<webcleaner.conf(5)>."
-msgstr "Das zugrundeliegende Konfigurationsformat ist ein eigenes XML Format welches in I<webcleaner.conf(5)> erklärt ist."
+msgstr "Das zugrunde liegende Konfigurationsformat ist ein eigenes XML Format welches in I<webcleaner.conf(5)> erklärt ist."
 
 # type: SH
 #: en/webcleaner.1:31
@@ -221,7 +221,7 @@ msgstr "webcleaner.conf - Konfigurationsdatei für WebCleaner"
 # type: Plain text
 #: en/webcleaner.conf.5:8
 msgid "B<webcleaner.conf> is the main configuration file for the WebCleaner proxy. The file has a custom XML format following the Document Type Definition in the file B<webcleaner.dtd>."
-msgstr "B<webcleaner.conf> ist die Hauptkonfigurationsdatei für denWebCleaner Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokumentdefinition der Datei B<webcleaner.dtd> folgt."
+msgstr "B<webcleaner.conf> ist die Hauptkonfigurationsdatei für den WebCleaner Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokument Definition der Datei B<webcleaner.dtd> folgt."
 
 # type: SH
 #: en/webcleaner.conf.5:8
@@ -271,7 +271,7 @@ msgstr "B<sslgateway>"
 # type: Plain text
 #: en/webcleaner.conf.5:22
 msgid "If set to one, WebCleaner will start an SSL server on the above port for delegating and filtering HTTPS traffic."
-msgstr "Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummereinen SSL Server starten, um HTTPS Daten weiterzuleiten und zufiltern."
+msgstr "Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer einen SSL Server starten, um HTTPS Daten weiterzuleiten und zu filtern."
 
 # type: TP
 #: en/webcleaner.conf.5:22
@@ -392,7 +392,7 @@ msgstr "B<nofilterhosts>"
 # type: Plain text
 #: en/webcleaner.conf.5:56
 msgid "Comma separated list of hosts for which filtering is disabled."
-msgstr "Kommaseparierte Liste von Rechnernamen für die Filtern deaktiviert ist."
+msgstr "Komma separierte Liste von Rechnernamen für die Filtern deaktiviert ist."
 
 # type: TP
 #: en/webcleaner.conf.5:56
@@ -403,7 +403,7 @@ msgstr "B<allowedhosts>"
 # type: Plain text
 #: en/webcleaner.conf.5:59
 msgid "Comma separated list of hosts which are allowed to use this proxy."
-msgstr "Kommaseparierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen."
+msgstr "Komma separierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen."
 
 # type: TP
 #: en/webcleaner.conf.5:59
@@ -425,7 +425,7 @@ msgstr "B<try_google>"
 # type: Plain text
 #: en/webcleaner.conf.5:66
 msgid "If set to one, will display on timeouts or other fatal server errors a page with links to google cache for the requested page."
-msgstr "Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitungeine Seite mit Verweisen zum Google Cache der angeforderten Seitendargestellt."
+msgstr "Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung eine Seite mit Verweisen zum Google Cache der angeforderten Seiten dargestellt."
 
 # type: SH
 #: en/webcleaner.conf.5:66
@@ -464,7 +464,7 @@ msgstr "B<BinaryCharFilter>"
 # type: Plain text
 #: en/webcleaner.conf.5:77
 msgid "Replace some binary chars (espacially those illegal Microsoft quote chars)."
-msgstr "Ersetzt einige Binärzeichen (besonders die illegalen MicrosoftAnführungszeichen)."
+msgstr "Ersetzt einige Binärzeichen (besonders die illegalen Microsoft Anführungszeichen)."
 
 # type: TP
 #: en/webcleaner.conf.5:77
@@ -519,7 +519,7 @@ msgstr "B<MimeRecognizer>"
 # type: Plain text
 #: en/webcleaner.conf.5:93
 msgid "Detect and correct missing or wrong Content-Type headers."
-msgstr "Erkenne und korrigiere fehlende oder falsche Angaben imContent-Type Kopfdatum."
+msgstr "Erkenne und korrigiere fehlende oder falsche Angaben im Content-Type Kopfdatum."
 
 # type: TP
 #: en/webcleaner.conf.5:93

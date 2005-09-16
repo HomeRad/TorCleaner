@@ -5,14 +5,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-16 16:13+0200\n"
-"PO-Revision-Date: 2005-09-16 16:18+0100\n"
+"POT-Creation-Date: 2005-09-16 21:14+0200\n"
+"PO-Revision-Date: 2005-09-17 00:45+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: iso-8859-1\n"
 
 #: ../wc/filter/rules/FolderRule.py:100
 #, python-format
@@ -136,11 +139,11 @@ msgstr "Sie müssen ScannerDaemonOutputFormat deaktivieren"
 
 #: ../wc/filter/VirusFilter.py:252
 msgid "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
-msgstr "Clamd ist nicht richt konfiguriert: sowohl TCPSocket als auch LocalSocket sindaktiviert."
+msgstr "Clamd ist nicht richtig konfiguriert: sowohl TCPSocket als auch LocalSocket sind aktiviert."
 
 #: ../wc/filter/VirusFilter.py:285
 msgid "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
-msgstr "Sie müssen entwender TCPSocket oder LocalSocket in Ihrer Clamd Konfigurationaktivieren"
+msgstr "Sie müssen entweder TCPSocket oder LocalSocket in Ihrer Clamd Konfiguration aktivieren"
 
 #: ../wc/filter/html/JSFilter.py:356
 #, python-format
@@ -309,11 +312,11 @@ msgid "Ok"
 msgstr "Ok"
 
 #: ../wc/webgui/webconfig.py:64
-#: ../wc/proxy/HttpClient.py:606
-#: ../wc/proxy/HttpClient.py:612
-#: ../wc/proxy/HttpClient.py:623
+#: ../wc/proxy/HttpClient.py:609
+#: ../wc/proxy/HttpClient.py:615
+#: ../wc/proxy/HttpClient.py:626
 msgid "Authentication Required"
-msgstr "Authorisierung benötigt"
+msgstr "Autorisierung benötigt"
 
 #: ../wc/webgui/webconfig.py:80
 msgid "Not Found"
@@ -326,7 +329,7 @@ msgstr "Interner Fehler"
 #: ../wc/webgui/context/error_html.py:23
 #, python-format
 msgid "%s error"
-msgstr "%s error"
+msgstr "%s Fehler"
 
 #: ../wc/webgui/context/filterconfig_html.py:396
 msgid "No title"
@@ -410,53 +413,53 @@ msgstr "Setze Content-Type von %r nach %r"
 msgid "unsupported encoding: %r"
 msgstr "Nicht unterstütztes Encoding: %r"
 
-#: ../wc/proxy/HttpClient.py:120
+#: ../wc/proxy/HttpClient.py:123
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr "Proxy Fehler %d %s"
 
-#: ../wc/proxy/HttpClient.py:198
+#: ../wc/proxy/HttpClient.py:201
 msgid "Method not allowed"
 msgstr "Anfrage nicht erlaubt"
 
-#: ../wc/proxy/HttpClient.py:204
+#: ../wc/proxy/HttpClient.py:207
 msgid "Empty URL"
 msgstr "Leere URL"
 
-#: ../wc/proxy/HttpClient.py:207
+#: ../wc/proxy/HttpClient.py:210
 msgid "HTTP version not supported"
 msgstr "HTTP Version wird nicht unterstützt"
 
-#: ../wc/proxy/HttpClient.py:224
+#: ../wc/proxy/HttpClient.py:227
 msgid "URL too long"
 msgstr "URL zu lang"
 
-#: ../wc/proxy/HttpClient.py:225
+#: ../wc/proxy/HttpClient.py:228
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr "URL Längenbegrenzung ist %d Byte."
 
-#: ../wc/proxy/HttpClient.py:253
+#: ../wc/proxy/HttpClient.py:256
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: ../wc/proxy/HttpClient.py:309
-#: ../wc/proxy/HttpClient.py:316
+#: ../wc/proxy/HttpClient.py:312
+#: ../wc/proxy/HttpClient.py:319
 msgid "Bad Request"
 msgstr "Schlechte Anfrage"
 
-#: ../wc/proxy/HttpClient.py:337
-#: ../wc/proxy/HttpClient.py:350
-#: ../wc/proxy/HttpClient.py:362
+#: ../wc/proxy/HttpClient.py:340
+#: ../wc/proxy/HttpClient.py:353
+#: ../wc/proxy/HttpClient.py:365
 msgid "Proxy Authentication Required"
-msgstr "Proxy Authorisierung benötigt"
+msgstr "Proxy Autorisierung benötigt"
 
-#: ../wc/proxy/HttpClient.py:469
+#: ../wc/proxy/HttpClient.py:472
 #: ../wc/proxy/HttpServer.py:415
 msgid "Moved Temporarily"
 msgstr "Vorübergehend verschoben"
 
-#: ../wc/proxy/HttpClient.py:598
+#: ../wc/proxy/HttpClient.py:601
 msgid "Invalid Method"
 msgstr "Ungültige Anfrage"
 
@@ -464,7 +467,7 @@ msgstr "Ungültige Anfrage"
 msgid "redirection to localhost"
 msgstr "Weiterleitung zu localhost"
 
-#: ../wc/proxy/HttpServer.py:470
+#: ../wc/proxy/HttpServer.py:474
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
@@ -560,7 +563,7 @@ msgstr ""
 "--startup [manual|auto|disabled]\n"
 "        Wann der Dienst gestartet werden soll. Standard ist manuell (manual)\n"
 "--interactive\n"
-"        Erlaub Interaktion mit dem Desktop.\n"
+"        Erlaube Interaktion mit dem Desktop.\n"
 
 #: ../webcleaner:71
 #, python-format
@@ -613,7 +616,7 @@ msgstr "Führen Sie 'webcleaner -h' aus, um Hilfe zu erhalten\n"
 
 #: ../webcleaner:110
 msgid "press return to continue..."
-msgstr "drücken Sie Return, um fortzufahren..."
+msgstr "drücken Sie die Eingabetaste, um fortzufahren..."
 
 #: ../webcleaner:118
 #, python-format
@@ -689,7 +692,7 @@ msgstr "${appname} Konfiguration"
 #: ../templates/classic/error.html:5
 #: ../templates/classic/error.html:9
 msgid "${appname} error"
-msgstr "${appname} error"
+msgstr "${appname} Fehler"
 
 #: ../templates/classic/filterconfig.html:12
 msgid "${appname} filter rule configuration"
@@ -1308,9 +1311,9 @@ msgstr "Htmlrewrite Attribut(e) wurde(n) gelöscht."
 #: ../templates/classic/feedback.html:20
 msgid "I wrote this software to get rid of advertisings. If you still see advert images on pages you surf on, you are free to send me the url of those pages and I will include filters to remove the adverts."
 msgstr ""
-"Ich habe dieses Progamm geschrieben, um Werbung zu entfernen.\n"
-"Falls sie immer noch Werbebanner auf Seiten sehen, können sie mir eine\n"
-"Url dieser Seiten schicken und ich werde Filter einfügen, um diese Werbung\n"
+"Ich habe dieses Programm geschrieben, um Werbung zu entfernen.\n"
+"Falls sie immer noch Werbung auf Seiten sehen, können sie mir eine\n"
+"URL dieser Seiten schicken und ich werde Filter einfügen, um diese Werbung\n"
 "zu entfernen."
 
 #: ../templates/classic/help.html:244
@@ -1557,7 +1560,7 @@ msgstr "Verändert XML Seiten."
 
 #: ../templates/classic/accessibility.html:36
 msgid "Most browsers support jumping to specific links by typing keys defined on the web site. On Windows, you can press ${alt-key} + an access key; on Macintosh, you can press ${control-key} + an access key."
-msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen von vordefinierten Tastenkommandos auf der Webseite. Unter Windows können sie ${alt-key} + Tastaturkommando tippen, unter Macintosh können sie ${control-key} + Tastaturkommando tippen."
+msgstr "Die meisten Browser unterstützen das Springen zu Verknüpfungen durch Tippen von vordefinierten Tastenkommandos auf der Website. Unter Windows können sie ${alt-key} + Tastaturkommando tippen, unter Macintosh können sie ${control-key} + Tastaturkommando tippen."
 
 #: ../templates/classic/filterconfig.html:44
 msgid "Move folder down"
@@ -1589,11 +1592,11 @@ msgstr "Netscape/Mozilla"
 
 #: ../templates/classic/config.html:29
 msgid "Network address"
-msgstr "Netzwerkaddresse"
+msgstr "Netzwerkadresse"
 
 #: ../templates/classic/config.html:29
 msgid "Network address the proxy should listen on."
-msgstr "Netzwerkaddresse auf der Proxy horchen soll."
+msgstr "Netzwerkadresse auf der Proxy horchen soll."
 
 #: ../templates/classic/filterconfig.html:69
 msgid "New folder"
@@ -1672,7 +1675,7 @@ msgstr "Übergeordneter Proxy Benutzer erfolgreich geändert."
 
 #: ../templates/classic/help.html:142
 msgid "Parse HTML code and rewrite single tags, attributes and values. Execute and filter JavaScript. Parse and filter content rated pages. Filter HTML comments."
-msgstr "Parse HTML Daten und schreibe einzelne Tags, Attribute und Werte um. Führt JavaScript aus und filtert es. Parst in Seiten angegebene Inhaltsbewertungen und filtert diese Seiten. Filtert HTML Kommentare."
+msgstr "Parse HTML Daten und schreibe einzelne Tags, Attribute und Werte um. Führt Java-Script aus und filtert es. Parst in Seiten angegebene Inhaltsbewertungen und filtert diese Seiten. Filtert HTML Kommentare."
 
 #: ../templates/classic/help.html:220
 msgid "Parse XML code and rewrite single tags, attributes and values. Plus there is the ability to filter embedded HTML content, often occuring in RSS feeds."
@@ -1739,7 +1742,7 @@ msgstr "Proxy Filtermodule"
 
 #: ../templates/classic/config.html:468
 msgid "Proxy network address successfully changed."
-msgstr "Proxy Netzwerkaddresse erfolgreich geändert."
+msgstr "Proxy Netzwerkadresse erfolgreich geändert."
 
 #: ../templates/classic/config.html:156
 msgid "Proxy password"
@@ -1771,7 +1774,7 @@ msgstr "Proxybenutzer erfolgreich geändert."
 
 #: ../templates/classic/rating.html:87
 msgid "Rated"
-msgstr "Bewerted"
+msgstr "Bewertet"
 
 #: ../templates/classic/rating.html:40
 msgid "Rating"
@@ -1861,7 +1864,7 @@ msgstr "Ersetze reguläre Ausdrücke in HTML und Textdaten."
 
 #: ../templates/classic/help.html:345
 msgid "Replace regular expressions in HTML or JavaScript pages."
-msgstr "Ersetze reguläre Ausdrücke in HTML oder JavaScript Seiten."
+msgstr "Ersetze reguläre Ausdrücke in HTML oder Java-Script Seiten."
 
 #: ../templates/classic/help.html:197
 msgid "Replace regular expressions in data streams."
@@ -2114,7 +2117,7 @@ msgstr "Der Proxy startet neu. Sie werden in 10 Sekunden automatisch zur neuen <
 
 #: ../templates/classic/accessibility.html:21
 msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims ${accessibility-link}."
-msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Webseiten stammen von Mark Pilgrims ${accessibility-link}."
+msgstr "Diese Erklärung sowie fast alle implementierten Techniken für behindertengerechte Websites stammen von Mark Pilgrims ${accessibility-link}."
 
 #: ../templates/classic/config.html:104
 msgid "Timeout"
@@ -2200,7 +2203,7 @@ msgstr "XML Selektor"
 
 #: ../templates/classic/feedback.html:24
 msgid "You can of course always add your own filter rules, they will not be touched on a filter update."
-msgstr "Sie können natürlich auch ihre eigenen Filterregeln hinzfügen, diese werden bei einer Filteraktualisierung nicht gelöscht."
+msgstr "Sie können natürlich auch ihre eigenen Filterregeln hinzufügen, diese werden bei einer Filteraktualisierung nicht gelöscht."
 
 #: ../templates/classic/rating.html:18
 msgid "You can rate and review web pages according to several given categories."
@@ -2208,7 +2211,7 @@ msgstr "Sie können Webseiten nachschlagen und anhand einiger Kategorien bewerten
 
 #: ../templates/classic/rating_mail.html:20
 msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
-msgstr "Sie können mir geänderte oder neue Seitenbewertungen per Mail schicken so daß ich diese anschauen und in eine aktualisierte Bewertungsdatenbank einfügen kann."
+msgstr "Sie können mir geänderte oder neue Seitenbewertungen per Mail schicken sodass ich diese anschauen und in eine aktualisierte Bewertungsdatenbank einfügen kann."
 
 #: ../templates/classic/config.html:444
 msgid "You can specify complete domains or only their last parts with a leading dot. For example <code>.intra</code> will match any hosts ending with <code>.intra</code>."
