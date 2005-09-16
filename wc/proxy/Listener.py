@@ -48,7 +48,6 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
         """
         super(Listener, self).__init__()
         self.addr = (sockaddr, port)
-        wc.log.info(wc.LOG_PROXY, "Starting to listen on %s", self.addr)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         if sslctx is not None:
             import OpenSSL.SSL
@@ -59,6 +58,11 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
         # maximum number of queued connections
         self.listen(50)
         self.handler = handler
+        if sockaddr:
+            host = "%s:%d" % self.addr
+        else:
+            host = "*:%d" % port
+        wc.log.info(wc.LOG_PROXY, "%s listening on %s tcp", wc.App, host)
 
     def __repr__ (self):
         """
