@@ -1,0 +1,616 @@
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2005-09-16 17:21+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING"
+
+# type: TH
+#: en/webcleaner-certificates.1:1
+#, no-wrap
+msgid "WEBCLEANER-CERTIFICATES"
+msgstr ""
+
+# type: TH
+#: en/webcleaner-certificates.1:1
+#, no-wrap
+msgid "22 March 2004"
+msgstr ""
+
+# type: SH
+#: en/webcleaner-certificates.1:2 en/webcleaner.1:2 en/webcleaner.conf.5:2
+#, no-wrap
+msgid "NAME"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:4
+msgid "webcleaner-certificates - generate or remove WebCleaner SSL certificates"
+msgstr ""
+
+# type: SH
+#: en/webcleaner-certificates.1:4 en/webcleaner.1:4
+#, no-wrap
+msgid "SYNOPSIS"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:6
+msgid "B<webcleaner-certificates> [I<options>] I<command>"
+msgstr ""
+
+# type: SH
+#: en/webcleaner-certificates.1:6 en/webcleaner.1:12
+#, no-wrap
+msgid "OPTIONS"
+msgstr ""
+
+# type: TP
+#: en/webcleaner-certificates.1:7 en/webcleaner.1:16
+#, no-wrap
+msgid "B<-d> I<directory>, B<--configdir=>I<directory>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:12
+msgid ""
+"Generate certificates in given directory instead of the default one for "
+"WebCleaner.  See also the option B<-d> in B<webcleaner(1)>."
+msgstr ""
+
+# type: SH
+#: en/webcleaner-certificates.1:12
+#, no-wrap
+msgid "COMMANDS"
+msgstr ""
+
+# type: TP
+#: en/webcleaner-certificates.1:13
+#, no-wrap
+msgid "B<install>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:18
+msgid ""
+"Generate and install WebCleaner SSL certificates for client and server "
+"authentification.  If the certificates exist already, do nothing."
+msgstr ""
+
+# type: TP
+#: en/webcleaner-certificates.1:18
+#, no-wrap
+msgid "B<remove>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:21
+msgid "Remove all previously generated WebCleaner SSL certificates."
+msgstr ""
+
+# type: SH
+#: en/webcleaner-certificates.1:21 en/webcleaner.1:33 en/webcleaner.conf.5:123
+#, no-wrap
+msgid "AUTHOR"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:22 en/webcleaner.1:34 en/webcleaner.conf.5:124
+msgid "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
+msgstr ""
+
+# type: TH
+#: en/webcleaner.1:1
+#, no-wrap
+msgid "WEBCLEANER"
+msgstr ""
+
+# type: TH
+#: en/webcleaner.1:1
+#, no-wrap
+msgid "6 December 2000"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:4
+msgid "webcleaner - a filtering HTTP proxy"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:6
+msgid "B<webcleaner> [I<options>]"
+msgstr ""
+
+# type: SH
+#: en/webcleaner.1:6 en/webcleaner.conf.5:4
+#, no-wrap
+msgid "DESCRIPTION"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:12
+msgid ""
+"WebCleaner is a filtering HTTP proxy. You can encode, decode and modify each "
+"part of an HTTP request. WebCleaner enhances your privacy and efficiency on "
+"the web. It comes with several ready-to-use filters to remove advertisement "
+"and unwanted HTML content, compresses documents on-the-fly, disables "
+"animated GIF images and more."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.1:13
+#, no-wrap
+msgid "B<-h>, B<--help>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:16
+msgid "Print help text."
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:20
+msgid ""
+"Use given directory for configuration. It should include a "
+"B<webcleaner.conf> file and several .zap files."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.1:20
+#, no-wrap
+msgid "B<--no-file-logs>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:23
+msgid "Log to stdout instead of generating log files."
+msgstr ""
+
+# type: SH
+#: en/webcleaner.1:23
+#, no-wrap
+msgid "CONFIGURATION"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:28
+msgid ""
+"To configure WebCleaner, point your favourite webbrowser to "
+"B<http://localhost:>I<port>B</> where I<port> is your configured WebCleaner "
+"port number (default 8080)."
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:31
+msgid ""
+"The underlying configuration format is a custom XML format which is "
+"explained in I<webcleaner.conf(5)>."
+msgstr ""
+
+# type: SH
+#: en/webcleaner.1:31 en/webcleaner.conf.5:121
+#, no-wrap
+msgid "SEE ALSO"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:33
+msgid "webcleaner.conf(5)"
+msgstr ""
+
+# type: TH
+#: en/webcleaner.conf.5:1
+#, no-wrap
+msgid "WEBCLEANER.CONF"
+msgstr ""
+
+# type: TH
+#: en/webcleaner.conf.5:1
+#, no-wrap
+msgid "3 January 2003"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:4
+msgid "webcleaner.conf - configuration file for WebCleaner"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:8
+msgid ""
+"B<webcleaner.conf> is the main configuration file for the WebCleaner "
+"proxy. The file has a custom XML format following the Document Type "
+"Definition in the file B<webcleaner.dtd>."
+msgstr ""
+
+# type: SH
+#: en/webcleaner.conf.5:8
+#, no-wrap
+msgid "SETTINGS"
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:9
+#, no-wrap
+msgid "B<version>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:12
+msgid "The configuration format version."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:12
+#, no-wrap
+msgid "B<port>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:15
+msgid "The port number the WebCleaner Proxy is running on."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:15
+#, no-wrap
+msgid "B<sslport>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:18
+msgid "The port number for the WebCleaner SSL server."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:18
+#, no-wrap
+msgid "B<sslgateway>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:22
+msgid ""
+"If set to one, WebCleaner will start an SSL server on the above port for "
+"delegating and filtering HTTPS traffic."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:22
+#, no-wrap
+msgid "B<adminuser>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:25
+msgid "The user name for the proxy configuration interface."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:25
+#, no-wrap
+msgid "B<adminpass>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:28
+msgid "The base64 encoded password for the proxy configuration interface."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:28
+#, no-wrap
+msgid "B<proxyuser>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:31
+msgid "The user name for proxy authentication."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:31
+#, no-wrap
+msgid "B<proxypass>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:34
+msgid "The base64 encoded password for proxy authentication."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:34
+#, no-wrap
+msgid "B<parentproxy>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:38
+msgid ""
+"The hostname of the HTTP parent proxy. Leave empty to not use a parent "
+"proxy."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:38
+#, no-wrap
+msgid "B<parentproxyport>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:41
+msgid "The port number the parent proxy is running on."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:41
+#, no-wrap
+msgid "B<parentproxyuser>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:44
+msgid "The user name for parent proxy authentication."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:44
+#, no-wrap
+msgid "B<parentproxypass>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:47
+msgid "The base64 encoded password for parent proxy authentication."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:47
+#, no-wrap
+msgid "B<timeout>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:50
+msgid "Connection timeout in seconds."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:50
+#, no-wrap
+msgid "B<gui\\_theme>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:53
+msgid "Web configuration gui theme selection."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:53
+#, no-wrap
+msgid "B<nofilterhosts>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:56
+msgid "Comma separated list of hosts for which filtering is disabled."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:56
+#, no-wrap
+msgid "B<allowedhosts>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:59
+msgid "Comma separated list of hosts which are allowed to use this proxy."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:59
+#, no-wrap
+msgid "B<auth_ntlm>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:62
+msgid "If set to one, will authenticate with NTLM algorithm."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:62
+#, no-wrap
+msgid "B<try_google>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:66
+msgid ""
+"If set to one, will display on timeouts or other fatal server errors a page "
+"with links to google cache for the requested page."
+msgstr ""
+
+# type: SH
+#: en/webcleaner.conf.5:66
+#, no-wrap
+msgid "FILTER"
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:67
+#, no-wrap
+msgid "B<Blocker>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:70
+msgid "Block specific urls; this replaces advert images and frames."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:70
+#, no-wrap
+msgid "B<Compress>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:73
+msgid "Compress documents with good compression ratio (HTML, WAV, ...)."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:73
+#, no-wrap
+msgid "B<BinaryCharFilter>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:77
+msgid "Replace some binary chars (espacially those illegal Microsoft quote chars)."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:77
+#, no-wrap
+msgid "B<GifImage>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:80
+msgid "Deanimate GIF images and remove GIF comments."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:80
+#, no-wrap
+msgid "B<Header>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:83
+msgid "Replace, modify and add arbitrary HTTP headers."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:83
+#, no-wrap
+msgid "B<ImageReducer>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:87
+msgid ""
+"Reduce all images to low-quality JPEG images. Useful for users with very low "
+"bandwidth."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:87
+#, no-wrap
+msgid "B<ImageSize>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:90
+msgid "Filter images by size."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:90
+#, no-wrap
+msgid "B<MimeRecognizer>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:93
+msgid "Detect and correct missing or wrong Content-Type headers."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:93
+#, no-wrap
+msgid "B<PicsHeader>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:96
+msgid "PICS filtering."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:96
+#, no-wrap
+msgid "B<Replacer>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:99
+msgid "Replace text pieces in text data files (HTML, plain text, ...)."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:99
+#, no-wrap
+msgid "B<Rewriter>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:103
+msgid ""
+"Parse the HTML stream and replace arbitrary tag constructs; filters most "
+"advertising."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.conf.5:103
+#, no-wrap
+msgid "B<VirusFilter>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:106
+msgid "Turns on clamav virus filtering (if clamav is installed)."
+msgstr ""
+
+# type: SH
+#: en/webcleaner.conf.5:106
+#, no-wrap
+msgid "EXAMPLE"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:121
+#, no-wrap
+msgid ""
+" E<lt>?xml version=\"1.0\"?E<gt>\n"
+" E<lt>!DOCTYPE webcleaner SYSTEM \"webcleaner.dtd\"E<gt>\n"
+" E<lt>webcleaner \n"
+"  version=\"0.8\"\n"
+"  port=\"8000\"\n"
+"  parentproxy=\"squid.company.com\"\n"
+"  parentproxyport=\"3128\"\n"
+"  E<gt>\n"
+"   E<lt>filter name=\"Rewriter\"/E<gt>\n"
+"   E<lt>filter name=\"Blocker\"/E<gt>\n"
+"   E<lt>filter name=\"Header\"/E<gt>\n"
+"   E<lt>filter name=\"Replacer\"/E<gt>\n"
+"   E<lt>filter name=\"GifImage\"/E<gt>\n"
+"  E<lt>/webcleanerE<gt>\n"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.conf.5:123
+msgid "webcleaner(1)"
+msgstr ""

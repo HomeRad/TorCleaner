@@ -1,10 +1,12 @@
-.TH WEBCLEANER.CONF 5 "29. November 2004"
+.\" This file was generated with po4a. Translate the source file.
+.\" 
+.TH WEBCLEANER.CONF 5 "3. Januar 2003"  
 .SH NAME
-webcleaner.conf - Konfigurationsdatei für WebCleaner
+webcleaner.conf \- Konfigurationsdatei für WebCleaner
 .SH BESCHREIBUNG
-\fBwebcleaner.conf\fP ist die Hauptkonfigurationsdatei für den
-WebCleaner Proxy. Die Datei besitzt ein eigenes XML Format, welches
-der Dokumentdefinition der Datei \fBwebcleaner.dtd\fP folgt.
+\fBwebcleaner.conf\fP ist die Hauptkonfigurationsdatei für denWebCleaner 
+Proxy. Die Datei besitzt ein eigenes XML Format, welches der 
+Dokumentdefinition der Datei \fBwebcleaner.dtd\fP folgt.
 .SH EINSTELLUNGEN
 .TP
 \fBversion\fP
@@ -17,25 +19,24 @@ Die Portnummer unter der der WebCleaner Proxy läuft.
 Die Portnummer für den WebCleaner SSL Server.
 .TP
 \fBsslgateway\fP
-Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer
-einen SSL Server starten, um HTTPS Daten weiterzuleiten und zu
-filtern.
+Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummereinen SSL 
+Server starten, um HTTPS Daten weiterzuleiten und zufiltern.
 .TP
 \fBadminuser\fP
 Der Benutzername für die Proxy Konfigurationsoberfläche.
 .TP
 \fBadminpass\fP
-Der base64-kodierte Passwort für die Proxy Konfigurationsoberfläche.
+Der base64\-kodierte Passwort für die Proxy Konfigurationsoberfläche.
 .TP
 \fBproxyuser\fP
 Der Benutzername für Proxy Authentifizierung.
 .TP
 \fBproxypass\fP
-Das base64-kodierte Passwort für Proxy Authentifizierung.
+Das base64\-kodierte Passwort für Proxy Authentifizierung.
 .TP
 \fBparentproxy\fP
-Der Rechnername des übergeordneten HTTP Proxy. Lassen Sie
-den Rechnername leer, um keinen übergeordneten Proxy zu benutzen.
+Der Rechnername des übergeordneten HTTP Proxy. Lassen Sie den Rechnernamen 
+leer, um keinen übergeordneten Proxy zu benutzen.
 .TP
 \fBparentproxyport\fP
 Die Portnummer des übergeordneten Proxy.
@@ -44,7 +45,8 @@ Die Portnummer des übergeordneten Proxy.
 Der Benutzername zur Authentifizierung des übergeordneten Proxy.
 .TP
 \fBparentproxypass\fP
-Das base64-kodierte Passwort zur Authentifizierung des übergeordneten Proxy.
+Das base64\-kodierte Passwort zur Authentifizierung des übergeordneten 
+Proxy.
 .TP
 \fBtimeout\fP
 Zeitüberschreitungslimit für Verbindungen in Sekunden.
@@ -56,26 +58,25 @@ Themenauswahl für die Weboberfläche.
 Kommaseparierte Liste von Rechnernamen für die Filtern deaktiviert ist.
 .TP
 \fBallowedhosts\fP
-Kommaseparierte Liste von Rechnernamen die diesen Proxy benutzen dürfen.
+Kommaseparierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen.
 .TP
 \fBauth_ntlm\fP
 Falls auf Eins gesetzt, wird mit NTLM Algorithmus authentifiziert.
 .TP
 \fBtry_google\fP
-Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung
-eine Seite mit Verweisen zum Google Cache der angeforderten Seiten
-dargestellt.
+Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitungeine 
+Seite mit Verweisen zum Google Cache der angeforderten Seitendargestellt.
 .SH FILTER
 .TP
 \fBBlocker\fP
-Blockiert bestimmte URLs. Dies ersetzt Werbebilder und -frames.
+Blockiert bestimmte URLs. Dies ersetzt Werbebilder und \-frames.
 .TP
 \fBCompress\fP
 Komprimiert Dokumente mit guter Kompressionsrate (HTML, WAV, ...).
 .TP
 \fBBinaryCharFilter\fP
-Ersetzt einige Binärzeichen (besonders die illegalen Microsoft
-Anführungszeichen).
+Ersetzt einige Binärzeichen (besonders die illegalen 
+MicrosoftAnführungszeichen).
 .TP
 \fBGifImage\fP
 Deanimiert GIF Bilder und entfernt GIF Kommentare.
@@ -84,15 +85,15 @@ Deanimiert GIF Bilder und entfernt GIF Kommentare.
 Ersetzen, modifizieren und hinzufügen von beliebigen HTTP Kopfdaten.
 .TP
 \fBImageReducer\fP
-Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.
-Nützlich für Benutzer mit sehr niedriger Bandbreite.
+Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.Nützlich für 
+Benutzer mit sehr niedriger Bandbreite.
 .TP
 \fBImageSize\fP
 Filtere Bilder nach Größe.
 .TP
 \fBMimeRecognizer\fP
-Erkenne und korrigiere fehlende oder falsche Angaben im
-Content\-Type Kopfdatum.
+Erkenne und korrigiere fehlende oder falsche Angaben imContent\-Type 
+Kopfdatum.
 .TP
 \fBPicsHeader\fP
 Ein PICS Filter.
@@ -101,11 +102,11 @@ Ein PICS Filter.
 Ersetzt Daten im Textdateien (HTML, reiner Text, ...).
 .TP
 \fBRewriter\fP
-Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filter
-die meiste Werbung heraus.
+Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filtert die 
+meiste Werbung heraus.
 .TP
 \fBVirusFilter\fP
-Aktivier den Clamav Virusfilter (falls Clamav installiert ist).
+Aktiviert den Clamav Virusfilter (falls Clamav installiert ist).
 .SH BEISPIEL
  <?xml version="1.0"?>
  <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
@@ -122,6 +123,6 @@ Aktivier den Clamav Virusfilter (falls Clamav installiert ist).
    <filter name="GifImage"/>
   </webcleaner>
 .SH "SIEHE AUCH"
-webcleaner(1), webcleanerconf(1)
+webcleaner(1)
 .SH AUTHOR
 Bastian Kleineidam <calvin@users.sourceforge.net>
