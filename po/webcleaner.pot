@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-15 14:23+0200\n"
+"POT-Creation-Date: 2005-09-16 01:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,29 +119,29 @@ msgstr ""
 msgid "generic url %r doesn't match %r"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:87
+#: ../wc/filter/VirusFilter.py:89
 msgid "Not acceptable"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:88
+#: ../wc/filter/VirusFilter.py:90
 #, python-format
 msgid "Maximum data size (%s) exceeded"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:174
+#: ../wc/filter/VirusFilter.py:176
 msgid "Clamd is not ready for stream scanning"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:248
+#: ../wc/filter/VirusFilter.py:250
 msgid "You have to disable ScannerDaemonOutputFormat"
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:250
+#: ../wc/filter/VirusFilter.py:252
 msgid ""
 "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
 msgstr ""
 
-#: ../wc/filter/VirusFilter.py:283
+#: ../wc/filter/VirusFilter.py:285
 msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
@@ -281,12 +281,12 @@ msgstr ""
 msgid "The %s service can be paused."
 msgstr ""
 
-#: ../wc/configuration.py:284
+#: ../wc/configuration.py:296
 #, python-format
 msgid "inserting %s"
 msgstr ""
 
-#: ../wc/configuration.py:512 ../wc/configuration.py:592
+#: ../wc/configuration.py:525 ../wc/configuration.py:605
 #, python-format
 msgid "unknown tag name %r"
 msgstr ""
