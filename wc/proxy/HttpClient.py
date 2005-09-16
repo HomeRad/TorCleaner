@@ -37,6 +37,7 @@ import cStringIO as StringIO
 
 import wc
 import wc.log
+import wc.strformat
 import wc.configuration
 import wc.http
 import wc.url
@@ -97,8 +98,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.state = 'request'
         self.server = None
         self.request = ''
-        self.decoders = [] # Handle each of these, left to right
-        self.headers = {} # remembers server headers
+        # Handle each of these, left to right
+        self.decoders = []
+        self.encoders = []
+        # remembers server headers
+        self.headers = {}
         self.bytes_remaining = None # for content only
         self.content = ''
         self.compress = "identity" # acceptable compression for client
@@ -138,9 +142,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             extra += "server "
         if hasattr(self, "request") and self.request:
             try:
-                extra += self.request.split()[1]
+                request = self.request.split()[1]
             except IndexError:
-                extra += '???'+self.request
+                request = '???'+self.request
+            extra += wc.strformat.limit(request, 200)
         else:
             extra += 'being read'
         if hasattr(self.socket, "state_string"):
@@ -422,11 +427,13 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             self.bytes_remaining -= len(data)
         is_closed = False
         for decoder in self.decoders:
-            data = decoder.decode(data)
+            data = decoder.process(data)
             if not is_closed:
                 is_closed = decoder.closed
         for stage in FilterStages:
             data = wc.filter.applyfilter(stage, data, "filter", self.attrs)
+        for encoder in self.encoders:
+            data = encoder.process(data)
         self.content += data
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0

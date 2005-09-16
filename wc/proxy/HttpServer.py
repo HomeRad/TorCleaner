@@ -37,6 +37,7 @@ import cStringIO as StringIO
 
 import wc
 import wc.log
+import wc.strformat
 import wc.configuration
 import wc.url
 import wc.magic
@@ -61,17 +62,16 @@ FilterStages = [
     wc.filter.STAGE_RESPONSE_ENCODE,
 ]
 
-def flush_decoders (decoders):
+def flush_coders (coders, data=""):
     """
-    Flush given decoders and return flushed data.
+    Flush given de- or encoders and return flushed data.
     """
-    data = ""
-    while decoders:
-        wc.log.debug(wc.LOG_PROXY, "flush decoder %s", decoders[0])
-        data = decoders[0].flush()
-        del decoders[0]
-        for decoder in decoders:
-            data = decoder.decode(data)
+    while coders:
+        wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
+        data = coders[0].flush()
+        del coders[0]
+        for coder in coders:
+            data = coder.process(data)
     return data
 
 
@@ -106,6 +106,7 @@ class HttpServer (wc.proxy.Server.Server):
         self.headers = wc.http.header.WcMessage()
         # Handle each of these, left to right
         self.decoders = []
+        self.encoders = []
         # for persistent connections
         self.persistent = False
         # initial filter attributes
@@ -140,10 +141,9 @@ class HttpServer (wc.proxy.Server.Server):
         if hasaddr:
             extra += ":%d" % self.addr[1]
         if hasattr(self, "document"):
-            extra += self.document
+            extra += wc.strformat.limit(self.document, 200)
         if hasattr(self, "client") and self.client:
             extra += " client"
-        #if len(extra) > 46: extra = extra[:43] + '...'
         if hasattr(self.socket, "state_string"):
             # SSL status string
             extra += " (%s)" % self.socket.state_string()
@@ -379,8 +379,8 @@ class HttpServer (wc.proxy.Server.Server):
             decoders = [d.__class__() for d in self.decoders]
             data = self.recv_buffer
             for decoder in decoders:
-                data = decoder.decode(data)
-            data += flush_decoders(decoders)
+                data = decoder.process(data)
+            data += flush_coders(decoders)
             wc.proxy.Headers.server_set_content_headers(
                                      self.headers, self.mime_types, self.url)
 
@@ -445,7 +445,7 @@ class HttpServer (wc.proxy.Server.Server):
                          self, self.bytes_remaining)
         is_closed = False
         for decoder in self.decoders:
-            data = decoder.decode(data)
+            data = decoder.process(data)
             wc.log.debug(wc.LOG_PROXY, "%s have run decoder %s",
                          self, decoder)
             if not is_closed and decoder.closed:
@@ -463,6 +463,10 @@ class HttpServer (wc.proxy.Server.Server):
         except wc.filter.FilterProxyError, e:
             self.handle_error("filter proxy error")
             return
+        for encoder in self.encoders:
+            data = encoder.encode(data)
+            wc.log.debug(wc.LOG_PROXY, "%s have run encoder %s",
+                         self, encoder)
         underflow = self.bytes_remaining is not None and \
                    self.bytes_remaining < 0
         if underflow:
@@ -554,7 +558,7 @@ class HttpServer (wc.proxy.Server.Server):
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.flush", self)
         if not self.statuscode:
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
-        data = flush_decoders(self.decoders)
+        data = flush_coders(self.decoders)
         try:
             for stage in FilterStages:
                data = wc.filter.applyfilter(stage, data, "finish", self.attrs)
@@ -564,6 +568,7 @@ class HttpServer (wc.proxy.Server.Server):
             # to save CPU time make connection unreadable for a while
             self.set_unreadable(0.5)
             return False
+        data = flush_coders(self.encoders, data=data)
         # the client might already have closed
         if not self.client:
             return
