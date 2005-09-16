@@ -5,6 +5,11 @@
     Type: feature
     Changed: wc/configuration.py, wc/filters/*.py
 
+  * If a server has a list of IP addresses and the first one failed, try
+    also the other ones if they allow a connect.
+    Type: feature
+    Changed: wc/proxy/ClientServerMatchmaker.py, wc/proxy/Dispatcher.py
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings

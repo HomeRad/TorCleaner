@@ -122,6 +122,11 @@ class ClientServerMatchmaker (object):
         wc.log.debug(wc.LOG_PROXY, "background dns lookup %r", self.hostname)
         wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
+    def get_ip_addr (self):
+        ip = self.try_addrs[0]
+        del self.try_addrs[0]
+        return ip
+
     def handle_dns (self, hostname, answer):
         """
         Got dns answer, look for server.
@@ -133,7 +138,13 @@ class ClientServerMatchmaker (object):
             # The browser has already closed this connection, so abort
             return
         if answer.isFound():
-            self.ipaddr = answer.data[0]
+            # The data is a list of strings resembling IP addresses.
+            # Be sure not to copy the list since it is modified.
+            self.ipaddrs = answer.data
+            # A copy if IP addresses to keep track what IPs have been tried.
+            self.try_addrs = self.ipaddrs[:]
+            # Try the first IP in the list.
+            self.ipaddr = self.get_ip_addr()
             self.state = 'server'
             self.find_server()
         elif answer.isRedirect():
@@ -260,10 +271,25 @@ class ClientServerMatchmaker (object):
     def server_abort (self, reason=_("No response from server")):
         """
         The server had an error, so we need to tell the client
-        that we couldn't connect.
+        that we couldn't connect, or try another IP of the DNS IP list
+        to connect to.
         """
         if self.client.connected:
-            self.client.error(503, reason)
+            if self.try_addrs:
+                # There are still IP addresses to try out.
+                # Shuffle the failed IP to the end if the DNS list for
+                # subsequent requests.
+                del self.ipaddrs[0]
+                self.ipaddrs.append(self.ipaddr)
+                # Get the next IP address in the list.
+                self.ipaddr = self.get_ip_addr()
+                wc.log.info(wc.LOG_PROXY, "%s try next IP %s",
+                            self, self.ipaddr)
+                self.state = "server"
+                self.find_server()
+            else:
+                # Tell the client that the server had an error.
+                self.client.error(503, reason)
 
     def server_close (self, server):
         """

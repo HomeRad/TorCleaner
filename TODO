@@ -2,9 +2,6 @@ TODO
 
 - if an unknown port is forbidden (403 status), add an explaining message
 
-- some servers have a list of IP addrs, not just one
-  If one of those did not connect (check ECONNREFUSED), try the other ones.
-
 - functional tests
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
