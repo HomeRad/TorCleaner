@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-16 01:14+0200\n"
-"PO-Revision-Date: 2005-09-16 15:01+0100\n"
+"POT-Creation-Date: 2005-09-16 16:13+0200\n"
+"PO-Revision-Date: 2005-09-16 16:18+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -346,49 +346,54 @@ msgstr "Fehler: keine Aktualisierungen vorhanden."
 msgid "Error: %s"
 msgstr "Fehler: %s"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:154
+#: ../wc/proxy/ClientServerMatchmaker.py:165
 #, python-format
 msgid "Host %s is an abbreviation for %s"
 msgstr "Rechner %s ist eine Abkürzung für %s"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:159
+#: ../wc/proxy/ClientServerMatchmaker.py:170
 msgid "Host not found"
 msgstr "Rechner nicht gefunden"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:160
+#: ../wc/proxy/ClientServerMatchmaker.py:171
 #, python-format
 msgid "Host %s not found .. %s"
 msgstr "Rechner %s nicht gefunden .. %s"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:191
+#: ../wc/proxy/ClientServerMatchmaker.py:202
 msgid "Service unavailable"
 msgstr "Dienst nicht verfügbar"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:210
+#: ../wc/proxy/ClientServerMatchmaker.py:221
 msgid "Connect error"
 msgstr "Verbindungsproblem"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:243
-#: ../wc/proxy/ClientServerMatchmaker.py:247
+#: ../wc/proxy/ClientServerMatchmaker.py:254
+#: ../wc/proxy/ClientServerMatchmaker.py:258
 msgid "Expectation failed"
 msgstr "Erwartung fehlgeschlagen"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:244
+#: ../wc/proxy/ClientServerMatchmaker.py:255
 msgid "Server does not understand HTTP/1.1"
 msgstr "Server versteht nicht HTTP/1.1"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:248
+#: ../wc/proxy/ClientServerMatchmaker.py:259
 #, python-format
 msgid "Unsupported expectation %r"
 msgstr "Erwartung %r nicht erfüllbar"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:260
+#: ../wc/proxy/ClientServerMatchmaker.py:271
 msgid "No response from server"
 msgstr "Keine Antwort vom Server"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:283
+#: ../wc/proxy/ClientServerMatchmaker.py:309
 msgid "Server did not respond"
 msgstr "Server hat nicht geantwortet"
+
+#: ../wc/proxy/Dispatcher.py:323
+#, python-format
+msgid "Connect error %s."
+msgstr "Verbindungsproblem %s."
 
 #: ../wc/proxy/Headers.py:273
 #, python-format

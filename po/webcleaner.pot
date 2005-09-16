@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-16 01:14+0200\n"
+"POT-Creation-Date: 2005-09-16 16:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -337,48 +337,53 @@ msgstr ""
 msgid "Error: %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:154
+#: ../wc/proxy/ClientServerMatchmaker.py:165
 #, python-format
 msgid "Host %s is an abbreviation for %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:159
+#: ../wc/proxy/ClientServerMatchmaker.py:170
 msgid "Host not found"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:160
+#: ../wc/proxy/ClientServerMatchmaker.py:171
 #, python-format
 msgid "Host %s not found .. %s"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:191
+#: ../wc/proxy/ClientServerMatchmaker.py:202
 msgid "Service unavailable"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:210
+#: ../wc/proxy/ClientServerMatchmaker.py:221
 msgid "Connect error"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:243
-#: ../wc/proxy/ClientServerMatchmaker.py:247
+#: ../wc/proxy/ClientServerMatchmaker.py:254
+#: ../wc/proxy/ClientServerMatchmaker.py:258
 msgid "Expectation failed"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:244
+#: ../wc/proxy/ClientServerMatchmaker.py:255
 msgid "Server does not understand HTTP/1.1"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:248
+#: ../wc/proxy/ClientServerMatchmaker.py:259
 #, python-format
 msgid "Unsupported expectation %r"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:260
+#: ../wc/proxy/ClientServerMatchmaker.py:271
 msgid "No response from server"
 msgstr ""
 
-#: ../wc/proxy/ClientServerMatchmaker.py:283
+#: ../wc/proxy/ClientServerMatchmaker.py:309
 msgid "Server did not respond"
+msgstr ""
+
+#: ../wc/proxy/Dispatcher.py:323
+#, python-format
+msgid "Connect error %s."
 msgstr ""
 
 #: ../wc/proxy/Headers.py:273
