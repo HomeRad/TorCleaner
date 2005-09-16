@@ -85,7 +85,7 @@ class UnchunkStream (object):
         return '<unchunk %s buflen=%d bytes_remaining=%s>' % \
                   (s, len(self.buf), self.bytes_remaining)
 
-    def decode (self, s):
+    def process (self, s):
         """
         Unchunk given data s.
         """

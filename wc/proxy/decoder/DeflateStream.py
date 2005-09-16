@@ -55,7 +55,7 @@ class DeflateStream (object):
             s = "open"
         return '<deflate %s>' % s
 
-    def decode (self, s):
+    def process (self, s):
         """
         Unzip given data s and return decompressed data.
         """

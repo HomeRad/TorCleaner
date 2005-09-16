@@ -32,7 +32,7 @@ Implements the minimal amount of work needed to ungzip an input stream
 
 Based on gzip.py in the standard Python distribution,
 but exports a proxy4 encoding interface:
- - decode(string) => return as much of the string as can be decoded
+ - process(string) => return as much of the string as can be decoded
  - flush()        => return everything else
 """
 
@@ -123,7 +123,7 @@ class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
         self.buf = s
         self.header_seen = True
 
-    def decode (self, s):
+    def process (self, s):
         """
         Gunzip data s.
         """
@@ -143,7 +143,7 @@ class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
                 # We haven't finished parsing the header
                 return ''
         # We have seen the header, so we can move on to zlib
-        return super(GunzipStream, self).decode(s)
+        return super(GunzipStream, self).process(s)
 
     def flush (self):
         """
