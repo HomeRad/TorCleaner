@@ -240,3 +240,22 @@ def stripall (s):
     if not s:
         return s
     return _sub_ws("", s)
+
+
+def limit (s, length=72):
+    """
+    If the length of the string exceeds the given limit, it will be cut
+    off and three dots will be appended.
+
+    @param s: the string to limit
+    @type s: string
+    @param length: maximum length
+    @type length: non-negative integer
+    @return: limited string, at most length+3 characters long
+    """
+    assert length >= 0, "length limit must be a non-negative integer"
+    if not s or len(s) <= length:
+        return s
+    if length == 0:
+        return ""
+    return "%s..." % s[:length]

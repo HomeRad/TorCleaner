@@ -104,6 +104,12 @@ class TestStrFormat (unittest.TestCase):
         self.assertEquals(wc.strformat.stripall(" a\t b"), "ab")
         self.assertEquals(wc.strformat.stripall(" \r\na\t \nb\r"), "ab")
 
+    def test_limit (self):
+        self.assertEquals(wc.strformat.limit("", 0), "")
+        self.assertEquals(wc.strformat.limit("a", 0), "")
+        self.assertEquals(wc.strformat.limit("1", 1), "1")
+        self.assertEquals(wc.strformat.limit("11", 1), "1...")
+
 
 def test_suite ():
     """
