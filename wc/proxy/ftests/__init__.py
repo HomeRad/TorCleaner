@@ -47,12 +47,41 @@ import unittest
 import socket
 import select
 import BaseHTTPServer
+
 import wc.proxy
+import wc.proxy.decoder.UnchunkStream
 
 
 ###################### utility functions ######################
 
-def decode (encoding, data):
+def decode_transfer (encoding, data, headers):
+    """
+    Decode data according to given transfer encoding. Optional the header
+    list is updated since the "chunked" encoding can have additional
+    header lines.
+
+    @param encoding: value of Transfer-Encoding header
+    @ptype encoding: string
+    @param data: data to decode
+    @ptype data: string
+    @param headers: header lines to extend (mutable object, side effect)
+    @ptype headers: list of strings
+    @return: encoded data
+    @rtype: string
+    """
+    if encoding == "chunked":
+        unchunk = wc.proxy.decoder.UnchunkStream.UnchunkStream()
+        data = unchunk.process(data)
+        data += unchunk.flush()
+        for name in unchunk.headers:
+            for value in unchunk.headers.getheaders(name):
+                headers.append("%s: %s" % (name, value))
+    else:
+        raise ValueError("Unknown transfer encoding %r" % encoding)
+    return data
+
+
+def decode_content (encoding, data):
     """
     Decode data with given content-encoding.
     """
@@ -68,6 +97,8 @@ def decode (encoding, data):
         data = zlib.decompress(data)
     elif encoding == "identity":
         pass
+    else:
+        raise ValueError("Unknown content encoding %r" % encoding)
     return data
 
 
@@ -410,12 +441,14 @@ class ProxyTest (unittest.TestCase):
             fp = StringIO(headerdata+"\r\n")
             rfcheaders = rfc822.Message(fp)
             fp.close()
+            if "Transfer-Encoding" in rfcheaders:
+                enctype = rfcheaders["Transfer-Encoding"]
+                data = decode_transfer(enctype, data, headers)
             if "Content-Encoding" in rfcheaders:
-                data = decode(rfcheaders["Content-Encoding"], data)
+                enctype = rfcheaders["Content-Encoding"]
+                data = decode_content(enctype, data)
             # chop off the appending \r\n of each header
-            headers = list([x[:-2] for x in rfcheaders.headers])
-        else:
-            headers = []
+            headers.extend([x[:-2] for x in rfcheaders.headers])
         return HttpResponse(version, status, msg, headers, content=data)
 
     def check_response (self, response):
