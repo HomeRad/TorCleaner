@@ -49,6 +49,13 @@ class ChunkedResponseTest (ProxyTest):
     def chunked (self, data, repeat=1, trailers=None):
         """
         Chunk-encode data.
+
+        @param data: data to encode
+        @type data: string
+        @param repeat: how much chunks of this data to generate
+        @type repeat: integer
+        @param trailers: trailer lines to append (without CRLF)
+        @type trailers: list of strings
         """
         if not data:
             repeat = 0
@@ -168,7 +175,7 @@ class test_chunked_1p1_1025x100B_toClt (ChunkedResponseTest):
         return self.chunked("a"*100, repeat=1025)
 
 
-class _test_chunked_1p1_trailer_11_1_announced_woutTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_1_announced_woutTe_toClt (ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
