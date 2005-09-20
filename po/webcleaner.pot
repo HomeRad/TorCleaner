@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-16 21:14+0200\n"
+"POT-Creation-Date: 2005-09-20 14:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -301,8 +301,8 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:64 ../wc/proxy/HttpClient.py:609
-#: ../wc/proxy/HttpClient.py:615 ../wc/proxy/HttpClient.py:626
+#: ../wc/webgui/webconfig.py:64 ../wc/proxy/HttpClient.py:613
+#: ../wc/proxy/HttpClient.py:619 ../wc/proxy/HttpClient.py:630
 msgid "Authentication Required"
 msgstr ""
 
@@ -386,12 +386,12 @@ msgstr ""
 msgid "Connect error %s."
 msgstr ""
 
-#: ../wc/proxy/Headers.py:273
+#: ../wc/proxy/Headers.py:274
 #, python-format
 msgid "Change content type of %r from %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:276
+#: ../wc/proxy/Headers.py:277
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr ""
@@ -401,58 +401,58 @@ msgstr ""
 msgid "unsupported encoding: %r"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:123
+#: ../wc/proxy/HttpClient.py:124
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:201
+#: ../wc/proxy/HttpClient.py:203
 msgid "Method not allowed"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:207
+#: ../wc/proxy/HttpClient.py:209
 msgid "Empty URL"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:210
+#: ../wc/proxy/HttpClient.py:212
 msgid "HTTP version not supported"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:227
+#: ../wc/proxy/HttpClient.py:229
 msgid "URL too long"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:228
+#: ../wc/proxy/HttpClient.py:230
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:256
+#: ../wc/proxy/HttpClient.py:258
 msgid "Forbidden"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:312 ../wc/proxy/HttpClient.py:319
+#: ../wc/proxy/HttpClient.py:314 ../wc/proxy/HttpClient.py:321
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:340 ../wc/proxy/HttpClient.py:353
-#: ../wc/proxy/HttpClient.py:365
+#: ../wc/proxy/HttpClient.py:342 ../wc/proxy/HttpClient.py:355
+#: ../wc/proxy/HttpClient.py:367
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:472 ../wc/proxy/HttpServer.py:415
+#: ../wc/proxy/HttpClient.py:476 ../wc/proxy/HttpServer.py:414
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:601
+#: ../wc/proxy/HttpClient.py:605
 msgid "Invalid Method"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:339
+#: ../wc/proxy/HttpServer.py:338
 msgid "redirection to localhost"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:474
+#: ../wc/proxy/HttpServer.py:473
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr ""
