@@ -269,6 +269,28 @@ Rule MIME types
 Rule (don't) match url
 </tr>
 <tr valign="top"><td>
+<label for="rule_headeraction" i18n:translate="">Action</label>:
+</td>
+<td>
+<select name="rule_headeraction" id="rule_headeraction"
+ i18n:attributes="title"
+ title="Header rules can add, replace or remove headers">
+<option tal:condition="not:curheaderaction/add"
+ value="add" i18n:translate="">add/replace</option>
+<option tal:condition="curheaderaction/add"
+ value="add" selected i18n:translate="">add/replace</option>
+<option tal:condition="not:curheaderaction/replace"
+ value="replace" i18n:translate="">replace</option>
+<option tal:condition="curheaderaction/replace"
+ value="replace" selected i18n:translate="">replace</option>
+<option tal:condition="not:curheaderaction/remove"
+ value="remove" i18n:translate="">remove</option>
+<option tal:condition="curheaderaction/remove"
+ value="remove" selected i18n:translate="">remove</option>
+</select>
+</td>
+</tr>
+<tr valign="top"><td>
 <label for="rule_headername" i18n:translate="">Header name</label><sup><a
  href="#footnote2" class="footnote" title="see footnote 2"
  i18n:attributes="title">2)</a></sup>:

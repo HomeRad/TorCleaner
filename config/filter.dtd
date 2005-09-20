@@ -4,6 +4,8 @@
  
  Changes:
 
+ 20050920 Bastian Kleineidam
+ * added action attribute to header element
  20050809 Bastian Kleineidam
  * renamed rewrite to htmlrewrite
  * added xmlrewrite
@@ -258,6 +260,7 @@
  name     CDATA #REQUIRED
  disable  CDATA "0"
  filterstage (request|response|both) "request"
+ action   (add|replace|remove) "replace"
 >
 
 <!--                       Image

@@ -29,7 +29,7 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, name="noname", value="", filterstage="request",
-                  matchurls=None, nomatchurls=None):
+                  action="remove", matchurls=None, nomatchurls=None):
         """
         Init rule name and value.
         """
@@ -39,7 +39,8 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         self.name = name
         self.value = value
         self.filterstage = filterstage
-        self.attrnames.extend(('name', 'filterstage'))
+        self.action = action
+        self.attrnames.extend(('name', 'filterstage', 'action'))
 
     def end_data (self, name):
         """
@@ -48,6 +49,8 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         super(HeaderRule, self).end_data(name)
         if name == 'replacement':
             self.value = self._data
+            if self.value and self.action == "remove":
+                self.action = "replace"
 
     def update (self, rule, dryrun=False, log=None):
         """
@@ -71,6 +74,7 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         s = u'%s\n name="%s"' % (super(HeaderRule, self).toxml(),
                                 wc.XmlUtils.xmlquoteattr(self.name))
         s += u'\n filterstage="%s"' % self.filterstage
+        s += u'\n action="%s"' % self.action
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")

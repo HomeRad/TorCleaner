@@ -70,6 +70,7 @@ info = {
     "ruleheadername": False,
     "ruleheadervalue": False,
     "ruleheaderfilter": False,
+    "ruleheaderaction": False,
     "ruleimgwidth": False,
     "ruleimgheight": False,
     "rulecategory": False,
@@ -100,6 +101,8 @@ error = {
     "ruledown": False,
     "ruletitle": False,
     "ruleheadername": False,
+    "ruleheaderfilter": False,
+    "ruleheaderaction": False,
     "ruleimgwidth": False,
     "ruleimgheight": False,
     "ruleimgquality": False,
@@ -126,6 +129,8 @@ curindex = 0
 curparts = None
 # current filterstage value
 curfilterstage = None
+# current header action value
+curheaderaction = None
 # current replace types
 curreplacetypes = None
 # only some rules allowed for new
@@ -137,6 +142,13 @@ newrulenames.remove('blockurls')
 newrulenames.sort()
 # ruletype flag for tal condition
 ruletype = {}
+
+def _is_valid_header_filterstage (filterstage):
+    return filterstage in ('request', 'response', 'both')
+
+
+def _is_valid_header_action (action):
+    return action in ('add', 'replace', 'remove')
 
 
 def set_indexstr (folder):
@@ -241,11 +253,12 @@ def _form_reset ():
     for f in config['folderrules']:
         f.selected = False
     global curfolder, currule, curparts, curindex, curfilterstage
-    global curreplacetypes
+    global curheaderaction, curreplacetypes
     curfolder = None
     currule = None
     curparts = None
     curfilterstage = None
+    curheaderaction = None
     curindex = 0
     curreplacetypes = None
 
@@ -293,11 +306,16 @@ def _form_selrule (index):
             for name, num in replacetypenums.items():
                 curreplacetypes[name] = (currule.replacetype == num)
         elif currule.get_name() == u"header":
-            global curfilterstage
+            global curfilterstage, curheaderaction
             curfilterstage = {
                 u'both': currule.filterstage == u'both',
                 u'request': currule.filterstage == u'request',
                 u'response': currule.filterstage == u'response',
+            }
+            curheaderaction = {
+                u'add': currule.action == u'add',
+                u'replace': currule.action == u'replace',
+                u'remove': currule.action == u'remove',
             }
     except (ValueError, IndexError, OverflowError):
         error['ruleindex'] = True
@@ -661,10 +679,22 @@ def _form_apply_header (form):
     if value != currule.value:
         currule.value = value
         info['ruleheadervalue'] = True
+    action = _getval(form, "rule_headeraction")
+    if action != currule.action:
+        if _is_valid_header_action(action):
+            currule.action = action
+            info['ruleheaderaction'] = True
+        else:
+            error['ruleheaderaction'] = True
+        # select again because of side effect (XXX see above)
+        _form_selrule(currule.oid)
     filterstage = _getval(form, 'rule_headerfilter')
     if filterstage != currule.filterstage:
-        currule.filterstage = filterstage
-        info['ruleheaderfilter'] = True
+        if _is_valid_header_filterstage(filterstage):
+            currule.filterstage = filterstage
+            info['ruleheaderfilter'] = True
+        else:
+            error['ruleheaderfilter'] = True
         # select again because of side effect (XXX see above)
         _form_selrule(currule.oid)
 

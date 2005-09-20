@@ -10,6 +10,16 @@
     Type: feature
     Changed: wc/proxy/ClientServerMatchmaker.py, wc/proxy/Dispatcher.py
 
+  * Support chunked encoding trailers for client and server.
+    Type: feature
+    Changed: wc/proxy/{Headers,HttpClient,HttpServer}.py
+
+  * Support replacing of header values only when they exist.
+    Type: feature
+    Changed: templates/classic/macros/rules.html, config/filter.dtd,
+      wc/filter/rules/HeaderRule.py, wc/filter/Header.py,
+      wc/webgui/context/filterconfig_html.py
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings

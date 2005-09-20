@@ -56,6 +56,10 @@ class Header (wc.filter.Filter.Filter):
             wc.filter.STAGE_REQUEST_HEADER: [],
             wc.filter.STAGE_RESPONSE_HEADER: [],
         }
+        replace = {
+            wc.filter.STAGE_REQUEST_HEADER: [],
+            wc.filter.STAGE_RESPONSE_HEADER: [],
+        }
         add = {
             wc.filter.STAGE_REQUEST_HEADER: [],
             wc.filter.STAGE_RESPONSE_HEADER: [],
@@ -64,10 +68,10 @@ class Header (wc.filter.Filter.Filter):
             # filter out unwanted rules
             if not rule.applies_to_url(url) or not rule.name:
                 continue
-            # name is a regular expression match object
-            if not rule.value:
-                # no value --> header name should be deleted
-                # deletion can apply to many headers
+            if rule.action == 'remove':
+                # No value means header name should be removed.
+                # Removal can apply to many header names, so treat name as
+                # a regular expression.
                 matcher = re.compile(rule.name, re.I).match
                 if rule.filterstage in ('both', 'request'):
                     delete[wc.filter.STAGE_REQUEST_HEADER].append(matcher)
@@ -77,11 +81,18 @@ class Header (wc.filter.Filter.Filter):
                 # name, value must be ASCII strings
                 name = str(rule.name)
                 val = str(rule.value)
+                if rule.action == "add":
+                    d = add
+                elif rule.action == "replace":
+                    d = replace
+                else:
+                    raise ValueError("Invalid rule action %r" % rule.action)
                 if rule.filterstage in ('both', 'request'):
-                    add[wc.filter.STAGE_REQUEST_HEADER].append((name, val))
+                    d[wc.filter.STAGE_REQUEST_HEADER].append((name, val))
                 if rule.filterstage in ('both', 'response'):
-                    add[wc.filter.STAGE_RESPONSE_HEADER].append((name, val))
+                    d[wc.filter.STAGE_RESPONSE_HEADER].append((name, val))
         d['header_add'] = add
+        d['header_replace'] = replace
         d['header_delete'] = delete
         return d
 
@@ -104,6 +115,17 @@ class Header (wc.filter.Filter.Filter):
         for name, val in attrs['header_add'][stage]:
             wc.log.debug(wc.LOG_FILTER,
                          "%s adding header %r: %r", self, name, val)
+            if "$" in val:
+                # substitute template
+                d = {"host": attrs['headers']['client'].get('Host', '')}
+                t = string.Template(val)
+                val = t.safe_substitute(d)
+            data[name] = val+"\r"
+        for name, val in attrs['header_replace'][stage]:
+            wc.log.debug(wc.LOG_FILTER,
+                         "%s replacing header %r: %r", self, name, val)
+            if name not in data:
+                continue
             if "$" in val:
                 # substitute template
                 d = {"host": attrs['headers']['client'].get('Host', '')}
