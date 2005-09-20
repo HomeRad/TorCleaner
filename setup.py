@@ -17,7 +17,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Setup file for the distuils module.
-XXX Some patches here can be removed when moving to Python >= 2.4.
 """
 
 import sys
@@ -109,7 +108,7 @@ class MyInstall (install, object):
         return outs
 
     # compatibility bugfix for Python << 2.5, << 2.4.1, << 2.3.5
-    # remove this method when depending on one of the above versions
+    # XXX remove this method when depending on one of the above versions
     def dump_dirs (self, msg):
         if DEBUG:
             from distutils.fancy_getopt import longopt_xlate
@@ -289,13 +288,9 @@ class MyBdistWininst (bdist_wininst, object):
 
     def get_exe_bytes (self):
         if win_compiling:
-            # wininst.exe is in the same directory as bdist_wininst
-            # XXX for python2.4, use wininst-X.Y.exe
+            # wininst-X.Y.exe is in the same directory as bdist_wininst
             directory = os.path.dirname(distutils.command.__file__)
-            if sys.version_info < (2, 4, 0, 'final', 0):
-                filename = os.path.join(directory, "wininst.exe")
-            else:
-                filename = os.path.join(directory, "wininst-7.1.exe")
+            filename = os.path.join(directory, "wininst-7.1.exe")
             return open(filename, "rb").read()
         return super(MyBdistWininst, self).get_exe_bytes()
 
@@ -639,7 +634,8 @@ setup (name = "webcleaner",
            'wc.filter.rating.storage', 'wc.filter.html', 'wc.filter.xmlfilt',
            'wc.js', 'wc.magic', 'wc.dns', 'wc.dns.rdtypes', 'wc.http',
            'wc.dns.rdtypes.IN', 'wc.dns.rdtypes.ANY', 'wc.HtmlParser',
-           'wc.proxy', 'wc.proxy.auth', 'wc.proxy.decoder', 'wc.webgui',
+           'wc.proxy', 'wc.proxy.auth', 'wc.webgui',
+           'wc.proxy.decoder', 'wc.proxy.encoder',
            'wc.webgui.PageTemplates', 'wc.webgui.TAL', 'wc.webgui.ZTUtils',
            'wc.webgui.context', ],
        ext_modules = extensions,
