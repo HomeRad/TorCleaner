@@ -51,9 +51,10 @@ import re
 import cStringIO as StringIO
 import wc
 import wc.log
+import wc.http.header
 
 
-match_bytes = re.compile(r"^(?i)(?P<bytes>[0-9a-f]+)(;.+)?$").search
+match_bytes = re.compile(r"^(?P<bytes>[0-9a-fA-F]+)(;.+)?$").search
 
 
 class UnchunkStream (object):
@@ -71,6 +72,8 @@ class UnchunkStream (object):
         Initialize internal buffers and flags.
         """
         self.buf = ''
+        # Store chunk trailer headers for later use.
+        self.headers = wc.http.header.WcMessage()
         self.bytes_remaining = None
         self.closed = False
 
@@ -149,8 +152,7 @@ class UnchunkStream (object):
             fp.close()
             for name in msg:
                 for value in msg.getheaders(name):
-                    pass
-                    # XXX self.headers.addheader(name, value)
+                    self.headers.addheader(name, value)
 
     def flush (self):
         """
@@ -158,4 +160,5 @@ class UnchunkStream (object):
         """
         s = self.buf
         self.buf = ''
+        wc.log.debug(wc.LOG_NET, "flush chunk %r", s)
         return s
