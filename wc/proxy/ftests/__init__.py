@@ -73,8 +73,11 @@ def decode_transfer (encoding, data, headers):
         unchunk = wc.proxy.decoder.UnchunkStream.UnchunkStream()
         data = unchunk.process(data)
         data += unchunk.flush()
-        for name in unchunk.headers:
-            for value in unchunk.headers.getheaders(name):
+        unchunk.trailer.seek(0)
+        msg = wc.http.header.WcMessage(unchunk.trailer)
+        unchunk.trailer.close()
+        for name in msg:
+            for value in msg.getheaders(name):
                 headers.append("%s: %s" % (name, value))
     else:
         raise ValueError("Unknown transfer encoding %r" % encoding)

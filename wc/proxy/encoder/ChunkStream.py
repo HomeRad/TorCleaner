@@ -59,12 +59,12 @@ class ChunkStream (object):
     Stream filter for chunked transfer encoding
     """
 
-    def __init__ (self, headers):
+    def __init__ (self, trailer):
         """
-        Initialize internal buffers and flags.
+        Initialize closed flag and trailer.
         """
         self.closed = False
-        self.headers = headers
+        self.trailer = trailer
 
     def __repr__ (self):
         """
@@ -88,15 +88,16 @@ class ChunkStream (object):
         """
         Construct HTTP header lines.
         """
-        if not self.headers:
+        headers = self.get_headers()
+        if not headers:
             return ""
-        lines = []
-        for name in self.headers:
-            for value in self.headers.getheaders(name):
-                lines.append("%s: %s" % (name, value))
-        # last header line should also end with CRLF
-        lines.append("")
-        return "\r\n".join(lines)
+        return "".join(headers.headers)+"\r\n"
+
+    def get_headers (self):
+        self.trailer.seek(0)
+        headers = wc.http.header.WcMessage(self.trailer)
+        self.trailer.close()
+        return headers
 
     def flush (self):
         """

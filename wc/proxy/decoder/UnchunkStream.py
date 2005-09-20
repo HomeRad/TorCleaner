@@ -72,8 +72,9 @@ class UnchunkStream (object):
         Initialize internal buffers and flags.
         """
         self.buf = ''
-        # Store chunk trailer headers for later use.
-        self.headers = wc.http.header.WcMessage()
+        # Store chunk trailer for later use. Has to be a mutable object
+        # for sharing between coders.
+        self.trailer = StringIO.StringIO()
         self.bytes_remaining = None
         self.closed = False
 
@@ -119,8 +120,8 @@ class UnchunkStream (object):
                         if self.bytes_remaining == 0:
                             # End of stream
                             self.closed = True
-                            # at this point, read footers until a blank line
-                            self.read_footers()
+                            # at this point, read trailer until a blank line
+                            self.read_trailer()
                 else:
                     break
             if self.bytes_remaining is not None:
@@ -136,23 +137,18 @@ class UnchunkStream (object):
         wc.log.debug(wc.LOG_NET, "decoded chunk %r", s)
         return s
 
-    def read_footers (self):
+    def read_trailer (self):
         i = self.buf.find('\r\n')
         if i >= 0:
             line = self.buf[:i].strip()
             if not line:
                 self.buf = self.buf[i+2:]
                 return
-        # read headers
+        # store trailer
         i = self.buf.find('\r\n\r\n')
         if i >= 0:
-            fp = StringIO.StringIO(self.buf[:i])
+            self.trailer.write(self.buf[:i])
             self.buf = self.buf[i+4:]
-            msg = wc.http.header.WcMessage(fp)
-            fp.close()
-            for name in msg:
-                for value in msg.getheaders(name):
-                    self.headers.addheader(name, value)
 
     def flush (self):
         """

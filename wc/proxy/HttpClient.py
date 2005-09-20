@@ -292,8 +292,6 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
         # filter headers
         self.headers = wc.filter.applyfilter(stage, msg, "finish", self.attrs)
-        # add decoders
-        self.decoders = []
         # if content-length header is missing, assume zero length
         self.bytes_remaining = \
                wc.proxy.Headers.get_content_length(self.headers, 0)
@@ -302,9 +300,10 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # XXX don't look at value, assume chunked encoding for now
             wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
                          self, self.headers['Transfer-encoding'])
-            self.decoders.append(
-                  wc.proxy.decoder.UnchunkStream.UnchunkStream())
-            wc.proxy.Headers.client_remove_encoding_headers(self.headers)
+            unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream()
+            self.decoders.append(unchunker)
+            chunker = wc.proxy.encoder.ChunkStream.ChunkStream(unchunker.trailer)
+            self.encoders.append(chunker)
             self.bytes_remaining = None
         if self.bytes_remaining is None:
             self.persistent = False
@@ -442,10 +441,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                         "client received %d bytes more than content-length",
                         -self.bytes_remaining)
         if is_closed or self.bytes_remaining <= 0:
-            data = ""
+            data = wc.proxy.HttpServer.flush_coders(self.decoders)
             for stage in FilterStages:
                 data = wc.filter.applyfilter(stage, data, "finish",
                                              self.attrs)
+            data = wc.proxy.HttpServer.flush_coders(self.encoders, data=data)
             self.content += data
             if self.content:
                 if self.method in ['GET', 'HEAD']:
@@ -454,7 +454,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                                 self.method, self.content)
                     if self.headers.has_key('Content-Length'):
                         del self.headers['Content-Length']
-                elif not self.headers.has_key('Content-Length'):
+                elif not self.headers.has_key('Content-Length') and \
+                     not self.headers.has_key('Transfer-Encoding'):
                     self.headers['Content-Length'] = "%d\r"%len(self.content)
             # We're done reading content
             self.state = 'receive'
