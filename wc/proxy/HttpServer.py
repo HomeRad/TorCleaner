@@ -68,10 +68,9 @@ def flush_coders (coders, data=""):
     """
     while coders:
         wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
-        data = coders[0].flush()
+        data = coders[0].process(data)
+        data += coders[0].flush()
         del coders[0]
-        for coder in coders:
-            data = coder.process(data)
     return data
 
 
@@ -369,8 +368,8 @@ class HttpServer (wc.proxy.Server.Server):
         Modify response headers.
         """
         wc.proxy.Headers.server_set_headers(self.headers)
-        self.bytes_remaining = wc.proxy.Headers.server_set_encoding_headers(
-         self.headers, self.is_rewrite(), self.decoders, self.bytes_remaining)
+        self.bytes_remaining = \
+              wc.proxy.Headers.server_set_encoding_headers(self)
         if self.bytes_remaining is None:
             self.persistent = False
         # 304 Not Modified does not send any type info, because it was cached
@@ -464,7 +463,7 @@ class HttpServer (wc.proxy.Server.Server):
             self.handle_error("filter proxy error")
             return
         for encoder in self.encoders:
-            data = encoder.encode(data)
+            data = encoder.process(data)
             wc.log.debug(wc.LOG_PROXY, "%s have run encoder %s",
                          self, encoder)
         underflow = self.bytes_remaining is not None and \

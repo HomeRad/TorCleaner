@@ -31,6 +31,7 @@ import wc.http.header
 import wc.http.date
 import wc.magic
 import wc.proxy.decoder.UnchunkStream
+import wc.proxy.encoder.ChunkStream
 import wc.proxy.decoder.GunzipStream
 import wc.proxy.decoder.DeflateStream
 
@@ -277,61 +278,60 @@ def server_set_content_headers (headers, mime_types, url):
     headers['Content-Type'] = "%s\r" % mime
 
 
-def server_set_encoding_headers (headers, rewrite, decoders, bytes_remaining,
-                                 filename=None):
+def server_set_encoding_headers (server, filename=None):
     """
     Set encoding headers.
     """
-    bytes_remaining = get_content_length(headers)
+    rewrite = server.is_rewrite()
+    bytes_remaining = get_content_length(server.headers)
     to_remove = sets.Set()
     # remove content length
     if rewrite:
         to_remove.add('Content-Length')
     # add decoders
-    if headers.has_key('Transfer-Encoding'):
+    if server.headers.has_key('Transfer-Encoding'):
         # chunked encoded
-        tenc = headers['Transfer-Encoding']
+        tenc = server.headers['Transfer-Encoding']
         if tenc != 'chunked':
             wc.log.warn(wc.LOG_PROXY,
               "unknown transfer encoding %r, assuming chunked encoding", tenc)
-        decoders.append(wc.proxy.decoder.UnchunkStream.UnchunkStream())
-        # remove encoding header
-        to_remove.add("Transfer-Encoding")
-        if headers.has_key("Content-Length"):
+        unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream()
+        server.decoders.append(unchunker)
+        chunker = wc.proxy.encoder.ChunkStream.ChunkStream(unchunker.headers)
+        server.encoders.append(chunker)
+        if server.headers.has_key("Content-Length"):
             wc.log.warn(wc.LOG_PROXY,
                         'chunked encoding should not have Content-Length')
             to_remove.add("Content-Length")
         bytes_remaining = None
-        # add warning
-        headers['Warning'] = "214 Transformation applied\r"
-    remove_headers(headers, to_remove)
+    remove_headers(server.headers, to_remove)
     # only decompress on rewrite
     if not rewrite:
         return bytes_remaining
     # Compressed content (uncompress only for rewriting modules)
-    encoding = headers.get('Content-Encoding', '').lower()
+    encoding = server.headers.get('Content-Encoding', '').lower()
     # note: do not gunzip .gz files
     if encoding in ('gzip', 'x-gzip', 'deflate') and \
        (filename is None or not filename.endswith(".gz")):
         if encoding == 'deflate':
-            decoders.append(wc.proxy.decoder.DeflateStream.DeflateStream())
+            server.decoders.append(wc.proxy.decoder.DeflateStream.DeflateStream())
         else:
-            decoders.append(wc.proxy.decoder.GunzipStream.GunzipStream())
+            server.decoders.append(wc.proxy.decoder.GunzipStream.GunzipStream())
         # remove encoding because we unzip the stream
         to_remove = ['Content-Encoding']
         # remove no-transform cache control
-        if headers.get('Cache-Control', '').lower() == 'no-transform':
+        if server.headers.get('Cache-Control', '').lower() == 'no-transform':
             to_remove.append('Cache-Control')
-        remove_headers(headers, to_remove)
+        remove_headers(server.headers, to_remove)
         # add warning
-        headers['Warning'] = "214 Transformation applied\r"
+        server.headers['Warning'] = "214 Transformation applied\r"
     elif encoding and encoding!='identity':
         wc.log.warn(wc.LOG_PROXY, _("unsupported encoding: %r"), encoding)
         # do not disable filtering for unknown content-encodings
         # this could result in a DoS attack (server sending garbage
         # as content-encoding)
-    if not headers.has_key('Content-Length'):
-        headers['Connection'] = 'close\r'
+    if not server.headers.has_key('Content-Length'):
+        server.headers['Connection'] = 'close\r'
     return bytes_remaining
 
 
