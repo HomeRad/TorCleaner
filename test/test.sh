@@ -14,7 +14,8 @@ else
     echo "Proxy disabled"
     RES_PROXY=""
 fi
-if [ -n "$RES_PROXY" ]; then
+# validate web interface pages, but only if no additional options exist
+if [ -n "$RES_PROXY" -a -z "$1" ]; then
     NAMES="index config filterconfig update rating help"
     for NAME in $NAMES; do
         URL="http://$PROXY/${NAME}.html"
