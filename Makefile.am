@@ -35,6 +35,7 @@ SERVICEDIR := /etc/webcleaner/service
 TESTS = test/test.sh
 
 MANIFEST: MANIFEST.in setup.py
+	rm -f share
 	$(PYTHON) setup.py sdist --manifest-only
 
 clean-local: clean-log
