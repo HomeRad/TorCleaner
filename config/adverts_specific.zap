@@ -74,13 +74,13 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.9"
- tag="table">
+ tag="ul">
   <title lang="de">slashdot.org</title>
   <title lang="en">Slashdot OSDN navbar</title>
   <description lang="de">Ich mag die OSDN Leiste nicht.</description>
   <description lang="en">I don't like the OSDN navbar.</description>
   <matchurl>^http://slashdot\.org/</matchurl>
-  <attr name="style">border-top: 1px #999999 solid; border-bottom: 5px #000000 solid</attr>
+  <attr name="id">ostgnavbar</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.10"
