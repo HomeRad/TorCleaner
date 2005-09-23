@@ -67,14 +67,12 @@ class UnchunkStream (object):
        we're reading up to bytes_remaining elements of data
     """
 
-    def __init__ (self):
+    def __init__ (self, trailerhandler):
         """
         Initialize internal buffers and flags.
         """
         self.buf = ''
-        # Store chunk trailer for later use. Has to be a mutable object
-        # for sharing between coders.
-        self.trailer = StringIO.StringIO()
+        self.trailerhandler = trailerhandler
         self.bytes_remaining = None
         self.closed = False
 
@@ -147,7 +145,7 @@ class UnchunkStream (object):
         # store trailer
         i = self.buf.find('\r\n\r\n')
         if i >= 0:
-            self.trailer.write(self.buf[:i])
+            self.trailerhandler.write_trailer(self.buf[:i])
             self.buf = self.buf[i+4:]
 
     def flush (self):

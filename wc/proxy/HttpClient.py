@@ -45,6 +45,7 @@ import wc.proxy.StatefulConnection
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.ServerHandleDirectly
 import wc.proxy.decoder.UnchunkStream
+import wc.proxy.encoder.ChunkStream
 import wc.proxy.Allowed
 import wc.proxy
 import wc.proxy.Headers
@@ -63,7 +64,7 @@ FilterStages = [
     wc.filter.STAGE_REQUEST_ENCODE,
 ]
 
-class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
+class HttpClient (wc.proxy.CodingConnection.CodingConnection):
     """
     States:
      - request (read first line)
@@ -98,9 +99,6 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         self.state = 'request'
         self.server = None
         self.request = ''
-        # Handle each of these, left to right
-        self.decoders = []
-        self.encoders = []
         # remembers server headers
         self.headers = {}
         self.bytes_remaining = None # for content only
@@ -281,17 +279,8 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
         fp.close()
         wc.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
         self.fix_request_headers(msg)
-        clientheaders = msg.copy()
-        stage = wc.filter.STAGE_REQUEST_HEADER
-        self.attrs = wc.filter.get_filterattrs(self.url,
-                       self.localhost, [stage],
-                       clientheaders=clientheaders,
-                       headers=msg)
-        self.set_persistent(msg, self.version)
-        self.mangle_request_headers(msg)
-        self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
-        # filter headers
-        self.headers = wc.filter.applyfilter(stage, msg, "finish", self.attrs)
+        self.clientheaders = msg.copy()
+        self.headers = self.filter_headers(msg)
         # if content-length header is missing, assume zero length
         self.bytes_remaining = \
                wc.proxy.Headers.get_content_length(self.headers, 0)
@@ -300,9 +289,9 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             # XXX don't look at value, assume chunked encoding for now
             wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
                          self, self.headers['Transfer-encoding'])
-            unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream()
+            unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(self)
             self.decoders.append(unchunker)
-            chunker = wc.proxy.encoder.ChunkStream.ChunkStream(unchunker.trailer)
+            chunker = wc.proxy.encoder.ChunkStream.ChunkStream(self)
             self.encoders.append(chunker)
             self.bytes_remaining = None
         if self.bytes_remaining is None:
@@ -385,6 +374,18 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
             return
         self.state = 'content'
 
+    def filter_headers (self, msg):
+        stage = wc.filter.STAGE_REQUEST_HEADER
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                       self.localhost, [stage],
+                       clientheaders=self.clientheaders,
+                       headers=msg)
+        self.set_persistent(msg, self.version)
+        self.mangle_request_headers(msg)
+        self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
+        # filter headers
+        return wc.filter.applyfilter(stage, msg, "finish", self.attrs)
+
     def set_persistent (self, headers, http_ver):
         """
         Return True if connection is persistent.
@@ -441,11 +442,11 @@ class HttpClient (wc.proxy.StatefulConnection.StatefulConnection):
                         "client received %d bytes more than content-length",
                         -self.bytes_remaining)
         if is_closed or self.bytes_remaining <= 0:
-            data = wc.proxy.HttpServer.flush_coders(self.decoders)
+            data = self.flush_coders(self.decoders)
             for stage in FilterStages:
                 data = wc.filter.applyfilter(stage, data, "finish",
                                              self.attrs)
-            data = wc.proxy.HttpServer.flush_coders(self.encoders, data=data)
+            data = self.flush_coders(self.encoders, data=data)
             self.content += data
             if self.content:
                 if self.method in ['GET', 'HEAD']:

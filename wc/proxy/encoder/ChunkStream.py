@@ -59,12 +59,15 @@ class ChunkStream (object):
     Stream filter for chunked transfer encoding
     """
 
-    def __init__ (self, trailer):
+    def __init__ (self, trailerhandler):
         """
-        Initialize closed flag and trailer.
+        Initialize closed flag and trailer handler.
+
+        @param trailerhandler: a mutable trailer storage
+        @ptype trailerhandler: object with get_headers() method
         """
         self.closed = False
-        self.trailer = trailer
+        self.trailerhandler = trailerhandler
 
     def __repr__ (self):
         """
@@ -88,16 +91,10 @@ class ChunkStream (object):
         """
         Construct HTTP header lines.
         """
-        headers = self.get_headers()
+        headers = self.trailerhandler.handle_trailer()
         if not headers:
             return ""
         return "".join(headers.headers)+"\r\n"
-
-    def get_headers (self):
-        self.trailer.seek(0)
-        headers = wc.http.header.WcMessage(self.trailer)
-        self.trailer.close()
-        return headers
 
     def flush (self):
         """

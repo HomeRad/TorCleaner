@@ -30,6 +30,7 @@ Connection handling proxy <--> http server.
 """
 
 import time
+import copy
 import socket
 import re
 import urllib
@@ -62,17 +63,6 @@ FilterStages = [
     wc.filter.STAGE_RESPONSE_ENCODE,
 ]
 
-def flush_coders (coders, data=""):
-    """
-    Flush given de- or encoders and return flushed data.
-    """
-    while coders:
-        wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
-        data = coders[0].process(data)
-        data += coders[0].flush()
-        del coders[0]
-    return data
-
 
 class HttpServer (wc.proxy.Server.Server):
     """
@@ -103,9 +93,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.document = ''
         self.response = ''
         self.headers = wc.http.header.WcMessage()
-        # Handle each of these, left to right
-        self.decoders = []
-        self.encoders = []
         # for persistent connections
         self.persistent = False
         # initial filter attributes
@@ -303,9 +290,9 @@ class HttpServer (wc.proxy.Server.Server):
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
         # make a copy for later
-        serverheaders = msg.copy()
+        self.serverheaders = msg.copy()
         wc.log.debug(wc.LOG_PROXY, "%s server headers\n%s",
-                     self, serverheaders)
+                     self, self.serverheaders)
         if self.statuscode == 100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
@@ -313,22 +300,16 @@ class HttpServer (wc.proxy.Server.Server):
             return
         self.set_persistent(msg,
                      wc.proxy.ServerPool.serverpool.http_versions[self.addr])
-        stage = wc.filter.STAGE_RESPONSE_HEADER
-        self.attrs = wc.filter.get_filterattrs(self.url,
-                        self.client.localhost, [stage],
-                        clientheaders=self.client.headers,
-                        serverheaders=serverheaders)
         try:
-            self.headers = \
-                wc.filter.applyfilter(stage, msg, "finish", self.attrs)
-        except wc.filter.FilterRating, msg:
+            self.headers = self.filter_headers(msg)
+        except wc.filter.FilterRating, err:
             wc.log.debug(wc.LOG_PROXY, "%s FilterRating from header: %s",
-                         self, msg)
-            if msg == wc.filter.rules.RatingRule.MISSING:
+                         self, err)
+            if err == wc.filter.rules.RatingRule.MISSING:
                 # still have to look at content
                 self.defer_data = True
             else:
-                self._show_rating_deny(str(msg))
+                self._show_rating_deny(str(err))
                 return
         if self.statuscode in (301, 302):
             location = self.headers.get('Location')
@@ -346,12 +327,12 @@ class HttpServer (wc.proxy.Server.Server):
         self.attrs = wc.filter.get_filterattrs(self.url,
                                      self.client.localhost, FilterStages,
                                      clientheaders=self.client.headers,
-                                     serverheaders=serverheaders,
+                                     serverheaders=self.serverheaders,
                                      headers=self.headers)
         # tell the MIME recognizer to ignore the type if
         # a) a MIME type is enforced
         # b) the MIME type is not supported
-        mime = serverheaders.get('Content-Type')
+        mime = self.serverheaders.get('Content-Type')
         if self.mime_types or mime in wc.magic.unsupported_types:
             self.attrs['mimerecognizer_ignore'] = True
         wc.log.debug(wc.LOG_PROXY, "%s filtered headers %s",
@@ -363,6 +344,14 @@ class HttpServer (wc.proxy.Server.Server):
                                         self.headers)
             # note: self.client could be None here
 
+    def filter_headers (self, msg):
+        stage = wc.filter.STAGE_RESPONSE_HEADER
+        self.attrs = wc.filter.get_filterattrs(self.url,
+                        self.client.localhost, [stage],
+                        clientheaders=self.client.headers,
+                        serverheaders=self.serverheaders)
+        return wc.filter.applyfilter(stage, msg, "finish", self.attrs)
+
     def mangle_response_headers (self):
         """
         Modify response headers.
@@ -372,15 +361,11 @@ class HttpServer (wc.proxy.Server.Server):
               wc.proxy.Headers.server_set_encoding_headers(self)
         if self.bytes_remaining is None:
             self.persistent = False
-        # 304 Not Modified does not send any type info, because it was cached
-        if self.statuscode != 304:
-            # copy decoders
-            decoders = [d.__class__() for d in self.decoders]
-            data = self.recv_buffer
-            for decoder in decoders:
-                data = decoder.process(data)
-            data += flush_coders(decoders)
-            wc.proxy.Headers.server_set_content_headers(
+        if self.statuscode == 304:
+            # 304 Not Modified does not send any type info, because it
+            # was cached
+            return
+        wc.proxy.Headers.server_set_content_headers(
                                      self.headers, self.mime_types, self.url)
 
     def set_persistent (self, headers, http_ver):
@@ -472,18 +457,17 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY,
                       _("server received %d bytes more than content-length"),
                       (-self.bytes_remaining))
-        if self.statuscode != 407:
-            if data:
-                if self.defer_data:
-                    # defer until data is non-empty, which ensures that
-                    # every filter above has seen at least some data
-                    self.defer_data = False
-                    self.client.server_response(self, self.response,
-                                                self.statuscode, self.headers)
-                    if not self.client:
-                        # client is gone
-                        return
-                self.client.server_content(data)
+        if self.statuscode != 407 and data:
+            if self.defer_data:
+                # defer until data is non-empty, which ensures that
+                # every filter above has seen at least some data
+                self.defer_data = False
+                self.client.server_response(self, self.response,
+                                            self.statuscode, self.headers)
+                if not self.client:
+                    # client is gone
+                    return
+            self.client.server_content(data)
         if is_closed or self.bytes_remaining == 0:
             # either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
@@ -557,7 +541,7 @@ class HttpServer (wc.proxy.Server.Server):
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.flush", self)
         if not self.statuscode:
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
-        data = flush_coders(self.decoders)
+        data = self.flush_coders(self.decoders)
         try:
             for stage in FilterStages:
                data = wc.filter.applyfilter(stage, data, "finish", self.attrs)
@@ -567,7 +551,7 @@ class HttpServer (wc.proxy.Server.Server):
             # to save CPU time make connection unreadable for a while
             self.set_unreadable(0.5)
             return False
-        data = flush_coders(self.encoders, data=data)
+        data = self.flush_coders(self.encoders, data=data)
         # the client might already have closed
         if not self.client:
             return
@@ -705,9 +689,3 @@ def speedcheck_print_status ():
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
     wc.proxy.make_timer(5, speedcheck_print_status)
-    #if wc.proxy.ServerPool.serverpool.map:
-    #    print 'server pool:'
-    #    for addr,set in wc.proxy.ServerPool.serverpool.map.items():
-    #        for server,status in set.items():
-    #            print '  %15s:%-4d %10s %s' % (addr[0], addr[1],
-    #                                          status[0], server.hostname)

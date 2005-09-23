@@ -33,10 +33,10 @@ import socket
 
 import wc
 import wc.log
-import wc.proxy.StatefulConnection
+import wc.proxy.CodingConnection
 
 
-class Server (wc.proxy.StatefulConnection.StatefulConnection):
+class Server (wc.proxy.CodingConnection.CodingConnection):
     """
     Basic class for server connections.
     """

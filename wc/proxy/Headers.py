@@ -295,9 +295,9 @@ def server_set_encoding_headers (server, filename=None):
         if tenc != 'chunked':
             wc.log.warn(wc.LOG_PROXY,
               "unknown transfer encoding %r, assuming chunked encoding", tenc)
-        unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream()
+        unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(server)
         server.decoders.append(unchunker)
-        chunker = wc.proxy.encoder.ChunkStream.ChunkStream(unchunker.trailer)
+        chunker = wc.proxy.encoder.ChunkStream.ChunkStream(server)
         server.encoders.append(chunker)
         if server.headers.has_key("Content-Length"):
             wc.log.warn(wc.LOG_PROXY,

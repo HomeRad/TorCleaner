@@ -41,7 +41,7 @@ def test_suite ():
 
 """
 
-from cStringIO import StringIO
+import cStringIO as StringIO
 import rfc822
 import unittest
 import socket
@@ -54,7 +54,25 @@ import wc.proxy.decoder.UnchunkStream
 
 ###################### utility functions ######################
 
-def decode_transfer (encoding, data, headers):
+class TrailerHandler (object):
+
+    def __init__ (self, headers):
+        self.chunktrailer = StringIO.StringIO()
+        self.headers = headers
+
+    def write_trailer (self, data):
+        self.chunktrailer.write(data)
+
+    def handle_trailer (self):
+        self.chunktrailer.seek(0)
+        headers = wc.http.header.WcMessage(self.chunktrailer)
+        self.chunktrailer.close()
+        for name in headers:
+            for value in headers.getheaders(name):
+                self.headers.append("%s: %s" % (name, value))
+
+
+def decode_transfer (encoding, data, handler):
     """
     Decode data according to given transfer encoding. Optional the header
     list is updated since the "chunked" encoding can have additional
@@ -70,15 +88,9 @@ def decode_transfer (encoding, data, headers):
     @rtype: string
     """
     if encoding == "chunked":
-        unchunk = wc.proxy.decoder.UnchunkStream.UnchunkStream()
+        unchunk = wc.proxy.decoder.UnchunkStream.UnchunkStream(handler)
         data = unchunk.process(data)
         data += unchunk.flush()
-        unchunk.trailer.seek(0)
-        msg = wc.http.header.WcMessage(unchunk.trailer)
-        unchunk.trailer.close()
-        for name in msg:
-            for value in msg.getheaders(name):
-                headers.append("%s: %s" % (name, value))
     else:
         raise ValueError("Unknown transfer encoding %r" % encoding)
     return data
@@ -90,7 +102,7 @@ def decode_content (encoding, data):
     """
     if encoding == "gzip":
         import gzip
-        buf = StringIO(data)
+        buf = StringIO.StringIO(data)
         fp = gzip.GzipFile("", "rb", 9, buf)
         data = fp.read()
         fp.close()
@@ -441,12 +453,14 @@ class ProxyTest (unittest.TestCase):
         i = data.find("\r\n\r\n")
         if i != -1:
             headerdata, data = data.split("\r\n\r\n", 1)
-            fp = StringIO(headerdata+"\r\n")
+            fp = StringIO.StringIO(headerdata+"\r\n")
             rfcheaders = rfc822.Message(fp)
             fp.close()
             if "Transfer-Encoding" in rfcheaders:
+                handler = TrailerHandler(headers)
                 enctype = rfcheaders["Transfer-Encoding"]
-                data = decode_transfer(enctype, data, headers)
+                data = decode_transfer(enctype, data, handler)
+                handler.handle_trailer()
             if "Content-Encoding" in rfcheaders:
                 enctype = rfcheaders["Content-Encoding"]
                 data = decode_content(enctype, data)

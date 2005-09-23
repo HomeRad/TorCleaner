@@ -72,7 +72,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
             data = self.recv_buffer
             for decoder in decoders:
                 data = decoder.process(data)
-            data += wc.proxy.HttpServer.flush_coders(decoders)
+            data += self.flush_coders(decoders)
             wc.proxy.Headers.server_set_content_headers(
                                         self.headers, self.mime_types, self.url)
 
