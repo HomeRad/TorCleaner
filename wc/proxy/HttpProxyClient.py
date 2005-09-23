@@ -54,6 +54,7 @@ class HttpProxyClient (object):
         self.addr = ('localhost', 80)
         self.localhost = localhost
         self.isredirect = False
+        self.headers = wc.http.header.WcMessage()
         attrs = wc.filter.get_filterattrs(self.url, self.localhost,
                                           [wc.filter.STAGE_REQUEST])
         # note: use HTTP/1.0 for JavaScript
