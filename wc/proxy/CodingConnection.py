@@ -32,6 +32,7 @@ class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
         # Handle each of these, left to right
         self.decoders = []
         self.encoders = []
+        # Chunk trailer store
         self.chunktrailer = StringIO.StringIO()
 
     def flush_coders (self, coders, data=""):
@@ -52,12 +53,27 @@ class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
 
     @notimplemented
     def filter_headers (self, headers):
+        """
+        Filter HTTP headers.
+
+        @param headers: the headers to filter
+        @ptype headers: wc.http.header.WcMessage
+        @return: filtered headers
+        @rtype: wc.http.header.WcMessage
+        """
         pass
 
     def write_trailer (self, data):
+        """
+        Store data of a chunk trailer.
+        """
         self.chunktrailer.write(data)
 
     def handle_trailer (self):
+        """
+        Process a completed chunk trailer. This method must be called
+        only once.
+        """
         self.chunktrailer.seek(0)
         headers = wc.http.header.WcMessage(self.chunktrailer)
         # filter headers
