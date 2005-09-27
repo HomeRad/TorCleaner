@@ -55,15 +55,27 @@ import wc.proxy.decoder.UnchunkStream
 ###################### utility functions ######################
 
 class TrailerHandler (object):
+    """
+    Store chunk trailer for chunked encoding.
+    """
 
     def __init__ (self, headers):
+        """
+        Init trailer store and set self.headers.
+        """
         self.chunktrailer = StringIO.StringIO()
         self.headers = headers
 
     def write_trailer (self, data):
+        """
+        Write trailer data.
+        """
         self.chunktrailer.write(data)
 
     def handle_trailer (self):
+        """
+        Parse trailer headers and write them into self.headers.
+        """
         self.chunktrailer.seek(0)
         headers = wc.http.header.WcMessage(self.chunktrailer)
         self.chunktrailer.close()
@@ -123,6 +135,9 @@ class HttpData (object):
     """
 
     def __init__ (self, headers, content=None):
+        """
+        Set headers and content variables.
+        """
         self.headers = headers
         self.content = content
 
@@ -133,8 +148,11 @@ class HttpData (object):
         return self.num_headers(name) > 0
 
     def num_headers (self, name):
-        # HTTP headers are case insensitive
+        """
+        Count number of headers with given name.
+        """
         num = 0
+        # HTTP headers are case insensitive
         key = name.lower()
         for header in self.headers:
             if header.lower().startswith("%s:" % key):
@@ -207,9 +225,24 @@ class HttpClient (object):
     Simple minded HTTP client class.
     """
 
+    def __init__ (self):
+        """
+        Initial the socket is not connected
+        """
+        self.socket = None
+
     def connect (self, addr):
+        """
+        Connect to addr.
+        """
         self.socket = socket.socket()
         self.socket.connect(addr)
+
+    def connected (self):
+        """
+        Check if this client is already connected.
+        """
+        return self.socket != None
 
     def send_data (self, data):
         """
@@ -284,6 +317,9 @@ class ProxyTest (unittest.TestCase):
     needed_resources = ['proxy']
 
     def setUp (self):
+        """
+        Set up the test case and check the proxy resource.
+        """
         super(ProxyTest, self).setUp()
         self.check_resources(self.needed_resources)
 
@@ -293,9 +329,7 @@ class ProxyTest (unittest.TestCase):
         @return: http client
         @rtype: HttpClient
         """
-        client = HttpClient()
-        client.connect(("", 8081))
-        return client
+        return HttpClient()
 
     def start_server (self):
         """
@@ -326,18 +360,37 @@ class ProxyTest (unittest.TestCase):
         return HttpRequest(method, uri, version, headers, content=content)
 
     def get_request_method (self):
+        """
+        Get HTTP request method; default is 'GET'.
+        """
         return "GET"
 
     def get_request_uri (self):
+        """
+        Get HTTP request URI; default is '/'.
+        """
         return "/"
 
     def get_request_version (self):
+        """
+        Get HTTP request version; default is 1.1.
+        """
         return (1, 1)
 
     def get_request_content (self):
+        """
+        Get HTTP request content; default is an empty string.
+        Note that some request methods do not allow a non-empty
+        content to be set (ie. the GET method).
+        """
         return ""
 
     def get_request_headers (self, content):
+        """
+        Get request headers; default are a Host: and a Proxy-Connection:
+        header, and a Content-Length: header if a non-empty request
+        content has been given.
+        """
         port = self.server.socket.getsockname()[1]
         headers = [
            "Host: localhost:%d" % port,
@@ -375,18 +428,33 @@ class ProxyTest (unittest.TestCase):
         self.check_request_content(request)
 
     def check_request_method (self, request):
+        """
+        Check HTTP request method.
+        """
         self.assertEquals(request.method, self.get_request_method())
 
     def check_request_uri (self, request):
+        """
+        Check HTTP request URI.
+        """
         self.assertEquals(request.uri, self.get_request_uri())
 
     def check_request_version (self, request):
+        """
+        Check HTTP request version.
+        """
         self.assertEquals(request.version, self.get_request_version())
 
     def check_request_headers (self, request):
+        """
+        Check HTTP request headers.
+        """
         pass
 
     def check_request_content (self, request):
+        """
+        Check HTTP request content.
+        """
         self.assertEquals(request.content, self.get_request_content())
 
     def get_response (self):
@@ -403,22 +471,44 @@ class ProxyTest (unittest.TestCase):
         return HttpResponse(version, status, msg, headers, content=content)
 
     def get_response_version (self):
+        """
+        Get HTTP response version; default (1, 1).
+        @return: HTTP version
+        @rtype: tuple of two integers
+        """
         return (1, 1)
 
     def get_response_status (self):
+        """
+        Get HTTP response status; default 200.
+        @return: status
+        @rtype: integer
+        """
         return 200
 
     def get_response_message (self, status):
+        """
+        Get HTTP response message; default 'Ok'.
+        """
         return "Ok"
 
     def get_response_content (self):
+        """
+        Get HTTP response content; default 'hui'.
+        """
         return "hui"
 
     def get_response_headers (self, content):
-        return [
+        """
+        Get HTTP response headers; default are a Content-Type: text/plain
+        and a Content-Length: header if content was non-empty.
+        """
+        headers = [
             "Content-Type: text/plain",
-            "Content-Length: %d" % len(content),
         ]
+        if content:
+            headers.append("Content-Length: %d" % len(content))
+        return headers
 
     def construct_response_data (self, response):
         """
@@ -510,6 +600,7 @@ class ProxyTest (unittest.TestCase):
         self.server = self.start_server()
         try:
             data = self.construct_request_data(self.get_request())
+            self.client.connect(("", 8081))
             self.client.send_data(data)
             if wc.proxy.readable_socket(self.server.socket):
                 self.server.handle_request()
