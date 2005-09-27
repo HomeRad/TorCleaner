@@ -78,6 +78,8 @@ class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
         headers = wc.http.header.WcMessage(self.chunktrailer)
         # filter headers
         headers = self.filter_headers(headers)
+        if headers:
+            wc.log.debug(wc.LOG_PROXY, "chunk trailer headers %s", headers)
         self.chunktrailer.close()
         return headers
 

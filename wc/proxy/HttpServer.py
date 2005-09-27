@@ -193,6 +193,8 @@ class HttpServer (wc.proxy.Server.Server):
                      self, self.clientheaders)
         self.write("".join(self.clientheaders.headers))
         self.write('\r\n')
+        wc.log.debug(wc.LOG_PROXY, "%s write content\n%r",
+                     self, self.content)
         self.write(self.content)
         self.state = 'response'
 
