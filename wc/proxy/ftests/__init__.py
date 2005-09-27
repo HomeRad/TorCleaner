@@ -46,11 +46,19 @@ import rfc822
 import unittest
 import socket
 import select
+import sys
 import BaseHTTPServer
 
+import wc.dummy
 import wc.proxy
 import wc.proxy.decoder.UnchunkStream
 
+_debug = 0
+if _debug:
+    def debug (msg):
+        print >> sys.stderr, "TEST", msg
+else:
+    debug = wc.dummy.Dummy()
 
 ###################### utility functions ######################
 
@@ -127,6 +135,42 @@ def decode_content (encoding, data):
     else:
         raise ValueError("Unknown content encoding %r" % encoding)
     return data
+
+
+def socket_send (sock, data):
+    """
+    Send data to socket.
+    """
+    sock.sendall(data)
+    debug("Socket sent %r" % data)
+
+
+def socket_read (sock):
+    """
+    Read data from socket until no more data is available.
+    """
+    data = ""
+    while wc.proxy.readable_socket(sock):
+        s = sock.recv(8192)
+        if not s:
+            break
+        data += s
+    debug("Socket read %r" % data)
+    return data
+
+
+def socketfile_read (sock):
+    """
+    Read data from socket until no more data is available.
+    """
+    data = ""
+    while wc.proxy.readable_socket(sock):
+        s = sock.read(1)
+        if not s:
+            break
+        data += s
+    debug("Socket file read %r" % data)
+    return data + sock._rbuf
 
 
 class HttpData (object):
@@ -233,8 +277,9 @@ class HttpClient (object):
 
     def connect (self, addr):
         """
-        Connect to addr.
+        Connect to given address.
         """
+        debug("Client connect to %s" % str(addr))
         self.socket = socket.socket()
         self.socket.connect(addr)
 
@@ -248,19 +293,44 @@ class HttpClient (object):
         """
         Send complete data to socket.
         """
-        self.socket.sendall(data)
+        debug("Client send")
+        socket_send(self.socket, data)
 
     def read_data (self):
         """
         Read until no more data is available.
         """
-        data = ""
-        while wc.proxy.readable_socket(self.socket):
-            s = self.socket.recv(4096)
-            if not s:
-                break
-            data += s
-        return data
+        debug("Client read")
+        return socket_read(self.socket)
+
+
+class HttpServer (BaseHTTPServer.HTTPServer):
+    """
+    Custom HTTP server class.
+    """
+
+    def handle_request(self):
+        """
+        Handle one request, possibly blocking. Exceptions are raised
+        again for the test suite to handle.
+        """
+        try:
+            request, client_address = self.get_request()
+        except socket.error:
+            return
+        if self.verify_request(request, client_address):
+            try:
+                self.process_request(request, client_address)
+            except:
+                self.handle_error(request, client_address)
+                self.close_request(request)
+                raise
+
+    def handle_error(self, request, client_address):
+        """
+        Suppress error printing.
+        """
+        pass
 
 
 class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
@@ -273,6 +343,7 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         Read one request and parse it. Then let the TestCase class
         check the request and construct the response which is sent back.
         """
+        debug("Server handle one request...")
         self.raw_requestline = self.rfile.readline()
         if not self.raw_requestline:
             self.close_connection = 1
@@ -284,6 +355,7 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         response = self.server.tester.get_response()
         data = self.server.tester.construct_response_data(response)
         self.wfile.write(data)
+        debug("... ok.")
 
     def log_request (self, code='-', size='-'):
         """
@@ -302,16 +374,31 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         headers = [line[:-1] for line in self.headers.headers]
         if self.headers.has_key("Content-Length"):
             clen = int(self.headers["Content-Length"])
-            content = self.rfile.read(clen)
+            data = self.rfile.read(clen)
         else:
-            content = ""
-        return HttpRequest(method, uri, version, headers, content=content)
-
+            data = socketfile_read(self.rfile)
+        if "Transfer-Encoding" in self.headers:
+            handler = TrailerHandler(headers)
+            enctype = self.headers["Transfer-Encoding"]
+            data = decode_transfer(enctype, data, handler)
+            handler.handle_trailer()
+        if "Content-Encoding" in self.headers:
+            enctype = self.headers["Content-Encoding"]
+            data = decode_content(enctype, data)
+        return HttpRequest(method, uri, version, headers, content=data)
 
 
 ################ Proxy tests ######################
 
 class ProxyTest (unittest.TestCase):
+    """
+    Basic proxy test case. Subclasses have complete control over
+    request or response data by overriding the
+    get_{request,response}_* methods, or if needed the methods
+    construct_{request,response}_*.
+    The test_*() method can just call start_test() to start sending
+    the request and reading the response.
+    """
 
     # the proxy to test must be started
     needed_resources = ['proxy']
@@ -329,6 +416,7 @@ class ProxyTest (unittest.TestCase):
         @return: http client
         @rtype: HttpClient
         """
+        debug("Start client")
         return HttpClient()
 
     def start_server (self):
@@ -339,9 +427,10 @@ class ProxyTest (unittest.TestCase):
         """
         port = 8000
         server_address = ('', port)
+        debug("Start server on %d" % port)
         HandlerClass = HttpRequestHandler
         HandlerClass.protocol_version = "HTTP/1.1"
-        ServerClass = BaseHTTPServer.HTTPServer
+        ServerClass = HttpServer
         httpd = ServerClass(server_address, HandlerClass)
         httpd.tester = self
         return httpd
@@ -512,7 +601,7 @@ class ProxyTest (unittest.TestCase):
 
     def construct_response_data (self, response):
         """
-        Construct valid HTTP response data string.
+        Construct a HTTP response data string.
         """
         lines = []
         version = "HTTP/%d.%d" % response.version
@@ -526,6 +615,11 @@ class ProxyTest (unittest.TestCase):
         return data
 
     def parse_response_data (self, data):
+        """
+        Parse HTTP response data.
+        @return: HTTP response
+        @rtype: HttpResponse
+        """
         # find status line
         i = data.find("\r\n")
         if i == -1:
@@ -571,22 +665,37 @@ class ProxyTest (unittest.TestCase):
         self.check_response_content(response)
 
     def check_response_version (self, response):
+        """
+        Check HTTP response version.
+        """
         self.assertEqual(response.version, self.get_response_version())
 
     def check_response_status (self, response):
+        """
+        Check HTTP response status.
+        """
         self.assertEqual(response.status, self.get_response_status())
 
     def check_response_message (self, response):
+        """
+        Check HTTP response message.
+        """
         # only check if status is what one expected
         if response.status == self.get_response_status():
             msg = self.get_response_message(response.status)
             self.assertEqual(response.msg, msg)
 
     def check_response_headers (self, response):
+        """
+        Check HTTP response headers.
+        """
         # no standard checks here
         pass
 
     def check_response_content (self, response):
+        """
+        Check HTTP response content.
+        """
         # only check if status is what one expected
         if response.status == self.get_response_status():
             self.assertEqual(response.content, self.get_response_content())
