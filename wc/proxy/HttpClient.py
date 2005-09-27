@@ -280,6 +280,9 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         wc.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
         self.fix_request_headers(msg)
         self.clientheaders = msg.copy()
+        self.set_persistent(msg, self.version)
+        self.mangle_request_headers(msg)
+        self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
         self.headers = self.filter_headers(msg)
         # if content-length header is missing, assume zero length
         self.bytes_remaining = \
@@ -380,10 +383,6 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                        self.localhost, [stage],
                        clientheaders=self.clientheaders,
                        headers=msg)
-        self.set_persistent(msg, self.version)
-        self.mangle_request_headers(msg)
-        self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
-        # filter headers
         return wc.filter.applyfilter(stage, msg, "finish", self.attrs)
 
     def set_persistent (self, headers, http_ver):
