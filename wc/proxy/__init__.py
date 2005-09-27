@@ -52,10 +52,8 @@ def readable_socket (sock, timeout=0.5):
     """
     try:
         if timeout is None or timeout < 0.0:
-            r, w, e = select.select([sock], [], [])
-        else:
-            r, w, e = select.select([sock], [], [], timeout)
-        return (sock in r)
+            return select.select([sock], [], [])[0]
+        return select.select([sock], [], [], timeout)[0]
     except select.error:
         return False
 
