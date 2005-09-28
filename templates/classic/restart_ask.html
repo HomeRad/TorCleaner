@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" tal:attributes="lang lang">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="copyright" content="(C) 2005 Bastian Kleineidam">
+<link href="wc.css" type="text/css" rel="Stylesheet">
+<link rel="SHORTCUT ICON" href="/favicon.png">
+<link rel="home" href="index.html" title="Home"
+ i18n:attributes="title"
+ tal:attributes="href string:index.html.${lang}">
+<link rel="help" href="help.html" title="Help"
+ i18n:attributes="title"
+ tal:attributes="href string:help.html.${lang}">
+<title i18n:translate=""><span tal:replace="AppName"
+i18n:name="appname">WebCleaner</span> restart</title>
+</head>
+<body>
+<div metal:use-macro="macros/nav">Navigation...</div>
+<div class="content" id="main">
+
+<h2 i18n:translate="">Restart the WebCleaner proxy?</h2>
+
+<div>
+<form action="restart.html" method="POST"
+ tal:attributes="action string:restart.html.${lang}">
+<input type="submit" value="Restart proxy" class="submit" name="restart"
+ i18n:attributes="value">
+</form>
+</div>
+
+</div>
+
+<div metal:use-macro="macros/footer">Footer...</div>
+</body>
+</html>
