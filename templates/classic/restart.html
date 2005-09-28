@@ -3,13 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="copyright" content="(C) 2004-2005 Bastian Kleineidam">
-<meta http-equiv="refresh" content="10; URL=index.html"
- tal:attributes="content string:10;; URL=${newbaseurl}">
+<meta http-equiv="refresh" content="15;URL=index.html"
+ tal:attributes="content string:15;;URL=${newbaseurl}">
 <link href="wc.css" type="text/css" rel="Stylesheet">
 <link rel="SHORTCUT ICON" href="/favicon.png">
 <link rel="home" href="index.html" title="Home"
+ i18n:attributes="title"
  tal:attributes="href string:index.html.${lang}">
 <link rel="help" href="help.html" title="Help"
+ i18n:attributes="title"
  tal:attributes="href string:help.html.${lang}">
 <title i18n:translate=""><span tal:replace="AppName"
 i18n:name="appname">WebCleaner</span> restart</title>
@@ -22,7 +24,7 @@ i18n:name="appname">WebCleaner</span> restart</title>
 <p i18n:translate="">This proxy is restarting. You will be redirected
 to the new <a href="index.html"
 tal:attributes="href newbaseurl">main configuration page</a>
-automatically in 10 seconds.
+automatically in 15 seconds.
 </p>
 
 </div>
