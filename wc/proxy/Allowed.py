@@ -24,6 +24,17 @@ import wc.configuration
 
 MAX_URL_LEN = 8192
 
+
+def is_in_document_list (doc, docs):
+    """
+    Return True iff doc is document list.
+    """
+    for f in docs:
+        if doc.startswith(f):
+            return True
+    return False
+
+
 class AllowedHttpClient (object):
     """
     Allowance data for http clients.
@@ -47,19 +58,27 @@ class AllowedHttpClient (object):
           '/favicon.ico',
           '/favicon.png',
           '/wc.css',
-          '/adminpass.html',
           '/rated.html',
           '/robots.txt',
+        ]
+        # documents to visit when no admin password has been given
+        self.admin_docs = [
+          '/adminpass.html',
+          '/restart_ask.html',
+          '/restart.html',
         ]
 
     def public_document (self, doc):
         """
         Return True iff doc is a public document.
         """
-        for f in self.public_docs:
-            if doc.startswith(f):
-                return True
-        return False
+        return is_in_document_list(doc, self.public_docs)
+
+    def admin_document (self, doc):
+        """
+        Return True iff doc is an admin document.
+        """
+        return is_in_document_list(doc, self.admin_docs)
 
     def host (self, host):
         """

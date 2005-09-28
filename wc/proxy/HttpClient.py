@@ -467,8 +467,10 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                 is_public_doc = self.allow.public_document(self.document)
             if wc.configuration.config['adminuser'] and \
                not wc.configuration.config['adminpass']:
-                if is_local and is_public_doc:
-                    self.handle_local(is_public_doc=is_public_doc)
+                is_admin_doc = self.allow.admin_document(self.document)
+                if is_local and (is_public_doc or is_admin_doc):
+                    self.handle_local(is_public_doc=is_public_doc,
+                                      is_admin_doc=is_admin_doc)
                 else:
                     # ignore request, must init admin password
                     self.headers['Location'] = \
@@ -595,7 +597,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             # check to see if the client is still connected.
         super(HttpClient, self).handle_close()
 
-    def handle_local (self, is_public_doc=False):
+    def handle_local (self, is_public_doc=False, is_admin_doc=False):
         """
         Handle local request by delegating it to the web configuration.
         """
@@ -606,19 +608,19 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             self.error(403, _("Invalid Method"))
             return
         # check admin pass
-        if not is_public_doc and wc.configuration.config["adminuser"]:
+        if not (is_public_doc or is_admin_doc) and \
+           wc.configuration.config["adminuser"]:
             creds = wc.proxy.auth.get_header_credentials(self.headers,
                                                          'Authorization')
             if not creds:
                 auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(401, _("Authentication Required"), auth=auth)
                 return
-            if 'NTLM' in creds:
-                if creds['NTLM'][0]['type'] == \
-                   wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
-                    auth = ",".join(creds['NTLM'][0])
-                    self.error(401, _("Authentication Required"), auth=auth)
-                    return
+            if 'NTLM' in creds and creds['NTLM'][0]['type'] == \
+               wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
+                auth = ",".join(creds['NTLM'][0])
+                self.error(401, _("Authentication Required"), auth=auth)
+                return
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds,
                             username=wc.configuration.config['adminuser'],
