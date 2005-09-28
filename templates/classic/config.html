@@ -219,7 +219,10 @@ Enable the VirusFilter module.
 </table>
 <div class="footnote">
 <span id="footnote1" title="footnote 1" i18n:attributes="title">1)</span>
-<span i18n:translate="">Changes to this option require a proxy restart to take effect.</span><br>
+<span i18n:translate="">Changes to this option require a proxy
+<a href="restart_ask.html"
+ tal:attributes="href string:restart_ask.html.${lang}">restart</a>
+ to take effect.</span><br>
 <span id="footnote2" title="footnote 2" i18n:attributes="title">2)</span>
 <span i18n:translate="">Always change the complete password since the displayed value is only a dummy.</span><br>
 <span id="footnote3" title="footnote 3" i18n:attributes="title">3)</span>
@@ -500,14 +503,6 @@ match any hosts ending with <code>.intra</code>.</span><br>
 <div tal:condition="error/parentproxypass" i18n:translate="">Parent proxy password must have only ASCII characters.</div>
 <div tal:condition="error/adminuser" i18n:translate="">Admin user must have only ASCII characters.</div>
 <div tal:condition="error/adminpass" i18n:translate="">Admin password must have only ASCII characters.</div>
-</div>
-
-<div align="right">
-<form action="restart.html" method="POST"
- tal:attributes="action string:restart.html.${lang}">
-<input type="submit" value="Restart proxy" class="submit" name="restart"
- i18n:attributes="value">
-</form>
 </div>
 
 </div>
