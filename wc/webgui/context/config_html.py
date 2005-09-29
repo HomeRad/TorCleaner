@@ -22,9 +22,9 @@ Parameters for config.html page.
 import base64
 import socket
 import os
-from wc import AppName, Version
-from wc.configuration import config, filtermodules
+from wc import AppName, Version, HasSsl
 from wc import sort_seq as _sort_seq
+from wc.configuration import config, filtermodules
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.ip import lookup_ips as _lookup_ips
@@ -32,6 +32,7 @@ from wc.ip import resolve_host as _resolve_host
 from wc.ip import hosts2map as _hosts2map
 from wc.proxy.dns_lookups import resolver as _resolver
 from wc.strformat import is_ascii as _is_ascii
+import wc.filter
 
 # config vars
 info = {
@@ -70,8 +71,14 @@ error = {
     'parentproxypass': False,
 }
 config['filterdict'] = {}
+config['filterenable'] = {}
 for _i in filtermodules:
     config['filterdict'][_i] = False
+    # import filter module
+    exec "from wc.filter import %s" % _i
+    # Filter class has same name as module.
+    _clazz = getattr(getattr(wc.filter, _i), _i)
+    config['filterenable'][_i] = _clazz.enable
 for _i in config.get('filters', []):
     config['filterdict'][_i] = True
 config['newbindaddress'] = config.get('bindaddress', '')

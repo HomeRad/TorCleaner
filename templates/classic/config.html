@@ -72,10 +72,21 @@ proxy configuration</title>
 <sup><a href="#footnote1" class="footnote" title="see footnote 1"
  i18n:attributes="title">1)</a></sup></td>
 <td>
+<span tal:condition="HasSsl">
 <input tal:condition="config/newsslgateway" class="checkbox"
  type="checkbox" checked name="sslgateway" id="sslgateway" value="1">
 <input tal:condition="not:config/newsslgateway" class="checkbox"
  type="checkbox" name="sslgateway" id="sslgateway" value="1">
+</span>
+<span tal:condition="not:HasSsl">
+<input tal:condition="config/newsslgateway" class="checkbox"
+ type="checkbox" checked name="sslgateway" id="sslgateway" value="1"
+ disabled="disabled">
+<input tal:condition="not:config/newsslgateway" class="checkbox"
+ type="checkbox" name="sslgateway" id="sslgateway" value="1"
+ disabled="disabled">
+<span i18n:translate="">PyOpenSSL is required</span>
+</span>
 </td>
 </tr>
 

@@ -14,12 +14,23 @@
 
 <!-- filter module checkbox -->
 <div metal:define-macro="modulecheckbox">
-<td><input tal:condition="config/filterdict/?module" checked
+<td><span
+ tal:condition="config/filterenable/?module"
+><input tal:condition="config/filterdict/?module" checked
  type="checkbox" class="checkbox"
- tal:attributes="value module;name string:filter${module}">
-<input tal:condition="not:config/filterdict/?module"
+ tal:attributes="value module;name string:filter${module}"
+><input tal:condition="not:config/filterdict/?module"
  type="checkbox" class="checkbox"
- tal:attributes="value module;name string:filter${module}"></td>
+ tal:attributes="value module;name string:filter${module}"
+ ></span><span
+ tal:condition="not:config/filterenable/?module"
+><input tal:condition="config/filterdict/?module" checked
+ type="checkbox" class="checkbox" disabled="disabled"
+ tal:attributes="value module;name string:filter${module}"
+><input tal:condition="not:config/filterdict/?module"
+ type="checkbox" class="checkbox" disabled="disabled"
+ tal:attributes="value module;name string:filter${module}"
+></span></td>
 <td><span tal:replace="module">Module</span><sup><a href="help.html"
  tal:attributes="href string:help.html.${lang}#${module}">?</a></sup></td>
 </div>
