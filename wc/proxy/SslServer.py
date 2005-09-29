@@ -65,16 +65,12 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
             wc.proxy.Headers.server_set_encoding_headers(self)
         if self.bytes_remaining is None:
             self.persistent = False
-        # 304 Not Modified does not send any type info, because it was cached
-        if self.statuscode != 304:
-            # copy decoders
-            decoders = [d.__class__() for d in self.decoders]
-            data = self.recv_buffer
-            for decoder in decoders:
-                data = decoder.process(data)
-            data += self.flush_coders(decoders)
-            wc.proxy.Headers.server_set_content_headers(
-                                        self.headers, self.mime_types, self.url)
+        if self.statuscode == 304:
+            # 304 Not Modified does not send any type info, because it
+            # was cached
+            return
+        wc.proxy.Headers.server_set_content_headers(
+                                     self.headers, self.mime_types, self.url)
 
     def process_recycle (self):
         """
