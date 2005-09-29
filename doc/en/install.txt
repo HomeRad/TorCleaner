@@ -24,27 +24,27 @@ Requirements for Unix/Linux or Max OS X
 
 3. runit from http://smarden.org/runit/
 
-4. *Optional (used by ImageSize and ImageReducer module)*
+4. *Optional but recommended (used by ImageSize and ImageReducer modules)*
    Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
 
-5. *Optional (used for NTLM authentication)*
-   Python Crypto Module from
-   http://www.amk.ca/python/code/crypto.html
-
-6. *Optional (used for SSL connections)*
+5. *Optional but recommended (used for SSL connections)*
    OpenSSL and PyOpenSSL from
    http://www.openssl.org/ and
    http://pyopenssl.sourceforge.net/
+
+6. *Optional but recommended (speedup for i386 compatible PCs)*
+   Psyco from
+   http://psyco.sourceforge.net/
+   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.4-src.tar.gz]
 
 7. *Optional (used by VirusFilter module)*
    ClamAv from
    http://www.clamav.net/
 
-8. *Optional (speedup for i386 compatible PCs)*
-   Psyco from
-   http://psyco.sourceforge.net/
-   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.4-src.tar.gz]
+8. *Optional (used for NTLM authentication)*
+   Python Crypto Module from
+   http://www.amk.ca/python/code/crypto.html
 
 Requirements for Windows:
 -------------------------
@@ -57,26 +57,12 @@ Direct download links are in brackets.
    http://starship.python.net/crew/mhammond/
    [http://osdn.dl.sourceforge.net/sourceforge/pywin32/pywin32-204.win32-py2.4.exe]
 
-3. *Only needed if you compile from source:*
-   install the MinGW suite from http://mingw.sourceforge.net/.
-   Be sure to install in the given order:
-   
-   a) MingGW
-      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-4.1.1.exe]
-   b) MSYS
-      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe]
-   
-4. *Optional (used by ImageSize and ImageReducer module)*
+3. *Optional but recommended (used by ImageSize and ImageReducer modules)*
    Install Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
    [http://effbot.org/downloads/PIL-1.1.5.win32-py2.4.exe]
 
-5. *Optional (used for NTLM authentication)*
-   Download Python Crypto Module from
-   http://www.amk.ca/python/code/crypto.html
-   [http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.4.exe]
-
-6. *Optional (used for SSL connections)*
+4. *Optional but recommended (used for SSL connections)*
    Install OpenSSL and PyOpenSSL for Windows from
    http://www.shininglightpro.com/products/Win32OpenSSL.html
    [http://www.shininglightpro.com/download/Win32OpenSSL-v0.9.8.exe]
@@ -84,15 +70,29 @@ Direct download links are in brackets.
    http://pyopenssl.sourceforge.net/
    [http://webcleaner.sourceforge.net/pyOpenSSL-0.6.win32-py2.4.exe]
 
+5. *Optional but recommended (speedup for i386 compatible PCs)*
+   Psyco from
+   http://psyco.sourceforge.net/
+   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.4.win32-py2.4.exe]
+
+6. *Optional (used for NTLM authentication)*
+   Download Python Crypto Module from
+   http://www.amk.ca/python/code/crypto.html
+   [http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.4.exe]
+
 7. *Optional (used by VirusFilter module)*
    ClamAv from
    http://www.sosdg.org/clamav-win32/index.php
    [http://www.sosdg.org/clamav-win32/clamav-devel.exe]
 
-8. *Optional (speedup for i386 compatible PCs)*
-   Psyco from
-   http://psyco.sourceforge.net/
-   [http://osdn.dl.sourceforge.net/sourceforge/psyco/psyco-1.4.win32-py2.4.exe]
+8. *Only needed if you compile from source:*
+   install the MinGW suite from http://mingw.sourceforge.net/.
+   Be sure to install in the given order:
+   
+   a) MingGW
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-4.1.1.exe]
+   b) MSYS
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe]
 
 Setup for Unix/Linux:
 ---------------------
