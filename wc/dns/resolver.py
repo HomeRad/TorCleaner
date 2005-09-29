@@ -338,7 +338,6 @@ class Resolver(object):
             self.nameservers.append('127.0.0.1')
 
     def read_local_hosts (self):
-        # XXX is this default list of localhost stuff complete?
         self.add_addrinfo(socket.gethostname())
         # add system specific hosts for all enabled interfaces
         for addr in self.read_local_ifaddrs():

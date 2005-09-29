@@ -91,7 +91,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             if category.iterable:
                 self.values[name] = {}
                 for v in category.values:
-                    self.values[name][v] = v==value
+                    self.values[name][v] = (v == value)
             else:
                 self.values[name] = value
 

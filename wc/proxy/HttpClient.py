@@ -456,7 +456,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                         del self.headers['Content-Length']
                 elif not self.headers.has_key('Content-Length') and \
                      not self.headers.has_key('Transfer-Encoding'):
-                    self.headers['Content-Length'] = "%d\r"%len(self.content)
+                    self.headers['Content-Length'] = \
+                               "%d\r" % len(self.content)
             # We're done reading content
             self.state = 'receive'
             is_local = self.hostname in \

@@ -39,7 +39,8 @@ from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.filter.rating import categories
 from wc.filter.rating import get_category as _get_category
-from wc.filter.rating.category import intrange_from_string as _intrange_from_string
+from wc.filter.rating.category import intrange_from_string as \
+     _intrange_from_string
 
 xmlreplacetypenames = sorted(replacetypenums.keys())
 

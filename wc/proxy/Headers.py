@@ -314,9 +314,11 @@ def server_set_encoding_headers (server, filename=None):
     if encoding in ('gzip', 'x-gzip', 'deflate') and \
        (filename is None or not filename.endswith(".gz")):
         if encoding == 'deflate':
-            server.decoders.append(wc.proxy.decoder.DeflateStream.DeflateStream())
+            server.decoders.append(
+                 wc.proxy.decoder.DeflateStream.DeflateStream())
         else:
-            server.decoders.append(wc.proxy.decoder.GunzipStream.GunzipStream())
+            server.decoders.append(
+                 wc.proxy.decoder.GunzipStream.GunzipStream())
         # remove encoding because we unzip the stream
         to_remove = ['Content-Encoding']
         # remove no-transform cache control

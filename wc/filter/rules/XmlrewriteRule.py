@@ -16,8 +16,6 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Rule rewriting xml tags.
-
-XXX todo: implement more replace types
 """
 
 import re
@@ -90,7 +88,7 @@ def match_stack (stack, selector):
         tag = element[1]
         attrs = element[2]
         if i >= 0 and match_element(tag, attrs, selector[i]):
-            if i==0:
+            if i == 0:
                 break
             i -= 1
             continue

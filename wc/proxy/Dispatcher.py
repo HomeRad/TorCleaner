@@ -300,7 +300,8 @@ class Dispatcher (object):
             (r, w, e) = select.select([], [self.fileno()], [], 0.2)
         except select.error, why:
             # not yet ready
-            wc.log.debug(wc.LOG_PROXY, '%s connect not ready %s', self, str(why))
+            wc.log.debug(wc.LOG_PROXY,
+                         '%s connect not ready %s', self, str(why))
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
             return
         if self.fileno() not in w:
@@ -315,7 +316,8 @@ class Dispatcher (object):
             wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
         elif err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
-            wc.log.debug(wc.LOG_PROXY, '%s connect status in progress/would block', self)
+            wc.log.debug(wc.LOG_PROXY,
+                         '%s connect status in progress/would block', self)
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
         else:
             strerr = errno.errorcode[err]

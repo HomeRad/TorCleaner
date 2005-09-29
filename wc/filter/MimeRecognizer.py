@@ -111,7 +111,8 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         """
         if not self.applies_to_stages(stages):
             return {}
-        d = super(MimeRecognizer, self).get_attrs(url, localhost, stages, headers)
+        d = super(MimeRecognizer, self).get_attrs(url, localhost,
+                                                  stages, headers)
         d['mimerecognizer_buf'] = StringIO.StringIO()
         d['mimerecognizer_ignore'] = False
         return d

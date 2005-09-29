@@ -235,7 +235,8 @@ class HttpServer (wc.proxy.Server.Server):
             self.response = "%s %d %s" % (ver, status, tail)
             self.statuscode = status
             # Let the server pool know what version this is
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr,version)
+            wc.proxy.ServerPool.serverpool.set_http_version(self.addr,
+                                                            version)
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
@@ -374,10 +375,10 @@ class HttpServer (wc.proxy.Server.Server):
         """
         Return True iff this server connection is persistent.
         """
-        if http_ver >= (1,1):
+        if http_ver >= (1, 1):
             self.persistent = not wc.proxy.Headers.has_header_value(
                                               headers, 'Connection', 'Close')
-        elif http_ver >= (1,0):
+        elif http_ver >= (1, 0):
             self.persistent = wc.proxy.Headers.has_header_value(
                                          headers, 'Connection', 'Keep-Alive')
         else:

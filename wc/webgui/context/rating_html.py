@@ -28,8 +28,10 @@ from wc.strformat import strtime as _strtime
 from wc.filter.rating import services, categories
 from wc.filter.rating import get_category as _get_category
 from wc.filter.rating.rating import Rating as _Rating
-from wc.filter.rating.category import intrange_from_string as _intrange_from_string
-from wc.filter.rating.category import string_from_intrange as _string_from_intrange
+from wc.filter.rating.category import intrange_from_string as \
+     _intrange_from_string
+from wc.filter.rating.category import string_from_intrange as \
+     _string_from_intrange
 from wc.filter.rating.storage import get_rating_store as _get_rating_store
 from wc.filter.rating.storage.pickle import PickleStorage as _PickleStorage
 

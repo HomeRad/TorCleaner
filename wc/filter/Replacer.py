@@ -25,7 +25,6 @@ import wc.filter.Filter
 
 DefaultCharset = 'iso-8859-1'
 
-# XXX group matches?
 class Replacer (wc.filter.Filter.Filter):
     """
     Replace regular expressions in a data stream.

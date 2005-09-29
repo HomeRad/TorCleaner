@@ -352,11 +352,14 @@ class JSFilter (wc.js.JSListener.JSListener):
         if data is None:
             if not self.js_script:
                 wc.log.warn(wc.LOG_JS, "empty JavaScript src %s", url)
-                self.js_script = u"// "+\
-                      _("error fetching script from %r") % url
-            self.htmlparser.tagbuf.append(
-                 [wc.filter.html.STARTTAG, u"script",
-                  {'type': 'text/javascript'}])
+                msg = _("error fetching script from %r") % url
+                self.js_script = u"// " + msg
+            else:
+                msg = _("fetched script from %r") % url
+            self.htmlparser.tagbuf.append([wc.filter.html.COMMENT,
+                                           u" %s " % msg])
+            self.htmlparser.tagbuf.append([wc.filter.html.STARTTAG, u"script",
+                                          {'type': 'text/javascript'}])
             # norm html comments
             script = wc.js.clean(self.js_script, jscomments=self.jscomments)
             self.htmlparser.tagbuf.append(
