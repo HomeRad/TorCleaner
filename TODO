@@ -1,8 +1,12 @@
 TODO
 
-- if an unknown port is forbidden (403 status), add an explaining message
+- stuff that was downloaded in the background (scripts, css, ..) should have a prepended
+  comment with the original URL, but only when HTML comments are allowed (ie. the Nocomment
+  rule is not enabled).
 
-- functional tests
+- more HTTP RFC2616 unit tests
+
+- if an unknown port is forbidden (403 status), add an explaining message
 
 - wc.proxy <client:receive  persistent server http://download.daemlich.net/no_hotlinkers33/volkswagen-getaway.mov> (32, 'Broken pipe')
 Traceback (most recent call last):
