@@ -33,7 +33,7 @@ class ImageReducer (wc.filter.Filter.Filter):
     Reduce the image size by making low quality JPEGs.
     """
 
-    enabled = wc.HasPil
+    enable = wc.HasPil
 
     def __init__ (self):
         """
