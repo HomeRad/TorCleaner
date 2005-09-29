@@ -166,9 +166,6 @@ def mainloop (handle=None, abort=None):
         sslctx = wc.proxy.ssl.get_serverctx(wc.configuration.config.configdir)
         wc.proxy.Listener.Listener(host, port, wc.proxy.SslClient.SslClient,
                                    sslctx=sslctx)
-    # experimental interactive command line
-    #from Interpreter import Interpreter
-    #Listener(host, wc.configuration.config['cmdport'], Interpreter)
     # periodic statistics (only useful for speed profiling)
     #make_timer(5, transport.http_server.speedcheck_print_status)
     #make_timer(60, periodic_print_socketlist)
