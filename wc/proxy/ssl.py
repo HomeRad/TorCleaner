@@ -106,6 +106,8 @@ def create_certificates (configdir):
     careq = create_cert_request(cakey, CN='Certificate    Authority')
     # five years
     cacert = create_certificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5))
+    # write files with appropriate umask
+    oldmask = os.umask(0022)
     f = file(os.path.join(configdir, 'CA.pkey'), 'w')
     f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))
     f.close()
@@ -124,6 +126,8 @@ def create_certificates (configdir):
         f = file(os.path.join(configdir, '%s.cert' % fname), 'w')
         f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
         f.close()
+    # reset umask
+    os.umask(oldmask)
 
 
 #
