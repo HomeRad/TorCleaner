@@ -20,6 +20,17 @@
       wc/filter/rules/HeaderRule.py, wc/filter/Header.py,
       wc/webgui/context/filterconfig_html.py
 
+  * Added check for SSL support before generating SSL certificates.
+    Type: feature
+    Changed: webcleaner-certificates
+
+  * Document software requirements for filter modules in the web
+    interface, and disable configuration of features with missing
+    requirements.
+    Type: feature
+    Changed: templates/classic/{help,configuration}.html,
+      wc/webgui/context/configuration_html.py
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
