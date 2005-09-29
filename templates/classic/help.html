@@ -89,7 +89,7 @@ be further customized by separate rules in the filter configuration.
 <tr style="border-bottom:1px solid black;">
 <th i18n:translate="">Name</th>
 <th i18n:translate="">Description</th>
-<th i18n:translate="">Applies to</th>
+<th i18n:translate="">Requirements</th>
 <th i18n:translate="">Configuration rules</th>
 </tr>
 </thead>
@@ -98,8 +98,9 @@ be further customized by separate rules in the filter configuration.
 <td><a name="BinaryCharFilter">BinaryCharFilter</a></td>
 <td i18n:translate="">Replace illegal binary characters in HTML code like
 the quote chars often found in Microsoft pages.</td>
-<td i18n:translate="">MIME types: text/html<br>
-HTTP stages: response content body
+<td>
+<div i18n:translate="">MIME types: text/html</div>
+<div i18n:translate="">HTTP stages: response content body</div>
 </td>
 <td i18n:translate="">None</td>
 </tr>
@@ -109,9 +110,9 @@ HTTP stages: response content body
 <td i18n:translate="">Block or allow specific sites by URL name.
 Before matching a URL the hostname and path is unquoted to avoid
 spoofing attacks.</td>
-<td i18n:translate="">
-MIME types: all<br>
-HTTP stages: request URL
+<td>
+<div i18n:translate="">MIME types: all</div>
+<div i18n:translate="">HTTP stages: request URL</div>
 </td>
 <td>
 <a href="#BlockRule">Block</a>,
@@ -123,10 +124,11 @@ HTTP stages: request URL
 <td><a name="Compress">Compress</td>
 <td i18n:translate="">Compression of documents with good compression ratio
 like HTML, WAV, etc.</td>
-<td i18n:translate="">MIME types: text/*, application/postscript,
+<td>
+<div i18n:translate="">MIME types: text/*, application/postscript,
 application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav,
-image/x-portable-*map, x-world/x-vrml<br>
-HTTP stages: response content body
+image/x-portable-*map, x-world/x-vrml</div>
+<div i18n:translate="">HTTP stages: response content body</div>
 </td>
 <td i18n:translate="">None</td>
 </tr>
@@ -135,16 +137,20 @@ HTTP stages: response content body
 <td><a name="GifImage">GifImage</td>
 <td i18n:translate="">Deanimates GIFs and removes all unwanted GIF image
 extensions (for example GIF comments).</td>
-<td i18n:translate="">MIME types: image/gif<br>
-HTTP stages: response content body</td>
+<td>
+<div i18n:translate="">MIME types: image/gif</div>
+<div i18n:translate="">HTTP stages: response content body</div>
+</td>
 <td i18n:translate="">None</td>
 </tr>
 
 <tr valign="top" style="border-bottom:1px solid black;">
 <td><a name="Header">Header</td>
 <td i18n:translate="">Add, modify and delete HTTP headers of request and response.</td>
-<td i18n:translate="">MIME types: all<br>
-HTTP stages: request and response headers</td>
+<td>
+<div i18n:translate="">MIME types: all</div>
+<div i18n:translate="">HTTP stages: request and response headers</div>
+</td>
 <td>
 <a href="#HeaderRule">Header</a>
 </td>
@@ -155,8 +161,10 @@ HTTP stages: request and response headers</td>
 <td i18n:translate="">Parse HTML code and rewrite single tags, attributes
 and values. Execute and filter JavaScript. Parse and filter content rated
 pages. Filter HTML comments.</td>
-<td i18n:translate="">MIME types: text/html<br>
-HTTP stages: response content body</td>
+<td>
+<div i18n:translate="">MIME types: text/html</div>
+<div i18n:translate="">HTTP stages: response content body</div>
+</td>
 <td>
 <a href="#JavascriptRule">Javascript</a>,
 <a href="#NocommentsRule">Nocomments</a>,
@@ -168,7 +176,7 @@ HTTP stages: response content body</td>
 <tr style="border-bottom:1px solid black;">
 <th i18n:translate="">Name</th>
 <th i18n:translate="">Description</th>
-<th i18n:translate="">Applies to</th>
+<th i18n:translate="">Requirements</th>
 <th i18n:translate="">Configuration rules</th>
 </tr>
 
@@ -176,9 +184,11 @@ HTTP stages: response content body</td>
 <td><a name="ImageReducer">ImageReducer</td>
 <td i18n:translate="">Convert images to low quality JPEG files to reduce
 bandwidth</td>
-<td i18n:translate="">MIME types: all image types supported by the
-Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm<br>
-HTTP stages: response content body
+<td>
+<div i18n:translate="">Software: the Python Image Library (PIL) must be installed.</div>
+<div i18n:translate="">MIME types: all image types supported by the
+Python Imaging Library (as of version 1.1.5: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm)</div>
+<div i18n:translate="">HTTP stages: response content body</div>
 </td>
 <td i18n:translate="">None</td>
 </tr>
@@ -186,9 +196,11 @@ HTTP stages: response content body
 <tr valign="top" style="border-bottom:1px solid black;">
 <td><a name="ImageSize">ImageSize</td>
 <td i18n:translate="">Remove images with certain width and/or height.</td>
-<td i18n:translate="">MIME types: all image types supported by the
-Python Imaging Library: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm<br>
-HTTP stages: response content body
+<td>
+<div i18n:translate="">Software: the Python Image Library (PIL) must be installed.</div>
+<div i18n:translate="">MIME types: all image types supported by the
+Python Imaging Library (as of version 1.1.5: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm)</div>
+<div i18n:translate="">HTTP stages: response content body</div>
 </td>
 <td>
 <a href="#ImageRule">Image</a>
@@ -198,8 +210,10 @@ HTTP stages: response content body
 <tr valign="top" style="border-bottom:1px solid black;">
 <td><a name="RatingHeader">RatingHeader</td>
 <td i18n:translate="">Parse and evaluate content rating system header values.</td>
-<td i18n:translate="">MIME types: all<br>
-HTTP stages: response headers</td>
+<td>
+<div i18n:translate="">MIME types: all</div>
+<div i18n:translate="">HTTP stages: response headers</div>
+</td>
 <td>
 <a href="#RatingRule">Rating</a>
 </td>
@@ -208,8 +222,10 @@ HTTP stages: response headers</td>
 <tr valign="top" style="border-bottom:1px solid black;">
 <td><a name="Replacer">Replacer</td>
 <td i18n:translate="">Replace regular expressions in data streams.</td>
-<td i18n:translate="">MIME types: text/html, (text|application)/javascript<br>
-HTTP stages: response content body</td>
+<td>
+<div i18n:translate="">MIME types: text/html, (text|application)/javascript</div>
+<div i18n:translate="">HTTP stages: response content body</div>
+</td>
 <td>
 <a href="#ReplaceRule">Replace</a>
 </td>
@@ -217,12 +233,15 @@ HTTP stages: response content body</td>
 
 <tr valign="top" style="border-bottom:1px solid black;">
 <td><a name="VirusFilter">VirusFilter</td>
-<td i18n:translate="">Scan all data with the ClamAv virus scanner (which must
-be installed on the proxy host). For performance reasons there is a
-maximum size of 4 MB. If an object exceeds that size the proxy gives an
-error.</td>
-<td i18n:translate="">MIME types: text/html<br>
-HTTP stages: response content body</td>
+<td i18n:translate="">Scan all data with the ClamAv virus scanner.
+For performance reasons there is a maximum size of 4 MB. If an object
+exceeds that size the proxy gives an error.</td>
+<td>
+<div i18n:translate="">Software: the ClamAV virus scanner must be installed
+on the proxy host.</div>
+<div i18n:translate="">MIME types: text/html</div>
+<div i18n:translate="">HTTP stages: response content body</div>
+</td>
 <td>
 <a href="#AntivirusRule">Antivirus</a>
 </td>
@@ -233,8 +252,10 @@ HTTP stages: response content body</td>
 <td i18n:translate="">Parse XML code and rewrite single tags, attributes
 and values. Plus there is the ability to filter embedded HTML content,
 often occuring in RSS feeds.</td>
-<td i18n:translate="">MIME types: text/html<br>
-HTTP stages: response content body</td>
+<td>
+<div i18n:translate="">MIME types: text/html</div>
+<div i18n:translate="">HTTP stages: response content body</div>
+</td>
 <td>
 <a href="#HtmlrewriteRule">Htmlrewrite</a>,
 <a href="#XmlrewriteRule">Xmlrewrite</a>
