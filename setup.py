@@ -67,7 +67,7 @@ def cnormpath (path):
         # replace slashes with backslashes
         path = path.replace("/", "\\")
     if not os.path.isabs(path):
-        path= os.path.join(sys.prefix, path)
+        path = normpath(os.path.join(sys.prefix, path))
     return path
 
 
