@@ -173,20 +173,7 @@ Setup for Windows - compiling from source:
    
    Be sure to have installed all required windows software listed above.
 
-2. Preparing Python for the MinGW compiler
-   
-   Search the file python24.dll in your windows folder.
-   After you found it, launch MSYS. Change into the windows folder,
-   for example ``% cd c:\winnt\system32``. Then execute
-   ``% pexports python24.dll > python24.def``.
-   Then use the dlltool with
-   ``% dlltool --dllname python24.dll --def python24.def --output-lib
-   libpython24.a``.
-   The resulting library has to be placed in the same directory as
-   python24.lib. (Should be the libs directory under your Python installation
-   directory, for example ``c:\Python24\Libs\``.)
-
-3. Compile the JavaScript library
+2. Compile the JavaScript library
    
    Copy the webcleaner-X.Y.tar.gz into your MSYS home directory,
    which is usually under c:\\msys\\1.0\\home\\user\\.
@@ -197,7 +184,7 @@ Setup for Windows - compiling from source:
    library:
    ``% ./configure && make -C libjs``.
 
-5. Install OpenSSL and compile PyOpenSSL
+3. Install OpenSSL and compile PyOpenSSL
    
    Change to the directory where you installed OpenSSL (for example
    ``c:> cd c:\OpenSSL\``).
@@ -211,7 +198,7 @@ Setup for Windows - compiling from source:
    ``c:> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
    -L c:\OpenSSL\lib\MinGW build install``
 
-6. Generate the WebCleaner installer
+4. Generate the WebCleaner installer
    
    Change to the webcleaner-X.Y directory and run
    ``c:> python setup.py sdist --manifest-only`` and
@@ -226,7 +213,7 @@ Setup for Windows - compiling from source:
    .. _psyco installation docs:
       http://psyco.sourceforge.net/psycoguide/node2.html
 
-7. Enjoy
+5. Enjoy
    
    WebCleaner is now downloaded and started as a regular Windows service.
    See the `main page`_ on how to configure the proxy filters.
