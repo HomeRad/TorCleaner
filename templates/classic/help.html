@@ -18,6 +18,7 @@ help</title>
 <h2 i18n:translate="">Browser configuration</h2>
 <p i18n:translate="">You have to configure your web browser to use
 <span tal:replace="AppName" i18n:name="appname">WebCleaner</span> as a proxy.</p>
+
 <h3 i18n:translate="">Netscape/Mozilla</h3>
 <p i18n:translate="">Select <b>Edit -&gt; Preferences -&gt; Advanced
 -&gt; Proxies</b>.<br>
@@ -25,6 +26,17 @@ Activate <b>Manual proxy configuration</b>.<br>
 Under <b>HTTP Proxy</b> enter <i>localhost</i>, the <b>Port</b> is
 <i tal:content="port" i18n:name="port">8080</i>.<br>
 Under <b>HTTPS Proxy</b> enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="port" i18n:name="port">8080</i>.<br>
+Under <b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br>
+Click <b>Ok</b> to use your new settings.</p>
+
+<h3 i18n:translate="">Firefox</h3>
+<p i18n:translate="">Select <b>Edit -&gt; Preferences -&gt; General
+-&gt; Connection Settings</b>.<br>
+Activate <b>Manual proxy configuration</b>.<br>
+Under <b>HTTP Proxy</b> enter <i>localhost</i>, the <b>Port</b> is
+<i tal:content="port" i18n:name="port">8080</i>.<br>
+Under <b>SSL Proxy</b> enter <i>localhost</i>, the <b>Port</b> is
 <i tal:content="port" i18n:name="port">8080</i>.<br>
 Under <b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br>
 Click <b>Ok</b> to use your new settings.</p>
