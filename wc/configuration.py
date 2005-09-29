@@ -153,7 +153,19 @@ class Configuration (dict):
         self.reset()
         # read configuration
         self.read_proxyconf()
+        self.check_ssl_certificates()
         self.read_filterconf()
+
+    def check_ssl_certificates (self):
+        """
+        Check existance of SSL support and generate certificates if
+        needed. This is necessary since SSL support can be installed
+        after WebCleaner.
+        """
+        if wc.HasSsl and self["sslgateway"]:
+            import wc.proxy.ssl
+            if not wc.proxy.ssl.exist_certificates(self.configdir):
+                wc.proxy.ssl.create_certificates(self.configdir)
 
     def reset (self):
         """

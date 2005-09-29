@@ -303,6 +303,7 @@ def _form_sslgateway (enable):
         oldval = config['sslgateway']
         config['sslgateway'] = enable
         config.write_proxyconf()
+        config.check_ssl_certificates()
         config['sslgateway'] = oldval
         info['sslgateway'] = True
 
