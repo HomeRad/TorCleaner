@@ -47,7 +47,7 @@
   <title lang="de">Verknüpfungen mit 'ads'</title>
   <title lang="en">Ad servers 03</title>
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'ads' im Rechnernamen.</description>
-  <attr>https?://(servedby\.)?ad(s|server|vertising)?\.</attr>
+  <attr>https?://(servedby\.)?ad(s|server(\d+)?|vertising)?\.</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.335">
