@@ -100,12 +100,12 @@ def get_clientctx (configdir):
 
 def create_certificates (configdir):
     """Create certificates and private keys for webcleaner"""
-    cakey = createKeyPair(TYPE_RSA, 1024)
+    cakey = create_key_pair(TYPE_RSA, 1024)
     # note: the CN name should be a multiple of 4 since the pyopenssl
     # wrapper has a bug treating some strings as UniversalString
-    careq = createCertRequest(cakey, CN='Certificate    Authority')
+    careq = create_cert_request(cakey, CN='Certificate    Authority')
     # five years
-    cacert = createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5))
+    cacert = create_certificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5))
     f = file(os.path.join(configdir, 'CA.pkey'), 'w')
     f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))
     f.close()
@@ -114,10 +114,10 @@ def create_certificates (configdir):
     f.close()
     for (fname, cname) in [('client', '%s Client' % wc.AppName),
                            ('server', '%s Server' % wc.AppName)]:
-        pkey = createKeyPair(TYPE_RSA, 1024)
-        req = createCertRequest(pkey, CN=cname)
+        pkey = create_key_pair(TYPE_RSA, 1024)
+        req = create_cert_request(pkey, CN=cname)
         # five years
-        cert = createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5))
+        cert = create_certificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5))
         f = file(os.path.join(configdir, '%s.pkey' % fname), 'w')
         f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))
         f.close()
@@ -137,7 +137,7 @@ def create_certificates (configdir):
 TYPE_RSA = crypto.TYPE_RSA
 TYPE_DSA = crypto.TYPE_DSA
 
-def createKeyPair (ktype, bits):
+def create_key_pair (ktype, bits):
     """
     Create a public/private key pair.
 
@@ -151,7 +151,7 @@ def createKeyPair (ktype, bits):
     return pkey
 
 
-def createCertRequest (pkey, digest="md5", **name):
+def create_cert_request (pkey, digest="md5", **name):
     """
     Create a certificate request.
 
@@ -180,7 +180,7 @@ def createCertRequest (pkey, digest="md5", **name):
     return req
 
 
-def createCertificate (req, (issuerCert, issuerKey), serial,
+def create_certificate (req, (issuerCert, issuerKey), serial,
                        (notBefore, notAfter), digest="md5"):
     """
     Generate a certificate given a certificate request.
