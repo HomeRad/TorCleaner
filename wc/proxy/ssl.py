@@ -36,7 +36,7 @@ def exist_certificates (configdir):
     return True
 
 
-def dumpCertificate (cert, filetype=crypto.FILETYPE_PEM):
+def dump_certificate (cert, filetype=crypto.FILETYPE_PEM):
     """
     A helper to dump an incoming cert as a PEM.
     """
