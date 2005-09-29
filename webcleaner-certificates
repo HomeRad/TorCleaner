@@ -18,18 +18,15 @@
 """SSL certificates generation/installation/removal script"""
 
 import sys
-
-if not hasattr(sys, "version_info"):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
-if sys.version_info < (2, 3, 1, 'final', 0):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
-
 import os
 import getopt
 import wc
 # initialize i18n
 wc.init_i18n()
-import wc.proxy.ssl
+try:
+    import wc.proxy.ssl
+except ImportError:
+    raise SystemExit, _("SSL certificate operations require PyOpenSSL.")
 
 
 usage = _("""Usage: webcleaner-certificates [options] <command>
