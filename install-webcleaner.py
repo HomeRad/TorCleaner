@@ -89,6 +89,7 @@ def fix_install_path (line):
         if oldpath in val:
             val = val.replace(oldpath, newpath)
             val = os.path.join(sys.prefix, val)
+            val = os.path.normpath(val)
     return "%s = %r%s" % (key, val, os.linesep)
 
 
