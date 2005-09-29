@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-28 22:40+0200\n"
+"POT-Creation-Date: 2005-09-29 17:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -549,7 +549,7 @@ msgstr ""
 msgid "%(appname)s Proxy"
 msgstr ""
 
-#: ../webcleaner:147 ../webcleaner-certificates:94
+#: ../webcleaner:147 ../webcleaner-certificates:91
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr ""
@@ -559,11 +559,15 @@ msgstr ""
 msgid "Unknown command %r"
 msgstr ""
 
-#: ../webcleaner:169 ../webcleaner-certificates:101
+#: ../webcleaner:169 ../webcleaner-certificates:98
 msgid "No command given."
 msgstr ""
 
-#: ../webcleaner-certificates:35
+#: ../webcleaner-certificates:29
+msgid "SSL certificate operations require PyOpenSSL."
+msgstr ""
+
+#: ../webcleaner-certificates:32
 #, python-format
 msgid ""
 "Usage: webcleaner-certificates [options] <command>\n"
@@ -578,17 +582,17 @@ msgid ""
 "remove  - remove %(app)s SSL certificates\n"
 msgstr ""
 
-#: ../webcleaner-certificates:58
+#: ../webcleaner-certificates:55
 #, python-format
 msgid "%s SSL certificates already exist, doing nothing"
 msgstr ""
 
-#: ../webcleaner-certificates:72
+#: ../webcleaner-certificates:69
 #, python-format
 msgid "Could not remove %r: %s"
 msgstr ""
 
-#: ../webcleaner-certificates:109
+#: ../webcleaner-certificates:106
 #, python-format
 msgid "Invalid command %r."
 msgstr ""
