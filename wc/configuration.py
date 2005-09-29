@@ -162,6 +162,7 @@ class Configuration (dict):
         needed. This is necessary since SSL support can be installed
         after WebCleaner.
         """
+        import wc
         if wc.HasSsl and self["sslgateway"]:
             import wc.proxy.ssl
             if not wc.proxy.ssl.exist_certificates(self.configdir):
