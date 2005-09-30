@@ -31,6 +31,13 @@
     Changed: templates/classic/{help,configuration}.html,
       wc/webgui/context/configuration_html.py
 
+  * Improve the restart page by asking a question before actually
+    restarting. Use links to this page instead of form buttons.
+    Type: feature
+    Added: templates/classic/restart_ask.html,
+      wc/webgui/context/restart_ask_html.py
+    Changed: setup.py, templates/classic/{adminpass, configuration}.html
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
