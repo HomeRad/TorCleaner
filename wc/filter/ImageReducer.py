@@ -82,8 +82,10 @@ class ImageReducer (wc.filter.Filter.Filter):
             if attrs.get('imgreducer_convert'):
                 img = img.convert()
             img.save(data, "JPEG", quality=self.quality, optimize=1)
-        except IOError:
+        except IOError, msg:
             # return original image data on error
+            wc.log.warn(wc.LOG_FILTER,
+                        "I/O error reading image data: %s", str(msg))
             # XXX the content type is pretty sure wrong
             return p.getvalue()
         return data.getvalue()
