@@ -138,10 +138,6 @@ class TestRewriter (unittest.TestCase):
         """
         self.filt("""<noscript>Kein Javascript</noscript>""", "")
 
-    def XXXtestErotic (self):
-        self.filt("""<a href="http://playboy.com/issue/">blubba</a>""",
-                  """<a href="http://www.calvinandhobbes.com/">blubba</a>""")
-
     def testRedirect (self):
         """
         Fileleech redirection.
