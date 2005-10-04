@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-29 19:59+0200\n"
+"POT-Creation-Date: 2005-10-04 18:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,9 +146,14 @@ msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
 
-#: ../wc/filter/html/JSFilter.py:356
+#: ../wc/filter/html/JSFilter.py:355
 #, python-format
 msgid "error fetching script from %r"
+msgstr ""
+
+#: ../wc/filter/html/JSFilter.py:358
+#, python-format
+msgid "fetched script from %r"
 msgstr ""
 
 #: ../wc/update.py:219
@@ -281,12 +286,12 @@ msgstr ""
 msgid "The %s service can be paused."
 msgstr ""
 
-#: ../wc/configuration.py:296
+#: ../wc/configuration.py:309
 #, python-format
 msgid "inserting %s"
 msgstr ""
 
-#: ../wc/configuration.py:525 ../wc/configuration.py:605
+#: ../wc/configuration.py:538 ../wc/configuration.py:618
 #, python-format
 msgid "unknown tag name %r"
 msgstr ""
@@ -301,16 +306,16 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:64 ../wc/proxy/HttpClient.py:617
-#: ../wc/proxy/HttpClient.py:622 ../wc/proxy/HttpClient.py:633
+#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:614
+#: ../wc/proxy/HttpClient.py:619 ../wc/proxy/HttpClient.py:630
 msgid "Authentication Required"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:80
+#: ../wc/webgui/webconfig.py:81
 msgid "Not Found"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:85
+#: ../wc/webgui/webconfig.py:86
 msgid "Internal Error"
 msgstr ""
 
@@ -319,7 +324,7 @@ msgstr ""
 msgid "%s error"
 msgstr ""
 
-#: ../wc/webgui/context/filterconfig_html.py:414
+#: ../wc/webgui/context/filterconfig_html.py:415
 msgid "No title"
 msgstr ""
 
@@ -381,7 +386,7 @@ msgstr ""
 msgid "Server did not respond"
 msgstr ""
 
-#: ../wc/proxy/Dispatcher.py:323
+#: ../wc/proxy/Dispatcher.py:325
 #, python-format
 msgid "Connect error %s."
 msgstr ""
@@ -396,7 +401,7 @@ msgstr ""
 msgid "Set content type of %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:329
+#: ../wc/proxy/Headers.py:331
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr ""
@@ -406,53 +411,53 @@ msgstr ""
 msgid "Proxy Error %d %s"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:201
+#: ../wc/proxy/HttpClient.py:202
 msgid "Method not allowed"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:207
+#: ../wc/proxy/HttpClient.py:208
 msgid "Empty URL"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:210
+#: ../wc/proxy/HttpClient.py:211
 msgid "HTTP version not supported"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:227
+#: ../wc/proxy/HttpClient.py:228
 msgid "URL too long"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:228
+#: ../wc/proxy/HttpClient.py:229
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:256
+#: ../wc/proxy/HttpClient.py:257
 msgid "Forbidden"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:305 ../wc/proxy/HttpClient.py:312
+#: ../wc/proxy/HttpClient.py:306 ../wc/proxy/HttpClient.py:313
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:333 ../wc/proxy/HttpClient.py:346
-#: ../wc/proxy/HttpClient.py:358
+#: ../wc/proxy/HttpClient.py:333 ../wc/proxy/HttpClient.py:344
+#: ../wc/proxy/HttpClient.py:355
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:479 ../wc/proxy/HttpServer.py:401
+#: ../wc/proxy/HttpClient.py:477 ../wc/proxy/HttpServer.py:402
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:608
+#: ../wc/proxy/HttpClient.py:606
 msgid "Invalid Method"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:321
+#: ../wc/proxy/HttpServer.py:322
 msgid "redirection to localhost"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:460
+#: ../wc/proxy/HttpServer.py:461
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr ""

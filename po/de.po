@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-09-29 19:59+0200\n"
-"PO-Revision-Date: 2005-09-29 20:04+0100\n"
+"POT-Creation-Date: 2005-10-04 18:58+0200\n"
+"PO-Revision-Date: 2005-10-04 20:39+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -145,10 +145,15 @@ msgstr "Clamd ist nicht richtig konfiguriert: sowohl TCPSocket als auch LocalSoc
 msgid "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr "Sie müssen entweder TCPSocket oder LocalSocket in Ihrer Clamd Konfiguration aktivieren"
 
-#: ../wc/filter/html/JSFilter.py:356
+#: ../wc/filter/html/JSFilter.py:355
 #, python-format
 msgid "error fetching script from %r"
 msgstr "Fehler beim Laden von %r"
+
+#: ../wc/filter/html/JSFilter.py:358
+#, python-format
+msgid "fetched script from %r"
+msgstr "Skript geladen von %r"
 
 #: ../wc/update.py:219
 msgid "updating filters"
@@ -288,13 +293,13 @@ msgstr "Der %s Dienst kann angehalten werden."
 msgid "The %s service can be paused."
 msgstr "Der %s Dienst kann pausieren."
 
-#: ../wc/configuration.py:296
+#: ../wc/configuration.py:309
 #, python-format
 msgid "inserting %s"
 msgstr "füge %s ein"
 
-#: ../wc/configuration.py:525
-#: ../wc/configuration.py:605
+#: ../wc/configuration.py:538
+#: ../wc/configuration.py:618
 #, python-format
 msgid "unknown tag name %r"
 msgstr "Unbekannter Tagname %r"
@@ -311,18 +316,18 @@ msgstr ""
 msgid "Ok"
 msgstr "Ok"
 
-#: ../wc/webgui/webconfig.py:64
-#: ../wc/proxy/HttpClient.py:617
-#: ../wc/proxy/HttpClient.py:622
-#: ../wc/proxy/HttpClient.py:633
+#: ../wc/webgui/webconfig.py:65
+#: ../wc/proxy/HttpClient.py:614
+#: ../wc/proxy/HttpClient.py:619
+#: ../wc/proxy/HttpClient.py:630
 msgid "Authentication Required"
 msgstr "Autorisierung benötigt"
 
-#: ../wc/webgui/webconfig.py:80
+#: ../wc/webgui/webconfig.py:81
 msgid "Not Found"
 msgstr "Nicht vorhanden"
 
-#: ../wc/webgui/webconfig.py:85
+#: ../wc/webgui/webconfig.py:86
 msgid "Internal Error"
 msgstr "Interner Fehler"
 
@@ -331,7 +336,7 @@ msgstr "Interner Fehler"
 msgid "%s error"
 msgstr "%s Fehler"
 
-#: ../wc/webgui/context/filterconfig_html.py:414
+#: ../wc/webgui/context/filterconfig_html.py:415
 msgid "No title"
 msgstr "Überschrift"
 
@@ -393,7 +398,7 @@ msgstr "Keine Antwort vom Server"
 msgid "Server did not respond"
 msgstr "Server hat nicht geantwortet"
 
-#: ../wc/proxy/Dispatcher.py:323
+#: ../wc/proxy/Dispatcher.py:325
 #, python-format
 msgid "Connect error %s."
 msgstr "Verbindungsproblem %s."
@@ -408,7 +413,7 @@ msgstr "Setze Inhaltstyp in %r von %r nach %r"
 msgid "Set content type of %r to %r"
 msgstr "Setze Content-Type von %r nach %r"
 
-#: ../wc/proxy/Headers.py:329
+#: ../wc/proxy/Headers.py:331
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr "Nicht unterstütztes Encoding: %r"
@@ -418,56 +423,56 @@ msgstr "Nicht unterstütztes Encoding: %r"
 msgid "Proxy Error %d %s"
 msgstr "Proxy Fehler %d %s"
 
-#: ../wc/proxy/HttpClient.py:201
+#: ../wc/proxy/HttpClient.py:202
 msgid "Method not allowed"
 msgstr "Anfrage nicht erlaubt"
 
-#: ../wc/proxy/HttpClient.py:207
+#: ../wc/proxy/HttpClient.py:208
 msgid "Empty URL"
 msgstr "Leere URL"
 
-#: ../wc/proxy/HttpClient.py:210
+#: ../wc/proxy/HttpClient.py:211
 msgid "HTTP version not supported"
 msgstr "HTTP Version wird nicht unterstützt"
 
-#: ../wc/proxy/HttpClient.py:227
+#: ../wc/proxy/HttpClient.py:228
 msgid "URL too long"
 msgstr "URL zu lang"
 
-#: ../wc/proxy/HttpClient.py:228
+#: ../wc/proxy/HttpClient.py:229
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr "URL Längenbegrenzung ist %d Byte."
 
-#: ../wc/proxy/HttpClient.py:256
+#: ../wc/proxy/HttpClient.py:257
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: ../wc/proxy/HttpClient.py:305
-#: ../wc/proxy/HttpClient.py:312
+#: ../wc/proxy/HttpClient.py:306
+#: ../wc/proxy/HttpClient.py:313
 msgid "Bad Request"
 msgstr "Schlechte Anfrage"
 
 #: ../wc/proxy/HttpClient.py:333
-#: ../wc/proxy/HttpClient.py:346
-#: ../wc/proxy/HttpClient.py:358
+#: ../wc/proxy/HttpClient.py:344
+#: ../wc/proxy/HttpClient.py:355
 msgid "Proxy Authentication Required"
 msgstr "Proxy Autorisierung benötigt"
 
-#: ../wc/proxy/HttpClient.py:479
-#: ../wc/proxy/HttpServer.py:401
+#: ../wc/proxy/HttpClient.py:477
+#: ../wc/proxy/HttpServer.py:402
 msgid "Moved Temporarily"
 msgstr "Vorübergehend verschoben"
 
-#: ../wc/proxy/HttpClient.py:608
+#: ../wc/proxy/HttpClient.py:606
 msgid "Invalid Method"
 msgstr "Ungültige Anfrage"
 
-#: ../wc/proxy/HttpServer.py:321
+#: ../wc/proxy/HttpServer.py:322
 msgid "redirection to localhost"
 msgstr "Weiterleitung zu localhost"
 
-#: ../wc/proxy/HttpServer.py:460
+#: ../wc/proxy/HttpServer.py:461
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
