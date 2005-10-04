@@ -38,6 +38,13 @@
       wc/webgui/context/restart_ask_html.py
     Changed: setup.py, templates/classic/{adminpass, configuration}.html
 
+  * Fix HTTP client authenticate: send multiple (WWW|Proxy)-Authenticate
+    headers instead of only one.
+    Fixes the "Page unavailable" bug on the web configuration with
+    IE browsers.
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py, wc/webgui/webconfig.py
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
