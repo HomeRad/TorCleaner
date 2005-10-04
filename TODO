@@ -1,10 +1,8 @@
 TODO
 
-- stuff that was downloaded in the background (scripts, css, ..) should have a prepended
-  comment with the original URL, but only when HTML comments are allowed (ie. the Nocomment
-  rule is not enabled).
-
 - more HTTP RFC2616 unit tests
+
+- fix rating store
 
 - if an unknown port is forbidden (403 status), add an explaining message
 
