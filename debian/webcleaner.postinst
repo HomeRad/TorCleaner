@@ -12,7 +12,6 @@ package=webcleaner
 
 case "$1" in
     configure|reconfigure|abort-upgrade|abort-remove|abort-deconfigure)
-        break
     ;;
     *)
         echo "postinst called with unknown argument \`$1'" >&2

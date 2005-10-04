@@ -46,15 +46,12 @@ case "$1" in
         rmdir /etc/webcleaner/service/log/supervise
         ln -s /var/run/webcleaner /etc/webcleaner/service/log/supervise
     fi
-    break
     ;;
 
     install)
-    break
     ;;
 
     abort-upgrade)
-    break
     ;;
 
     *)
