@@ -1811,7 +1811,7 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
         SAVE_SP(fp);
     } else {
         sp = fp->sp;
-        JS_ASSERT(JS_UPTRDIFF(sp, fp->spbase) <= depth);
+        JS_ASSERT(JS_UPTRDIFF(sp, fp->spbase) <= depth * sizeof(jsval));
         newsp = fp->spbase - depth;
         mark = NULL;
     }
@@ -2349,9 +2349,28 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
             if (prop)
                 OBJ_DROP_PROPERTY(cx, obj2, prop);
 
-            /* If the id was deleted, or found in a prototype, skip it. */
-            if (!prop || obj2 != obj)
+            /*
+             * If the id was deleted, or found in a prototype or an unrelated
+             * object (specifically, not in an inner object for obj), skip it.
+             * This means that OBJ_LOOKUP_PROPERTY implementations must return
+             * an object either further on the prototype chain, or related by
+             * the JSExtendedClass.outerObject optional hook.
+             */
+            if (!prop)
                 goto enum_next_property;
+            if (obj != obj2) {
+                cond = JS_FALSE;
+                clasp = OBJ_GET_CLASS(cx, obj2);
+                if (clasp->flags & JSCLASS_IS_EXTENDED) {
+                    JSExtendedClass *xclasp;
+
+                    xclasp = (JSExtendedClass *) clasp;
+                    cond = xclasp->outerObject &&
+                           xclasp->outerObject(cx, obj2) == obj;
+                }
+                if (!cond)
+                    goto enum_next_property;
+            }
 
 #if JS_HAS_XML_SUPPORT
             if (foreach) {
@@ -5257,9 +5276,32 @@ out:
 #if JS_HAS_EXCEPTIONS
     if (!ok) {
         /*
-         * Has an exception been raised?
+         * Has an exception been raised?  Also insist that we are in the
+         * interpreter activation that pushed fp's operand stack, to avoid
+         * catching exceptions within XML filtering predicate expressions,
+         * such as the one from tests/e4x/Regress/regress-301596.js:
+         *
+         *    try {
+         *        <xml/>.(@a == 1);
+         *        throw 5;
+         *    } catch (e) {
+         *    }
+         *
+         * The inner interpreter activation executing the predicate bytecode
+         * will throw "reference to undefined XML name @a" (or 5, in older
+         * versions that followed the first edition of ECMA-357 and evaluated
+         * unbound identifiers to undefined), and the exception must not be
+         * caught until control unwinds to the outer interpreter activation.
+         *
+         * Otherwise, the wrong stack depth will be restored by JSOP_SETSP,
+         * and the catch will move into the filtering predicate expression,
+         * leading to double catch execution if it rethrows.
+         *
+         * XXX This assumes the null mark case implies XML filtering predicate
+         * expression execution!
+         * FIXME: https://bugzilla.mozilla.org/show_bug.cgi?id=309894
          */
-        if (cx->throwing) {
+        if (cx->throwing && JS_LIKELY(mark != NULL)) {
             /*
              * Call debugger throw hook if set (XXX thread safety?).
              */
@@ -5319,7 +5361,7 @@ out2:
      * Clear spbase to indicate that we've popped the 2 * depth operand slots.
      * Restore the previous frame's execution state.
      */
-    if (JS_LIKELY(mark)) {
+    if (JS_LIKELY(mark != NULL)) {
         fp->sp = fp->spbase;
         fp->spbase = NULL;
         js_FreeRawStack(cx, mark);

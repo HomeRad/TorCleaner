@@ -406,6 +406,12 @@ MarkSharpObjects(JSContext *cx, JSObject *obj, JSIdArray **idap)
     uintN attrs;
 #endif
     jsval val;
+    int stackDummy;
+
+    if (!JS_CHECK_STACK_SIZE(cx, stackDummy)) {
+        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL, JSMSG_OVER_RECURSED);
+        return NULL;
+    }
 
     map = &cx->sharpObjectMap;
     table = map->table;
@@ -1017,6 +1023,20 @@ js_obj_toString(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 }
 
 static JSBool
+js_obj_toLocaleString(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+                      jsval *rval)
+{
+    JSString *str;
+
+    str = js_ValueToString(cx, argv[-1]);
+    if (!str)
+        return JS_FALSE;
+
+    *rval = STRING_TO_JSVAL(str);
+    return JS_TRUE;
+}
+
+static JSBool
 obj_valueOf(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     *rval = OBJECT_TO_JSVAL(obj);
@@ -1493,7 +1513,7 @@ static JSFunctionSpec object_methods[] = {
     {js_toSource_str,             js_obj_toSource,    0, 0, OBJ_TOSTRING_EXTRA},
 #endif
     {js_toString_str,             js_obj_toString,    0, 0, OBJ_TOSTRING_EXTRA},
-    {js_toLocaleString_str,       js_obj_toString,    0, 0, OBJ_TOSTRING_EXTRA},
+    {js_toLocaleString_str,       js_obj_toLocaleString, 0, 0, OBJ_TOSTRING_EXTRA},
     {js_valueOf_str,              obj_valueOf,        0,0,0},
     {js_eval_str,                 obj_eval,           1,0,0},
 #if JS_HAS_OBJ_WATCHPOINT
@@ -1962,7 +1982,6 @@ JSBool
 js_FindConstructor(JSContext *cx, JSObject *start, const char *name, jsval *vp)
 {
     JSAtom *atom;
-    JSBool ok;
     JSObject *obj, *pobj;
     JSProperty *prop;
     JSScopeProperty *sprop;
@@ -1985,22 +2004,11 @@ js_FindConstructor(JSContext *cx, JSObject *start, const char *name, jsval *vp)
         }
     }
 
-    /* XXX require global objects to be native to avoid recursive death */
     JS_ASSERT(OBJ_IS_NATIVE(obj));
-
-    /*
-     * Switch from cx->newborn to cx->localRootStack to preserve the invariant
-     * that callers of js_NewGCThing (who calls us via GetClassPrototype) need
-     * not protect newborns of types other than the one being allocated.
-     */
-    if (!js_EnterLocalRootScope(cx))
+    if (!js_LookupPropertyWithFlags(cx, obj, ATOM_TO_JSID(atom),
+                                    JSRESOLVE_CLASSNAME, &pobj, &prop)) {
         return JS_FALSE;
-    ok = js_LookupPropertyWithFlags(cx, obj, ATOM_TO_JSID(atom),
-                                    JSRESOLVE_CLASSNAME, &pobj, &prop);
-    js_LeaveLocalRootScope(cx);
-    if (!ok)
-        return JS_FALSE;
-
+    }
     if (!prop)  {
         *vp = JSVAL_VOID;
         return JS_TRUE;
