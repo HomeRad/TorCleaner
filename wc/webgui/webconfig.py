@@ -38,7 +38,8 @@ class WebConfig (object):
     """
 
     def __init__ (self, client, url, form, protocol, clientheaders,
-                 status=200, msg=_('Ok'), localcontext=None, auth=''):
+                 status=200, msg=_('Ok'), localcontext=None,
+                 auth_challenges=None):
         """
         Load a web configuration template and return response.
         """
@@ -48,7 +49,7 @@ class WebConfig (object):
         self.client = client
         # we pretend to be the server
         self.connected = True
-        headers = get_headers(url, status, auth, clientheaders)
+        headers = get_headers(url, status, auth_challenges, clientheaders)
         path = ""
         newstatus = None
         try:
@@ -119,20 +120,23 @@ def expand_template (template, context):
     return template.render(context)
 
 
-def get_headers (url, status, auth, clientheaders):
+def get_headers (url, status, auth_challenges, clientheaders):
     """
     Get proxy headers to send.
     """
     headers = wc.http.header.WcMessage()
     headers['Server'] = 'Proxy\r'
-    if auth:
-        if status == 407:
-            headers['Proxy-Authenticate'] = "%s\r" % auth
-        elif status == 401:
-            headers['WWW-Authenticate'] = "%s\r" % auth
-        else:
+    if auth_challenges:
+        if status not in (401, 407):
             wc.log.error(wc.LOG_GUI,
                          "Authentication with wrong status %d", status)
+        else:
+            if status == 407:
+                name = 'Proxy-Authenticate'
+            if status == 401:
+                name = 'WWW-Authenticate'
+            for auth in auth_challenges:
+                headers.addheader(name, "%s\r" % auth)
     if status in [301, 302]:
         headers['Location'] = clientheaders['Location']
     gm = mimetypes.guess_type(url, None)

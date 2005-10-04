@@ -109,7 +109,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         self.url = ''
         self.needs_redirect = False
 
-    def error (self, status, msg, txt='', auth=''):
+    def error (self, status, msg, txt='', auth_challenges=None):
         """
         Display error page.
         """
@@ -127,7 +127,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             protocol = "HTTP/%d.%d" % self.version
             wc.webgui.webconfig.WebConfig(self, '/error.html', form, protocol,
                       self.headers, localcontext={'error': err,},
-                      status=status, msg=msg, auth=auth)
+                      status=status, msg=msg,
+                      auth_challenges=auth_challenges)
 
     def __repr__ (self):
         """
@@ -329,9 +330,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             creds = wc.proxy.auth.get_header_credentials(self.headers,
                        'Proxy-Authorization')
             if not creds:
-                auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(407, _("Proxy Authentication Required"),
-                           auth=auth)
+                           auth_challenges=wc.proxy.auth.get_challenges())
                 return
             if 'NTLM' in creds:
                 if creds['NTLM'][0]['type'] == \
@@ -341,10 +341,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                         'domain': creds['NTLM'][0]['domain'],
                         'type': wc.proxy.auth.ntlm.NTLMSSP_CHALLENGE,
                     }
-                    auth = ",".join(wc.proxy.auth.get_challenges(**attrs))
-                    self.error(407,
-                               _("Proxy Authentication Required"),
-                               auth=auth)
+                    self.error(407, _("Proxy Authentication Required"),
+                        auth_challenges=wc.proxy.auth.get_challenges(**attrs))
                     return
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds,
@@ -354,9 +352,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                            method=self.method, data=None):
                 wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s",
                             self.addr[0])
-                auth = ", ".join(wc.proxy.auth.get_challenges())
                 self.error(407, _("Proxy Authentication Required"),
-                           auth=auth)
+                           auth_challenges=wc.proxy.auth.get_challenges())
                 return
         if self.method in ['OPTIONS', 'TRACE'] and \
            wc.proxy.Headers.client_get_max_forwards(self.headers) == 0:
@@ -614,13 +611,13 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             creds = wc.proxy.auth.get_header_credentials(self.headers,
                                                          'Authorization')
             if not creds:
-                auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(401, _("Authentication Required"), auth=auth)
+                self.error(401, _("Authentication Required"),
+                           auth_challenges=wc.proxy.auth.get_challenges())
                 return
             if 'NTLM' in creds and creds['NTLM'][0]['type'] == \
                wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
-                auth = ",".join(creds['NTLM'][0])
-                self.error(401, _("Authentication Required"), auth=auth)
+                self.error(401, _("Authentication Required"),
+                           auth_challenges=[",".join(creds['NTLM'][0])])
                 return
             # XXX the data=None argument should hold POST data
             if not wc.proxy.auth.check_credentials(creds,
@@ -630,8 +627,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                             method=self.method, data=None):
                 wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s",
                             self.addr[0])
-                auth = ", ".join(wc.proxy.auth.get_challenges())
-                self.error(401, _("Authentication Required"), auth=auth)
+                self.error(401, _("Authentication Required"),
+                           auth_challenges=wc.proxy.auth.get_challenges())
                 return
         # get cgi form data
         form = self.get_form_data()
