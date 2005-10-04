@@ -12,6 +12,7 @@ package=webcleaner
 
 case "$1" in
     configure|reconfigure|abort-upgrade|abort-remove|abort-deconfigure)
+        # nothing to do
     ;;
     *)
         echo "postinst called with unknown argument \`$1'" >&2
@@ -22,14 +23,12 @@ esac
 if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
     db_get $package/port
     test -n "$RET" || RET="8080"
-    sed -e "s/ port=.*/ port=\"$RET\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
-    mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
+    sed -i -e "s/ port=.*/ port=\"$RET\"/" /etc/$package/$package.conf
     RET=""
     db_get $package/adminpass
     if [ "x$RET" != "x" ]; then
         P=`echo -n "$RET" | python -c "import sys, base64; print base64.encodestring(sys.stdin.read()).strip()"`
-        sed -e "s/ adminpass=.*/ adminpass=\"${P}\"/" /etc/$package/$package.conf > /etc/$package/$package.conf.tmp
-        mv -f /etc/$package/$package.conf.tmp /etc/$package/$package.conf
+        sed -i -e "s/ adminpass=.*/ adminpass=\"${P}\"/" /etc/$package/$package.conf
     fi
     db_unregister $package/adminpass
 fi
