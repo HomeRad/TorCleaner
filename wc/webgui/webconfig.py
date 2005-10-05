@@ -63,7 +63,7 @@ class WebConfig (object):
                      get_context(dirs, form, localcontext, hostname, lang)
                 if newstatus == 401 and status != newstatus:
                     client.error(401, _("Authentication Required"),
-                                 auth=wc.proxy.auth.get_challenges())
+                               auth_challenges=wc.proxy.auth.get_challenges())
                     return
                 # get (compiled) template
                 template = wc.webgui.templatecache.templates[path]
