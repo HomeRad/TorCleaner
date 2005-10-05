@@ -82,6 +82,11 @@ try:
     HasPil = True
 except ImportError:
     HasPil = False
+try:
+    import psyco
+    HasPsyco = True
+except ImportError:
+    HasPsyco = False
 
 # logger areas
 LOG_FILTER = "wc.filter"

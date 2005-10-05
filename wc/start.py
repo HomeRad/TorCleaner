@@ -46,7 +46,7 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
     wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
     wc.proxy.dns_lookups.init_resolver()
     # psyco library for speedup
-    try:
+    if wc.HasPsyco:
         import psyco
         # psyco >= 1.4.0 final is needed
         if psyco.__version__ >= 0x10400f0:
@@ -56,9 +56,6 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True):
             wc.log.warn(wc.LOG_PROXY,
          _("Psyco is installed but not used since the version is too old.\n"
            "Psyco >= 1.4 is needed."))
-    except ImportError:
-        # no psyco available, just ignore
-        pass
     # start the proxy
     wc.proxy.mainloop(handle=handle, abort=abort)
 
