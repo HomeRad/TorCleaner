@@ -39,9 +39,10 @@
     Changed: setup.py, templates/classic/{adminpass, configuration}.html
 
   * Fix HTTP client authenticate: send multiple (WWW|Proxy)-Authenticate
-    headers instead of only one.
-    Fixes the "Page unavailable" bug on the web configuration with
-    IE browsers.
+    headers instead of only one. And change the order by using "Basic"
+    authentication before "Digest".
+    These two changes above fix the "Page unavailable" bug when using
+    Internet Explorer to view the web configuration.
     Type: bugfix
     Changed: wc/proxy/HttpClient.py, wc/webgui/webconfig.py
 
