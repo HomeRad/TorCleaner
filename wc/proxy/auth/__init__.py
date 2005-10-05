@@ -89,9 +89,10 @@ def get_challenges (**args):
     if wc.configuration.config['auth_ntlm'] and wc.HasCrypto:
         chals = [get_ntlm_challenge(**args)]
     else:
-        chals = [get_digest_challenge(),
-                 get_basic_challenge(),
-                ]
+        chals = [
+            get_basic_challenge(),
+            get_digest_challenge(),
+        ]
     wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
     return chals
 
