@@ -593,6 +593,28 @@ class TestName (unittest.TestCase):
             (n, cused) = wc.dns.name.from_wire(w, 0)
         self.assertRaises(wc.dns.name.BadLabelType, bad)
 
+    def testParent1(self):
+        n = wc.dns.name.from_text('foo.bar.')
+        self.failUnless(n.parent() == wc.dns.name.from_text('bar.'))
+        self.failUnless(n.parent().parent() == wc.dns.name.root)
+
+    def testParent2(self):
+        n = wc.dns.name.from_text('foo.bar', None)
+        self.failUnless(n.parent() == wc.dns.name.from_text('bar', None))
+        self.failUnless(n.parent().parent() == wc.dns.name.empty)
+
+    def testParent3(self):
+        def bad():
+            n = wc.dns.name.root
+            n.parent()
+        self.failUnlessRaises(wc.dns.name.NoParent, bad)
+
+    def testParent4(self):
+        def bad():
+            n = wc.dns.name.empty
+            n.parent()
+        self.failUnlessRaises(wc.dns.name.NoParent, bad)
+
 
 def test_suite ():
     return unittest.makeSuite(TestName)

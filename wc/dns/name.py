@@ -68,6 +68,11 @@ class AbsoluteConcatenation(wc.dns.exception.DNSException):
     empty name to an absolute name."""
     pass
 
+class NoParent(wc.dns.exception.DNSException):
+    """Raised if an attempt is made to get the parent of the root name
+    or the empty name."""
+    pass
+
 _escaped = {
     '"' : True,
     '(' : True,
@@ -479,6 +484,16 @@ class Name(object):
                 return self.derelativize(origin)
         else:
             return self
+
+    def parent(self):
+        """Return the parent of the name.
+        @rtype: wc.dns.name.Name object
+        @raises NoParent: the name is either the root name or the enpty name
+        and thus has no parent.
+        """
+        if self == root or self == empty:
+            raise NoParent
+        return Name(self.labels[1:])
 
 root = Name([''])
 empty = Name([])

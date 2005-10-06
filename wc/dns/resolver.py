@@ -502,8 +502,14 @@ class Resolver(object):
     def _compute_timeout(self, start):
         now = time.time()
         if now < start:
-            # Time going backwards is bad.  Just give up.
-            raise Timeout
+            if start - now > 1:
+                # Time going backwards is bad.  Just give up.
+                raise Timeout
+            else:
+                # Time went backwards, but only a little. This can
+                # happen, e.g. under vmware with older linux kernels.
+                # Pretend it didn't happen.
+                now = start
         duration = now - start
         if duration >= self.lifetime:
             raise Timeout
@@ -689,3 +695,33 @@ def query(qname, rdtype=wc.dns.rdatatype.A, rdclass=wc.dns.rdataclass.IN,
     wc.log.debug(wc.LOG_DNS,
                         "Query %s %s %s", qname, rdtype, rdclass)
     return default_resolver.query(qname, rdtype, rdclass, tcp)
+
+def zone_for_name(name, rdclass=wc.dns.rdataclass.IN,
+                  tcp=False, resolver=None):
+    """Find the name of the zone which contains the specified name.
+
+    @param name: the query name
+    @type name: absolute wc.dns.name.Name object or string
+    @ivar rdclass: The query class
+    @type rdclass: int
+    @param tcp: use TCP to make the query (default is False).
+    @type tcp: bool
+    @param resolver: the resolver to use
+    @type resolver: wc.dns.resolver.Resolver object or None
+    @rtype: dns.name.Name"""
+
+    if isinstance(name, str):
+        name = dns.name.from_text(name, dns.name.root)
+    if resolver is None:
+        resolver = get_default_resolver()
+    if not name.is_absolute():
+        raise NotAbsolute, name
+    while 1:
+        try:
+            answer = resolver.query(name, wc.dns.rdatatype.SOA, rdclass, tcp)
+            return name
+        except (wc.dns.resolver.NXDOMAIN, wc.dns.resolver.NoAnswer):
+            try:
+                name = name.parent()
+            except NoParent:
+                raise NoRootSoa
