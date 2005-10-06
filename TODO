@@ -42,8 +42,25 @@ Traceback (most recent call last):
     assert self.server, "%s server_content(%r) had no server" % \
 AssertionError: <client:closed   being read> server_content('\xfc\
 
-- Mac OS X support for network interface list:
-  http://lists.helixcommunity.org/pipermail/client-dev/2004-May/001032.html
+- Mac OS X and BSD support for network interface list:
+  from the www.dents.org C source (GPL license):
+  /* Loop through all of the interfaces, getting the IP address for each */
+  for (i = 0; i < ifc.ifc_len;) {
+    ifr = (struct ifreq *)((u_char *) ifc.ifc_req + i);
+
+    /* For some reason BSD has to be difficult */
+#ifdef HAVE_SA_LEN
+    i += sizeof(ifr->ifr_name) +
+      (ifr->ifr_addr.sa_len > sizeof(struct sockaddr)
+       ? ifr->ifr_addr.sa_len : sizeof(struct sockaddr));
+#else
+    i += sizeof(struct ifreq);
+#endif
+
+    /* Make sure it's an AF_INET address. This is mostly to cover the BSD's */
+    /* which send AF_LINK interface's back as well. */
+    if (ifr->ifr_addr.sa_family != AF_INET)
+        continue;
 
 - invalid js url:
 http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
