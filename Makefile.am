@@ -1,5 +1,5 @@
 SUBDIRS = libjs service po
-DIST_SUBDIRS = $(SUBDIRS) doc po
+DIST_SUBDIRS = $(SUBDIRS) doc
 EXTRA_DIST = wc/tests \
 	wc/dns/tests \
 	wc/filter/tests \
