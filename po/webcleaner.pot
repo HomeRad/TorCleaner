@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-06 18:39+0200\n"
+"POT-Creation-Date: 2005-10-06 19:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2016,7 +2016,7 @@ msgid "Select <b>Edit -&gt; Preferences -&gt; General -&gt; Connection Settings<
 msgstr ""
 
 #: ../templates/classic/help.html:75
-msgid "Select <b>Settings -&gt; Configure Konqueror -&gt; Proxy</b>.<br> Activate <b>Manually specify the proxy settings</b> and select its <b>Setup</b>. In the new windows enter <i>localhost</i> as hostname and ${port} as port name both for <b>HTTP</b> and <b>HTTPS</b>. <br> Under <b>Exceptions</b> add both <i>localhost</i> and <i>127.0.0.1</i> with the <b>New</b> button."
+msgid "Select <b>Settings -&gt; Configure Konqueror -&gt; Proxy</b>.<br> Activate <b>Manually specify the proxy settings</b> and select its <b>Setup</b>. In the new windows enter <i>localhost</i> as hostname and ${port} as port number both for <b>HTTP</b> and <b>HTTPS</b>. <br> Under <b>Exceptions</b> add both <i>localhost</i> and <i>127.0.0.1</i> with the <b>New</b> button."
 msgstr ""
 
 #: ../templates/classic/help.html:55

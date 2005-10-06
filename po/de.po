@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-06 18:39+0200\n"
-"PO-Revision-Date: 2005-10-06 18:41+0100\n"
+"POT-Creation-Date: 2005-10-06 19:26+0200\n"
+"PO-Revision-Date: 2005-10-06 19:27+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2129,8 +2129,8 @@ msgid "Select <b>Edit -&gt; Preferences -&gt; General -&gt; Connection Settings<
 msgstr "Wählen Sie <b>Bearbeiten -&gt; Einstellungen -&gt; Allgemein -&gt; Verbindungs-Einstellungen</b>.<br> Aktivieren Sie <b>Manuelle Proxy-Konfiguration</b>.<br> Unter <b>HTTP-Proxy</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>SSL-Proxy</b> geben Sie <i>localhost</i> ein, der <b>Port</b> ist ${port}.<br> Unter <b>Kein Proxy für</b> geben Sie <i>localhost, 127.0.0.1</i> ein.<br> Klicken Sie <b>Ok</b>, um die neuen Einstellungen zu verwenden."
 
 #: ../templates/classic/help.html:75
-msgid "Select <b>Settings -&gt; Configure Konqueror -&gt; Proxy</b>.<br> Activate <b>Manually specify the proxy settings</b> and select its <b>Setup</b>. In the new windows enter <i>localhost</i> as hostname and ${port} as port name both for <b>HTTP</b> and <b>HTTPS</b>. <br> Under <b>Exceptions</b> add both <i>localhost</i> and <i>127.0.0.1</i> with the <b>New</b> button."
-msgstr ""
+msgid "Select <b>Settings -&gt; Configure Konqueror -&gt; Proxy</b>.<br> Activate <b>Manually specify the proxy settings</b> and select its <b>Setup</b>. In the new windows enter <i>localhost</i> as hostname and ${port} as port number both for <b>HTTP</b> and <b>HTTPS</b>. <br> Under <b>Exceptions</b> add both <i>localhost</i> and <i>127.0.0.1</i> with the <b>New</b> button."
+msgstr "Wählen Sie <b>Einstellungen -&gt; Konqueror einrichten -&gt; Proxy</b>.<br>Aktivieren Sie <b>Proxy-Einstellungen manuell vornehmen</b> undwählen Sie dessen Knopf <b>Einrichtung</b>. In dem neuen Fenster geben Sie <i>localhost</i> als Rechnername und ${port} als Portnummer sowohl für <b>HTTP</b> als auch für <b>HTTPS</b> ein.<br>Fügen Sie unter <b>Ausnahmen</b> sowohl <i>localhost</i> als auch <i>127.0.0.1</i> mit dem <b>Neu</b> Knopf hinzu."
 
 #: ../templates/classic/help.html:55
 msgid "Select <b>Tools -&gt; Internet Options -&gt; Connections</b>.<br> Click on <b>LAN Settings</b>. If you have a dialup connection to the internet, select your dialup connection and click on <b>Settings</b>.<br> Activate <b>Use a proxy server</b>.<br> If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br> Click on <b>Advanced</b>.<br> Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Click <b>Ok</b> to use your new settings."
