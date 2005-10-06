@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-05 18:15+0200\n"
+"POT-Creation-Date: 2005-10-06 18:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -391,17 +391,17 @@ msgstr ""
 msgid "Connect error %s."
 msgstr ""
 
-#: ../wc/proxy/Headers.py:274
+#: ../wc/proxy/Headers.py:286
 #, python-format
 msgid "Change content type of %r from %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:277
+#: ../wc/proxy/Headers.py:289
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:331
+#: ../wc/proxy/Headers.py:343
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr ""
@@ -640,7 +640,7 @@ msgstr ""
 msgid "${appname} update script"
 msgstr ""
 
-#: ../templates/classic/help.html:80
+#: ../templates/classic/help.html:84
 msgid "${appname} uses a modular filter design allowing a lot of flexibility for different uses.<br> Each module has a list if mime types and a list of which parts of request/response challenge it applies to. And each module can be further customized by separate rules in the filter configuration."
 msgstr ""
 
@@ -648,11 +648,11 @@ msgstr ""
 msgid "${appname} web interface main page"
 msgstr ""
 
-#: ../templates/classic/help.html:272
+#: ../templates/classic/help.html:276
 msgid "A HTML rewrite rule applies to one specified HTML tag and can replace (or delete if the replacement data is empty) parts of or the complete tag. The tag name is a case insensitive string.<br> If attributes are given, they must match too before the rule applies."
 msgstr ""
 
-#: ../templates/classic/help.html:383
+#: ../templates/classic/help.html:387
 msgid "A block rule specifies regular expressions for urls which must be blocked.<br> The replacement URL specifies the URL to show when the block matches. If none is given a default block message is shown.<br> Back references to matched subgroups can be specified in the replacement url with a backslash and the subgroup number (ie. \1, \2, ...)."
 msgstr ""
 
@@ -691,8 +691,8 @@ msgid "Accessibility statement for ${appname}"
 msgstr ""
 
 #: ../templates/classic/macros/rules.html:272
-#: ../templates/classic/help.html:277
-#: ../templates/classic/help.html:349
+#: ../templates/classic/help.html:281
+#: ../templates/classic/help.html:353
 msgid "Action"
 msgstr ""
 
@@ -712,7 +712,7 @@ msgstr ""
 msgid "Add new rule to current folder."
 msgstr ""
 
-#: ../templates/classic/help.html:149
+#: ../templates/classic/help.html:153
 msgid "Add, modify and delete HTTP headers of request and response."
 msgstr ""
 
@@ -770,11 +770,11 @@ msgstr ""
 msgid "All pages define the following access keys:"
 msgstr ""
 
-#: ../templates/classic/help.html:407
+#: ../templates/classic/help.html:411
 msgid "Allow a list of URLs. The URL list is stored in an extern compressed file."
 msgstr ""
 
-#: ../templates/classic/help.html:403
+#: ../templates/classic/help.html:407
 msgid "Allow a list of domains. The domain list is stored in an extern compressed file."
 msgstr ""
 
@@ -799,11 +799,11 @@ msgstr ""
 msgid "Always change the complete password since the displayed value is only a dummy."
 msgstr ""
 
-#: ../templates/classic/help.html:340
+#: ../templates/classic/help.html:344
 msgid "An XML rewrite rule applies to one specific XML tag and can replace (or delete) parts of or the complete tag. The selector is a simplified XPath expression of the form <code><i>(</i>/<i>tag)+</i></code> where a tag is of the form <code><i>name</i>([<i>attr</i>=<i>val(</i>,<i>attr</i>=<i>val)*</i>]<i>)?</i></code>. Tag names, attributes and values are case sensitive.<br> Example: <code>/rss/channel/item/description</code> selects the <code>&lt;description&gt;</code> XML tag in an RSS new feed."
 msgstr ""
 
-#: ../templates/classic/help.html:399
+#: ../templates/classic/help.html:403
 msgid "An allow rule specifies regular expressions for urls which must be allowed, even if a matching block rule exists."
 msgstr ""
 
@@ -841,19 +841,19 @@ msgstr ""
 msgid "Block URL requests and show a replacement URL instead."
 msgstr ""
 
-#: ../templates/classic/help.html:395
+#: ../templates/classic/help.html:399
 msgid "Block a list of URLs. The URL list is stored in an extern compressed file."
 msgstr ""
 
-#: ../templates/classic/help.html:391
+#: ../templates/classic/help.html:395
 msgid "Block a list of domains. The domain list is stored in an extern compressed file."
 msgstr ""
 
-#: ../templates/classic/help.html:416
+#: ../templates/classic/help.html:420
 msgid "Block images with a certain size by replacing them with a transparent 1x1 image."
 msgstr ""
 
-#: ../templates/classic/help.html:110
+#: ../templates/classic/help.html:114
 msgid "Block or allow specific sites by URL name. Before matching a URL the hostname and path is unquoted to avoid spoofing attacks."
 msgstr ""
 
@@ -890,12 +890,12 @@ msgstr ""
 msgid "Compress HTML pages."
 msgstr ""
 
-#: ../templates/classic/help.html:125
+#: ../templates/classic/help.html:129
 msgid "Compression of documents with good compression ratio like HTML, WAV, etc."
 msgstr ""
 
-#: ../templates/classic/help.html:93
-#: ../templates/classic/help.html:180
+#: ../templates/classic/help.html:97
+#: ../templates/classic/help.html:184
 msgid "Configuration rules"
 msgstr ""
 
@@ -918,7 +918,7 @@ msgstr ""
 msgid "Content rating for ${appname}"
 msgstr ""
 
-#: ../templates/classic/help.html:185
+#: ../templates/classic/help.html:189
 msgid "Convert images to low quality JPEG files to reduce bandwidth"
 msgstr ""
 
@@ -930,11 +930,11 @@ msgstr ""
 msgid "Deanimate GIF images."
 msgstr ""
 
-#: ../templates/classic/help.html:138
+#: ../templates/classic/help.html:142
 msgid "Deanimates GIFs and removes all unwanted GIF image extensions (for example GIF comments)."
 msgstr ""
 
-#: ../templates/classic/help.html:354
+#: ../templates/classic/help.html:358
 msgid "Defined replacement types"
 msgstr ""
 
@@ -948,8 +948,8 @@ msgstr ""
 
 #: ../templates/classic/macros/rules.html:51
 #: ../templates/classic/macros/rules.html:153
-#: ../templates/classic/help.html:91
-#: ../templates/classic/help.html:178
+#: ../templates/classic/help.html:95
+#: ../templates/classic/help.html:182
 msgid "Description"
 msgstr ""
 
@@ -1055,7 +1055,7 @@ msgstr ""
 msgid "Example ClamAV config file:"
 msgstr ""
 
-#: ../templates/classic/help.html:420
+#: ../templates/classic/help.html:424
 msgid "Execute and filter JavaScript (JS) in HTML pages using the integrated Spidermonkey JS engine. The filter deletes popups and places dynamic content emitted with document.write() into the HTML file."
 msgstr ""
 
@@ -1082,7 +1082,7 @@ msgstr ""
 msgid "Filter configuration"
 msgstr ""
 
-#: ../templates/classic/help.html:268
+#: ../templates/classic/help.html:272
 msgid "Filter configuration rules"
 msgstr ""
 
@@ -1174,27 +1174,27 @@ msgstr ""
 msgid "Guess a missing content type."
 msgstr ""
 
-#: ../templates/classic/help.html:115
+#: ../templates/classic/help.html:119
 msgid "HTTP stages: request URL"
 msgstr ""
 
-#: ../templates/classic/help.html:152
+#: ../templates/classic/help.html:156
 msgid "HTTP stages: request and response headers"
 msgstr ""
 
-#: ../templates/classic/help.html:103
-#: ../templates/classic/help.html:131
-#: ../templates/classic/help.html:142
-#: ../templates/classic/help.html:166
-#: ../templates/classic/help.html:191
-#: ../templates/classic/help.html:203
-#: ../templates/classic/help.html:227
-#: ../templates/classic/help.html:243
-#: ../templates/classic/help.html:257
+#: ../templates/classic/help.html:107
+#: ../templates/classic/help.html:135
+#: ../templates/classic/help.html:146
+#: ../templates/classic/help.html:170
+#: ../templates/classic/help.html:195
+#: ../templates/classic/help.html:207
+#: ../templates/classic/help.html:231
+#: ../templates/classic/help.html:247
+#: ../templates/classic/help.html:261
 msgid "HTTP stages: response content body"
 msgstr ""
 
-#: ../templates/classic/help.html:215
+#: ../templates/classic/help.html:219
 msgid "HTTP stages: response headers"
 msgstr ""
 
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "I wrote this software to get rid of advertisings. If you still see advert images on pages you surf on, you are free to send me the url of those pages and I will include filters to remove the adverts."
 msgstr ""
 
-#: ../templates/classic/help.html:278
+#: ../templates/classic/help.html:282
 msgid "If there is no replacement given the specified tag part will be removed, else it will be replaced.<br> Back references to matched subgroups can be specified in the replacement string with a backslash and the subgroup number (ie. \1, \2, ...)."
 msgstr ""
 
@@ -1270,7 +1270,7 @@ msgstr ""
 msgid "If you have any suggestions or comments about ${appname}, feel free to email me at <a href=\"mailto:calvin@users.sourceforge.net\">calvin@users.sourceforge.net</a>."
 msgstr ""
 
-#: ../templates/classic/help.html:334
+#: ../templates/classic/help.html:338
 msgid "If you specified zero or more than one attributes to match, 'attr' and 'attrvalue' replace the first occuring or matching attribute or nothing."
 msgstr ""
 
@@ -1408,6 +1408,10 @@ msgstr ""
 msgid "Invalid url. The url has to start with <code>http://</code>, <code>https://</code> or <code>ftp://</code>."
 msgstr ""
 
+#: ../templates/classic/help.html:70
+msgid "Konqueror (KDE)"
+msgstr ""
+
 #: ../templates/classic/macros/rules.html:69
 msgid "List of MIME types this rule should apply to"
 msgstr ""
@@ -1436,33 +1440,33 @@ msgstr ""
 msgid "MIME type"
 msgstr ""
 
-#: ../templates/classic/help.html:114
-#: ../templates/classic/help.html:151
-#: ../templates/classic/help.html:214
+#: ../templates/classic/help.html:118
+#: ../templates/classic/help.html:155
+#: ../templates/classic/help.html:218
 msgid "MIME types: all"
 msgstr ""
 
-#: ../templates/classic/help.html:189
-#: ../templates/classic/help.html:201
+#: ../templates/classic/help.html:193
+#: ../templates/classic/help.html:205
 msgid "MIME types: all image types supported by the Python Imaging Library (as of version 1.1.5: jpeg, png, gif, bmp, pcx, tiff, xbm, xpm)"
 msgstr ""
 
-#: ../templates/classic/help.html:141
+#: ../templates/classic/help.html:145
 msgid "MIME types: image/gif"
 msgstr ""
 
-#: ../templates/classic/help.html:128
+#: ../templates/classic/help.html:132
 msgid "MIME types: text/*, application/postscript, application/pdf, application/x-dvi, audio/basic, audio/midi, audio/x-wav, image/x-portable-*map, x-world/x-vrml"
 msgstr ""
 
-#: ../templates/classic/help.html:102
-#: ../templates/classic/help.html:165
-#: ../templates/classic/help.html:242
-#: ../templates/classic/help.html:256
+#: ../templates/classic/help.html:106
+#: ../templates/classic/help.html:169
+#: ../templates/classic/help.html:246
+#: ../templates/classic/help.html:260
 msgid "MIME types: text/html"
 msgstr ""
 
-#: ../templates/classic/help.html:226
+#: ../templates/classic/help.html:230
 msgid "MIME types: text/html, (text|application)/javascript"
 msgstr ""
 
@@ -1474,7 +1478,7 @@ msgstr ""
 msgid "Match urls"
 msgstr ""
 
-#: ../templates/classic/help.html:271
+#: ../templates/classic/help.html:275
 msgid "Matching"
 msgstr ""
 
@@ -1490,7 +1494,7 @@ msgstr ""
 msgid "Modify HTML pages."
 msgstr ""
 
-#: ../templates/classic/help.html:411
+#: ../templates/classic/help.html:415
 msgid "Modify HTTP headers. If the replacement value is empty, the header is deleted, else it gets replaced or added if it did not exist before."
 msgstr ""
 
@@ -1521,8 +1525,8 @@ msgstr ""
 #: ../templates/classic/config.html:311
 #: ../templates/classic/macros/rules.html:628
 #: ../templates/classic/macros/rules.html:653
-#: ../templates/classic/help.html:90
-#: ../templates/classic/help.html:177
+#: ../templates/classic/help.html:94
+#: ../templates/classic/help.html:181
 msgid "Name"
 msgstr ""
 
@@ -1562,14 +1566,14 @@ msgstr ""
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
-#: ../templates/classic/help.html:105
-#: ../templates/classic/help.html:133
-#: ../templates/classic/help.html:144
-#: ../templates/classic/help.html:193
+#: ../templates/classic/help.html:109
+#: ../templates/classic/help.html:137
+#: ../templates/classic/help.html:148
+#: ../templates/classic/help.html:197
 msgid "None"
 msgstr ""
 
-#: ../templates/classic/help.html:431
+#: ../templates/classic/help.html:435
 msgid "One activated Rating rule enables the content rating system in ${appname}. Several distinct content rating services including the one defined by ${appname} itself can be configured."
 msgstr ""
 
@@ -1609,15 +1613,15 @@ msgstr ""
 msgid "Parent proxy user successfully changed."
 msgstr ""
 
-#: ../templates/classic/help.html:161
+#: ../templates/classic/help.html:165
 msgid "Parse HTML code and rewrite single tags, attributes and values. Execute and filter JavaScript. Parse and filter content rated pages. Filter HTML comments."
 msgstr ""
 
-#: ../templates/classic/help.html:252
+#: ../templates/classic/help.html:256
 msgid "Parse XML code and rewrite single tags, attributes and values. Plus there is the ability to filter embedded HTML content, often occuring in RSS feeds."
 msgstr ""
 
-#: ../templates/classic/help.html:212
+#: ../templates/classic/help.html:216
 msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
@@ -1672,7 +1676,7 @@ msgid "Proxy configuration"
 msgstr ""
 
 #: ../templates/classic/config.html:307
-#: ../templates/classic/help.html:78
+#: ../templates/classic/help.html:82
 msgid "Proxy filter modules"
 msgstr ""
 
@@ -1744,7 +1748,7 @@ msgstr ""
 msgid "Read the help for information on how to set up your browser to work with ${appname}."
 msgstr ""
 
-#: ../templates/classic/help.html:425
+#: ../templates/classic/help.html:429
 msgid "Remove comments from HTML source. Comments inside &lt;script&gt; or &lt;style&gt; tags are not removed."
 msgstr ""
 
@@ -1752,7 +1756,7 @@ msgstr ""
 msgid "Remove folder"
 msgstr ""
 
-#: ../templates/classic/help.html:198
+#: ../templates/classic/help.html:202
 msgid "Remove images with certain width and/or height."
 msgstr ""
 
@@ -1780,7 +1784,7 @@ msgstr ""
 msgid "Replace binary characters from HTML documents with their ASCII equivalent"
 msgstr ""
 
-#: ../templates/classic/help.html:99
+#: ../templates/classic/help.html:103
 msgid "Replace illegal binary characters in HTML code like the quote chars often found in Microsoft pages."
 msgstr ""
 
@@ -1800,11 +1804,11 @@ msgstr ""
 msgid "Replace regular expressions in HTML and text data."
 msgstr ""
 
-#: ../templates/classic/help.html:379
+#: ../templates/classic/help.html:383
 msgid "Replace regular expressions in HTML or JavaScript pages."
 msgstr ""
 
-#: ../templates/classic/help.html:224
+#: ../templates/classic/help.html:228
 msgid "Replace regular expressions in data streams."
 msgstr ""
 
@@ -1825,8 +1829,8 @@ msgstr ""
 msgid "Replacement URL"
 msgstr ""
 
-#: ../templates/classic/help.html:92
-#: ../templates/classic/help.html:179
+#: ../templates/classic/help.html:96
+#: ../templates/classic/help.html:183
 msgid "Requirements"
 msgstr ""
 
@@ -1983,7 +1987,7 @@ msgstr ""
 msgid "Saved ratings"
 msgstr ""
 
-#: ../templates/classic/help.html:236
+#: ../templates/classic/help.html:240
 msgid "Scan all data with the ClamAv virus scanner. For performance reasons there is a maximum size of 4 MB. If an object exceeds that size the proxy gives an error."
 msgstr ""
 
@@ -2011,15 +2015,19 @@ msgstr ""
 msgid "Select <b>Edit -&gt; Preferences -&gt; General -&gt; Connection Settings</b>.<br> Activate <b>Manual proxy configuration</b>.<br> Under <b>HTTP Proxy</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>SSL Proxy</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>No Proxy for</b> enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
 msgstr ""
 
-#: ../templates/classic/help.html:64
-msgid "Select <b>Extras -&gt; Preferences -&gt; Advanced -&gt; Network -&gt; Proxy servers</b>.<br> Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>Use HTTP 1.1 for proxies</b><br> Activate <b>Do not use Proxy on the adresses below</b> and enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
+#: ../templates/classic/help.html:75
+msgid "Select <b>Settings -&gt; Configure Konqueror -&gt; Proxy</b>.<br> Activate <b>Manually specify the proxy settings</b> and select its <b>Setup</b>. In the new windows enter <i>localhost</i> as hostname and ${port} as port name both for <b>HTTP</b> and <b>HTTPS</b>. <br> Under <b>Exceptions</b> add both <i>localhost</i> and <i>127.0.0.1</i> with the <b>New</b> button."
 msgstr ""
 
 #: ../templates/classic/help.html:55
 msgid "Select <b>Tools -&gt; Internet Options -&gt; Connections</b>.<br> Click on <b>LAN Settings</b>. If you have a dialup connection to the internet, select your dialup connection and click on <b>Settings</b>.<br> Activate <b>Use a proxy server</b>.<br> If activated, deactivate <b>Bypass proxy server for local addresses</b>.<br> Click on <b>Advanced</b>.<br> Under <b>HTTP</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Under <b>Secure</b> enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Click <b>Ok</b> to use your new settings."
 msgstr ""
 
-#: ../templates/classic/help.html:339
+#: ../templates/classic/help.html:64
+msgid "Select <b>Tools -&gt; Preferences -&gt; Advanced -&gt; Network -&gt; Proxy servers</b>.<br> Activate <b>HTTP</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>HTTPS</b> and enter <i>localhost</i>, the <b>Port</b> is ${port}.<br> Activate <b>Enable HTTP 1.1 for proxies</b><br> Activate <b>Do not use proxy on the adresses below</b> and enter <i>localhost, 127.0.0.1</i>.<br> Click <b>Ok</b> to use your new settings."
+msgstr ""
+
+#: ../templates/classic/help.html:343
 msgid "Selector"
 msgstr ""
 
@@ -2036,12 +2044,12 @@ msgstr ""
 msgid "Skip to main content"
 msgstr ""
 
-#: ../templates/classic/help.html:240
+#: ../templates/classic/help.html:244
 msgid "Software: the ClamAV virus scanner must be installed on the proxy host."
 msgstr ""
 
-#: ../templates/classic/help.html:188
-#: ../templates/classic/help.html:200
+#: ../templates/classic/help.html:192
+#: ../templates/classic/help.html:204
 msgid "Software: the Python Image Library (PIL) must be installed."
 msgstr ""
 
@@ -2148,7 +2156,7 @@ msgstr ""
 msgid "Welcome to the wonderful world of ${appname}."
 msgstr ""
 
-#: ../templates/classic/help.html:287
+#: ../templates/classic/help.html:291
 msgid "What it does when replacement is <i>foo</i>"
 msgstr ""
 
@@ -2192,7 +2200,7 @@ msgstr ""
 msgid "accessibility features of these pages"
 msgstr ""
 
-#: ../templates/classic/help.html:359
+#: ../templates/classic/help.html:363
 msgid "action"
 msgstr ""
 
@@ -2201,7 +2209,7 @@ msgstr ""
 msgid "add/replace"
 msgstr ""
 
-#: ../templates/classic/help.html:292
+#: ../templates/classic/help.html:296
 msgid "after"
 msgstr ""
 
@@ -2209,7 +2217,7 @@ msgstr ""
 msgid "alt-key"
 msgstr ""
 
-#: ../templates/classic/help.html:291
+#: ../templates/classic/help.html:295
 msgid "before"
 msgstr ""
 
@@ -2254,15 +2262,15 @@ msgstr ""
 msgid "replace"
 msgstr ""
 
-#: ../templates/classic/help.html:290
+#: ../templates/classic/help.html:294
 msgid "replace part"
 msgstr ""
 
-#: ../templates/classic/help.html:357
+#: ../templates/classic/help.html:361
 msgid "replace type"
 msgstr ""
 
-#: ../templates/classic/help.html:358
+#: ../templates/classic/help.html:362
 msgid "replace value"
 msgstr ""
 
