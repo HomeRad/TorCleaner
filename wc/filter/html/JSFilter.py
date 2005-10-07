@@ -266,7 +266,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         # execute script
         self.jsScript(script, ver, item)
 
-    def js_start_element (self, tag, attrs):
+    def js_start_element (self, tag, attrs, starttype):
         """
         Check popups for onmouseout and onmouseover.
         Inline extern javascript sources.
@@ -292,7 +292,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             if js_ok and url:
                 self.jsScriptSrc(url, js_lang)
                 return
-        self.htmlparser.tagbuf.append([wc.filter.html.STARTTAG, tag, attrs])
+        self.htmlparser.tagbuf.append([starttype, tag, attrs])
 
     def jsForm (self, name, action, target):
         """

@@ -154,7 +154,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         wc.log.debug(wc.LOG_FILTER,
                      "%s start_end_element %r %s", self, tag, attrs)
-        self._start_element(tag, attrs, True)
+        self._start_element(tag, attrs, wc.filter.html.STARTENDTAG)
 
     def _start_element (self, tag, attrs, starttype):
         """
@@ -235,7 +235,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
             self.htmlparser.tagbuf.append(item)
         elif self.javascript:
             # if it's not yet filtered, try filter javascript
-            self.js_start_element(tag, attrs)
+            self.js_start_element(tag, attrs, starttype)
         else:
             # put original item on tag buffer
             self.htmlparser.tagbuf.append(item)
