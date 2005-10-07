@@ -22,9 +22,7 @@ administrator password, every user can change the proxy configuration.
 replace the line <code i18n:name="lineold">adminpass=""</code> with:
 </p>
 <pre>adminpass="<span tal:replace="adminpass_b64">dummy</span>"</pre>
-<p i18n:translate="">After that,
-<a href="restart_ask.html"
- tal:attributes="href string:restart_ask.html.${lang}">restart</a>
+<p i18n:translate="">After that, <a href="restart_ask.html">restart</a>
 <span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
 and click on the configuration link below.
 Your new credentials for the configuration are:<br>
