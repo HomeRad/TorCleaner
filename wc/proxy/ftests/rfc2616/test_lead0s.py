@@ -39,7 +39,7 @@ class test_lead0s_major_toSrv (ProxyTest):
         lines.extend(("", ""))
         data = "\r\n".join(lines)
         if request.content:
-            data += content
+            data += request.content
         return data
 
 
@@ -61,7 +61,7 @@ class test_lead0s_minor_toSrv (ProxyTest):
         lines.extend(("", ""))
         data = "\r\n".join(lines)
         if request.content:
-            data += content
+            data += request.content
         return data
 
 

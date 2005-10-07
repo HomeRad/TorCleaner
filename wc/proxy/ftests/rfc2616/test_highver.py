@@ -94,7 +94,7 @@ class test_highver_1_011 (HighverTest):
         lines.extend(("", ""))
         data = "\r\n".join(lines)
         if request.content:
-            data += content
+            data += request.content
         return data
 
 
@@ -118,7 +118,7 @@ class test_highver_011_1 (HighverTest):
         lines.extend(("", ""))
         data = "\r\n".join(lines)
         if request.content:
-            data += content
+            data += request.content
         return data
 
 
