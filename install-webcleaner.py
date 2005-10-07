@@ -26,6 +26,8 @@ import distutils.sysconfig
 import win32service
 import win32serviceutil
 import pywintypes
+# dummy translation to calm down source code checkers
+_ = lambda s: s
 
 
 def execute (pythonw, script, args):
