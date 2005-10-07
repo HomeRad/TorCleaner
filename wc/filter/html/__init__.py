@@ -62,12 +62,12 @@ def tagbuf2data (tagbuf, out, entities=None):
             out.write(item[1])
         elif item[0] == STARTTAG:
             _startout(out, item)
+        elif item[0] == STARTENDTAG:
+            _startout(out, item, end=u"/>")
         elif item[0] == ENDTAG:
             out.write(u"</%s>" % item[1])
         elif item[0] == COMMENT:
             out.write(u"<!--%s-->" % item[1])
-        elif item[0] == STARTENDTAG:
-            _startout(out, item, end=u"/>")
         else:
             wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
     return out
