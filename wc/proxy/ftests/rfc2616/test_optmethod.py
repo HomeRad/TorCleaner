@@ -18,7 +18,7 @@
 Test optional methods.
 """
 
-from wc.proxy.ftests import ProxyTest, make_suite, HttpRequest
+from wc.proxy.ftests import ProxyTest, make_suite
 
 class MethodTest (ProxyTest):
 

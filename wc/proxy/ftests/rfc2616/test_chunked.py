@@ -34,7 +34,7 @@ chunk-data     = chunk-size(OCTET)
 trailer        = *(entity-header CRLF)
 """
 
-from wc.proxy.ftests import ProxyTest, make_suite, HttpResponse
+from wc.proxy.ftests import ProxyTest, make_suite
 
 
 def chunk_size (data, extension):
