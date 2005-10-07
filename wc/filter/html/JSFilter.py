@@ -358,6 +358,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                 msg = _("fetched script from %r") % url
             self.htmlparser.tagbuf.append([wc.filter.html.COMMENT,
                                            u" %s " % msg])
+            self.htmlparser.tagbuf.append([wc.filter.html.DATA, u"\n"])
             self.htmlparser.tagbuf.append([wc.filter.html.STARTTAG, u"script",
                                           {'type': 'text/javascript'}])
             # norm html comments
