@@ -204,8 +204,8 @@ class UpdatePOEngine (POEngine):
             elif section == STR:
                 msgstr += '%s\n' % l
             else:
-                print >> sys.stderr, 'Syntax error on %s:%d' % (infile, lno), \
-                      'before:'
+                print >> sys.stderr, 'Syntax error on %s:%d' % \
+                      (self._filename, lno), 'before:'
                 print >> sys.stderr, l
                 sys.exit(1)
         # Add last entry

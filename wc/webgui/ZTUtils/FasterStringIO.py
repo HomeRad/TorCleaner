@@ -18,9 +18,6 @@ Fast append-only String I/O.
 from StringIO import StringIO
 import traceback
 
-import wc
-import wc.log
-
 class FasterStringIO (StringIO):
     """
     Append-only version of StringIO.
@@ -36,10 +33,7 @@ class FasterStringIO (StringIO):
         raise RuntimeError, "FasterStringIO.seek() not allowed"
 
     def write (self, s):
-        #assert self.pos == self.len
         if not isinstance(s, unicode):
-            #wc.log.warn(wc.LOG_GUI, "non-unicode string %r", s)
-            #traceback.print_stack()
             s = unicode(s, "iso-8859-1")
         self.buflist.append(s)
         self.len = self.pos = self.pos + len(s)
