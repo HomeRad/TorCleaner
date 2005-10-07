@@ -23,6 +23,7 @@ __version__ = "$Revision$"[11:-2]
 __date__    = "$Date$"[7:-2]
 
 import sys
+import os
 import wc
 import wc.js
 import wc.js.jslib

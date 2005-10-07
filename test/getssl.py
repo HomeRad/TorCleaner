@@ -26,9 +26,8 @@ import socket
 import select
 import errno
 import time
-from OpenSSL import SSL
 
-def request1 (url):
+def request1 (url, port):
     """httplib request"""
     parts = urlparse.urlsplit(url)
     host = parts[1]
@@ -199,13 +198,13 @@ def _main ():
     if len(sys.argv) != 2:
         print _main.__doc__.strip()
         sys.exit(1)
-    #request1(sys.argv[1])
     import wc.configuration
     wc.configuration.config = wc.configuration.init("localconfig")
     #port = wc.configuration.config['port']
     sslport = 443
     #sslport = wc.configuration.config['sslport']
     print "Get %s (port %d)" % (sys.argv[1], sslport)
+    #request1(sys.argv[1], sslport)
     #proxyrequest1(sys.argv[1], sslport)
     proxyrequest2(sys.argv[1], sslport)
     #proxyrequest3(sys.argv[1], sslport)

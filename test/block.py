@@ -16,6 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import sys
+import os
 import wc
 import wc.http.header
 
@@ -23,7 +25,6 @@ def _main ():
     """
     USAGE: test/run.sh test/block.py <configdir> <url>
     """
-    import sys
     if len(sys.argv) != 3:
         print _main.__doc__.strip()
         sys.exit(1)
