@@ -21,8 +21,6 @@ Header mangling.
 import re
 import sets
 import time
-import rfc822
-import cStringIO as StringIO
 
 import wc
 import wc.log

@@ -24,9 +24,6 @@ if not hasattr(sys, "version_info"):
 if sys.version_info < (2, 4, 0, 'final', 0):
     raise SystemExit, "This program requires Python 2.4 or later."
 import os
-import time
-import socket
-import glob
 import logging.config
 import logging.handlers
 

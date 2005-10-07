@@ -23,10 +23,8 @@ If you think you found a HTML related security flaw that is not covered
 by this module, you are encouraged to inform me with details.
 """
 
-import os
 import re
 import urllib
-import sys
 
 import wc
 import wc.log

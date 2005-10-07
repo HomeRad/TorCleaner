@@ -19,7 +19,6 @@ Filter XML tags.
 """
 
 from StringIO import StringIO
-import urllib
 
 import wc.url
 import wc.log

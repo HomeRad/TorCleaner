@@ -30,7 +30,6 @@ Connection handling proxy <--> http server.
 """
 
 import time
-import copy
 import socket
 import re
 import urllib

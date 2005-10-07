@@ -45,7 +45,6 @@ import cStringIO as StringIO
 import rfc822
 import unittest
 import socket
-import select
 import sys
 import BaseHTTPServer
 

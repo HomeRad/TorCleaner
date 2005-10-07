@@ -19,7 +19,6 @@ Rating related data types and routines.
 """
 
 import urlparse
-import sets
 
 import wc
 import wc.configuration
