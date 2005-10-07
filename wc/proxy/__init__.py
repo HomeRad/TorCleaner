@@ -116,8 +116,10 @@ def proxy_poll (timeout=0.0):
         # don't want to call another handle_* on it
         for x in e:
             wc.log.debug(wc.LOG_PROXY, "%s poll handle exception", x)
+            t = time.time()
             x.handle_expt_event()
             handlerCount += 1
+            _slow_check(x, t, 'eslow')
         for x in w:
             wc.log.debug(wc.LOG_PROXY, "poll handle write %s", x)
             # note: do not put the following "if" in a list filter
