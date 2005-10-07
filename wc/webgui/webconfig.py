@@ -163,6 +163,7 @@ def get_context (dirs, form, localcontext, hostname, lang):
     status = None
     modulepath = ".".join(['context'] + dirs[:-1])
     template = dirs[-1].replace(".", "_")
+    template_context = None
     # this can raise an import error
     exec "from %s import %s as template_context" % (modulepath, template)
     # make TAL context

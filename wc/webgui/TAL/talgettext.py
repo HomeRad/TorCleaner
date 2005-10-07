@@ -165,7 +165,7 @@ class UpdatePOEngine (POEngine):
             print >> sys.stderr, msg
             sys.exit(1)
 
-        section = None
+        section = msgid = msgstr = None
         fuzzy = False
 
         # Parse the catalog

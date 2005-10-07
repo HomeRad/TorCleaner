@@ -79,7 +79,7 @@ class MimeRule (wc.filter.rules.Rule.Rule):
         """
         m = [u"%s<mime>%s</mime>" % \
              (prefix, wc.XmlUtils.xmlquote(r)) for r in self.mimes]
-        return u"\n".join(m+n)
+        return u"\n".join(m)
 
     def endxml (self):
         """

@@ -681,20 +681,23 @@ class Resolver(object):
 
 default_resolver = None
 
+def get_default_resolver ():
+    global default_resolver
+    if default_resolver is None:
+        default_resolver = Resolver()
+
 def query(qname, rdtype=wc.dns.rdatatype.A, rdclass=wc.dns.rdataclass.IN,
-          tcp=False):
+          tcp=False, resolver=None):
     """Query nameservers to find the answer to the question.
 
     This is a convenience function that uses the default resolver
     object to make the query.
     @see: L{wc.dns.resolver.Resolver.query} for more information on the
     parameters."""
-    global default_resolver
-    if default_resolver is None:
-        default_resolver = Resolver()
-    wc.log.debug(wc.LOG_DNS,
-                        "Query %s %s %s", qname, rdtype, rdclass)
-    return default_resolver.query(qname, rdtype, rdclass, tcp)
+    wc.log.debug(wc.LOG_DNS, "Query %s %s %s", qname, rdtype, rdclass)
+    if resolver is None:
+        resolver = get_default_resolver()
+    return resolver.query(qname, rdtype, rdclass, tcp)
 
 def zone_for_name(name, rdclass=wc.dns.rdataclass.IN,
                   tcp=False, resolver=None):
@@ -711,7 +714,7 @@ def zone_for_name(name, rdclass=wc.dns.rdataclass.IN,
     @rtype: dns.name.Name"""
 
     if isinstance(name, str):
-        name = dns.name.from_text(name, dns.name.root)
+        name = wc.dns.name.from_text(name, wc.dns.name.root)
     if resolver is None:
         resolver = get_default_resolver()
     if not name.is_absolute():

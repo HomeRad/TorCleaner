@@ -17,7 +17,6 @@ An implementation of a generic TALES engine
 """
 
 import re
-import sys
 import weakref
 
 import wc
