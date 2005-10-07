@@ -19,10 +19,10 @@
 
 import sys
 import os
-
+# dummy translation to calm down source code checkers
+_ = lambda s: s
+# inits i18n and _() method
 import wc
-# initialize i18n
-#wc.init_i18n()
 
 nt_usage = _("""USAGE\twebcleaner [options] <command> [command options]
 
@@ -113,9 +113,9 @@ def paginate (text, lines=22):
 
 def print_help ():
     """Print long usage info and exit."""
-    d = {'service': service, 'appname': wc.AppName}
+    d = {'appname': wc.AppName}
     if os.name=='nt':
-        service = _("%(appname)s Proxy") % d
+        d["service"] = _("%(appname)s Proxy") % d
         paginate(nt_usage % d)
     else:
         print usage % d
