@@ -177,7 +177,8 @@ a=0;
 """<script src="http://imadoofus.org/notfound.js">
 /* this should not be here **/
 </script>""",
-"""<script type="text/javascript">
+"""<!-- error fetching script from u\'http://imadoofus.org/notfound.js\' -->
+<script type="text/javascript">
 <!--
 // error fetching script from u'http://imadoofus.org/notfound.js'
 //-->
