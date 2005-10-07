@@ -464,9 +464,9 @@ class Dispatcher (object):
 
     def handle_expt (self):
         """
-        Handle exception. Default is to log a warning with the error.
+        Handle socket exception. Default is to log a warning with the error.
         """
-        wc.log.exception(wc.LOG_PROXY, '%s unhandled exception', self)
+        wc.log.warn(wc.LOG_PROXY, '%s unhandled exception', self)
 
     def handle_read (self):
         """
