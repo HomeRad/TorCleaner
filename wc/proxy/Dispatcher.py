@@ -347,7 +347,7 @@ class Dispatcher (object):
             else:
                 raise
 
-    def send (self, data):
+    def send (self, data, flags=0):
         """
         Send given data on socket.
 
@@ -357,7 +357,7 @@ class Dispatcher (object):
         @raise: socket.error on error
         """
         try:
-            result = self.socket.send(data)
+            result = self.socket.send(data, flags)
             return result
         except socket.error, why:
             if why[0] == errno.EWOULDBLOCK:
@@ -367,7 +367,7 @@ class Dispatcher (object):
                 return 0
             raise
 
-    def recv (self, buffer_size):
+    def recv (self, buffer_size, flags=0):
         """
         Try to receive up to given buffer_size bytes from the socket.
 
@@ -375,7 +375,7 @@ class Dispatcher (object):
         @rtype: string
         """
         try:
-            data = self.recv_bytes(buffer_size)
+            data = self.recv_bytes(buffer_size, flags=flags)
             if not data:
                 # a closed connection is indicated by signaling
                 # a read condition, and having recv() return 0.
@@ -391,7 +391,7 @@ class Dispatcher (object):
             else:
                 raise
 
-    def recv_bytes (self, buffer_size):
+    def recv_bytes (self, buffer_size, flags=0):
         """
         Receive up to given buffer_size bytes from the socket.
 
@@ -405,7 +405,7 @@ class Dispatcher (object):
                 # answer was for someone else
                 raise socket.error, (errno.EREMCHG, str(addr))
         else:
-            data = self.socket.recv(buffer_size)
+            data = self.socket.recv(buffer_size, flags)
         return data
 
     def close (self):
