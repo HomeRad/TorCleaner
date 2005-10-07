@@ -9,6 +9,8 @@ import time
 import tempfile
 import urllib2
 import errno
+from distutils.file_util import copy_file
+
 import wc
 import wc.XmlUtils
 
