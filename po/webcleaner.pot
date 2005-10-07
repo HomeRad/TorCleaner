@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-06 19:26+0200\n"
+"POT-Creation-Date: 2005-10-07 20:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,7 +77,7 @@ msgstr ""
 msgid "Enclosed block"
 msgstr ""
 
-#: ../wc/filter/rating/__init__.py:144
+#: ../wc/filter/rating/__init__.py:143
 #, python-format
 msgid "adding new rating for %r"
 msgstr ""
@@ -391,17 +391,17 @@ msgstr ""
 msgid "Connect error %s."
 msgstr ""
 
-#: ../wc/proxy/Headers.py:286
+#: ../wc/proxy/Headers.py:284
 #, python-format
 msgid "Change content type of %r from %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:289
+#: ../wc/proxy/Headers.py:287
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr ""
 
-#: ../wc/proxy/Headers.py:343
+#: ../wc/proxy/Headers.py:341
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr ""
@@ -445,7 +445,7 @@ msgstr ""
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:477 ../wc/proxy/HttpServer.py:402
+#: ../wc/proxy/HttpClient.py:477 ../wc/proxy/HttpServer.py:401
 msgid "Moved Temporarily"
 msgstr ""
 
@@ -453,11 +453,11 @@ msgstr ""
 msgid "Invalid Method"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:322
+#: ../wc/proxy/HttpServer.py:321
 msgid "redirection to localhost"
 msgstr ""
 
-#: ../wc/proxy/HttpServer.py:461
+#: ../wc/proxy/HttpServer.py:460
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr ""
@@ -606,7 +606,7 @@ msgstr ""
 msgid "${appname} Google Selection"
 msgstr ""
 
-#: ../templates/classic/adminpass.html:38
+#: ../templates/classic/adminpass.html:36
 msgid "${appname} configuration"
 msgstr ""
 
@@ -696,12 +696,12 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: ../templates/classic/config.html:338
+#: ../templates/classic/config.html:336
 msgid "Add and replace HTTP header values."
 msgstr ""
 
-#: ../templates/classic/config.html:412
-#: ../templates/classic/config.html:451
+#: ../templates/classic/config.html:410
+#: ../templates/classic/config.html:449
 #: ../templates/classic/macros/rules.html:78
 #: ../templates/classic/macros/rules.html:102
 #: ../templates/classic/macros/rules.html:119
@@ -724,11 +724,11 @@ msgstr ""
 msgid "Admin password"
 msgstr ""
 
-#: ../templates/classic/config.html:516
+#: ../templates/classic/config.html:514
 msgid "Admin password must have only ASCII characters."
 msgstr ""
 
-#: ../templates/classic/config.html:486
+#: ../templates/classic/config.html:484
 msgid "Admin password successfully changed."
 msgstr ""
 
@@ -736,11 +736,11 @@ msgstr ""
 msgid "Admin user"
 msgstr ""
 
-#: ../templates/classic/config.html:515
+#: ../templates/classic/config.html:513
 msgid "Admin user must have only ASCII characters."
 msgstr ""
 
-#: ../templates/classic/config.html:485
+#: ../templates/classic/config.html:483
 msgid "Admin user successfully changed."
 msgstr ""
 
@@ -757,8 +757,8 @@ msgstr ""
 msgid "Administrator username"
 msgstr ""
 
-#: ../templates/classic/adminpass.html:32
-msgid "After that, <a href=\"\">restart</a> ${appname} and click on the configuration link below. Your new credentials for the configuration are:<br> username ${adminuser}<br> password ${adminpass}<br>"
+#: ../templates/classic/adminpass.html:30
+msgid "After that, <a href=\"restart_ask.html\">restart</a> ${appname} and click on the configuration link below. Your new credentials for the configuration are:<br> username ${adminuser}<br> password ${adminpass}<br>"
 msgstr ""
 
 #: ../templates/classic/config.html:38
@@ -778,15 +778,15 @@ msgstr ""
 msgid "Allow a list of domains. The domain list is stored in an extern compressed file."
 msgstr ""
 
-#: ../templates/classic/config.html:499
+#: ../templates/classic/config.html:497
 msgid "Allowed host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:500
+#: ../templates/classic/config.html:498
 msgid "Allowed host(s) successfully removed."
 msgstr ""
 
-#: ../templates/classic/config.html:389
+#: ../templates/classic/config.html:387
 msgid "Allowed hosts"
 msgstr ""
 
@@ -794,8 +794,8 @@ msgstr ""
 msgid "Allowed limit"
 msgstr ""
 
-#: ../templates/classic/config.html:238
-#: ../templates/classic/config.html:300
+#: ../templates/classic/config.html:236
+#: ../templates/classic/config.html:298
 msgid "Always change the complete password since the displayed value is only a dummy."
 msgstr ""
 
@@ -811,7 +811,7 @@ msgstr ""
 msgid "Applies to all pages starting with url?"
 msgstr ""
 
-#: ../templates/classic/config.html:467
+#: ../templates/classic/config.html:465
 #: ../templates/classic/macros/rules.html:185
 #: ../templates/classic/macros/rules.html:250
 #: ../templates/classic/macros/rules.html:328
@@ -837,7 +837,7 @@ msgstr ""
 msgid "Back to update overview"
 msgstr ""
 
-#: ../templates/classic/config.html:323
+#: ../templates/classic/config.html:321
 msgid "Block URL requests and show a replacement URL instead."
 msgstr ""
 
@@ -874,11 +874,11 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: ../templates/classic/config.html:234
-msgid "Changes to this option require a proxy <a href=\"\">restart</a> to take effect."
+#: ../templates/classic/config.html:233
+msgid "Changes to this option require a proxy <a href=\"restart_ask.html\">restart</a> to take effect."
 msgstr ""
 
-#: ../templates/classic/config.html:489
+#: ../templates/classic/config.html:487
 msgid "ClamAV config successfully changed."
 msgstr ""
 
@@ -886,7 +886,7 @@ msgstr ""
 msgid "Clamav Config"
 msgstr ""
 
-#: ../templates/classic/config.html:328
+#: ../templates/classic/config.html:326
 msgid "Compress HTML pages."
 msgstr ""
 
@@ -926,7 +926,7 @@ msgstr ""
 msgid "Coral Cache for"
 msgstr ""
 
-#: ../templates/classic/config.html:333
+#: ../templates/classic/config.html:331
 msgid "Deanimate GIF images."
 msgstr ""
 
@@ -961,7 +961,7 @@ msgstr ""
 msgid "Disable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:498
+#: ../templates/classic/config.html:496
 msgid "Disabled filter module(s) ${disabled-filter}."
 msgstr ""
 
@@ -973,7 +973,7 @@ msgstr ""
 msgid "Disabled rule icon"
 msgstr ""
 
-#: ../templates/classic/config.html:428
+#: ../templates/classic/config.html:426
 msgid "Don't filter hosts"
 msgstr ""
 
@@ -1035,7 +1035,7 @@ msgstr ""
 msgid "Enable rule"
 msgstr ""
 
-#: ../templates/classic/config.html:496
+#: ../templates/classic/config.html:494
 msgid "Enabled filter module(s) ${enabled-filter}."
 msgstr ""
 
@@ -1047,11 +1047,11 @@ msgstr ""
 msgid "Error: no rating for URL ${url} found."
 msgstr ""
 
-#: ../templates/classic/config.html:363
+#: ../templates/classic/config.html:361
 msgid "Evaluate content rating HTTP headers."
 msgstr ""
 
-#: ../templates/classic/config.html:240
+#: ../templates/classic/config.html:238
 msgid "Example ClamAV config file:"
 msgstr ""
 
@@ -1170,7 +1170,7 @@ msgstr ""
 msgid "Google Cache for"
 msgstr ""
 
-#: ../templates/classic/config.html:358
+#: ../templates/classic/config.html:356
 msgid "Guess a missing content type."
 msgstr ""
 
@@ -1234,11 +1234,11 @@ msgstr ""
 msgid "Home page"
 msgstr ""
 
-#: ../templates/classic/config.html:251
+#: ../templates/classic/config.html:249
 msgid "Hostname"
 msgstr ""
 
-#: ../templates/classic/config.html:251
+#: ../templates/classic/config.html:249
 msgid "Hostname of the parent proxy"
 msgstr ""
 
@@ -1290,7 +1290,7 @@ msgstr ""
 msgid "Internet Explorer"
 msgstr ""
 
-#: ../templates/classic/config.html:507
+#: ../templates/classic/config.html:505
 msgid "Invalid SSL server port."
 msgstr ""
 
@@ -1323,7 +1323,7 @@ msgstr ""
 msgid "Invalid folder move up id."
 msgstr ""
 
-#: ../templates/classic/config.html:510
+#: ../templates/classic/config.html:508
 msgid "Invalid host name."
 msgstr ""
 
@@ -1351,11 +1351,11 @@ msgstr ""
 msgid "Invalid or missing sender address."
 msgstr ""
 
-#: ../templates/classic/config.html:508
+#: ../templates/classic/config.html:506
 msgid "Invalid parent proxy port."
 msgstr ""
 
-#: ../templates/classic/config.html:506
+#: ../templates/classic/config.html:504
 msgid "Invalid proxy port."
 msgstr ""
 
@@ -1396,7 +1396,7 @@ msgstr ""
 msgid "Invalid selection index."
 msgstr ""
 
-#: ../templates/classic/config.html:509
+#: ../templates/classic/config.html:507
 msgid "Invalid timeout value."
 msgstr ""
 
@@ -1416,11 +1416,11 @@ msgstr ""
 msgid "List of MIME types this rule should apply to"
 msgstr ""
 
-#: ../templates/classic/config.html:432
+#: ../templates/classic/config.html:430
 msgid "List of domain names the proxy must not filter."
 msgstr ""
 
-#: ../templates/classic/config.html:393
+#: ../templates/classic/config.html:391
 msgid "List of hosts allowed to use this proxy."
 msgstr ""
 
@@ -1490,7 +1490,7 @@ msgstr ""
 msgid "Modified"
 msgstr ""
 
-#: ../templates/classic/config.html:343
+#: ../templates/classic/config.html:341
 msgid "Modify HTML pages."
 msgstr ""
 
@@ -1498,7 +1498,7 @@ msgstr ""
 msgid "Modify HTTP headers. If the replacement value is empty, the header is deleted, else it gets replaced or added if it did not exist before."
 msgstr ""
 
-#: ../templates/classic/config.html:378
+#: ../templates/classic/config.html:376
 msgid "Modify XML pages."
 msgstr ""
 
@@ -1522,7 +1522,7 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: ../templates/classic/config.html:311
+#: ../templates/classic/config.html:309
 #: ../templates/classic/macros/rules.html:628
 #: ../templates/classic/macros/rules.html:653
 #: ../templates/classic/help.html:94
@@ -1542,6 +1542,10 @@ msgstr ""
 msgid "Network address the proxy should listen on."
 msgstr ""
 
+#: ../templates/classic/restart.html:28
+msgid "New configuration page"
+msgstr ""
+
 #: ../templates/classic/filterconfig.html:69
 msgid "New folder"
 msgstr ""
@@ -1558,11 +1562,11 @@ msgstr ""
 msgid "New rule successfully created."
 msgstr ""
 
-#: ../templates/classic/config.html:501
+#: ../templates/classic/config.html:499
 msgid "Nofilter host successfully added."
 msgstr ""
 
-#: ../templates/classic/config.html:502
+#: ../templates/classic/config.html:500
 msgid "Nofilter host(s) successfully removed."
 msgstr ""
 
@@ -1585,31 +1589,31 @@ msgstr ""
 msgid "Page blocked by ${appname}"
 msgstr ""
 
-#: ../templates/classic/config.html:514
+#: ../templates/classic/config.html:512
 msgid "Parent proxy password must have only ASCII characters."
 msgstr ""
 
-#: ../templates/classic/config.html:493
+#: ../templates/classic/config.html:491
 msgid "Parent proxy password successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:491
+#: ../templates/classic/config.html:489
 msgid "Parent proxy port successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:247
+#: ../templates/classic/config.html:245
 msgid "Parent proxy settings"
 msgstr ""
 
-#: ../templates/classic/config.html:490
+#: ../templates/classic/config.html:488
 msgid "Parent proxy successfully changed."
 msgstr ""
 
-#: ../templates/classic/config.html:513
+#: ../templates/classic/config.html:511
 msgid "Parent proxy user must have only ASCII characters."
 msgstr ""
 
-#: ../templates/classic/config.html:492
+#: ../templates/classic/config.html:490
 msgid "Parent proxy user successfully changed."
 msgstr ""
 
@@ -1625,11 +1629,11 @@ msgstr ""
 msgid "Parse and evaluate content rating system header values."
 msgstr ""
 
-#: ../templates/classic/config.html:284
+#: ../templates/classic/config.html:282
 msgid "Password"
 msgstr ""
 
-#: ../templates/classic/config.html:284
+#: ../templates/classic/config.html:282
 msgid "Password used for parent proxy authentication"
 msgstr ""
 
@@ -1650,11 +1654,11 @@ msgid "Please specify an SMTP host to send the mail to. If unsure, leave it at <
 msgstr ""
 
 #: ../templates/classic/config.html:54
-#: ../templates/classic/config.html:262
+#: ../templates/classic/config.html:260
 msgid "Port number"
 msgstr ""
 
-#: ../templates/classic/config.html:262
+#: ../templates/classic/config.html:260
 msgid "Port number of the parent proxy"
 msgstr ""
 
@@ -1666,7 +1670,7 @@ msgstr ""
 msgid "Port number the proxy is listening on for requests"
 msgstr ""
 
-#: ../templates/classic/config.html:483
+#: ../templates/classic/config.html:481
 msgid "Port successfully changed."
 msgstr ""
 
@@ -1675,12 +1679,12 @@ msgstr ""
 msgid "Proxy configuration"
 msgstr ""
 
-#: ../templates/classic/config.html:307
+#: ../templates/classic/config.html:305
 #: ../templates/classic/help.html:82
 msgid "Proxy filter modules"
 msgstr ""
 
-#: ../templates/classic/config.html:482
+#: ../templates/classic/config.html:480
 msgid "Proxy network address successfully changed."
 msgstr ""
 
@@ -1688,11 +1692,11 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-#: ../templates/classic/config.html:512
+#: ../templates/classic/config.html:510
 msgid "Proxy password must have only ASCII characters."
 msgstr ""
 
-#: ../templates/classic/config.html:488
+#: ../templates/classic/config.html:486
 msgid "Proxy password successfully changed."
 msgstr ""
 
@@ -1704,11 +1708,11 @@ msgstr ""
 msgid "Proxy user"
 msgstr ""
 
-#: ../templates/classic/config.html:511
+#: ../templates/classic/config.html:509
 msgid "Proxy user must have only ASCII characters."
 msgstr ""
 
-#: ../templates/classic/config.html:487
+#: ../templates/classic/config.html:485
 msgid "Proxy user successfully changed."
 msgstr ""
 
@@ -1764,8 +1768,8 @@ msgstr ""
 msgid "Remove rule"
 msgstr ""
 
-#: ../templates/classic/config.html:401
-#: ../templates/classic/config.html:440
+#: ../templates/classic/config.html:399
+#: ../templates/classic/config.html:438
 #: ../templates/classic/macros/rules.html:75
 #: ../templates/classic/macros/rules.html:99
 #: ../templates/classic/macros/rules.html:116
@@ -1780,7 +1784,7 @@ msgstr ""
 msgid "Rename folder"
 msgstr ""
 
-#: ../templates/classic/config.html:318
+#: ../templates/classic/config.html:316
 msgid "Replace binary characters from HTML documents with their ASCII equivalent"
 msgstr ""
 
@@ -1788,11 +1792,11 @@ msgstr ""
 msgid "Replace illegal binary characters in HTML code like the quote chars often found in Microsoft pages."
 msgstr ""
 
-#: ../templates/classic/config.html:353
+#: ../templates/classic/config.html:351
 msgid "Replace images having a certain width and height."
 msgstr ""
 
-#: ../templates/classic/config.html:348
+#: ../templates/classic/config.html:346
 msgid "Replace images with small, low-quality JPEGs."
 msgstr ""
 
@@ -1800,7 +1804,7 @@ msgstr ""
 msgid "Replace part"
 msgstr ""
 
-#: ../templates/classic/config.html:368
+#: ../templates/classic/config.html:366
 msgid "Replace regular expressions in HTML and text data."
 msgstr ""
 
@@ -1979,7 +1983,7 @@ msgstr ""
 msgid "SSL port number"
 msgstr ""
 
-#: ../templates/classic/config.html:484
+#: ../templates/classic/config.html:482
 msgid "SSL port successfully changed."
 msgstr ""
 
@@ -1991,7 +1995,7 @@ msgstr ""
 msgid "Scan all data with the ClamAv virus scanner. For performance reasons there is a maximum size of 4 MB. If an object exceeds that size the proxy gives an error."
 msgstr ""
 
-#: ../templates/classic/config.html:373
+#: ../templates/classic/config.html:371
 msgid "Scan content data for viruses."
 msgstr ""
 
@@ -2035,7 +2039,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: ../templates/classic/config.html:312
+#: ../templates/classic/config.html:310
 msgid "Short description"
 msgstr ""
 
@@ -2061,12 +2065,16 @@ msgstr ""
 msgid "The administrator password was not yet initialized. This password protects the web configuration pages. Without an administrator password, every user can change the proxy configuration."
 msgstr ""
 
-#: ../templates/classic/adminpass.html:34
+#: ../templates/classic/adminpass.html:32
 msgid "The configuration also allows you to change the password."
 msgstr ""
 
 #: ../templates/classic/rated.html:16
 msgid "The content of the requested page ${url} was rated for the following reason:"
+msgstr ""
+
+#: ../templates/classic/restart.html:24
+msgid "The proxy is restarting. You will be redirected to the new main configuration page automatically in 15 seconds."
 msgstr ""
 
 #: ../templates/classic/macros/rules.html:21
@@ -2083,10 +2091,6 @@ msgstr ""
 msgid "This page is also available in"
 msgstr ""
 
-#: ../templates/classic/restart.html:25
-msgid "This proxy is restarting. You will be redirected to the new <a href=\"\">main configuration page</a> automatically in 15 seconds."
-msgstr ""
-
 #: ../templates/classic/accessibility.html:21
 msgid "This statement and almost all implemented techniques for accessible web sites are from Mark Pilgrims ${accessibility-link}."
 msgstr ""
@@ -2095,7 +2099,7 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-#: ../templates/classic/config.html:494
+#: ../templates/classic/config.html:492
 msgid "Timeout sucessfully changed."
 msgstr ""
 
@@ -2131,11 +2135,11 @@ msgstr ""
 msgid "Update log"
 msgstr ""
 
-#: ../templates/classic/config.html:273
+#: ../templates/classic/config.html:271
 msgid "Username"
 msgstr ""
 
-#: ../templates/classic/config.html:273
+#: ../templates/classic/config.html:271
 msgid "Username used for parent proxy authentication"
 msgstr ""
 
@@ -2180,11 +2184,11 @@ msgstr ""
 msgid "You can send me changed or new page ratings per email so I can review them and include the changes into an updated rating database."
 msgstr ""
 
-#: ../templates/classic/config.html:458
+#: ../templates/classic/config.html:456
 msgid "You can specify complete domains or only their last parts with a leading dot. For example <code>.intra</code> will match any hosts ending with <code>.intra</code>."
 msgstr ""
 
-#: ../templates/classic/config.html:419
+#: ../templates/classic/config.html:417
 msgid "You can specify network masks for whole subnets. For example <code>192.168.1.1/8</code> (local subnet) or <code>1.1.1.1/0</code> (every host)."
 msgstr ""
 
@@ -2231,24 +2235,24 @@ msgstr ""
 msgid "footnote 1"
 msgstr ""
 
-#: ../templates/classic/config.html:237
+#: ../templates/classic/config.html:235
 #: ../templates/classic/macros/rules.html:33
 msgid "footnote 2"
 msgstr ""
 
-#: ../templates/classic/config.html:239
+#: ../templates/classic/config.html:237
 msgid "footnote 3"
 msgstr ""
 
-#: ../templates/classic/config.html:299
+#: ../templates/classic/config.html:297
 msgid "footnote 4"
 msgstr ""
 
-#: ../templates/classic/config.html:418
+#: ../templates/classic/config.html:416
 msgid "footnote 5"
 msgstr ""
 
-#: ../templates/classic/config.html:457
+#: ../templates/classic/config.html:455
 msgid "footnote 6"
 msgstr ""
 
@@ -2328,15 +2332,15 @@ msgstr ""
 msgid "see footnote 3"
 msgstr ""
 
-#: ../templates/classic/config.html:287
+#: ../templates/classic/config.html:285
 msgid "see footnote 4"
 msgstr ""
 
-#: ../templates/classic/config.html:408
+#: ../templates/classic/config.html:406
 msgid "see footnote 5"
 msgstr ""
 
-#: ../templates/classic/config.html:447
+#: ../templates/classic/config.html:445
 msgid "see footnote 6"
 msgstr ""
 
