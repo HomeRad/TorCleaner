@@ -162,6 +162,9 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
             elif item[0] == wc.filter.html.STARTTAG and \
                  hasattr(self.handler, "start_element"):
                 self.handler.start_element(item[1], item[2])
+            elif item[0] == wc.filter.html.STARTENDTAG and \
+                 hasattr(self.handler, "start_end_element"):
+                self.handler.start_end_element(item[1], item[2])
             elif item[0] == wc.filter.html.ENDTAG and \
                  hasattr(self.handler, "end_element"):
                 self.handler.end_element(item[1])
