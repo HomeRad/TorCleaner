@@ -21,12 +21,13 @@ i18n:name="appname">WebCleaner</span> restart</title>
 <div class="content" id="main">
 
 <h2 i18n:translate="">Restarting...</h2>
-<p i18n:translate="">This proxy is restarting. You will be redirected
-to the new <a href="index.html"
-tal:attributes="href newbaseurl">main configuration page</a>
-automatically in 15 seconds.
+<p i18n:translate="">The proxy is restarting. You will be redirected
+to the new main configuration page automatically in 15 seconds.
 </p>
-
+<p>
+<a href="index.html" i18n:translate=""
+tal:attributes="href newbaseurl">New configuration page</a>
+</p>
 </div>
 
 <div metal:use-macro="macros/footer">Footer...</div>
