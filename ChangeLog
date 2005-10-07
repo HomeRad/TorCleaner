@@ -46,6 +46,12 @@
     Type: bugfix
     Changed: wc/proxy/HttpClient.py, wc/webgui/webconfig.py
 
+  * Make sure all SSL CN name lengths are a multiple of 4 by filling the
+    name up with spaces. This works around a bug in the Windows pyopenssl
+    wrapper which detects some strings incorrectly as UniversalString.
+    Type: bugfix
+    Changed: wc/proxy/ssl.py
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
