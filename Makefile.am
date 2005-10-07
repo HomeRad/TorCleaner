@@ -22,10 +22,11 @@ PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint.$(PYTHON)
 PYLINTOPTS :=
 PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
         wc/filter/rating/*.py wc/js/*.py wc/proxy/*.py wc/proxy/decoder/*.py \
-	wc/proxy/auth/*.py wc/webgui/*.py \
+	wc/proxy/auth/*.py wc/webgui/*.py wc/dns/*.py wc/http/*.py \
 	wc/webgui/context/*.py wc/magic/*.py)
 PYLINTIGNORE = wc/win32start.py
 PYLINTFILES = $(filter-out $(PYLINTIGNORE),$(PYFILES))
+PYFLAKES:=pyflakes
 # test files
 # XXX todo
 TESTFILES :=
@@ -154,6 +155,12 @@ pycheck: localbuild
 .PHONY: pylint
 pylint: localbuild
 	$(PYLINT) $(PYLINTOPTS) $(PYLINTFILES) $(TESTFILES)
+
+.PHONY: pyflakes
+pyflakes:
+	$(PYFLAKES) *.py test wc config | \
+	  grep -v "redefinition of unused 'wc'" | \
+	  grep -v "undefined name '_'"
 
 .PHONY: ccheck
 ccheck:
