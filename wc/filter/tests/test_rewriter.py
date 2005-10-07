@@ -266,6 +266,17 @@ class TestRewriter (unittest.TestCase):
         self.filt("""<link rel="icon " href= " javascript:void()">""",
                   """<link rel="icon ">""")
 
+    def testStartEndTag (self):
+        self.filt("""
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<base href="bla"/>
+""",
+"""
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<base href="bla"/>
+""")
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)
