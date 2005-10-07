@@ -97,13 +97,10 @@ def get_clientctx (configdir):
         clientctx.load_verify_locations(os.path.join(configdir, 'CA.cert'))
     return clientctx
 
-
 def create_certificates (configdir):
     """Create certificates and private keys for webcleaner"""
     cakey = create_key_pair(TYPE_RSA, 1024)
-    # note: the CN name should be a multiple of 4 since the pyopenssl
-    # wrapper has a bug treating some strings as UniversalString
-    careq = create_cert_request(cakey, CN='Certificate    Authority')
+    careq = create_cert_request(cakey, CN='Certificate Authority')
     # five years
     cacert = create_certificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5))
     # write files with appropriate umask
@@ -177,6 +174,12 @@ def create_cert_request (pkey, digest="md5", **name):
     subj = req.get_subject()
 
     for (key, value) in name.items():
+        # Note: the CN name should be a multiple of 4 since the pyopenssl
+        # wrapper has a bug treating some strings as UniversalString.
+        # Workaround here is to fill the value up with spaces.
+        if key == 'CN':
+            tofill = 4 - (len(value) % 4)
+            value += " "*tofill
         setattr(subj, key, value)
 
     req.set_pubkey(pkey)
