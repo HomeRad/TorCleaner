@@ -27,7 +27,6 @@ if sys.version_info < (2, 4, 0, 'final', 0):
 import os
 import popen2
 import stat
-import re
 import string
 import glob
 from distutils.core import setup, Extension, DEBUG
@@ -40,9 +39,10 @@ from distutils.command.install_data import install_data
 from distutils.command.build_ext import build_ext
 from distutils.command.build import build
 from distutils.command.clean import clean
-from distutils.dir_util import create_tree, remove_tree
+from distutils.dir_util import remove_tree
 from distutils.file_util import write_file
 from distutils.sysconfig import get_python_version
+from distutils.errors import DistutilsPlatformError
 from distutils import util, log
 
 # cross compile config
