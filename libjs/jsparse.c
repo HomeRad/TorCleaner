@@ -1047,9 +1047,9 @@ Statements(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
         return NULL;
     PN_INIT_LIST(pn);
 
-    ts->flags |= TSF_OPERAND | TSF_START_STATEMENT;
+    ts->flags |= TSF_OPERAND;
     while ((tt = js_PeekToken(cx, ts)) > TOK_EOF && tt != TOK_RC) {
-        ts->flags &= ~(TSF_OPERAND | TSF_START_STATEMENT);
+        ts->flags &= ~TSF_OPERAND;
         pn2 = Statement(cx, ts, tc);
         if (!pn2) {
             if (ts->flags & TSF_EOF)
@@ -1091,7 +1091,7 @@ Statements(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
             PN_APPEND(pn, pn2);
         }
     }
-    ts->flags &= ~(TSF_OPERAND | TSF_START_STATEMENT);
+    ts->flags &= ~TSF_OPERAND;
     if (tt == TOK_ERROR)
         return NULL;
 
@@ -1265,9 +1265,9 @@ Statement(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
 
     CHECK_RECURSION();
 
-    ts->flags |= TSF_OPERAND | TSF_START_STATEMENT;
+    ts->flags |= TSF_OPERAND;
     tt = js_GetToken(cx, ts);
-    ts->flags &= ~(TSF_OPERAND | TSF_START_STATEMENT);
+    ts->flags &= ~TSF_OPERAND;
 
 #if JS_HAS_GETTER_SETTER
     if (tt == TOK_NAME) {
@@ -3660,6 +3660,25 @@ XMLElementOrList(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
     return pn;
 }
 
+static JSParseNode *
+XMLElementOrListRoot(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
+                     JSBool allowList)
+{
+    uint32 oldopts;
+    JSParseNode *pn;
+
+    /*
+     * Force XML support to be enabled so that comments and CDATA literals
+     * are recognized, instead of <! followed by -- starting an HTML comment
+     * to end of line (used in script tags to hide content from old browsers
+     * that don't recognize <script>).
+     */
+    oldopts = JS_SetOptions(cx, cx->options | JSOPTION_XML);
+    pn = XMLElementOrList(cx, ts, tc, allowList);
+    JS_SetOptions(cx, oldopts);
+    return pn;
+}
+
 JS_FRIEND_API(JSParseNode *)
 js_ParseXMLTokenStream(JSContext *cx, JSObject *chain, JSTokenStream *ts,
                        JSBool allowList)
@@ -3701,7 +3720,7 @@ js_ParseXMLTokenStream(JSContext *cx, JSObject *chain, JSTokenStream *ts,
                                     JSMSG_BAD_XML_MARKUP);
         pn = NULL;
     } else {
-        pn = XMLElementOrList(cx, ts, &tc, allowList);
+        pn = XMLElementOrListRoot(cx, ts, &tc, allowList);
     }
 
     ts->flags &= ~TSF_XMLONLYMODE;
@@ -3990,7 +4009,7 @@ PrimaryExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
         break;
 
       case TOK_XMLSTAGO:
-        pn = XMLElementOrList(cx, ts, tc, JS_TRUE);
+        pn = XMLElementOrListRoot(cx, ts, tc, JS_TRUE);
         if (!pn)
             return NULL;
         notsharp = JS_TRUE;     /* XXXbe could be sharp? */
