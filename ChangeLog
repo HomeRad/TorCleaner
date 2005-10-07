@@ -52,6 +52,10 @@
     Type: bugfix
     Changed: wc/proxy/ssl.py
 
+  * Fix handling of start/end tags in XHTML documents.
+    Type: bugfix
+    Changed: wc/filter/html/JSFilter.py
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
