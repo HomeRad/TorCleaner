@@ -144,26 +144,27 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         HTML start element.
         """
-        self._start_element(tag, attrs, False)
+        wc.log.debug(wc.LOG_FILTER,
+                     "%s start_element %r %s", self, tag, attrs)
+        self._start_element(tag, attrs, wc.filter.html.STARTTAG)
 
     def start_end_element (self, tag, attrs):
         """
         HTML start-end element (<a/>).
         """
+        wc.log.debug(wc.LOG_FILTER,
+                     "%s start_end_element %r %s", self, tag, attrs)
         self._start_element(tag, attrs, True)
 
-    def _start_element (self, tag, attrs, startend):
+    def _start_element (self, tag, attrs, starttype):
         """
         We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list.
         """
-        # default data
-        wc.log.debug(wc.LOG_FILTER, "%s start_element %r %s", self, tag, attrs)
-        if self._is_waiting([wc.filter.html.STARTTAG,
-                             tag, attrs]):
+        if self._is_waiting([starttype, tag, attrs]):
             return
         tag = wc.filter.html.check_spelling(tag, self.url)
-        if self.stackcount and not startend:
+        if self.stackcount and starttype == wc.filter.html.STARTTAG:
             if self.stackcount[-1][0] == tag:
                 self.stackcount[-1][1] += 1
         if tag == "meta":
@@ -195,21 +196,17 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply
-        self.filter_start_element(tag, attrs, startend)
+        self.filter_start_element(tag, attrs, starttype)
         # if rule stack is empty, write out the buffered data
         if not self.rulestack and not self.javascript:
             self.htmlparser.tagbuf2data()
 
-    def filter_start_element (self, tag, attrs, startend):
+    def filter_start_element (self, tag, attrs, starttype):
         """
         Filter the start element according to filter rules.
         """
         rulelist = []
         filtered = False
-        if startend:
-            starttype = wc.filter.html.STARTENDTAG
-        else:
-            starttype = wc.filter.html.STARTTAG
         item = [starttype, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
