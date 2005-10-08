@@ -56,6 +56,11 @@
     Type: bugfix
     Changed: wc/filter/html/JSFilter.py
 
+  * The image reducer filter did not convert some image types correctly.
+    This has been fixed.
+    Type: bugfix
+    Changed: wc/filter/ImageReducer.py
+
 2.32 "Evil Aliens" (release 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
