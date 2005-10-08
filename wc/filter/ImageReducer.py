@@ -79,13 +79,17 @@ class ImageReducer (wc.filter.Filter.Filter):
         try:
             img = Image.open(p)
             data = StringIO.StringIO()
-            if attrs.get('imgreducer_convert'):
-                img = img.convert()
+            # Only greyscale (L) and RGB images can be written directly to
+            # JPEG. All other modes (ie. palette found in GIF and PNG)
+            # have to be converted.
+            if img.mode not in ('RGB', 'L'):
+                img.draft("RGB", img.size)
+                img = img.convert("RGB")
             img.save(data, "JPEG", quality=self.quality, optimize=1)
         except IOError, msg:
             # return original image data on error
             wc.log.warn(wc.LOG_FILTER,
-                        "I/O error reading image data: %s", str(msg))
+                "I/O error reading image data %r: %s", attrs['url'], str(msg))
             # XXX the content type is pretty sure wrong
             return p.getvalue()
         return data.getvalue()
@@ -130,12 +134,5 @@ class ImageReducer (wc.filter.Filter.Filter):
         d['imgreducer_buf'] = StringIO.StringIO()
         # some images have to be convert()ed before saving
         ctype = headers['server'].get('Content-Type')
-        d['imgreducer_convert'] = convert(ctype)
         return d
 
-
-def convert (ctype):
-    """
-    Return True if an image has to be convert()ed before saving.
-    """
-    return ctype in ('image/gif',)
