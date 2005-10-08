@@ -331,6 +331,12 @@ class HttpServer (BaseHTTPServer.HTTPServer):
         """
         pass
 
+    def log_message (self, format, *args):
+        """
+        Suppress log printing.
+        """
+        pass
+
 
 class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
     """
