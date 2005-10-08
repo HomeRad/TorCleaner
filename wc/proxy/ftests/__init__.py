@@ -331,12 +331,6 @@ class HttpServer (BaseHTTPServer.HTTPServer):
         """
         pass
 
-    def log_message (self, format, *args):
-        """
-        Suppress log printing.
-        """
-        pass
-
 
 class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
     """
@@ -362,9 +356,9 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         self.wfile.write(data)
         debug("... ok.")
 
-    def log_request (self, code='-', size='-'):
+    def log_message (self, format, *args):
         """
-        Suppress request logging.
+        Suppress request/error logging.
         """
         pass
 
