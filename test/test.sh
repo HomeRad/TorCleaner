@@ -16,9 +16,10 @@ else
 fi
 # validate web interface pages, but only if no additional options exist
 if [ -n "$RES_PROXY" -a -z "$1" ]; then
-    NAMES="index config filterconfig update rating help"
-    for NAME in $NAMES; do
-        URL="http://$PROXY/${NAME}.html"
+    NAMES="index config filterconfig update rating help restart_ask adminpass"
+    for NAME in `ls templates/classic/*.html`; do
+        NAME=`basename "$NAME"`
+        URL="http://$PROXY/${NAME}"
         echo "Validating $URL"
         curl -s $URL | xmllint --html --noout --valid -
         URL1="${URL}.de"
@@ -28,5 +29,9 @@ if [ -n "$RES_PROXY" -a -z "$1" ]; then
         echo "Validating $URL1"
         curl -s $URL1 | xmllint --html --noout --valid -
     done
+    # one invalid URL, but nonetheless must be valid
+    URL="http://$PROXY/hulla"
+    echo "Validating $URL"
+    curl -s $URL | xmllint --html --noout --valid -
 fi
 test/run.sh test.py $RES_NETWORK $RES_PROXY --search-in=wc -ufpv "$@"
