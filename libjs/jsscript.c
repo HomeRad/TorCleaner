@@ -1,4 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set ts=8 sw=4 et tw=80:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -201,6 +202,11 @@ script_compile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
         principals = NULL;
     }
 
+    /* Ensure we compile this script with the right (inner) principals. */
+    OBJ_TO_INNER_OBJECT(cx, scopeobj);
+    if (!scopeobj)
+        return JS_FALSE;
+
     /*
      * Compile the new script using the caller's scope chain, a la eval().
      * Unlike jsobj.c:obj_eval, however, we do not set JSFRAME_EVAL in fp's
@@ -300,19 +306,21 @@ script_exec(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         }
     }
 
+    OBJ_TO_INNER_OBJECT(cx, scopeobj);
+    if (!scopeobj)
+        return JS_FALSE;
+
     /* Belt-and-braces: check that this script object has access to scopeobj. */
     principals = script->principals;
-    if (principals) {
-        rt = cx->runtime;
-        if (rt->findObjectPrincipals) {
-            scopePrincipals = rt->findObjectPrincipals(cx, scopeobj);
-            if (scopePrincipals &&
-                !principals->subsume(principals, scopePrincipals)) {
-                JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                                     JSMSG_BAD_INDIRECT_CALL,
-                                     "Script.prototype.exec");
-                return JS_FALSE;
-            }
+    rt = cx->runtime;
+    if (rt->findObjectPrincipals) {
+        scopePrincipals = rt->findObjectPrincipals(cx, scopeobj);
+        if (!principals || !scopePrincipals ||
+            !principals->subsume(principals, scopePrincipals)) {
+            JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
+                                 JSMSG_BAD_INDIRECT_CALL,
+                                 "Script.prototype.exec");
+            return JS_FALSE;
         }
     }
 
