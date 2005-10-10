@@ -245,9 +245,9 @@ def server_remove_hop_by_hop_headers (headers):
     """
     Remove hop-by-hop headers.
     """
-    # note: do not remove Proxy-Authenticate, we still need it
     to_remove = [
         'Connection',
+        'Proxy-Authenticate',
         'Keep-Alive',
         'Upgrade',
         'Trailer',
