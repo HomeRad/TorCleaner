@@ -25,7 +25,6 @@ from wc import AppName, Version
 from wc.configuration import config, rulenames
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
-from wc.webgui.context import filter_safe as _filter_safe
 from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.filter.rules.Rule import compileRegex as _compileRegex
 from wc.filter.rules.HtmlrewriteRule import partvalnames, partnames
