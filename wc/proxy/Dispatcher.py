@@ -271,7 +271,7 @@ class Dispatcher (object):
         self.connect_checks = 0
         err = self.socket.connect_ex(addr)
         if err != 0:
-            strerr = errno.errorcode[err]
+            strerr = os.strerror(err)
             wc.log.debug(wc.LOG_PROXY, '%s connection error %s', self, strerr)
         # XXX Should interpret Winsock return values
         if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
@@ -320,7 +320,7 @@ class Dispatcher (object):
                          '%s connect status in progress/would block', self)
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
         else:
-            strerr = errno.errorcode[err]
+            strerr = os.strerror(err)
             wc.log.info(wc.LOG_PROXY, '%s connect error %s', self, strerr)
             self.handle_error(_("Connect error %s.") % strerr)
 
