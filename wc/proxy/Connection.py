@@ -246,7 +246,9 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             wc.log.exception(wc.LOG_PROXY,
                              "%s could not get socket exception error", self)
         if not self.connected:
-            # The non-blocking socket connect() had an error.
+            # The non-blocking socket connect() had an error. This is
+            # a Windows peculiarity, on Unix a failed connect() puts
+            # the socket in the read list, and issues an empty read.
             self.handle_error("socket exception while connecting")
             return
         # Try to read out-of-band data (which might not yet
