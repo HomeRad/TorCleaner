@@ -303,69 +303,69 @@ Enable the VirusFilter module.
 <!-- proxy filter modules settings -->
 <fieldset>
 <legend i18n:translate="">Proxy filter modules</legend>
-<table rules="cols" border="0" cellpadding="3" cellspacing="0" summary="">
-<tr style="border-bottom:1px solid black;">
+<table rules="all" border="1" cellpadding="3" cellspacing="0" summary="">
+<tr>
 <th></th>
 <th i18n:translate="">Name</th>
 <th i18n:translate="">Short description</th>
 </tr>
 
-<tr style="border-bottom:1px solid black;" tal:define="module string:BinaryCharFilter">
+<tr tal:define="module string:BinaryCharFilter">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Replace binary characters from HTML documents with their ASCII equivalent</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:Blocker">
+<tr tal:define="module string:Blocker">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Block URL requests and show a replacement URL instead.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:Compress">
+<tr tal:define="module string:Compress">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Compress HTML pages.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:GifImage">
+<tr tal:define="module string:GifImage">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Deanimate GIF images.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:Header">
+<tr tal:define="module string:Header">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Add and replace HTTP header values.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:HtmlRewriter">
+<tr tal:define="module string:HtmlRewriter">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Modify HTML pages.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:ImageReducer">
+<tr tal:define="module string:ImageReducer">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Replace images with small, low-quality JPEGs.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:ImageSize">
+<tr tal:define="module string:ImageSize">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Replace images having a certain width and height.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:MimeRecognizer">
+<tr tal:define="module string:MimeRecognizer">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Guess a missing content type.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:RatingHeader">
+<tr tal:define="module string:RatingHeader">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Evaluate content rating HTTP headers.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:Replacer">
+<tr tal:define="module string:Replacer">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Replace regular expressions in HTML and text data.</td>
 </tr>
-<tr style="border-bottom:1px solid black;" tal:define="module string:VirusFilter">
+<tr tal:define="module string:VirusFilter">
 <td metal:use-macro="macros/modulecheckbox" colspan="2">Checkbox
 and name</td>
 <td i18n:translate="">Scan content data for viruses.</td>

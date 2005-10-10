@@ -33,9 +33,9 @@ several given categories.</p>
 <input type="checkbox" name="generic" value="generic"
  tal:condition="not:generic">
 <br><br>
-<table rules="cols" border="0" cellpadding="5" cellspacing="0" summary="">
+<table rules="all" border="1" cellpadding="5" cellspacing="0" summary="">
 <thead>
-<tr style="border-bottom:1px solid black;">
+<tr>
 <th i18n:translate="">Category</th>
 <th colspan="3" i18n:translate="">Rating</th>
 </tr>
@@ -77,10 +77,10 @@ several given categories.</p>
  tal:attributes="href string:${filename}.${lang}?selindex=${number}"
  tal:content="number">50</a> </span>
 </div>
-<table rules="cols" summary="" border="0" cellpadding="5" cellspacing="0"
- style="border-bottom:1px solid black;width:80%;">
+<table rules="all" summary="" border="1" cellpadding="5" cellspacing="0"
+ style="width:80%;">
 <thead>
-<tr style="border-bottom:1px solid black;">
+<tr>
 <th>&nbsp;</th>
 <th i18n:translate="">URL</th>
 <th i18n:translate="">Generic</th>
