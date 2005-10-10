@@ -1,3 +1,12 @@
+html {
+    scrollbar-base-color: #fff7ee;
+    scrollbar-highlight-color: #DEE7EC;
+    scrollbar-track-color: #F7F9FA;
+    scrollbar-darkshadow-color: #F7F9FA;
+    scrollbar-3dlight-color: #8CACBB;
+    scrollbar-shadow-color: #8CACBB;
+    scrollbar-arrow-color: #436976;
+}
 
 body {
     font-family: Verdana, Helvetica, Arial, sans-serif;
@@ -5,8 +14,7 @@ body {
     background: #fff7ee;
     margin: 0;
     padding: 0;
-/* These work in IE only, changes the look of the scrollbar + textareas */
-    scrollbar-base-color: #DEE7EC;
+    scrollbar-base-color: #fff7ee;
     scrollbar-highlight-color: #DEE7EC;
     scrollbar-track-color: #F7F9FA;
     scrollbar-darkshadow-color: #F7F9FA;
@@ -157,6 +165,13 @@ textarea {
     background: #fdf9f4;
     width: 88%;
     padding: 0.1em;
+    scrollbar-base-color: #fff7ee;
+    scrollbar-highlight-color: #DEE7EC;
+    scrollbar-track-color: #F7F9FA;
+    scrollbar-darkshadow-color: #F7F9FA;
+    scrollbar-3dlight-color: #8CACBB;
+    scrollbar-shadow-color: #8CACBB;
+    scrollbar-arrow-color: #436976;
 }
 
 select {
