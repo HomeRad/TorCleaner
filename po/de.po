@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-10 19:43+0200\n"
+"POT-Creation-Date: 2005-10-10 22:26+0200\n"
 "PO-Revision-Date: 2005-10-07 16:07+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -332,7 +332,7 @@ msgstr "Interner Fehler"
 msgid "%s error"
 msgstr "%s Fehler"
 
-#: ../wc/webgui/context/filterconfig_html.py:415
+#: ../wc/webgui/context/filterconfig_html.py:414
 msgid "No title"
 msgstr "Überschrift"
 
