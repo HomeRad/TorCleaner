@@ -35,6 +35,7 @@ Connection handling.
 
 import socket
 import errno
+import os
 
 import wc
 import wc.log
@@ -232,6 +233,40 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
 
     def handle_expt (self):
         """
-        Print exception.
+        Handle socket exception.
         """
-        wc.log.exception(wc.LOG_PROXY, "%s exception", self)
+        wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_expt', self)
+        try:
+            # Get the socket error and report it. Note that SO_ERROR
+            # clears the error.
+            err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+            wc.log.warn(wc.LOG_PROXY,
+                    "%s socket exception error %s", self, os.strerror(err))
+        except socket.error:
+            wc.log.exception(wc.LOG_PROXY,
+                             "%s could not get socket exception error", self)
+        if not self.connected:
+            # The non-blocking socket connect() had an error.
+            self.handle_error("socket exception while connecting")
+            return
+        # Try to read out-of-band data (which might not yet
+        # have arrived, despite the exception condition).
+        if len(self.recv_buffer) > MAX_BUFSIZE:
+            wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
+            return
+        try:
+            data = self.recv(self.socket_rcvbuf, flags=socket.MSG_OOB)
+        except socket.error, err:
+            if err == errno.EAGAIN:
+                # try again later
+                return
+            self.handle_error('read error')
+            return
+        if not data:
+            # Out-of-band data might just not have been arrived, even
+            # if the error condition is set.
+            wc.log.debug(wc.LOG_PROXY, "%s got empty out-of-band data", self)
+            return
+        wc.log.debug(wc.LOG_NET, '%s <= read %d', self, len(data))
+        wc.log.debug(wc.LOG_NET, 'data %r', data)
+        self.recv_buffer += data
