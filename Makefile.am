@@ -61,7 +61,7 @@ clean-log:
 
 # to build in the current directory
 .PHONY: localbuild
-localbuild: all MANIFEST
+localbuild: MANIFEST all
 	$(MAKE) -C wc/HtmlParser
 	$(PYTHON) setup.py build
 	ln -sf build/share share
