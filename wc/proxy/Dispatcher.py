@@ -273,15 +273,18 @@ class Dispatcher (object):
         if err != 0:
             strerr = os.strerror(err)
             wc.log.debug(wc.LOG_PROXY, '%s connection error %s', self, strerr)
-        # XXX Should interpret Winsock return values
         if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
+            # Connection is in progress, check the connect condition later.
             wc.proxy.make_timer(0.2, lambda a=addr: self.check_connect(addr))
         elif err in (0, errno.EISCONN):
+            # Connected!
             self.addr = addr
             self.connected = True
             wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
         else:
+            # Note that EALREADY is handled as an error. We don't want
+            # to connect to an already-connected socket.
             raise socket.error, (err, errno.errorcode[err])
         return err
 
