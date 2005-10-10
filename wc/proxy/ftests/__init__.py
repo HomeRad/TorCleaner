@@ -141,7 +141,7 @@ def socket_send (sock, data):
     Send data to socket.
     """
     sock.sendall(data)
-    debug("Socket sent %r" % data)
+    debug("Socket sent %d bytes: %r" % (len(data), data))
 
 
 def socket_read (sock):
@@ -154,7 +154,7 @@ def socket_read (sock):
         if not s:
             break
         data += s
-    debug("Socket read %r" % data)
+    debug("Socket read %d bytes: %r" % (len(data), data))
     return data
 
 
@@ -168,7 +168,7 @@ def socketfile_read (sock):
         if not s:
             break
         data += s
-    debug("Socket file read %r" % data)
+    debug("Socket file read %d bytes: %r" % (len(data), data))
     return data + sock._rbuf
 
 
