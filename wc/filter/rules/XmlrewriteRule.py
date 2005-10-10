@@ -22,6 +22,7 @@ import re
 import locale
 import wc.filter.rules.UrlRule
 import wc.filter.html.RssHtmlFilter
+import wc.filter.html.HtmlFilter
 
 # valid replace types
 RSSHTML = 0
