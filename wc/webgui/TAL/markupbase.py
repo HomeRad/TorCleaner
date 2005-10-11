@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 """Shared support for scanning document type declarations in HTML and XHTML."""
 
 import string

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# -*- coding: iso-8859-1 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Zope Corporation and Contributors.
