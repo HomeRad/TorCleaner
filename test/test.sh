@@ -1,5 +1,7 @@
 #!/bin/sh -e
-if ifconfig eth1 | grep RUNNING > /dev/null; then
+# network device, change as appropriate
+NETDEV=eth1
+if ifconfig $NETDEV | grep RUNNING > /dev/null; then
     echo "Network resource available"
     RES_NETWORK="--resource=network"
 else
@@ -34,4 +36,4 @@ if [ -n "$RES_PROXY" -a -z "$1" ]; then
     echo "Validating $URL"
     curl -s $URL | xmllint --html --noout --valid -
 fi
-test/run.sh test.py $RES_NETWORK $RES_PROXY --search-in=wc -ufpv "$@"
+test/run.sh test.py $RES_NETWORK $RES_PROXY --search-in=wc -ufpcv "$@"
