@@ -1,4 +1,4 @@
-2.33 "" (release xx.xx.xxxx)
+2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled
     automatically if a needed dependency could not be loaded.
@@ -61,7 +61,7 @@
     Type: bugfix
     Changed: wc/filter/ImageReducer.py
 
-2.32 "Evil Aliens" (release 15.9.2005)
+2.32 "Evil Aliens" (released 15.9.2005)
 
   * Add <noindex> to known invalid HTML tag list. This avoids warnings
     when such a tag is encountered.
@@ -90,7 +90,7 @@
     Type: feature
     Changed: setup.py
 
-2.31 "Nothing" (release 30.8.2005)
+2.31 "Nothing" (released 30.8.2005)
 
   * Added missing http:// scheme to google.html error page.
     Type: bugfix
