@@ -34,6 +34,9 @@ TESTFILES :=
 SERVICEDIR := /etc/webcleaner/service
 # run unittests on check
 TESTS = test/test.sh
+# Debian settings
+DEB_GPG_KEY:=2DE589F5
+#DEB_GPG_KEY:=32EC6F3E
 
 MANIFEST: MANIFEST.in setup.py
 	rm -f share
@@ -95,7 +98,7 @@ distclean-local:
 # ready for upload, signed with my GPG key
 .PHONY: deb_signed
 deb_signed: clean
-	env CVSROOT=:ext:calvin@cvs.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k32EC6F3E -r"fakeroot --" -I.cvsignore
+	env CVSROOT=:ext:calvin@cvs.sourceforge.net:/cvsroot/webcleaner cvs-buildpackage -W/home/calvin/projects/cvs-build -Mwebcleaner2 -sgpg -pgpg -k$(DEB_GPG_KEY) -r"fakeroot --" -I.cvsignore
 
 # add setup.py generated files to $(distdir)
 # note: debian/rules install generates broken links, so delete debian
