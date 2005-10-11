@@ -6,7 +6,6 @@ EXTRA_DIST		= js.msg jsopcode.tbl README
 BUILT_SOURCES		= jsautocfg.h
 
 AM_CFLAGS = @JSDEFS@
-CFLAGS += -fPIC
 
 noinst_LTLIBRARIES	= libjs.la
 libjs_la_SOURCES	= jsapi.c jsapi.h \

@@ -6,6 +6,6 @@ w_acos.c w_asin.c w_atan2.c w_exp.c w_fmod.c w_log.c w_pow.c w_sqrt.c
 
 
 DEFS			= @DEFS@ -DIEEE_LIBM
-CFLAGS += -fPIC
+
 noinst_LTLIBRARIES	= libfdm.la
 libfdm_la_SOURCES	= $(SRC)
