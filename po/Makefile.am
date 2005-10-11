@@ -1,4 +1,5 @@
-PYTHON=env PYTHONPATH=$(top_srcdir) python2.4
+PYVER:=2.4
+PYTHON=env PYTHONPATH=$(top_srcdir) python$(PYVER)
 XGETTEXT:=xgettext
 MSGFMT:=msgfmt
 MSGMERGE:=msgmerge
