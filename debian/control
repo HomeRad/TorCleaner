@@ -11,6 +11,8 @@ Depends: python2.4, python2.4-pyopenssl, debconf (>= 1.2.9), runit, webcleaner-c
 Recommends: python2.4-imaging
 Suggests: python2.4-crypto, python2.4-psyco, clamav-daemon
 Description: a filtering HTTP proxy
+ *** Unofficial package from calvin@users.sourceforge.net ***
+ .
  Features:
   * remove unwanted HTML (adverts, flash, etc.)
   * popup blocker

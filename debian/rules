@@ -28,6 +28,7 @@ makebuilddir/webcleaner::
 	@if ! test -f ./configure; then ./autogen.sh; fi
 
 binary-post-install/webcleaner-common::
+	install -m 0644 debian/bts debian/webcleaner/usr/share/bug/webcleaner/control
 # move files
 	dh_movefiles --sourcedir=debian/webcleaner
 # and cleanup after moving

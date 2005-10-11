@@ -5,3 +5,4 @@ etc/webcleaner/service/log
 usr/share/lintian/overrides
 usr/share/linda/overrides
 usr/bin
+usr/share/bug/webcleaner
