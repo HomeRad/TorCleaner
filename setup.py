@@ -48,7 +48,6 @@ from distutils import util, log
 # cross compile config
 cc = os.environ.get("CC")
 # directory with cross compiled (for win32) python
-# see also http://kampfwurst.net/python-mingw32/
 win_python_dir = "/home/calvin/src/python23-maint-cvs/dist/src/"
 # if we are compiling for or under windows
 win_compiling = (os.name == 'nt') or (cc is not None and "mingw32" in cc)
@@ -452,7 +451,6 @@ library_dirs = []
 # libraries
 libraries = []
 
-# distinguish the different platforms
 if os.name == 'nt':
     # windows does not have unistd.h
     define_macros.append(('YY_NO_UNISTD_H', None))
