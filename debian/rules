@@ -15,6 +15,8 @@ SHAREDIR:=$(BASE)/usr/share/$(PACKAGE)
 ETCDIR:=$(BASE)/etc/$(PACKAGE)
 SERVICEDIR:=$(ETCDIR)/service
 
+DEB_CONFIGURE_EXTRA_FLAGS+=--enable-shared
+
 # exclude files with special permissions
 DEB_FIXPERMS_EXCLUDE+=/etc/webcleaner/webcleaner.conf /var/log/webcleaner
 # do not install with "make", but with "python setup.py install"

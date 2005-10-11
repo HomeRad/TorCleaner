@@ -4,8 +4,9 @@ webcleaner (2.33-0calvin1) unstable; urgency=low
   * Standards version 3.6.2.1 (no changes required)
   * Add '| debconf-2.0' alternative to build depends
   * Fix bashism in install scripts
+  * add --enable-shared to configure flags to produce PIC code
 
- -- Bastian Kleineidam <calvin@debian.org>  Tue, 11 Oct 2005 19:32:36 +0200
+ -- Bastian Kleineidam <calvin@debian.org>  Tue, 11 Oct 2005 22:05:44 +0200
 
 webcleaner (2.32-0.1) unstable; urgency=low
 
