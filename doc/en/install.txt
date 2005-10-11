@@ -103,7 +103,8 @@ Setup for Unix/Linux:
 
 2. Compilation
    
-   Run ``./configure && make`` to compile the included C libraries.
+   Run ``./configure --enable-shared && make`` to compile the included
+   C libraries.
    Run ``python setup.py build`` to compile the Python files.
    For help about the setup.py script options, run
    ``python setup.py --help``.
@@ -182,7 +183,7 @@ Setup for Windows - compiling from source:
    Now change into the generated directory with
    ``% cd webcleaner-X.Y`` and configure and compile the JavaScript
    library:
-   ``% ./configure && make -C libjs``.
+   ``% ./configure --enable-shared && make -C libjs``.
 
 3. Install OpenSSL and compile PyOpenSSL
    
