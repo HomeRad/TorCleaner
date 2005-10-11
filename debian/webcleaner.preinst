@@ -1,9 +1,7 @@
-#! /bin/sh
-# preinst script for #PACKAGE#
+#! /bin/sh -e
+# preinst script for webcleaner
 #
 # see: dh_installdeb(1)
-
-set -e
 
 # summary of how this script can be called:
 #        * <new-preinst> `install'
@@ -16,7 +14,7 @@ set -e
 
 
 case "$1" in
-    upgrade)
+upgrade)
     # remove old files
     rm -rf /etc/webcleaner/whitelists || true
     # move old log files
@@ -47,16 +45,11 @@ case "$1" in
         ln -s /var/run/webcleaner /etc/webcleaner/service/log/supervise
     fi
     ;;
-
-    install)
+install|abort-upgrade)
     ;;
-
-    abort-upgrade)
-    ;;
-
-    *)
-        echo "preinst called with unknown argument \`$1'" >&2
-        exit 1
+*)
+    echo "preinst called with unknown argument \`$1'" >&2
+    exit 1
     ;;
 esac
 

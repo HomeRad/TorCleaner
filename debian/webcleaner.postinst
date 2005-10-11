@@ -11,16 +11,7 @@ umask 0077
 package=webcleaner
 
 case "$1" in
-    configure|reconfigure|abort-upgrade|abort-remove|abort-deconfigure)
-        # nothing to do
-    ;;
-    *)
-        echo "postinst called with unknown argument \`$1'" >&2
-        exit 1
-    ;;
-esac
-
-if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
+configure|reconfigure)
     db_get $package/port
     test -n "$RET" || RET="8080"
     sed -i -e "s/ port=.*/ port=\"$RET\"/" /etc/$package/$package.conf
@@ -31,7 +22,14 @@ if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
         sed -i -e "s/ adminpass=.*/ adminpass=\"${P}\"/" /etc/$package/$package.conf
     fi
     db_unregister $package/adminpass
-fi
+    ;;
+abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+*)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+    ;;
+esac
 db_stop
 
 
@@ -41,14 +39,16 @@ if [ "$1" = "configure" ]; then
     rm -f /var/log/webcleaner.err
     rm -f /var/log/webcleaner-access.log
 fi
-if [ "$1" = "configure" -o "$1" = "reconfigure" ]; then
+case "$1" in
+configure|reconfigure)
     # generate SSL certs
     webcleaner-certificates install
     # install service link
     if [ ! -e /var/service/$package ]; then
         ln -s /etc/$package/service /var/service/$package
     fi
-fi
+    ;;
+esac
 
 PYTHON=python2.4
 if which $PYTHON >/dev/null 2>&1; then
