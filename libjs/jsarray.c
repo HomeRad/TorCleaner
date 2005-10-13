@@ -634,12 +634,18 @@ array_reverse(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 {
     jsuint len, half, i;
     jsid id, id2;
-    jsval v, v2;
+    jsval *tmproot, *tmproot2;
     JSBool idexists, id2exists;
 
     if (!js_GetLengthProperty(cx, obj, &len))
         return JS_FALSE;
 
+    /*
+     * Use argv[argc] and argv[argc + 1] as local roots to hold temporarily
+     * array elements for GC-safe swap.
+     */
+    tmproot = argv + argc;
+    tmproot2 = argv + argc + 1;
     half = len / 2;
     for (i = 0; i < half; i++) {
         if (!IndexToId(cx, i, &id))
@@ -657,23 +663,23 @@ array_reverse(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
          * Get both of the values now. Note that we don't use v, or v2 based on
          * idexists and id2exists.
          */
-        if (!OBJ_GET_PROPERTY(cx, obj, id, &v) ||
-            !OBJ_GET_PROPERTY(cx, obj, id2, &v2)) {
+        if (!OBJ_GET_PROPERTY(cx, obj, id, tmproot) ||
+            !OBJ_GET_PROPERTY(cx, obj, id2, tmproot2)) {
             return JS_FALSE;
         }
 
         if (idexists) {
-            if (!OBJ_SET_PROPERTY(cx, obj, id2, &v))
+            if (!OBJ_SET_PROPERTY(cx, obj, id2, tmproot))
                 return JS_FALSE;
         } else {
-            if (!OBJ_DELETE_PROPERTY(cx, obj, id2, &v))
+            if (!OBJ_DELETE_PROPERTY(cx, obj, id2, tmproot))
                 return JS_FALSE;
         }
         if (id2exists) {
-            if (!OBJ_SET_PROPERTY(cx, obj, id, &v2))
+            if (!OBJ_SET_PROPERTY(cx, obj, id, tmproot2))
                 return JS_FALSE;
         } else {
-            if (!OBJ_DELETE_PROPERTY(cx, obj, id, &v2))
+            if (!OBJ_DELETE_PROPERTY(cx, obj, id, tmproot2))
                 return JS_FALSE;
         }
     }
@@ -880,7 +886,7 @@ sort_compare_strings(const void *a, const void *b, void *arg)
 static JSBool
 array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    jsval fval, *vec;
+    jsval fval, *vec, *pivotroot;
     CompareArgs ca;
     jsuint len, newlen, i;
     JSStackFrame *fp;
@@ -914,31 +920,27 @@ array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
 
     /*
-     * Memory for temporary array incliding one extra jsval as working space
-     * for js_HeapSort.
+     * We need a temporary array of len jsvals to hold elements of the array.
+     * Check that its size does not overflow size_t, which would allow for
+     * indexing beyond the end of the malloc'd vector.
      */
-    nbytes = (len + 1) * sizeof(jsval);
-
-    /*
-     * Test for size_t overflow, which could lead to indexing beyond the end
-     * of the malloc'd vector.
-     */
-    if (nbytes != (double) (len + 1) * sizeof(jsval)) {
+    if (len > ((size_t) -1) / sizeof(jsval)) {
         JS_ReportOutOfMemory(cx);
         return JS_FALSE;
     }
+    nbytes = ((size_t) len) * sizeof(jsval);
+
     vec = (jsval *) JS_malloc(cx, nbytes);
     if (!vec)
         return JS_FALSE;
-
-    newlen = 0;
 
     /* Root vec, clearing it first in case a GC nests while we're filling it. */
     memset(vec, 0, nbytes);
     fp = cx->fp;
     fp->vars = vec;
-    fp->nvars = len + 1;
+    fp->nvars = len;
 
+    newlen = 0;
     for (i = 0; i < len; i++) {
         ca.status = IndexToExistingId(cx, obj, i, &id);
         if (!ca.status)
@@ -961,9 +963,10 @@ array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 
     ca.context = cx;
     ca.fval = fval;
-    ca.localroot = argv + argc;         /* 1 local GC root */
+    ca.localroot = argv + argc;       /* local GC root for temporary string */
+    pivotroot    = argv + argc + 1;   /* local GC root for pivot val */
     ca.status = JS_TRUE;
-    js_HeapSort(vec, (size_t) len, vec + len, sizeof(jsval),
+    js_HeapSort(vec, (size_t) len, pivotroot, sizeof(jsval),
                 all_strings ? sort_compare_strings : sort_compare,
                 &ca);
 
@@ -1368,9 +1371,11 @@ array_slice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     jsid id, id2;
     jsval v;
 
+    /* Create a new Array object and store it in the rval local root. */
     nobj = js_NewArrayObject(cx, 0, NULL);
     if (!nobj)
         return JS_FALSE;
+    *rval = OBJECT_TO_JSVAL(nobj);
 
     if (!js_GetLengthProperty(cx, obj, &length))
         return JS_FALSE;
@@ -1420,7 +1425,6 @@ array_slice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         if (!OBJ_SET_PROPERTY(cx, nobj, id2, &v))
             return JS_FALSE;
     }
-    *rval = OBJECT_TO_JSVAL(nobj);
     return js_SetLengthProperty(cx, nobj, end - begin);
 }
 #endif /* JS_HAS_SEQUENCE_OPS */
@@ -1713,8 +1717,8 @@ static JSFunctionSpec array_methods[] = {
     /* Perl-ish methods. */
 #if JS_HAS_SOME_PERL_FUN
     {"join",                array_join,             1,JSFUN_GENERIC_NATIVE,0},
-    {"reverse",             array_reverse,          0,JSFUN_GENERIC_NATIVE,0},
-    {"sort",                array_sort,             1,JSFUN_GENERIC_NATIVE,1},
+    {"reverse",             array_reverse,          0,JSFUN_GENERIC_NATIVE,2},
+    {"sort",                array_sort,             1,JSFUN_GENERIC_NATIVE,2},
 #endif
 #if JS_HAS_MORE_PERL_FUN
     {"push",                array_push,             1,JSFUN_GENERIC_NATIVE,0},
