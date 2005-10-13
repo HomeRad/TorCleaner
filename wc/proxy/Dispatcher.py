@@ -95,12 +95,6 @@ class Dispatcher (object):
     Dispatch socket events to handler functions.
     """
 
-    connected = False
-    accepting = False
-    closing = False
-    addr = None
-
-
     def __init__ (self, sock=None):
         """
         Initialize connection.
@@ -108,6 +102,11 @@ class Dispatcher (object):
         @param sock: connected socket
         @type sock: socket.socket or None
         """
+        self.connected = False
+        self.accepting = False
+        self.closing = False
+        self.addr = None
+        self.socket = None
         if sock is not None:
             self.set_socket(sock)
             # I think it should inherit this anyway
@@ -120,8 +119,6 @@ class Dispatcher (object):
             except socket.error:
                 # The addr isn't crucial
                 pass
-        else:
-            self.socket = None
 
     def __repr__ (self):
         """
