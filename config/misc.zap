@@ -15,19 +15,6 @@
   <replacement part="tag"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.369"
- tag="iframe">
-  <title lang="de">Entferne &lt;iframe&gt;</title>
-  <title lang="en">Remove &lt;iframe&gt;</title>
-  <description lang="de">&lt;iframe&gt; Inhalte sind fast immer Werbungen.</description>
-  <description lang="en">&lt;iframe&gt; content is almost always advertising.</description>
-  <nomatchurl>www\.eselfilme\.de</nomatchurl>
-  <nomatchurl>coverviewer\.(sourceforge|sf)\.net</nomatchurl>
-  <nomatchurl>www\.eviltrash\.net</nomatchurl>
-  <nomatchurl>www\.flumserberg\.ch</nomatchurl>
-  <nomatchurl>www\.bad-meyer\.de</nomatchurl>
-</htmlrewrite>
-
 <htmlrewrite sid="wc.370"
  tag="noframes">
   <title lang="de">Entferne &lt;noframes&gt;</title>
