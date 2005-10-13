@@ -239,7 +239,38 @@ Errors are logged in the runit log file located at
 
 Troubleshooting for Windows
 ---------------------------
-Errors are logged in the system event logger. Execute
-Settings -> Control Panel -> Administrative Tools -> Event Viewer
-and look at the "Application Log" events.
+1. Make sure the proxy is started.
+   First look at the system event logger where startup errors are
+   logged. Do this by executing
+   Settings -> Control Panel -> Administrative Tools -> Event Viewer
+   and look at the "Application Log" events.
+   There should be an entry saying ``The WebCleaner service has started``.
+
+   Then start a DOS command prompt and execute
+   ``c:> netstat -a -n -p TCP``. In the listing there should be an
+   entry like ``TCP 0.0.0.0:8080 0.0.0.0:0 LISTENING`` which tells
+   you that the WebCleaner proxy port 8080 is ready to accept
+   incoming connections.
+
+2. A proxy restart can take a while. If the web configuration site
+   refreshes itself after a restart the proxy might just not be up
+   and running again. Just wait and press the Reload button in your
+   browser until the webpage can be displayed.
+
+3. Take a look in the WebCleaner log file.
+   It is located at ``c:\python24\share\webcleaner\config\webcleaner.log``
+   where ``c:\python24`` should be replaced with the directory you
+   installed Python into.
+
+   The log file has more detailed information as the application event log.
+   The line ``WebCleaner listening on *:8080 tcp`` tells you that the
+   proxy is running.
+   You can also turn on debugging by replacing INFO with DEBUG in the
+   file ``c:\python24\share\webcleaner\config\logging.conf``. After a
+   restart, the log should be filled with debug statements.
+
+4. Make sure firewall rules allow proxy connections.
+   If you have enabled a firewall, make sure that connections to
+   and from the proxy are allowed. Most firewall products have a log
+   file where you can see disallowed connection attempts.
 
