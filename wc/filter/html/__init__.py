@@ -372,4 +372,3 @@ def check_spelling (tag, url):
     if mo:
         return mo.group("tag")
     return tag
-

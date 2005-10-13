@@ -729,4 +729,3 @@ class TALInterpreter (object):
     bytecode_handlers_tal["onError"] = do_onError_tal
     bytecode_handlers_tal["<attrAction>"] = attrAction_tal
     bytecode_handlers_tal["optTag"] = do_optTag_tal
-

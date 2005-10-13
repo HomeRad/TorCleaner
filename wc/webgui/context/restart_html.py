@@ -24,4 +24,3 @@ from wc import AppName, Version
 def _exec_form (form, lang):
     if form.has_key('restart'):
         return "restart"
-

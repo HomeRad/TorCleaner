@@ -142,4 +142,3 @@ def parse_http_date (datestring):
     except ValueError:
         pass
     return None
-

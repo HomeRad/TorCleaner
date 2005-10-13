@@ -23,4 +23,3 @@ from wc import AppName, Version
 # form execution
 def _exec_form (form, lang):
     pass
-

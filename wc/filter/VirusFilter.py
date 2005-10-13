@@ -312,4 +312,3 @@ class ClamavConfig (dict):
             sock.close()
             raise
         return sock
-

@@ -135,4 +135,3 @@ class ImageReducer (wc.filter.Filter.Filter):
         # some images have to be convert()ed before saving
         ctype = headers['server'].get('Content-Type')
         return d
-

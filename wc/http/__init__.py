@@ -131,4 +131,3 @@ def split_quoted_string (s):
         escape = False
         i += 1
     return (quoted, s[i+1:].lstrip())
-

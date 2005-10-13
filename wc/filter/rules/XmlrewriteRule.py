@@ -207,4 +207,3 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         p.flush()
         p.tagbuf2data()
         return p.getoutput().decode(encoding)
-

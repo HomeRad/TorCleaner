@@ -728,4 +728,3 @@ class Magic (object):
         # separated with a space"
         result = result.lstrip('\x08').strip().replace(' \x08', '')
         return result
-

@@ -337,4 +337,3 @@ class HtmlSecurity (object):
                 msg = "%s\n Detected and prevented ICQ table width crash bug"
                 wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
                 del attrs['width']
-

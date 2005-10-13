@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (c) 2000, Amit Patel
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
@@ -438,7 +438,7 @@ class HttpServer (wc.proxy.Server.Server):
                 is_closed = True
         try:
             for stage in FilterStages:
-               data = wc.filter.applyfilter(stage, data, "filter", self.attrs)
+                data = wc.filter.applyfilter(stage, data, "filter", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
         except wc.filter.FilterRating, msg:
@@ -546,7 +546,7 @@ class HttpServer (wc.proxy.Server.Server):
         data = self.flush_coders(self.decoders)
         try:
             for stage in FilterStages:
-               data = wc.filter.applyfilter(stage, data, "finish", self.attrs)
+                data = wc.filter.applyfilter(stage, data, "finish", self.attrs)
         except wc.filter.FilterWait, msg:
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data

@@ -185,4 +185,3 @@ class HttpProxyClient (object):
         headers['Accept-Encoding'] = 'identity\r'
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(
                     self, request, headers, content, mime_types=mime_types)
-

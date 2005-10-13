@@ -386,4 +386,3 @@ class JSFilter (wc.js.JSListener.JSListener):
         if self.js_htmlparser is not None:
             self.js_htmlparser.handler.finish()
             self.js_htmlparser = None
-

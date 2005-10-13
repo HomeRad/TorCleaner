@@ -734,4 +734,3 @@ def make_suite (prefix, namespace):
     loader = unittest.defaultTestLoader
     tests = [loader.loadTestsFromTestCase(clazz) for clazz in classes]
     return unittest.TestSuite(tests)
-

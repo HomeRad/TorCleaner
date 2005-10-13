@@ -125,4 +125,3 @@ class PickleStorage (wc.filter.rating.storage.Storage):
                 for url in toremove:
                     del self[url]
                 self.write()
-

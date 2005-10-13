@@ -220,4 +220,3 @@ class XmlFilter (object):
         Representation with state.
         """
         return "<XmlFilter %s>" % self.url
-

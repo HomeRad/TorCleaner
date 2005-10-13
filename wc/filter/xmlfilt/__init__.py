@@ -65,4 +65,3 @@ def tagbuf2data (tagbuf, out, entities=None):
         else:
             wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
     return out
-

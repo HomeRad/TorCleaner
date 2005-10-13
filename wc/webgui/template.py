@@ -58,4 +58,3 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
             self._v_program, self.macros,
             engine.getContext(context), out, tal=1, strictinsert=0)()
         return out.getvalue().encode("iso8859-1")
-

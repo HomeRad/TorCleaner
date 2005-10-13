@@ -111,4 +111,3 @@ def rating_cache_parse (fp):
         elif url:
             ratingdata.append(line)
     return newrating_cache
-

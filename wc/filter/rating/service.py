@@ -68,4 +68,3 @@ class WebCleanerService (Service):
         self.submit = '%s/submit' % self.url,
         # request ratings from service
         self.request = '%s/request' % self.url,
-

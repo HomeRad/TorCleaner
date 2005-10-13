@@ -173,4 +173,3 @@ class RssHtmlFilter (object):
             self.outbuf.write(u"</%s>" % tag)
         else:
             self.valid = not self.stack
-

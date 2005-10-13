@@ -149,4 +149,3 @@ class Compress (wc.filter.Filter.Filter):
         else:
             attrs['compressobj'] = get_compress_object()
             headers['data']['Content-Encoding'] = 'gzip\r'
-

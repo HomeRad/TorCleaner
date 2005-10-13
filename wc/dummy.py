@@ -59,4 +59,3 @@ class Dummy (object):
 
     def __delitem__ (self, key):
         pass
-

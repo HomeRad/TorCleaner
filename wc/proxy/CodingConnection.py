@@ -82,4 +82,3 @@ class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
             wc.log.debug(wc.LOG_PROXY, "chunk trailer headers %s", headers)
         self.chunktrailer.close()
         return headers
-

@@ -146,4 +146,3 @@ def XXXrating_cache_merge (newrating_cache, dryrun=False, log=None):
     if not dryrun and chg:
         rating_cache_write()
     return chg
-

@@ -56,4 +56,3 @@ class WcMessage (rfc822.Message, object):
 
     def copy (self):
         return WcMessage(fp=StringIO.StringIO("".join(self.headers)))
-

@@ -26,4 +26,3 @@ class Proxy (object):
     def __getattr__ (self, name):
         """Get attribute from delegate."""
         return getattr(self._delegate, name)
-

@@ -177,4 +177,3 @@ def test_suite ():
     """
     prefix = __name__.split(".")[-1]
     return make_suite(prefix, globals())
-
