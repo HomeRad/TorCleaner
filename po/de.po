@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-10 22:26+0200\n"
+"POT-Creation-Date: 2005-10-14 00:28+0200\n"
 "PO-Revision-Date: 2005-10-07 16:07+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -78,11 +78,6 @@ msgstr "Ganzes Tag"
 msgid "Enclosed block"
 msgstr "Enthaltener Text"
 
-#: ../wc/filter/rating/__init__.py:143
-#, python-format
-msgid "adding new rating for %r"
-msgstr "füge neuen externen Filter %r hinzu"
-
 #: ../wc/filter/rating/category.py:64
 msgid "none"
 msgstr "keine"
@@ -119,6 +114,11 @@ msgstr "ungültige Änderungszeit %r"
 #, python-format
 msgid "generic url %r doesn't match %r"
 msgstr "Allgemeine URL %r passt nicht zu %r"
+
+#: ../wc/filter/rating/__init__.py:143
+#, python-format
+msgid "adding new rating for %r"
+msgstr "füge neuen externen Filter %r hinzu"
 
 #: ../wc/filter/VirusFilter.py:89
 msgid "Not acceptable"
@@ -350,6 +350,34 @@ msgstr "Fehler: keine Aktualisierungen vorhanden."
 msgid "Error: %s"
 msgstr "Fehler: %s"
 
+#: ../wc/proxy/Dispatcher.py:328
+#, python-format
+msgid "Connect error %s."
+msgstr "Verbindungsproblem %s."
+
+#: ../wc/proxy/Headers.py:284
+#, python-format
+msgid "Change content type of %r from %r to %r"
+msgstr "Setze Inhaltstyp in %r von %r nach %r"
+
+#: ../wc/proxy/Headers.py:287
+#, python-format
+msgid "Set content type of %r to %r"
+msgstr "Setze Content-Type von %r nach %r"
+
+#: ../wc/proxy/Headers.py:341
+#, python-format
+msgid "unsupported encoding: %r"
+msgstr "Nicht unterstütztes Encoding: %r"
+
+#: ../wc/proxy/decoder/GunzipStream.py:82
+msgid "zlib error: not gzip format, disabling gunzip"
+msgstr "zlib Fehler: nicht in gzip Format, deaktiviere gunzip"
+
+#: ../wc/proxy/decoder/GunzipStream.py:89
+msgid "zlib error: unknown compression method, disabling gunzip"
+msgstr "zlib Fehler: unbekannte Komprimierungsart, deaktiviere gunzip"
+
 #: ../wc/proxy/ClientServerMatchmaker.py:165
 #, python-format
 msgid "Host %s is an abbreviation for %s"
@@ -393,26 +421,6 @@ msgstr "Keine Antwort vom Server"
 #: ../wc/proxy/ClientServerMatchmaker.py:309
 msgid "Server did not respond"
 msgstr "Server hat nicht geantwortet"
-
-#: ../wc/proxy/Dispatcher.py:328
-#, python-format
-msgid "Connect error %s."
-msgstr "Verbindungsproblem %s."
-
-#: ../wc/proxy/Headers.py:284
-#, python-format
-msgid "Change content type of %r from %r to %r"
-msgstr "Setze Inhaltstyp in %r von %r nach %r"
-
-#: ../wc/proxy/Headers.py:287
-#, python-format
-msgid "Set content type of %r to %r"
-msgstr "Setze Content-Type von %r nach %r"
-
-#: ../wc/proxy/Headers.py:341
-#, python-format
-msgid "unsupported encoding: %r"
-msgstr "Nicht unterstütztes Encoding: %r"
 
 #: ../wc/proxy/HttpClient.py:122
 #, python-format
@@ -469,14 +477,6 @@ msgstr "Weiterleitung zu localhost"
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
-
-#: ../wc/proxy/decoder/GunzipStream.py:82
-msgid "zlib error: not gzip format, disabling gunzip"
-msgstr "zlib Fehler: nicht in gzip Format, deaktiviere gunzip"
-
-#: ../wc/proxy/decoder/GunzipStream.py:89
-msgid "zlib error: unknown compression method, disabling gunzip"
-msgstr "zlib Fehler: unbekannte Komprimierungsart, deaktiviere gunzip"
 
 #: ../webcleaner:27
 #, python-format
@@ -1225,7 +1225,8 @@ msgid "Evaluate content rating HTTP headers."
 msgstr "Evaluiere HTTP Header Werte der Inhaltsbewertung."
 
 #: ../templates/classic/config.html:238
-msgid "Example ClamAV config file:"
+#, fuzzy
+msgid "Example ClamAV configuration file:"
 msgstr "Beispieldatei für ClamAV Konfiguration:"
 
 #: ../templates/classic/help.html:424
