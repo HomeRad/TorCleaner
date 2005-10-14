@@ -83,7 +83,7 @@ ul#minitabs li {
 ul#minitabs a {
     text-decoration: none;
     padding: 0 0 3px;
-    border-bottom: 4px solid #FFF;
+    border-bottom: 4px solid #fff7ee;
     color: #555555;
 }
 ul#minitabs a#current {
