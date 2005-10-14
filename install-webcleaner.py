@@ -16,10 +16,11 @@ if not sys.platform.startswith('win'):
     # not for us
     sys.exit()
 if not hasattr(sys, "version_info"):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
-if sys.version_info < (2, 3, 1, 'final', 0):
-    raise SystemExit, "This program requires Python 2.3.1 or later."
+    raise SystemExit, "This program requires Python 2.4 or later."
+if sys.version_info < (2, 4, 0, 'final', 0):
+    raise SystemExit, "This program requires Python 2.4 or later."
 import os
+import glob
 import time
 import webbrowser
 import distutils.sysconfig
@@ -298,8 +299,9 @@ def remove_tempfiles ():
     """
     import wc
     remove_file(os.path.join(wc.ConfigDir, "magic.mime.mgc"))
-    remove_file(os.path.join(wc.ConfigDir, "webcleaner.log"))
-    remove_file(os.path.join(wc.ConfigDir, "webcleaner-access.log"))
+    for pat in ("webcleaner.log*", "webcleaner-access.log*"):
+        for fname in glob.glob(os.path.join(wc.ConfigDir, pat)):
+            remove_file(fname)
 
 
 def remove_file (fname):
