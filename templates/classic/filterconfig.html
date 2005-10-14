@@ -32,6 +32,7 @@ filter rule configuration</title>
 <tr valign="top">
 <!-- folders -->
 <td>
+<span tal:condition="not:config/folderrules" tal:replace="structure string:&nbsp;">&nbsp;</span>
 <table tal:repeat="folder config/folderrules" summary="">
 <tr>
 <td style="white-space:nowrap;"><img
@@ -72,6 +73,7 @@ filter rule configuration</title>
 </td>
 <!-- rules -->
 <td>
+<span tal:condition="not:curfolder" tal:replace="structure string:&nbsp;">&nbsp;</span>
 <div tal:condition="curfolder">
 <input type="hidden" name="selfolder" tal:attributes="value string:${curfolder/oid}">
 <table tal:repeat="rule curfolder/rules_display" summary=""
@@ -145,6 +147,7 @@ filter rule configuration</title>
 </td>
 <!-- rule -->
 <td>
+<span tal:condition="not:currule" tal:replace="structure string:&nbsp;">&nbsp;</span>
 <div tal:condition="currule">
 <input type="hidden" name="selrule"
  tal:attributes="value string:${currule/oid}">
