@@ -855,8 +855,7 @@ js_Invoke(JSContext *cx, uintN argc, uintN flags)
     JSNative native;
     JSFunction *fun;
     JSScript *script;
-    uintN minargs, nvars;
-    intN nslots, nalloc, surplus;
+    uintN nslots, nvars, nalloc, surplus;
     JSInterpreterHook hook;
     void *hookData;
 
@@ -891,6 +890,7 @@ js_Invoke(JSContext *cx, uintN argc, uintN flags)
      */
     if (JSVAL_IS_PRIMITIVE(v)) {
 #if JS_HAS_NO_SUCH_METHOD
+        jsid id;
         jsbytecode *pc;
         jsatomid atomIndex;
         JSAtom *atom;
@@ -919,10 +919,20 @@ js_Invoke(JSContext *cx, uintN argc, uintN flags)
             goto out2;
         thisp = frame.thisp;
 
-        ok = OBJ_GET_PROPERTY(cx, thisp,
-                              ATOM_TO_JSID(cx->runtime->atomState
-                                           .noSuchMethodAtom),
-                              &v);
+        id = ATOM_TO_JSID(cx->runtime->atomState.noSuchMethodAtom);
+        if (OBJECT_IS_XML(cx, thisp)) {
+            JSXMLObjectOps *ops;
+
+            ops = (JSXMLObjectOps *) thisp->map->ops;
+            thisp = ops->getMethod(cx, thisp, id, &v);
+            if (!thisp) {
+                ok = JS_FALSE;
+                goto out2;
+            }
+            vp[1] = OBJECT_TO_JSVAL(thisp);
+        } else {
+            ok = OBJ_GET_PROPERTY(cx, thisp, id, &v);
+        }
         if (!ok)
             goto out2;
         if (JSVAL_IS_PRIMITIVE(v))
@@ -1020,7 +1030,7 @@ js_Invoke(JSContext *cx, uintN argc, uintN flags)
         }
         fun = NULL;
         script = NULL;
-        minargs = nvars = 0;
+        nslots = nvars = 0;
 
         /* Try a call or construct native object op. */
         native = (flags & JSINVOKE_CONSTRUCT) ? ops->construct : ops->call;
@@ -1037,7 +1047,8 @@ have_fun:
             native = fun->u.native;
             script = NULL;
         }
-        minargs = fun->nargs + fun->extra;
+        nslots = (fun->nargs > argc) ? fun->nargs - argc : 0;
+        nslots += fun->extra;
         nvars = fun->nvars;
 
         /* Handle bound method special case. */
@@ -1076,8 +1087,7 @@ have_fun:
     hook = cx->runtime->callHook;
     hookData = NULL;
 
-    /* Check for missing arguments expected by the function. */
-    nslots = (intN)((argc < minargs) ? minargs - argc : 0);
+    /* Check for argument slots required by the function. */
     if (nslots) {
         /* All arguments must be contiguous, so we may have to copy actuals. */
         nalloc = nslots;
@@ -1087,15 +1097,15 @@ have_fun:
             nalloc += 2 + argc;
         } else {
             /* Take advantage of surplus slots in the caller's frame depth. */
+            JS_ASSERT((jsval *)mark >= sp);
             surplus = (jsval *)mark - sp;
-            JS_ASSERT(surplus >= 0);
             nalloc -= surplus;
         }
 
         /* Check whether we have enough space in the caller's frame. */
-        if (nalloc > 0) {
+        if ((intN)nalloc > 0) {
             /* Need space for actuals plus missing formals minus surplus. */
-            newsp = js_AllocRawStack(cx, (uintN)nalloc, NULL);
+            newsp = js_AllocRawStack(cx, nalloc, NULL);
             if (!newsp) {
                 ok = JS_FALSE;
                 goto out;
@@ -1104,7 +1114,7 @@ have_fun:
             /* If we couldn't allocate contiguous args, copy actuals now. */
             if (newsp != mark) {
                 JS_ASSERT(sp + nslots > limit);
-                JS_ASSERT(2 + argc + nslots == (uintN)nalloc);
+                JS_ASSERT(2 + argc + nslots == nalloc);
                 *newsp++ = vp[0];
                 *newsp++ = vp[1];
                 if (argc)
@@ -1118,16 +1128,18 @@ have_fun:
         frame.vars += nslots;
 
         /* Push void to initialize missing args. */
-        while (--nslots >= 0)
+        do {
             PUSH(JSVAL_VOID);
+        } while (--nslots != 0);
     }
+    JS_ASSERT(nslots == 0);
 
     /* Now allocate stack space for local variables. */
-    nslots = (intN)frame.nvars;
-    if (nslots) {
-        surplus = (intN)((jsval *)cx->stackPool.current->avail - frame.vars);
-        if (surplus < nslots) {
-            newsp = js_AllocRawStack(cx, (uintN)nslots, NULL);
+    if (nvars) {
+        JS_ASSERT((jsval *)cx->stackPool.current->avail >= frame.vars);
+        surplus = (jsval *)cx->stackPool.current->avail - frame.vars;
+        if (surplus < nvars) {
+            newsp = js_AllocRawStack(cx, nvars, NULL);
             if (!newsp) {
                 ok = JS_FALSE;
                 goto out;
@@ -1139,9 +1151,11 @@ have_fun:
         }
 
         /* Push void to initialize local variables. */
-        while (--nslots >= 0)
+        do {
             PUSH(JSVAL_VOID);
+        } while (--nvars != 0);
     }
+    JS_ASSERT(nvars == 0);
 
     /* Store the current sp in frame before calling fun. */
     SAVE_SP(&frame);
@@ -2294,7 +2308,7 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
                  ? ((JSXMLObjectOps *) obj->map->ops)->enumerateValues
                                 (cx, obj, JSENUMERATE_NEXT, &iter_state,
                                  &fid, &rval)
-                 : 
+                 :
 #endif
                    OBJ_ENUMERATE(cx, obj, JSENUMERATE_NEXT, &iter_state, &fid);
             propobj->slots[JSSLOT_ITER_STATE] = iter_state;
@@ -3595,7 +3609,7 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
             PUSH_OPND(rval);
             obj = NULL;
             break;
- 
+
           case JSOP_UINT24:
             i = (jsint) GET_LITERAL_INDEX(pc);
             rval = INT_TO_JSVAL(i);
@@ -3638,6 +3652,7 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
 #endif
 #if JS_HAS_XML_SUPPORT
               case JSOP_GETMETHOD:    goto do_JSOP_GETMETHOD;
+              case JSOP_SETMETHOD:    goto do_JSOP_SETMETHOD;
 #endif
               case JSOP_INITCATCHVAR: goto do_JSOP_INITCATCHVAR;
               case JSOP_NAMEDFUNOBJ:  goto do_JSOP_NAMEDFUNOBJ;
@@ -5213,6 +5228,28 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
             }
             if (!ok)
                 goto out;
+            STORE_OPND(-1, rval);
+          END_LITOPX_CASE
+
+          BEGIN_LITOPX_CASE(JSOP_SETMETHOD, 0)
+            /* Get an immediate atom naming the property. */
+            id   = ATOM_TO_JSID(atom);
+            rval = FETCH_OPND(-1);
+            FETCH_OBJECT(cx, -2, lval, obj);
+            SAVE_SP(fp);
+
+            /* Special-case XML object method lookup, per ECMA-357. */
+            if (OBJECT_IS_XML(cx, obj)) {
+                JSXMLObjectOps *ops;
+
+                ops = (JSXMLObjectOps *) obj->map->ops;
+                ok = ops->setMethod(cx, obj, id, &rval);
+            } else {
+                CACHED_SET(OBJ_SET_PROPERTY(cx, obj, id, &rval));
+            }
+            if (!ok)
+                goto out;
+            --sp;
             STORE_OPND(-1, rval);
           END_LITOPX_CASE
 
