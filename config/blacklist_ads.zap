@@ -3,8 +3,8 @@
 <folder sid="wc.14" oid="0" configversion="0.10">
 <title lang="en">Blacklist ads</title>
 <title lang="de">Filter für Werbung</title>
-<description lang="en">Automatically generated on 2005-08-29 15:02:46</description>
-<description lang="de">Automatisch generiert am 2005-08-29 15:02:46</description>
+<description lang="en">Automatically generated on 2005-10-16 02:24:40</description>
+<description lang="de">Automatisch generiert am 2005-10-16 02:24:40</description>
 <blockdomains sid="wc.2"
  filename="blacklists/ads/domains.gz">
   <title lang="en">Ads domain filter</title>
