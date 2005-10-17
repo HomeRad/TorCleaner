@@ -346,7 +346,7 @@ def download_and_merge ():
     # from Pål Baltzersen and Lars Erik Håland (Squidguard guys)
     geturl("ftp://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/", "blacklists.tar.gz", blacklist)
     # from Stefan Furtmayr
-    geturl("http://www.bn-paf.de/filter/", "de-blacklists.tar.gz", blacklist)
+    #geturl("http://www.bn-paf.de/filter/", "de-blacklists.tar.gz", blacklist)
     # from Craig Baird
     geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist, saveas="porn/domains.gz")
     # from ?????
