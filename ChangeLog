@@ -1,6 +1,8 @@
 2.34 "" (released xx.xx.xxxx)
 
-  *
+  * Document the Antivirus rule type.
+    Type: documentation
+    Changed: templates/classic/help.html
 
 2.33 "The Stunt Man" (released 12.10.2005)
 

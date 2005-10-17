@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-14 00:28+0200\n"
+"POT-Creation-Date: 2005-10-14 14:32+0200\n"
 "PO-Revision-Date: 2005-10-07 16:07+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -350,7 +350,7 @@ msgstr "Fehler: keine Aktualisierungen vorhanden."
 msgid "Error: %s"
 msgstr "Fehler: %s"
 
-#: ../wc/proxy/Dispatcher.py:328
+#: ../wc/proxy/Dispatcher.py:325
 #, python-format
 msgid "Connect error %s."
 msgstr "Verbindungsproblem %s."
@@ -817,7 +817,7 @@ msgstr "Hinzufügen und Ersetzen von HTTP Header Werten."
 msgid "Add new"
 msgstr "Neu hinzufügen"
 
-#: ../templates/classic/filterconfig.html:125
+#: ../templates/classic/filterconfig.html:127
 msgid "Add new rule to current folder."
 msgstr "Neue Regel zu aktuellem Ordner hinzufügen"
 
@@ -1126,11 +1126,11 @@ msgstr "Lösche diese Bewertung"
 msgid "Description"
 msgstr "Beschreibung"
 
-#: ../templates/classic/filterconfig.html:139
+#: ../templates/classic/filterconfig.html:141
 msgid "Disable folder"
 msgstr "Ordner deaktivieren"
 
-#: ../templates/classic/filterconfig.html:172
+#: ../templates/classic/filterconfig.html:175
 msgid "Disable rule"
 msgstr "Deaktiviere Regel"
 
@@ -1138,11 +1138,11 @@ msgstr "Deaktiviere Regel"
 msgid "Disabled filter module(s) ${disabled-filter}."
 msgstr "Filter Modul(e) ${disabled-filter} wurde(n) deaktiviert."
 
-#: ../templates/classic/filterconfig.html:49
+#: ../templates/classic/filterconfig.html:50
 msgid "Disabled folder icon"
 msgstr "Bild für inaktiven Ordner"
 
-#: ../templates/classic/filterconfig.html:92
+#: ../templates/classic/filterconfig.html:94
 msgid "Disabled rule icon"
 msgstr "Bild von inaktiver Regel"
 
@@ -1154,8 +1154,8 @@ msgstr "Nicht zu filternde Rechner"
 msgid "Don't match urls"
 msgstr "Nicht zutreffende URLs"
 
-#: ../templates/classic/filterconfig.html:44
-#: ../templates/classic/filterconfig.html:86
+#: ../templates/classic/filterconfig.html:45
+#: ../templates/classic/filterconfig.html:88
 msgid "Down"
 msgstr "Nach unten"
 
@@ -1175,36 +1175,36 @@ msgstr "Versende Mail nach ${email} mit dieser URL Bewertung"
 msgid "Email this rating to the author"
 msgstr "Versende dem Autor eine Mail mit dieser Bewertung"
 
-#: ../templates/classic/filterconfig.html:231
+#: ../templates/classic/filterconfig.html:234
 msgid "Empty attribute name."
 msgstr "Leerer Attributname."
 
-#: ../templates/classic/filterconfig.html:224
-#: ../templates/classic/filterconfig.html:225
+#: ../templates/classic/filterconfig.html:227
+#: ../templates/classic/filterconfig.html:228
 msgid "Empty folder name."
 msgstr "Leerer Ordnername."
 
-#: ../templates/classic/filterconfig.html:238
+#: ../templates/classic/filterconfig.html:241
 msgid "Empty header rule name."
 msgstr "Leerer Header-Regel Name."
 
-#: ../templates/classic/filterconfig.html:245
+#: ../templates/classic/filterconfig.html:248
 msgid "Empty replace search value."
 msgstr "Leerer Textersatzwert."
 
-#: ../templates/classic/filterconfig.html:246
+#: ../templates/classic/filterconfig.html:249
 msgid "Empty rewrite tag name."
 msgstr "Leerer Rewrite-Regel Tagname."
 
-#: ../templates/classic/filterconfig.html:237
+#: ../templates/classic/filterconfig.html:240
 msgid "Empty rule title."
 msgstr "Leerer Regel Titel."
 
-#: ../templates/classic/filterconfig.html:135
+#: ../templates/classic/filterconfig.html:137
 msgid "Enable folder"
 msgstr "Ordner aktivieren"
 
-#: ../templates/classic/filterconfig.html:168
+#: ../templates/classic/filterconfig.html:171
 msgid "Enable rule"
 msgstr "Aktiviere Regel"
 
@@ -1279,28 +1279,28 @@ msgstr "Filteraktualisierung"
 msgid "Firefox"
 msgstr "Firefox"
 
-#: ../templates/classic/filterconfig.html:226
+#: ../templates/classic/filterconfig.html:229
 msgid "Folder already disabled."
 msgstr "Ordner ist bereits deaktiviert."
 
-#: ../templates/classic/filterconfig.html:227
+#: ../templates/classic/filterconfig.html:230
 msgid "Folder already enabled."
 msgstr "Ordner ist bereits aktiviert."
 
-#: ../templates/classic/filterconfig.html:53
-#: ../templates/classic/filterconfig.html:55
+#: ../templates/classic/filterconfig.html:54
+#: ../templates/classic/filterconfig.html:56
 msgid "Folder icon"
 msgstr "Ordnericon"
 
-#: ../templates/classic/filterconfig.html:196
+#: ../templates/classic/filterconfig.html:199
 msgid "Folder moved down."
 msgstr "Ordner wurde nach unten geschoben."
 
-#: ../templates/classic/filterconfig.html:195
+#: ../templates/classic/filterconfig.html:198
 msgid "Folder moved up."
 msgstr "Ordner wurde nach oben geschoben."
 
-#: ../templates/classic/filterconfig.html:66
+#: ../templates/classic/filterconfig.html:67
 msgid "Folder name"
 msgstr "Ordnername"
 
@@ -1308,19 +1308,19 @@ msgstr "Ordnername"
 msgid "Folder rules"
 msgstr "Ordner Regeln"
 
-#: ../templates/classic/filterconfig.html:186
+#: ../templates/classic/filterconfig.html:189
 msgid "Folder successfully disabled."
 msgstr "Ordner erfolgreich deaktiviert."
 
-#: ../templates/classic/filterconfig.html:187
+#: ../templates/classic/filterconfig.html:190
 msgid "Folder successfully enabled."
 msgstr "Ordner erfolgreich aktiviert."
 
-#: ../templates/classic/filterconfig.html:188
+#: ../templates/classic/filterconfig.html:191
 msgid "Folder successfully removed."
 msgstr "Ordner erfolgreich gelöscht."
 
-#: ../templates/classic/filterconfig.html:185
+#: ../templates/classic/filterconfig.html:188
 msgid "Folder successfully renamed."
 msgstr "Ordner erfolgreich umbenannt."
 
@@ -1341,7 +1341,7 @@ msgstr "Allgemein"
 msgid "Go to rating:"
 msgstr "Gehe zur Bewertung:"
 
-#: ../templates/classic/filterconfig.html:106
+#: ../templates/classic/filterconfig.html:108
 msgid "Go to rule:"
 msgstr "Gehe zur Regel:"
 
@@ -1419,11 +1419,11 @@ msgstr "Rechnername"
 msgid "Hostname of the parent proxy"
 msgstr "Rechnername des übergeordneten Proxy"
 
-#: ../templates/classic/filterconfig.html:193
+#: ../templates/classic/filterconfig.html:196
 msgid "Htmlrewrite attribute added."
 msgstr "Htmlrewrite Attribut wurde hinzugefügt."
 
-#: ../templates/classic/filterconfig.html:194
+#: ../templates/classic/filterconfig.html:197
 msgid "Htmlrewrite attribute(s) removed."
 msgstr "Htmlrewrite Attribut(e) wurde(n) gelöscht."
 
@@ -1507,32 +1507,32 @@ msgstr "Internet Explorer"
 msgid "Invalid SSL server port."
 msgstr "Ungültige SSL Server Portnummer."
 
-#: ../templates/classic/filterconfig.html:253
+#: ../templates/classic/filterconfig.html:256
 msgid "Invalid XML replace type."
 msgstr "Ungültiger XML Ersatzwert."
 
-#: ../templates/classic/filterconfig.html:252
+#: ../templates/classic/filterconfig.html:255
 msgid "Invalid XML selector."
 msgstr "Ungültiger XML Selektor."
 
-#: ../templates/classic/filterconfig.html:232
+#: ../templates/classic/filterconfig.html:235
 msgid "Invalid attribute name."
 msgstr "Ungültiger Attributname."
 
 #: ../templates/classic/rating.html:134
-#: ../templates/classic/filterconfig.html:251
+#: ../templates/classic/filterconfig.html:254
 msgid "Invalid category value."
 msgstr "Ungültiger Kategorie Wert."
 
-#: ../templates/classic/filterconfig.html:248
+#: ../templates/classic/filterconfig.html:251
 msgid "Invalid folder index."
 msgstr "Ungültiger Ordnerindex."
 
-#: ../templates/classic/filterconfig.html:234
+#: ../templates/classic/filterconfig.html:237
 msgid "Invalid folder move down id."
 msgstr "Ungültige Ordner-nach-unten-Verschieben Nummer."
 
-#: ../templates/classic/filterconfig.html:233
+#: ../templates/classic/filterconfig.html:236
 msgid "Invalid folder move up id."
 msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
 
@@ -1540,19 +1540,19 @@ msgstr "Ungültige Ordner-nach-oben-Verschieben Nummer."
 msgid "Invalid host name."
 msgstr "Ungültiger Rechnername."
 
-#: ../templates/classic/filterconfig.html:242
+#: ../templates/classic/filterconfig.html:245
 msgid "Invalid image height value."
 msgstr "Ungültige Bildhöhe."
 
-#: ../templates/classic/filterconfig.html:243
+#: ../templates/classic/filterconfig.html:246
 msgid "Invalid image quality value."
 msgstr "Ungültiger Wert für Bildqualität."
 
-#: ../templates/classic/filterconfig.html:241
+#: ../templates/classic/filterconfig.html:244
 msgid "Invalid image width value."
 msgstr "Ungültige Bildbreite."
 
-#: ../templates/classic/filterconfig.html:244
+#: ../templates/classic/filterconfig.html:247
 msgid "Invalid minimum size bytes value."
 msgstr "Ungültiger Wet für minimale Bildgröße."
 
@@ -1576,36 +1576,36 @@ msgstr "Ungültige Proxy Portnummer."
 msgid "Invalid rating."
 msgstr "Ungültige Bewertung."
 
-#: ../templates/classic/filterconfig.html:247
+#: ../templates/classic/filterconfig.html:250
 msgid "Invalid rewrite part name."
 msgstr "Ungültiger Rewrite-Regel Teilwert."
 
-#: ../templates/classic/filterconfig.html:239
+#: ../templates/classic/filterconfig.html:242
 msgid "Invalid rule header action."
 msgstr "Ungültige Header-Regel-Aktion."
 
-#: ../templates/classic/filterconfig.html:240
+#: ../templates/classic/filterconfig.html:243
 msgid "Invalid rule header filter stage."
 msgstr "Ungültigee Header-Regel Filterstufe."
 
-#: ../templates/classic/filterconfig.html:249
+#: ../templates/classic/filterconfig.html:252
 msgid "Invalid rule index."
 msgstr "Ungültiger Regel Index."
 
-#: ../templates/classic/filterconfig.html:236
+#: ../templates/classic/filterconfig.html:239
 msgid "Invalid rule move down id."
 msgstr "Ungültige Regel-nach-unten-Verschieben Nummer."
 
-#: ../templates/classic/filterconfig.html:235
+#: ../templates/classic/filterconfig.html:238
 msgid "Invalid rule move up id."
 msgstr "Ungültige Regel-nach-oben-Verschieben Nummer."
 
-#: ../templates/classic/filterconfig.html:228
+#: ../templates/classic/filterconfig.html:231
 msgid "Invalid rule type."
 msgstr "Ungültiger Regeltyp."
 
 #: ../templates/classic/rating.html:135
-#: ../templates/classic/filterconfig.html:250
+#: ../templates/classic/filterconfig.html:253
 msgid "Invalid selection index."
 msgstr "Ungültiger Auswahlindex."
 
@@ -1741,19 +1741,19 @@ msgstr ""
 "${alt-key} + Tastaturkommando tippen, unter Macintosh können sie ${control-"
 "key} + Tastaturkommando tippen."
 
-#: ../templates/classic/filterconfig.html:44
+#: ../templates/classic/filterconfig.html:45
 msgid "Move folder down"
 msgstr "Ordner nach unten schieben"
 
-#: ../templates/classic/filterconfig.html:38
+#: ../templates/classic/filterconfig.html:39
 msgid "Move folder up"
 msgstr "Ordner nach oben schieben"
 
-#: ../templates/classic/filterconfig.html:86
+#: ../templates/classic/filterconfig.html:88
 msgid "Move rule down"
 msgstr "Regel nach unten schieben"
 
-#: ../templates/classic/filterconfig.html:81
+#: ../templates/classic/filterconfig.html:83
 msgid "Move rule up"
 msgstr "Regel nach oben schieben"
 
@@ -1780,19 +1780,19 @@ msgstr "Netzwerkadresse auf der Proxy horchen soll."
 msgid "New configuration page"
 msgstr "Neue Konfigurationsseite"
 
-#: ../templates/classic/filterconfig.html:69
+#: ../templates/classic/filterconfig.html:70
 msgid "New folder"
 msgstr "Neuer Ordner"
 
-#: ../templates/classic/filterconfig.html:184
+#: ../templates/classic/filterconfig.html:187
 msgid "New folder successfully created."
 msgstr "Neuer Ordner erfolgreich erstellt."
 
-#: ../templates/classic/filterconfig.html:125
+#: ../templates/classic/filterconfig.html:127
 msgid "New rule"
 msgstr "Neue Regel"
 
-#: ../templates/classic/filterconfig.html:189
+#: ../templates/classic/filterconfig.html:192
 msgid "New rule successfully created."
 msgstr "Neue Regel wurde erfolgreich erstellt."
 
@@ -1808,6 +1808,12 @@ msgstr "Nicht zu filternde(r) Rechner wurde(n) erfolgreich entfernt."
 #: ../templates/classic/help.html:148 ../templates/classic/help.html:197
 msgid "None"
 msgstr "Keine"
+
+#: ../templates/classic/help.html:438
+msgid ""
+"One activated Antivirus rule enables the virus filtering for the VirusFilter "
+"module."
+msgstr ""
 
 #: ../templates/classic/help.html:435
 msgid ""
@@ -1984,7 +1990,7 @@ msgstr "Bewertet"
 msgid "Rating"
 msgstr "Bewertung"
 
-#: ../templates/classic/filterconfig.html:211
+#: ../templates/classic/filterconfig.html:214
 msgid "Rating category limit successfully changed."
 msgstr "Kategorie der Inhaltsbewertung wurde erfolgreich geändert."
 
@@ -2020,7 +2026,7 @@ msgstr ""
 "Lösche Kommentare aus dem HTML Quelltext. Kommentare innerhalb von &lt;"
 "script&gt; or &lt;style&gt; Tags werden nicht gelöscht."
 
-#: ../templates/classic/filterconfig.html:131
+#: ../templates/classic/filterconfig.html:133
 msgid "Remove folder"
 msgstr "Ordner löschen"
 
@@ -2028,7 +2034,7 @@ msgstr "Ordner löschen"
 msgid "Remove images with certain width and/or height."
 msgstr "Entferne Bilder bestimmter Breite und/oder Höhe."
 
-#: ../templates/classic/filterconfig.html:164
+#: ../templates/classic/filterconfig.html:167
 msgid "Remove rule"
 msgstr "Regel löschen"
 
@@ -2043,7 +2049,7 @@ msgstr "Lösche Auswahl"
 msgid "Remove selected attributes"
 msgstr "Lösche ausgewählte Attribute"
 
-#: ../templates/classic/filterconfig.html:116
+#: ../templates/classic/filterconfig.html:118
 msgid "Rename folder"
 msgstr "Ordner umbenennen"
 
@@ -2118,123 +2124,123 @@ msgid "Restarting..."
 msgstr "Starte neu..."
 
 #: ../templates/classic/filterconfig.html:28
-#: ../templates/classic/filterconfig.html:157
+#: ../templates/classic/filterconfig.html:160
 msgid "Rule"
 msgstr "Regel"
 
-#: ../templates/classic/filterconfig.html:203
+#: ../templates/classic/filterconfig.html:206
 msgid "Rule URL successfully changed."
 msgstr "Regel URL wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:219
+#: ../templates/classic/filterconfig.html:222
 msgid "Rule XML replace type successfully changed."
 msgstr "XML Regel Ersatztyp wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:220
+#: ../templates/classic/filterconfig.html:223
 msgid "Rule XML replace value successfully changed."
 msgstr "XML Regel Ersatzwert wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:218
+#: ../templates/classic/filterconfig.html:221
 msgid "Rule XML selector successfully changed."
 msgstr "XML Regel Selektor wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:229
+#: ../templates/classic/filterconfig.html:232
 msgid "Rule already disabled."
 msgstr "Regel ist bereits deaktiviert."
 
-#: ../templates/classic/filterconfig.html:230
+#: ../templates/classic/filterconfig.html:233
 msgid "Rule already enabled."
 msgstr "Regel ist bereits aktiviert."
 
-#: ../templates/classic/filterconfig.html:200
+#: ../templates/classic/filterconfig.html:203
 msgid "Rule description successfully changed."
 msgstr "Regelbeschreibung wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:202
+#: ../templates/classic/filterconfig.html:205
 msgid "Rule don't-match-url successfully changed."
 msgstr "Regel Nichttreffer-URL wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:215
+#: ../templates/classic/filterconfig.html:218
 msgid "Rule enclosed block successfully changed."
 msgstr "Rewrite-Regel eingeschlossener Block wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:207
+#: ../templates/classic/filterconfig.html:210
 msgid "Rule header action value successfully changed."
 msgstr "Header-Regel Aktion wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:208
+#: ../templates/classic/filterconfig.html:211
 msgid "Rule header filter stage value successfully changed."
 msgstr "Header-Regel Filterstufe wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:205
+#: ../templates/classic/filterconfig.html:208
 msgid "Rule header name successfully changed."
 msgstr "Regel Header-Name wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:206
+#: ../templates/classic/filterconfig.html:209
 msgid "Rule header value successfully changed."
 msgstr "Regel Header-Wert wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:93
+#: ../templates/classic/filterconfig.html:95
 msgid "Rule icon"
 msgstr "Regelicon"
 
-#: ../templates/classic/filterconfig.html:210
+#: ../templates/classic/filterconfig.html:213
 msgid "Rule image height successfully changed."
 msgstr "Regel Bildhöhe wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:209
+#: ../templates/classic/filterconfig.html:212
 msgid "Rule image width successfully changed."
 msgstr "Regel Bildbreite wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:201
+#: ../templates/classic/filterconfig.html:204
 msgid "Rule match-url successfully changed."
 msgstr "Regel Treffer-URL wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:198
+#: ../templates/classic/filterconfig.html:201
 msgid "Rule moved down."
 msgstr "Regel wurde nach unten geschoben."
 
-#: ../templates/classic/filterconfig.html:197
+#: ../templates/classic/filterconfig.html:200
 msgid "Rule moved up."
 msgstr "Regel wurde nach oben geschoben"
 
-#: ../templates/classic/filterconfig.html:212
+#: ../templates/classic/filterconfig.html:215
 msgid "Rule replace search successfully changed."
 msgstr "Replace-Regel Suchwert wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:213
+#: ../templates/classic/filterconfig.html:216
 msgid "Rule replacement successfully changed."
 msgstr "Regel Ersatzwert wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:216
+#: ../templates/classic/filterconfig.html:219
 msgid "Rule rewrite part successfully changed."
 msgstr "Rewrite-Regel Teilwert wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:217
+#: ../templates/classic/filterconfig.html:220
 msgid "Rule rewrite replacement successfully changed."
 msgstr "Rewrite-Regel Ersatztext wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:214
+#: ../templates/classic/filterconfig.html:217
 msgid "Rule rewrite tag successfully changed."
 msgstr "Rewrite-Regel Tagname wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:190
+#: ../templates/classic/filterconfig.html:193
 msgid "Rule successfully disabled."
 msgstr "Ordner erfolgreich deaktiviert."
 
-#: ../templates/classic/filterconfig.html:191
+#: ../templates/classic/filterconfig.html:194
 msgid "Rule successfully enabled."
 msgstr "Regel wurde erfolgreich aktiviert."
 
-#: ../templates/classic/filterconfig.html:192
+#: ../templates/classic/filterconfig.html:195
 msgid "Rule successfully removed."
 msgstr "Regel wurde erfolgreich gelöscht."
 
-#: ../templates/classic/filterconfig.html:199
+#: ../templates/classic/filterconfig.html:202
 msgid "Rule title successfully changed."
 msgstr "Regel Titel wurde erfolgreich geändert."
 
-#: ../templates/classic/filterconfig.html:204
+#: ../templates/classic/filterconfig.html:207
 msgid "Rule url replacement successfully changed."
 msgstr "Regel URL-Ersatzwert wurde erfolgreich geändert."
 
@@ -2494,8 +2500,8 @@ msgstr "URL Bewertung"
 msgid "URL to rate"
 msgstr "Zu bewertende URL"
 
-#: ../templates/classic/filterconfig.html:38
-#: ../templates/classic/filterconfig.html:81
+#: ../templates/classic/filterconfig.html:39
+#: ../templates/classic/filterconfig.html:83
 msgid "Up"
 msgstr "Hoch"
 
@@ -2707,11 +2713,11 @@ msgstr ""
 msgid "return window.confirm('Really delete this rating?')"
 msgstr "return window.confirm('Diese Bewertung wirklich löschen?')"
 
-#: ../templates/classic/filterconfig.html:131
+#: ../templates/classic/filterconfig.html:133
 msgid "return window.confirm('Really remove this folder?')"
 msgstr "return window.confirm('Diesen Ordner wirklich löschen?')"
 
-#: ../templates/classic/filterconfig.html:164
+#: ../templates/classic/filterconfig.html:167
 msgid "return window.confirm('Really remove this rule?')"
 msgstr "return window.confirm('Diese Regel wirklich löschen?')"
 
