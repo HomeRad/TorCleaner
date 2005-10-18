@@ -212,19 +212,21 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
             if rule.match_tag(tag) and rule.match_attrs(attrs):
                 wc.log.debug(wc.LOG_FILTER, "%s matched rule %r on tag %r",
                              self, rule.titles['en'], tag)
-                if rule.start_sufficient:
+                if rule.matches_starttag():
                     item = rule.filter_tag(tag, attrs, starttype)
                     filtered = True
-                    if item[0] == starttype and item[1] == tag:
-                        foo, tag, attrs = item
-                        # give'em a chance to replace more than one attribute
-                        continue
-                    else:
-                        break
-                else:
+                if rule.matches_endtag():
                     wc.log.debug(wc.LOG_FILTER, "%s put rule %r on buffer",
                                  self, rule.titles['en'])
                     rulelist.append(rule)
+                if item[0] == starttype and item[1] == tag:
+                    # If tag type and name did not change, more than one
+                    # rule has a chance to replace data.
+                    foo, tag, attrs = item
+                    continue
+                else:
+                    # If tag type or name changed, it's over.
+                    break
         if rulelist:
             # remember buffer position for end tag matching
             pos = len(self.htmlparser.tagbuf)

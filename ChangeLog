@@ -4,6 +4,12 @@
     Type: documentation
     Changed: templates/classic/help.html
 
+  * Make sure that a HTML rewrite rule that replaces tag names applies
+    to both start and end tags.
+    Type: bugfix
+    Changed: wc/filter/rules/HtmlrewriteRule.py,
+      wc/filter/html/HtmlFilter.py
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled

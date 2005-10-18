@@ -102,9 +102,6 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                               "so specifying an enclose value is invalid." % \
                               (self.titles['en'], tag)
         self.attrnames.append('tag')
-        # we'll do this again in after parsing, in compile_data()
-        self.set_start_sufficient()
-
 
     def fill_attrs (self, attrs, name):
         """
@@ -139,7 +136,6 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         wc.filter.rules.Rule.compileRegex(self, "tag", fullmatch=True)
         for attr, val in self.attrs.items():
             self.attrs_ro[attr] = re.compile(val)
-        self.set_start_sufficient()
 
     def update (self, rule, dryrun=False, log=None):
         """
@@ -150,24 +146,28 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         attrs = ['attrs', 'part', 'replacement', 'enclosed']
         return self.update_attrs(attrs, rule, dryrun, log) or chg
 
-    def _compute_start_sufficient (self):
+    def matches_starttag (self):
         """
-        Return True if start tag is sufficient for rule application.
+        See if this rule matches start tags.
         """
         if self.tag in NO_CLOSE_TAGS:
             return True
         return self.part not in [
             wc.filter.html.ENCLOSED,
             wc.filter.html.COMPLETE,
-            wc.filter.html.TAG,
-            wc.filter.html.TAGNAME,
         ]
 
-    def set_start_sufficient (self):
+    def matches_endtag (self):
         """
-        Set flag to test if start tag is sufficient for rule application.
+        See if this rule matches end tags.
         """
-        self.start_sufficient = self._compute_start_sufficient()
+        if self.tag in NO_CLOSE_TAGS:
+            return False
+        return self.part not in [
+            wc.filter.html.ATTR,
+            wc.filter.html.ATTRVAL,
+            wc.filter.html.ATTRNAME,
+        ]
 
     def match_tag (self, tag):
         """
@@ -270,10 +270,8 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         if self.part == wc.filter.html.COMPLETE:
             buf[i:] = [[wc.filter.html.DATA, self.replacement]]
         elif self.part == wc.filter.html.TAG:
-            buf[i] = [wc.filter.html.DATA, self.replacement]
             buf.append([wc.filter.html.DATA, self.replacement])
         elif self.part == wc.filter.html.TAGNAME:
-            buf[i] = [wc.filter.html.STARTTAG, self.replacement, {}]
             buf.append([wc.filter.html.ENDTAG, self.replacement])
         elif self.part == wc.filter.html.ENCLOSED:
             buf[i+1:] = [[wc.filter.html.DATA, self.replacement]]
@@ -323,5 +321,4 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         s += "enclosed %r\n" % self.enclosed.encode("iso-8859-1")
         s += "part %s\n" % num_part(self.part)
         s += "replacement %r\n" % self.replacement.encode("iso-8859-1")
-        s += "start suff. %d" % self.start_sufficient
         return s
