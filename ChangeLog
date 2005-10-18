@@ -10,6 +10,10 @@
     Changed: wc/filter/rules/HtmlrewriteRule.py,
       wc/filter/html/HtmlFilter.py
 
+  * New filter rule to replace <sourcetext> with <code>.
+    Type: feature
+    Changed: config/misc.zap
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled

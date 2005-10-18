@@ -30,7 +30,7 @@ from wc.http.header import WcMessage
 class TestRewriter (unittest.TestCase):
     """
     All these tests work with a _default_ filter configuration.
-    If you change any of the *.zap filter configs, tests can fail...
+    If you change any of the *.zap filter configs, tests can fail.
     """
 
     def setUp (self):
@@ -277,6 +277,10 @@ class TestRewriter (unittest.TestCase):
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <base href="bla"/>
 """)
+
+    def testSourcetext (self):
+        self.filt("""<html><body><strong>Mozilla<sourcetext></body></html>""",
+                  """<html><body><strong>Mozilla<code></body></html>""")
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)

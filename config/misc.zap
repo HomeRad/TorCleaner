@@ -117,4 +117,13 @@
   <title lang="de">IE print web object</title>
   <description lang="de">See discussion at http://www.securityfocus.com/archive/1/360128/2004-04-09/2004-04-15/0</description>
 </replace>
+
+<htmlrewrite sid="wc.47"
+ tag="sourcetext">
+  <title lang="de">Ersetze &lt;sourcetext&gt;</title>
+  <title lang="en">Replace &lt;sourcetext&gt;</title>
+  <description lang="de">Das &lt;sourcetext&gt; Element ist kein offizielles HTML Element und bringt einige Browser zum Absturz.</description>
+  <description lang="en">The&lt;sourcetext&gt; element is not an official HTML element and crashes some Browsers..</description>
+  <replacement part="tagname">code</replacement>
+</htmlrewrite>
 </folder>
