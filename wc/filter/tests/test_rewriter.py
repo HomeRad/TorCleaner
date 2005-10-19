@@ -278,9 +278,16 @@ class TestRewriter (unittest.TestCase):
 <base href="bla"/>
 """)
 
+    # sourcetext and parsererror tags hang Mozilla browsers
+    # See https://bugzilla.mozilla.org/show_bug.cgi?id=210658
     def testSourcetext (self):
         self.filt("""<html><body><strong>Mozilla<sourcetext></body></html>""",
-                  """<html><body><strong>Mozilla<code></body></html>""")
+                  """<html><body><strong>Mozilla</body></html>""")
+
+    def testParsererror (self):
+        self.filt("""<html><body><p><parsererror></parsererror></p></body></html>""",
+                  """<html><body><p></p></body></html>""")
+
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)
