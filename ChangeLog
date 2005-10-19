@@ -10,7 +10,8 @@
     Changed: wc/filter/rules/HtmlrewriteRule.py,
       wc/filter/html/HtmlFilter.py
 
-  * New filter rule to replace <sourcetext> with <code>.
+  * New filter rule to remove <sourcetext> and <parsererror> elements
+    which could hang Mozilla based browsers.
     Type: feature
     Changed: config/misc.zap
 
