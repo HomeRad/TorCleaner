@@ -168,9 +168,9 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
             if self.stackcount[-1][0] == tag:
                 self.stackcount[-1][1] += 1
         if tag == "meta":
-            if attrs.get('http-equiv', u'').lower() == 'content-rating':
+            if attrs.get_true('http-equiv', u'').lower() == 'content-rating':
                 rating = wc.HtmlParser.resolve_html_entities(
-                                                  attrs.get('content', u''))
+                                               attrs.get_true('content', u''))
                 url, rating = wc.filter.rating.rating_import(self.url, rating)
                 # note: always put this in the cache, since this overrides
                 # any http header setting, and page content changes more

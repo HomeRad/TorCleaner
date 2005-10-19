@@ -256,7 +256,8 @@ class HtmlSecurity (object):
         """
         if attrs.has_key('content'):
             # prevent redirect to non-http file
-            refresh = attrs.get('http-equiv', attrs.get('name', ''))
+            refresh = attrs.get_true('http-equiv',
+                                     attrs.get_true('name', u''))
             if refresh.lower() == 'refresh':
                 # lowercase and strip all whitespace
                 url = attrs['content'].lower()
