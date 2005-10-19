@@ -120,10 +120,19 @@
 
 <htmlrewrite sid="wc.47"
  tag="sourcetext">
-  <title lang="de">Ersetze &lt;sourcetext&gt;</title>
-  <title lang="en">Replace &lt;sourcetext&gt;</title>
+  <title lang="de">Entferne &lt;sourcetext&gt;</title>
+  <title lang="en">Remove &lt;sourcetext&gt;</title>
   <description lang="de">Das &lt;sourcetext&gt; Element ist kein offizielles HTML Element und bringt einige Browser zum Absturz.</description>
   <description lang="en">The&lt;sourcetext&gt; element is not an official HTML element and crashes some Browsers..</description>
-  <replacement part="tagname">code</replacement>
+  <replacement part="tag"/>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.48"
+ tag="parsererror">
+  <title lang="de">Entferne &lt;parsererror&gt;</title>
+  <title lang="en">Remove &lt;parsererror&gt;</title>
+  <description lang="de">Das &lt;parsererror&gt; Element ist kein offizielles HTML Element und bringt einige Browser zum Absturz.</description>
+  <description lang="en">The&lt;parsererror&gt; element is not an official HTML element and crashes some Browsers..</description>
+  <replacement part="tag"/>
 </htmlrewrite>
 </folder>
