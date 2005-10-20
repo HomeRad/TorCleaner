@@ -19,9 +19,10 @@ import unittest
 import time
 import wc.http
 import wc.http.date
+from wc.tests import MsgTestCase
 
 
-class TestBasic (unittest.TestCase):
+class TestBasic (MsgTestCase):
 
     def test_http_version (self):
         self.assertEquals(wc.http.parse_http_version("HTTP/0.0"), (0, 0))

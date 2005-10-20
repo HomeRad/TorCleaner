@@ -22,9 +22,10 @@ import unittest
 import os
 
 import wc.strformat
+from wc.tests import MsgTestCase
 
 
-class TestStrFormat (unittest.TestCase):
+class TestStrFormat (MsgTestCase):
     """
     Test string formatting routines.
     """

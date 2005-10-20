@@ -20,9 +20,10 @@ Test spell checker.
 
 import unittest
 from wc.filter.html import check_spelling
+from wc.tests import MsgTestCase
 
 
-class TestSpelling (unittest.TestCase):
+class TestSpelling (MsgTestCase):
 
     def test_htmltags (self):
         url = "unknown"

@@ -22,9 +22,10 @@ import unittest
 
 import wc.filter.rating
 import wc.filter.rating.category
+from wc.tests import MsgTestCase
 
 
-class TestRating (unittest.TestCase):
+class TestRating (MsgTestCase):
 
     def test_split_url (self):
         """

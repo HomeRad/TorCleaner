@@ -51,6 +51,7 @@ import BaseHTTPServer
 import wc.dummy
 import wc.proxy
 import wc.proxy.decoder.UnchunkStream
+from wc.tests import MsgTestCase
 
 _debug = 0
 if _debug:
@@ -389,7 +390,7 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
 
 ################ Proxy tests ######################
 
-class ProxyTest (unittest.TestCase):
+class ProxyTest (MsgTestCase):
     """
     Basic proxy test case. Subclasses have complete control over
     request or response data by overriding the

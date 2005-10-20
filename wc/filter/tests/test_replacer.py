@@ -23,9 +23,10 @@ import random
 import wc
 import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
+from wc.tests import MsgTestCase
 
 
-class TestReplacer (unittest.TestCase):
+class TestReplacer (MsgTestCase):
 
     def init (self):
         super(TestReplacer, self).init()

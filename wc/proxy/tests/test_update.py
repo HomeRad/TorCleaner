@@ -18,6 +18,7 @@ import unittest
 import wc
 import wc.configuration
 import wc.update
+from wc.tests import MsgTestCase
 
 
 class NoLog (object):
@@ -25,7 +26,7 @@ class NoLog (object):
         pass
 
 
-class TestUpdate (unittest.TestCase):
+class TestUpdate (MsgTestCase):
 
     def setUp (self):
         self.nolog = NoLog()

@@ -18,9 +18,10 @@
 import unittest
 import time
 import wc.http.date
+from wc.tests import MsgTestCase
 
 
-class TestDate (unittest.TestCase):
+class TestDate (MsgTestCase):
 
     def test_rfc1123 (self):
         now = time.time()

@@ -22,9 +22,10 @@ import unittest
 
 import wc.strformat
 import wc.dummy
+from wc.tests import MsgTestCase
 
 
-class TestDummy (unittest.TestCase):
+class TestDummy (MsgTestCase):
     """
     Test dummy object.
     """

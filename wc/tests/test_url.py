@@ -21,6 +21,7 @@ Test url routines.
 import unittest
 import os
 import wc.url
+from wc.tests import MsgTestCase
 
 # 'ftp://user:pass@ftp.foo.net/foo/bar':
 #     'ftp://user:pass@ftp.foo.net/foo/bar',
@@ -40,7 +41,7 @@ def url_norm (url):
     return wc.url.url_norm(url)[0]
 
 
-class TestUrl (unittest.TestCase):
+class TestUrl (MsgTestCase):
     """
     Test url norming and quoting.
     """

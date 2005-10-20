@@ -6,8 +6,9 @@ A magic(5) tester.
 import unittest
 import os
 from wc.magic import convert, classify
+from wc.tests import MsgTestCase
 
-class TestMagic (unittest.TestCase):
+class TestMagic (MsgTestCase):
 
     def setUp (self):
         self.basedir = os.path.join(os.getcwd(), "wc", "magic", "tests")

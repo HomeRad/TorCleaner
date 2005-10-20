@@ -3,9 +3,10 @@
 import unittest
 
 import wc.ip
+from wc.tests import MsgTestCase
 
 
-class TestIp (unittest.TestCase):
+class TestIp (MsgTestCase):
 
     def testNames (self):
         hosts, nets = wc.ip.hosts2map(["www.kampfesser.net",

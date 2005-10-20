@@ -17,9 +17,10 @@
 import unittest
 import wc.proxy.decoder.UnchunkStream
 import wc.dummy
+from wc.tests import MsgTestCase
 
 
-class TestUnchunk (unittest.TestCase):
+class TestUnchunk (MsgTestCase):
 
     def testUnchunk (self):
         dummy = wc.dummy.Dummy()

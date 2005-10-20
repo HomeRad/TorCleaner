@@ -24,9 +24,10 @@ import wc
 import wc.configuration
 import wc.proxy.Headers
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
+from wc.tests import MsgTestCase
 
 
-class TestBinaryCharFilter (unittest.TestCase):
+class TestBinaryCharFilter (MsgTestCase):
     """
     All these tests work with a _default_ filter configuration.
     If you change any of the *.zap filter configs, tests can fail...

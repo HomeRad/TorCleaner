@@ -24,8 +24,9 @@ import unittest
 import wc
 import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, STAGE_REQUEST
+from wc.tests import MsgTestCase
 
-class TestBlocker (unittest.TestCase):
+class TestBlocker (MsgTestCase):
 
     def setUp (self):
         self.url = "http://ads.realmedia.com/"
