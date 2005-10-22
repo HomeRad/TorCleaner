@@ -135,6 +135,27 @@ class test_datedwarn_1cur_continuation (ProxyTest):
         self.assertEquals(response.num_headers('Warning'), 1)
 
 
+class test_datedwarn_1cur_noquotes (ProxyTest):
+
+    def test_datedwarn_1cur_noquotes (self):
+        self.start_test()
+
+    def get_response_headers (self, content):
+        now = time.time()
+        date = get_date_rfc1123(now)
+        warn = '110 DataReactor "Response is stale" %s' % date
+        return [
+            "Content-Type: text/plain",
+            "Content-Length: %d" % len(content),
+            "Warning: %s" % warn,
+            "Date: %s" % date,
+        ]
+
+    def check_response_headers (self, response):
+        self.assertEquals(response.num_headers('Warning'), 1)
+
+
+
 def test_suite ():
     """
     Build and return a TestSuite.

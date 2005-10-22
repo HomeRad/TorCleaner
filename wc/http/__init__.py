@@ -105,7 +105,10 @@ def parse_http_warning (warning):
         warnagent, warning = warning.split(None, 1)
         warntext, warning = split_quoted_string(warning)
         if warning:
-            warndate, warning = split_quoted_string(warning)
+            if warning.startswith('"'):
+                warndate, warning = split_quoted_string(warning)
+            else:
+                warndate = warning
             warndate = wc.http.date.parse_http_date(warndate)
         else:
             warndate = None
@@ -115,6 +118,9 @@ def parse_http_warning (warning):
 
 
 def split_quoted_string (s):
+    """
+    Split off a leading quoted string.
+    """
     if not s.startswith('"'):
         raise ValueError("No quoted string found")
     quoted = ""
