@@ -551,7 +551,7 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.debug(wc.LOG_PROXY, "%s FilterWait %s", self, msg)
             # the filter still needs some data
             # to save CPU time make connection unreadable for a while
-            self.set_unreadable(0.5)
+            self.set_unreadable(1.0)
             return False
         data = self.flush_coders(self.encoders, data=data)
         # the client might already have closed
