@@ -41,8 +41,8 @@ import wc
 import wc.log
 import wc.proxy.Dispatcher
 
-# to prevent DoS attacks, specify a maximum buffer size
-MAX_BUFSIZE = 1024*1024
+# to prevent DoS attacks, specify a maximum buffer size of 10MB
+MAX_BUFSIZE = 10*1024*1024
 
 
 class Connection (wc.proxy.Dispatcher.Dispatcher):
@@ -95,7 +95,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         assert self.connected
         wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_read', self)
         if len(self.recv_buffer) > MAX_BUFSIZE:
-            wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
+            self.handle_error('read buffer full')
             return
         try:
             data = self.recv(self.socket_rcvbuf)
@@ -254,7 +254,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         # Try to read out-of-band data (which might not yet
         # have arrived, despite the exception condition).
         if len(self.recv_buffer) > MAX_BUFSIZE:
-            wc.log.warn(wc.LOG_PROXY, '%s read buffer full', self)
+            self.handle_error('read buffer full')
             return
         try:
             data = self.recv(self.socket_rcvbuf, flags=socket.MSG_OOB)
