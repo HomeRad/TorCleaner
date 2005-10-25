@@ -347,7 +347,8 @@ class JSFilter (wc.js.JSListener.JSListener):
         Callback for loading <script src=""> data in the background
         If downloading is finished, data is None.
         """
-        assert self.htmlparser.state[0] == 'wait', "non-wait state"
+        assert self.htmlparser.state[0] == 'wait', \
+            "non-wait state in %s" % self.htmlparser
         wc.log.debug(wc.LOG_JS, "%s jsScriptData %r", self, data)
         if data is None:
             if not self.js_script:
