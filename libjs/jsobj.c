@@ -628,7 +628,7 @@ js_LeaveSharpObject(JSContext *cx, JSIdArray **idap)
     }
 }
 
-#define OBJ_TOSTRING_EXTRA      3       /* for 3 local GC roots */
+#define OBJ_TOSTRING_EXTRA      4       /* for 4 local GC roots */
 
 #if JS_HAS_INITIALIZERS || JS_HAS_TOSOURCE
 JSBool
@@ -649,7 +649,7 @@ js_obj_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
     JSProperty *prop;
     uintN attrs;
 #endif
-    jsval val[2];
+    jsval *val;
     JSString *gsop[2];
     JSAtom *atom;
     JSString *idstr, *valstr, *str;
@@ -759,6 +759,13 @@ js_obj_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 
     comma = NULL;
 
+    /*
+     * We have four local roots for cooked and raw value GC safety.  Hoist the
+     * "argv + 2" out of the loop using the val local, which refers to the raw
+     * (unconverted, "uncooked") values.
+     */
+    val = argv + 2;
+
     for (i = 0, length = ida->length; i < length; i++) {
         /* Get strings for id and value and GC-root them via argv. */
         id = ida->vector[i];
@@ -826,7 +833,7 @@ js_obj_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
             ok = JS_FALSE;
             goto error;
         }
-        argv[0] = STRING_TO_JSVAL(idstr);
+        *rval = STRING_TO_JSVAL(idstr);         /* local root */
 
         /*
          * If id is a string that's a reserved identifier, or else id is not
@@ -841,7 +848,7 @@ js_obj_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
                 ok = JS_FALSE;
                 goto error;
             }
-            argv[0] = STRING_TO_JSVAL(idstr);
+            *rval = STRING_TO_JSVAL(idstr);     /* local root */
         }
         idstrchars = JSSTRING_CHARS(idstr);
         idstrlength = JSSTRING_LENGTH(idstr);
@@ -853,7 +860,7 @@ js_obj_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
                 ok = JS_FALSE;
                 goto error;
             }
-            argv[1+j] = STRING_TO_JSVAL(valstr);
+            argv[j] = STRING_TO_JSVAL(valstr);  /* local root */
             vchars = JSSTRING_CHARS(valstr);
             vlength = JSSTRING_LENGTH(valstr);
 
@@ -1045,8 +1052,9 @@ obj_valueOf(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
  * if so (or if scopeobj has no principals, for backward compatibility with
  * the JS API, which does not require principals), and false otherwise.
  */
-static JSBool
-CheckEvalAccess(JSContext *cx, JSObject *scopeobj, JSPrincipals *principals)
+JSBool
+js_CheckPrincipalsAccess(JSContext *cx, JSObject *scopeobj,
+                         JSPrincipals *principals, const char *caller)
 {
     JSRuntime *rt;
     JSPrincipals *scopePrincipals;
@@ -1057,18 +1065,25 @@ CheckEvalAccess(JSContext *cx, JSObject *scopeobj, JSPrincipals *principals)
         if (!principals || !scopePrincipals ||
             !principals->subsume(principals, scopePrincipals)) {
             JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                                 JSMSG_BAD_INDIRECT_CALL, js_eval_str);
+                                 JSMSG_BAD_INDIRECT_CALL, caller);
             return JS_FALSE;
         }
     }
     return JS_TRUE;
 }
 
-JSBool
+JSObject *
 js_CheckScopeChainValidity(JSContext *cx, JSObject *scopeobj, const char *caller)
 {
     JSClass *clasp;
     JSExtendedClass *xclasp;
+    JSObject *inner;
+
+    OBJ_TO_INNER_OBJECT(cx, scopeobj);
+    if (!scopeobj)
+        return NULL;
+
+    inner = scopeobj;
 
     /* XXX This is an awful gross hack. */
     while (scopeobj) {
@@ -1079,14 +1094,14 @@ js_CheckScopeChainValidity(JSContext *cx, JSObject *scopeobj, const char *caller
                 xclasp->innerObject(cx, scopeobj) != scopeobj) {
                 JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                      JSMSG_BAD_INDIRECT_CALL, caller);
-                return JS_FALSE;
+                return NULL;
             }
         }
 
         scopeobj = OBJ_GET_PARENT(cx, scopeobj);
     }
 
-    return JS_TRUE;
+    return inner;
 }
 
 static JSBool
@@ -1144,8 +1159,11 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         if (indirectCall) {
             callerScopeChain = caller->scopeChain;
             if (obj != callerScopeChain) {
-                if (!CheckEvalAccess(cx, obj, caller->script->principals))
+                if (!js_CheckPrincipalsAccess(cx, obj,
+                                              caller->script->principals,
+                                              js_eval_str)) {
                     return JS_FALSE;
+                }
 
                 scopeobj = js_NewObject(cx, &js_WithClass, obj,
                                         callerScopeChain);
@@ -1178,11 +1196,8 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
 
     /* Ensure we compile this eval with the right object in the scope chain. */
-    OBJ_TO_INNER_OBJECT(cx, scopeobj);
+    scopeobj = js_CheckScopeChainValidity(cx, scopeobj, js_eval_str);
     if (!scopeobj)
-        return JS_FALSE;
-
-    if (!js_CheckScopeChainValidity(cx, scopeobj, js_eval_str))
         return JS_FALSE;
 
     str = JSVAL_TO_STRING(argv[0]);
@@ -1232,7 +1247,7 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
      * Belt-and-braces: check that the lesser of eval's principals and the
      * caller's principals has access to scopeobj.
      */
-    ok = CheckEvalAccess(cx, scopeobj, principals);
+    ok = js_CheckPrincipalsAccess(cx, scopeobj, principals, js_eval_str);
     if (!ok)
         goto out;
 
@@ -1284,21 +1299,14 @@ obj_watch_handler(JSContext *cx, JSObject *obj, jsval id, jsval old, jsval *nvp,
 static JSBool
 obj_watch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-    JSObject *funobj;
-    JSFunction *fun;
+    JSObject *callable;
     jsval userid, value;
     jsid propid;
     uintN attrs;
 
-    if (JSVAL_IS_FUNCTION(cx, argv[1])) {
-        funobj = JSVAL_TO_OBJECT(argv[1]);
-    } else {
-        fun = js_ValueToFunction(cx, &argv[1], 0);
-        if (!fun)
-            return JS_FALSE;
-        funobj = fun->object;
-    }
-    argv[1] = OBJECT_TO_JSVAL(funobj);
+    callable = js_ValueToCallableObject(cx, &argv[1], 0);
+    if (!callable)
+        return JS_FALSE;
 
     /* Compute the unique int/atom symbol id needed by js_LookupProperty. */
     userid = argv[0];
@@ -1309,7 +1317,7 @@ obj_watch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_FALSE;
     if (attrs & JSPROP_READONLY)
         return JS_TRUE;
-    return JS_SetWatchPoint(cx, obj, userid, obj_watch_handler, funobj);
+    return JS_SetWatchPoint(cx, obj, userid, obj_watch_handler, callable);
 }
 
 static JSBool
@@ -3534,13 +3542,15 @@ js_CheckAccess(JSContext *cx, JSObject *obj, jsid id, JSAccessMode mode,
         return OBJ_CHECK_ACCESS(cx, pobj, id, mode, vp, attrsp);
     }
     sprop = (JSScopeProperty *)prop;
-    *vp = (SPROP_HAS_VALID_SLOT(sprop, OBJ_SCOPE(pobj)))
-          ? LOCKED_OBJ_GET_SLOT(pobj, sprop->slot)
-          : ((mode & JSACC_WATCH) == JSACC_PROTO)
-          ? LOCKED_OBJ_GET_SLOT(obj, JSSLOT_PROTO)
-          : (mode == JSACC_PARENT)
-          ? LOCKED_OBJ_GET_SLOT(obj, JSSLOT_PARENT)
-          : JSVAL_VOID;
+    if (!(mode & JSACC_WRITE)) {
+        *vp = (SPROP_HAS_VALID_SLOT(sprop, OBJ_SCOPE(pobj)))
+            ? LOCKED_OBJ_GET_SLOT(pobj, sprop->slot)
+            : ((mode & JSACC_WATCH) == JSACC_PROTO)
+            ? LOCKED_OBJ_GET_SLOT(obj, JSSLOT_PROTO)
+            : (mode == JSACC_PARENT)
+            ? LOCKED_OBJ_GET_SLOT(obj, JSSLOT_PARENT)
+            : JSVAL_VOID;
+    }
     *attrsp = sprop->attrs;
 
     /*
@@ -3793,6 +3803,18 @@ GetClassPrototype(JSContext *cx, JSObject *scope, const char *name,
                               &v)) {
             return JS_FALSE;
         }
+        if (!JSVAL_IS_PRIMITIVE(v)) {
+            /*
+             * Set the newborn root in case v is otherwise unreferenced.
+             * It's ok to overwrite newborn roots here, since the getter
+             * called just above could have.  Unlike the common GC rooting
+             * model, our callers do not have to protect protop thanks to
+             * this newborn root, since they all immediately create a new
+             * instance that delegates to this object, or just query the
+             * prototype for its class.
+             */
+            cx->newborn[GCX_OBJECT] = JSVAL_TO_GCTHING(v);
+        }
     }
     *protop = JSVAL_IS_OBJECT(v) ? JSVAL_TO_OBJECT(v) : NULL;
     return JS_TRUE;
@@ -3829,13 +3851,12 @@ static JSBool
 CheckCtorSetAccess(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
     JSAtom *atom;
-    jsval oldval;
     uintN attrs;
 
     atom = cx->runtime->atomState.constructorAtom;
     JS_ASSERT(id == ATOM_KEY(atom));
     return OBJ_CHECK_ACCESS(cx, obj, ATOM_TO_JSID(atom), JSACC_WRITE,
-                            &oldval, &attrs);
+                            vp, &attrs);
 }
 
 JSBool
@@ -3958,8 +3979,6 @@ js_TryMethod(JSContext *cx, JSObject *obj, JSAtom *atom,
         ok = JS_TRUE;
     } else if (!JSVAL_IS_PRIMITIVE(fval)) {
         ok = js_InternalCall(cx, obj, fval, argc, argv, rval);
-        if (!ok)
-            JS_ClearPendingException(cx);
     } else {
         ok = JS_TRUE;
     }
@@ -4008,7 +4027,7 @@ js_XDRObject(JSXDRState *xdr, JSObject **objp)
 
     if (xdr->mode != JSXDR_ENCODE) {
         if (classDef) {
-            ok = js_GetClassPrototype(cx, className, &proto);
+            ok = GetClassPrototype(cx, NULL, className, &proto);
             if (!ok)
                 goto out;
             clasp = OBJ_GET_CLASS(cx, proto);
