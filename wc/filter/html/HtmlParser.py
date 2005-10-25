@@ -25,8 +25,6 @@ import wc.filter
 import wc.filter.html
 import wc.HtmlParser.htmlsax
 
-# how often a flush() try is allowed when the parser is in wait state
-MAX_WAIT_CYCLES = 5000
 
 class HtmlParser (wc.HtmlParser.htmlsax.parser):
     """
@@ -135,13 +133,9 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         wc.log.debug(wc.LOG_FILTER, "%s flush", self)
         if self.state[0] == 'wait':
             # flushing in wait state raises a filter exception
-            if self.waited < MAX_WAIT_CYCLES:
-                self.waited += 1
-                raise wc.filter.FilterWait, "waited %d at parser %s" % \
-                                            (self.waited, str(self))
-            wc.log.error(wc.LOG_FILTER,
-                    "%s waited too long, switching back to parse state", self)
-            self.state = ('parse',)
+            self.waited += 1
+            raise wc.filter.FilterWait, "waited %d at parser %s" % \
+                                        (self.waited, str(self))
         super(HtmlParser, self).flush()
 
     def getoutput (self):
