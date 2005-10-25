@@ -98,6 +98,7 @@ class HttpProxyClient (object):
         Give data to handler.
         """
         if self.handler:
+            assert data is not None
             self.handler(data, *self.args)
 
     def server_response (self, server, response, status, headers):
