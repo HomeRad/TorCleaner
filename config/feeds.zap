@@ -26,6 +26,6 @@
 <htmlrewrite sid="wc.45">
   <title lang="en">OSDN RSS ads</title>
   <description lang="en">Ads in RSS feeds of freshmeat and slashdot.</description>
-  <attr>http://rss\.(slashdot\.org|freshmeat\.net)/~a/(Slashdot|freshmeat)/</attr>
+  <attr>http://rss\.(slashdot\.org|freshmeat\.net)/~[ca]/(Slashdot|freshmeat)/</attr>
 </htmlrewrite>
 </folder>
