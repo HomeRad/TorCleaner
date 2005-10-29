@@ -528,8 +528,14 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
                 pass
         else:
             wire = self.read(1024)
-        response = wc.dns.message.from_wire(
+        try:
+            response = wc.dns.message.from_wire(
                  wire, keyring=self.query.keyring, request_mac=self.query.mac)
+        except:
+            wc.log.exception(wc.LOG_DNS, "%s corrupt response %r to query %s",
+                             self, wire, wc.strformat.indent(self.query))
+            self.handle_error("DNS error: invalid DNS response")
+            return
         if not self.query.is_response(response):
             wc.log.warn(wc.LOG_DNS, '%s wrong response %s to query %s',
                         self, wc.strformat.indent(response),
