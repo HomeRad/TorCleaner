@@ -88,52 +88,55 @@ class HtmlSecurity (object):
         """
         Sanitize too large values.
         """
+        if name not in attrs:
+            return
         # Note that a maxlen of 4 is recommended to also allow
         # percentages like '100%'.
-        if attrs.has_key(name):
-            val = attrs[name].lower()
-            l = len(val)
-            # subtract common units
-            if val.endswith("%"):
-                l -= 1
-            elif val.endswith("pt") or val.endswith("px"):
-                l -= 2
-            if l > maxlen:
-                msg = "%s %r\n Detected a too large %s attribute value"
-                msg += " (length %d > %d)" % (len(val), maxlen)
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
-                del attrs[name]
+        val = attrs.get_true(name, u"").lower()
+        l = len(val)
+        # subtract common units
+        if val.endswith("%"):
+            l -= 1
+        elif val.endswith("pt") or val.endswith("px"):
+            l -= 2
+        if l > maxlen:
+            msg = "%s %r\n Detected a too large %s attribute value"
+            msg += " (length %d > %d)" % (len(val), maxlen)
+            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
+            del attrs[name]
 
     def _check_javascript_url (self, attrs, name, htmlfilter):
         """
         Check if url has javascript: embedded.
         """
-        if attrs.has_key(name):
-            url = attrs[name].strip().lower()
-            # to be sure catch all javascript: stuff
-            if "javascript:" in url:
-                msg = "%s\n Detected and prevented invlalid JS URL reference"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
-                del attrs[name]
+        if name not in attrs:
+            return
+        url = attrs.get_true(name, u"").strip().lower()
+        # to be sure catch all javascript: stuff
+        if "javascript:" in url:
+            msg = "%s\n Detected and prevented invlalid JS URL reference"
+            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
+            del attrs[name]
 
     def _check_url (self, attrs, name, htmlfilter):
         """
         Check if url has suspicious patterns.
         """
-        if attrs.has_key(name):
-            url = attrs[name]
-            if _has_lots_of_percents(url):
-                # prevent CAN-2003-0870
-                msg = "%s %r\n Detected and prevented Opera percent " \
-                      "encoding overflow crash"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
-                del attrs[name]
-            if _has_dashes_in_hostname(url):
-                # prevent firefox crash
-                msg = "%s %r\n Detected and prevented Firefox " \
-                      "dashes-in-hostname overflow crash"
-                wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
-                del attrs[name]
+        if name not in attrs:
+            return
+        url = attrs.get_true(name, u"")
+        if _has_lots_of_percents(url):
+            # prevent CAN-2003-0870
+            msg = "%s %r\n Detected and prevented Opera percent " \
+                  "encoding overflow crash"
+            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
+            del attrs[name]
+        if _has_dashes_in_hostname(url):
+            # prevent firefox crash
+            msg = "%s %r\n Detected and prevented Firefox " \
+                  "dashes-in-hostname overflow crash"
+            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
+            del attrs[name]
 
     # tag specific scan methods, sorted alphabetically
 
