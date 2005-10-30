@@ -18,16 +18,33 @@
 Filter modules.
 
 Welcome to the wonderful world of software OSI layer 5 filtering.
-If you want to write your own filter module look at the existing
-filters.
+To be able to filter every aspect of the HTTP protocol data, different
+data stages are defined. Each of these can be separately filtered.
+
+- HTTP request line
+- HTTP request headers
+- HTTP request content body
+- HTTP response line
+- HTTP response headers
+- HTTP response content body
+
+Since content bodies can be encoded (specified by the Content-Encoding
+header) they both have methods for decoding, filtering and re-encoding
+the body data.
+
+The content body is usual HTML data for the browser, but could also be
+something else. The type of data is specified by the Content-Type
+header and resembles a MIME type.
+Each filter for content bodies can apply to specific MIME type. For
+example the XmlRewriter filter applies only to XML data.
 
 You can add extern states for the filter by making a separate class
 and passing it with the "attrs" parameter. Look at the HtmlRewriter
 filter to see how it is done.
 
 To communicate with the proxy, filters can throw FilterExceptions.
-Of course, these must be handled in the appropriate proxy functions
-to work properly.
+These must be handled in the appropriate proxy functions to work
+properly.
 """
 
 import wc
