@@ -275,6 +275,18 @@
   <title lang="de">Google pageads</title>
 </block>
 
+<htmlrewrite sid="wc.49"
+ tag="script">
+  <title lang="de">Google pageads 2</title>
+  <attr name="src">\.googlesyndication\.</attr>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.50"
+ tag="iframe">
+  <title lang="de">Google pageads 3</title>
+  <attr name="src">\.googlesyndication\.</attr>
+</htmlrewrite>
+
 <htmlrewrite sid="wc.32">
   <title lang="de">Blog Werbungen</title>
   <title lang="en">Blog ads</title>
