@@ -29,6 +29,24 @@ import wc.filter.Filter
 import wc.magic
 
 
+def is_preferred_mime (mime, origmime):
+    """
+    See if the newly found mime is preferred over the original one.
+    @param mime: MIME type from magic module.
+    @type mime: string
+    @param origmime: original MIME type
+    @type origmime: string
+    """
+    # New mime could be same as orig, but without appendix. Example:
+    # mime="text/html", origmime="text/html; charset=UTF8"
+    if origmime.startswith(mime+";"):
+        return False
+    # Sometimes text/html is recognized as text/plain.
+    if origmime.startswith("text/html") and mime.startswith("text/"):
+        return False
+    return True
+
+
 class MimeRecognizer (wc.filter.Filter.Filter):
     """
     Recognizes missing or wrong content type header of URLs request data.
@@ -91,8 +109,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
             mime = wc.magic.classify(buf)
             wc.log.debug(wc.LOG_FILTER, "MIME recognized %r", mime)
             origmime = attrs['mime']
-            if mime is not None and origmime is not None and \
-               not origmime.startswith(mime):
+            if mime and origmime and is_preferred_mime(mime, origmime):
                 wc.log.warn(wc.LOG_FILTER, "Adjusting MIME %r -> %r at %r",
                             origmime, mime, attrs['url'])
                 attrs['mime'] = mime
