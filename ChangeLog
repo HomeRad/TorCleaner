@@ -15,6 +15,10 @@
     Type: feature
     Changed: config/misc.zap
 
+  * When handling HTML attribute values make sure they are not None.
+    Type: bugfix
+    Changed: wc/filter/html/*.py
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled
