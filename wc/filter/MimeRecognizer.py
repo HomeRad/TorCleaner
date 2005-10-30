@@ -37,6 +37,8 @@ def is_preferred_mime (mime, origmime):
     @param origmime: original MIME type
     @type origmime: string
     """
+    if mime == origmime:
+        return False
     # New mime could be same as orig, but without appendix. Example:
     # mime="text/html", origmime="text/html; charset=UTF8"
     if origmime.startswith(mime+";"):
