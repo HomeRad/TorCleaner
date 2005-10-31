@@ -1,14 +1,10 @@
-The following changes were made to the original dnspython 1.3.1
-sources:
+The following changes were made to the original dnspython sources:
 
-* moved everything into the linkcheck package
+* moved everything into the module package
   Changed: *.py
 
 * moved unittests and adapted them for the schooltool.org test runner
   Changed: tests/*.py
-
-* fixed missing random import
-  Changed: renderer.py
 
 * honor EnableDHCP flag in Windows registry config
   Changed: resolver.py
@@ -21,7 +17,7 @@ sources:
 
 * added set of localhost addresses to resolver config
   Changed: resolver.py
-  Added: IfConfig.py
+  Added: ifconfig.py
 
 * added search patters for domain names
   Changed: resolver.py

@@ -303,6 +303,16 @@ class TestZone (unittest.TestCase):
         self.assertEqual(ns, [wc.dns.name.from_text('ns1', None),
                                wc.dns.name.from_text('ns2', None)])
 
+    def testIterateAllRdatasets(self):
+        z = wc.dns.zone.from_text(example_text, 'example.', relativize=True)
+        ns = [n for n, r in z.iterate_rdatasets()]
+        ns.sort()
+        self.failUnless(ns == [wc.dns.name.from_text('@', None),
+                               wc.dns.name.from_text('@', None),
+                               wc.dns.name.from_text('bar.foo', None),
+                               wc.dns.name.from_text('ns1', None),
+                               wc.dns.name.from_text('ns2', None)])
+
     def testIterateRdatas(self):
         z = wc.dns.zone.from_text(example_text, 'example.', relativize=True)
         l = list(z.iterate_rdatas('A'))
@@ -315,6 +325,40 @@ class TestZone (unittest.TestCase):
                 3600,
                 wc.dns.rdata.from_text(wc.dns.rdataclass.IN, wc.dns.rdatatype.A,
                                     '10.0.0.2'))]
+        self.assertEqual(l, exl)
+
+    def testIterateAllRdatas(self):
+        z = wc.dns.zone.from_text(example_text, 'example.', relativize=True)
+        l = list(z.iterate_rdatas())
+        l.sort()
+        exl = [(wc.dns.name.from_text('@', None),
+                3600,
+                wc.dns.rdata.from_text(wc.dns.rdataclass.IN,
+                                       wc.dns.rdatatype.NS, 'ns1')),
+               (wc.dns.name.from_text('@', None),
+                3600,
+                wc.dns.rdata.from_text(wc.dns.rdataclass.IN,
+                                       wc.dns.rdatatype.NS, 'ns2')),
+               (wc.dns.name.from_text('@', None),
+                3600,
+                wc.dns.rdata.from_text(wc.dns.rdataclass.IN,
+                                       wc.dns.rdatatype.SOA,
+                                       'foo bar 1 2 3 4 5')),
+               (wc.dns.name.from_text('bar.foo', None),
+                300,
+                wc.dns.rdata.from_text(wc.dns.rdataclass.IN,
+                                       wc.dns.rdatatype.MX,
+                                       '0 blaz.foo')),
+               (wc.dns.name.from_text('ns1', None),
+                3600,
+                wc.dns.rdata.from_text(wc.dns.rdataclass.IN,
+                                       wc.dns.rdatatype.A,
+                                       '10.0.0.1')),
+               (wc.dns.name.from_text('ns2', None),
+                3600,
+                wc.dns.rdata.from_text(wc.dns.rdataclass.IN,
+                                       wc.dns.rdatatype.A,
+                                       '10.0.0.2'))]
         self.assertEqual(l, exl)
 
     def testTTLs(self):

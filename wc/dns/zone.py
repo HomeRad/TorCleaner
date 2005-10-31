@@ -404,7 +404,8 @@ class Zone(object):
             rrset = None
         return rrset
 
-    def iterate_rdatasets(self, rdtype=None, covers=wc.dns.rdatatype.NONE):
+    def iterate_rdatasets(self, rdtype=wc.dns.rdatatype.ANY,
+                          covers=wc.dns.rdatatype.NONE):
         """Return a generator which yields (name, rdataset) tuples for
         all rdatasets in the zone which have the specified I{rdtype}
         and I{covers}.  If I{rdtype} is wc.dns.rdatatype.ANY, the default,
@@ -426,7 +427,8 @@ class Zone(object):
                    (rds.rdtype == rdtype and rds.covers == covers):
                     yield (name, rds)
 
-    def iterate_rdatas(self, rdtype=None, covers=wc.dns.rdatatype.NONE):
+    def iterate_rdatas(self, rdtype=wc.dns.rdatatype.ANY,
+                       covers=wc.dns.rdatatype.NONE):
         """Return a generator which yields (name, ttl, rdata) tuples for
         all rdatas in the zone which have the specified I{rdtype}
         and I{covers}.  If I{rdtype} is wc.dns.rdatatype.ANY, the default,
@@ -805,7 +807,9 @@ def from_xfr(xfr, zone_factory=Zone, relativize=True):
 
     @param xfr: The xfr generator
     @type xfr: generator of wc.dns.message.Message objects
-    @param relativize: should names be relativized?  The default is True
+    @param relativize: should names be relativized?  The default is True.
+    It is essential that the relativize setting matches the one specified
+    to dns.query.xfr()
     @type relativize: bool
     @raises wc.dns.zone.NoSOA: No SOA RR was found at the zone origin
     @raises wc.dns.zone.NoNS: No NS RRset was found at the zone origin
