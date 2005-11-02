@@ -102,7 +102,9 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-/* Python module definition of a SAX html parser */
+/* A SAX HTML parser. Includes Python module definition to make it
+   usable for Python programs.
+*/
 #include "htmlsax.h"      /* SAX interface (includes Python.h) */
 #include "structmember.h" /* Python include for object definition */
 #include <string.h>
@@ -275,7 +277,7 @@ typedef int YYSTYPE;
 
 
 /* Line 213 of yacc.c.  */
-#line 279 "htmlparse.c"
+#line 281 "htmlparse.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -448,8 +450,8 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short int yyrline[] =
 {
-       0,   189,   189,   192,   197,   201,   208,   252,   303,   342,
-     364,   385,   407,   433,   460,   487
+       0,   191,   191,   194,   199,   203,   210,   254,   305,   344,
+     366,   387,   409,   435,   462,   489
 };
 #endif
 
@@ -1184,21 +1186,21 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 189 "htmlparse.y"
+#line 191 "htmlparse.y"
     {
     /* parse a single element */
 ;}
     break;
 
   case 3:
-#line 192 "htmlparse.y"
+#line 194 "htmlparse.y"
     {
     /* parse a list of elements */
 ;}
     break;
 
   case 4:
-#line 197 "htmlparse.y"
+#line 199 "htmlparse.y"
     {
     /* wait for more lexer input */
     YYACCEPT;
@@ -1206,7 +1208,7 @@ yyreduce:
     break;
 
   case 5:
-#line 202 "htmlparse.y"
+#line 204 "htmlparse.y"
     {
     /* an error occured in the scanner, the python exception must be set */
     UserData* ud = yyget_extra(scanner);
@@ -1216,7 +1218,7 @@ yyreduce:
     break;
 
   case 6:
-#line 209 "htmlparse.y"
+#line 211 "htmlparse.y"
     {
     /* parsed HTML start tag (eg. <a href="blubb">)
        $1 is a PyTuple (<tag>, <attrs>)
@@ -1263,7 +1265,7 @@ finish_start:
     break;
 
   case 7:
-#line 253 "htmlparse.y"
+#line 255 "htmlparse.y"
     {
     /* parsed HTML start-end tag (eg. <br/>)
        $1 is a PyTuple (<tag>, <attrs>)
@@ -1317,7 +1319,7 @@ finish_start_end:
     break;
 
   case 8:
-#line 304 "htmlparse.y"
+#line 306 "htmlparse.y"
     {
     /* parsed HTML end tag (eg. </b>)
        $1 is a PyUnicode with the tag name */
@@ -1359,7 +1361,7 @@ finish_end:
     break;
 
   case 9:
-#line 343 "htmlparse.y"
+#line 345 "htmlparse.y"
     {
     /* parsed HTML comment (eg. <!-- bla -->)
        $1 is a PyUnicode with the comment content */
@@ -1384,7 +1386,7 @@ finish_comment:
     break;
 
   case 10:
-#line 365 "htmlparse.y"
+#line 367 "htmlparse.y"
     {
     /* $1 is a PyUnicode */
     UserData* ud = yyget_extra(scanner);
@@ -1408,7 +1410,7 @@ finish_pi:
     break;
 
   case 11:
-#line 386 "htmlparse.y"
+#line 388 "htmlparse.y"
     {
     /* parsed HTML CDATA (eg. <![CDATA[spam and eggs ...]]>)
        $1 is a PyUnicode with the CDATA content */
@@ -1433,7 +1435,7 @@ finish_cdata:
     break;
 
   case 12:
-#line 408 "htmlparse.y"
+#line 410 "htmlparse.y"
     {
     /* parsed HTML doctype (eg. <!DOCTYPE imadoofus system>)
        $1 is a PyUnicode with the doctype content */
@@ -1462,7 +1464,7 @@ finish_doctype:
     break;
 
   case 13:
-#line 434 "htmlparse.y"
+#line 436 "htmlparse.y"
     {
     /* parsed HTML script content (plus end tag which is omitted)
        $1 is a PyUnicode with the script content */
@@ -1492,7 +1494,7 @@ finish_script:
     break;
 
   case 14:
-#line 461 "htmlparse.y"
+#line 463 "htmlparse.y"
     {
     /* parsed HTML style content (plus end tag which is omitted)
        $1 is a PyUnicode with the style content */
@@ -1522,7 +1524,7 @@ finish_style:
     break;
 
   case 15:
-#line 488 "htmlparse.y"
+#line 490 "htmlparse.y"
     {
     /* parsed HTML text data
        $1 is a PyUnicode with the text */
@@ -1552,7 +1554,7 @@ finish_characters:
     }
 
 /* Line 1037 of yacc.c.  */
-#line 1556 "htmlparse.c"
+#line 1558 "htmlparse.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1780,7 +1782,7 @@ yyreturn:
 }
 
 
-#line 513 "htmlparse.y"
+#line 515 "htmlparse.y"
 
 
 /* create parser object */
