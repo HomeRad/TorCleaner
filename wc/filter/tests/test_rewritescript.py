@@ -312,6 +312,25 @@ a = "--&#62;";
 //-->
 </script>""")
 
+    def testPopup1 (self):
+        self.filt(
+"""<script>
+function a () {
+    window.open();
+}
+a();
+</script>""",
+"""""")
+
+    def testPopup2 (self):
+        self.filt(
+"""<script>
+function a () {
+    alert("bla");
+}
+a();
+</script>""",
+"""""")
 
 def test_suite ():
     return unittest.makeSuite(TestRewriteScript)

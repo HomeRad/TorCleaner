@@ -19,6 +19,11 @@
     Type: bugfix
     Changed: wc/filter/html/*.py
 
+  * The alert() JavaScript function has been added to the popup-generating
+    function list.
+    Type: feature
+    Changed: wc/js/jslib.c
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled

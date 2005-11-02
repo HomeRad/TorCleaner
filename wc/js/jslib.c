@@ -655,7 +655,7 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
                            1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(self, "Could not set global clearInterval function");
     }
-    if (!JS_DefineFunction(self->ctx, self->global_obj, "alert", &doNothing,
+    if (!JS_DefineFunction(self->ctx, self->global_obj, "alert", &windowOpen,
                            1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
         return shutdown(self, "Could not set global alert function");
     }
