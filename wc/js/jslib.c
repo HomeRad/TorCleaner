@@ -46,9 +46,16 @@ staticforward PyTypeObject JSEnvType;
 
 /* generic JS class stub */
 static JSClass generic_class = {
-    "generic", 0,
-    JS_PropertyStub, JS_PropertyStub, JS_PropertyStub, JS_PropertyStub,
-    JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub
+    "generic",          /* name */
+    0,                  /* flags */
+    JS_PropertyStub,    /* add property */
+    JS_PropertyStub,    /* del property */
+    JS_PropertyStub,    /* get property */
+    JS_PropertyStub,    /* set property */
+    JS_EnumerateStub,   /* enumerate */
+    JS_ResolveStub,     /* resolve */
+    JS_ConvertStub,     /* convert */
+    JS_FinalizeStub     /* finalize */
 };
 
 /* hard branching limit to avoid recursive loops */
@@ -316,12 +323,14 @@ static JSBool onunloadSetter (JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 }
 
 
+/* Disable Java */
 static JSBool javaEnabled (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
     *rval = JSVAL_FALSE;
     return JS_TRUE;
 }
 
 
+/* Dispatch notification about an opened window. */
 static JSBool windowOpen (JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval) {
     int res = dispatchPopupNotification(get_environment(cx));
     *rval = JSVAL_NULL;
