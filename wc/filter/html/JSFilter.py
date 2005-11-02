@@ -220,7 +220,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                      "%s js_end_element buf %r", self, self.htmlparser.tagbuf)
         if len(self.htmlparser.tagbuf)<2:
             # syntax error, ignore
-            wc.log.warn(wc.LOG_JS,
+            wc.log.debug(wc.LOG_JS,
                     "JS syntax error, self.tagbuf %r", self.htmlparser.tagbuf)
             return
         if self.js_src:
@@ -325,6 +325,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             wc.log.warn(wc.LOG_JS,
                         "invalid script src url %r at %s (base %r)",
                         url, self.url, self.base_url)
+            # returning here will look like a syntax error
             return
         self.htmlparser.state = ('wait', url)
         self.htmlparser.waited = 1
