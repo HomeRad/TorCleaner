@@ -55,7 +55,7 @@ Direct download links are in brackets.
 
 2. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
-   [http://osdn.dl.sourceforge.net/sourceforge/pywin32/pywin32-204.win32-py2.4.exe]
+   [http://osdn.dl.sourceforge.net/pywin32/pywin32-205.win32-py2.4.exe]
 
 3. *Optional but recommended (used by ImageSize and ImageReducer modules)*
    Install Python Imaging Library (PIL) from
