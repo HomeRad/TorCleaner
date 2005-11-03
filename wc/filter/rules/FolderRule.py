@@ -134,9 +134,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         Write xml data into filename.
         """
         s = self.toxml().encode("iso-8859-1", "replace")
-        f = file(self.filename, 'w')
-        f.write(s)
-        f.close()
+        wc.fileutil.write_file_save(self.filename, s)
 
     def tiptext (self):
         """

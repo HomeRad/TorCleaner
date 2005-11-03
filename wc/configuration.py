@@ -31,6 +31,7 @@ import wc.log
 import wc.ip
 import wc.decorators
 import wc.strformat
+import wc.fileutil
 
 ConfigCharset = "iso-8859-1"
 
@@ -265,9 +266,8 @@ class Configuration (dict):
         for key in self['filters']:
             lines.append('<filter name="%s"/>' % xmlquoteattr(key))
         lines.append('</webcleaner>')
-        f = file(self.configfile, 'w')
-        f.write(os.linesep.join(lines))
-        f.close()
+        content = os.linesep.join(lines)
+        wc.fileutil.write_file_save(self.configfile, content)
 
     def read_filterconf (self):
         """
