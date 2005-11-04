@@ -332,6 +332,7 @@ a();
 </script>""",
 """""")
 
+
 def test_suite ():
     return unittest.makeSuite(TestRewriteScript)
 
