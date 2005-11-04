@@ -105,7 +105,8 @@ parsetests = [
     ("""<sCrIpt lang="a">bla </a> fasel</scripT>""",
      """<script lang="a">bla </a> fasel</script>""", 0),
     # line continuation (Dr. Fun webpage)
-    ("<img bo\\\nrder=0 >", """<img border="0">""", 1),
+    ("""<img bo\\\nrder=0 >""", """<img border="0">""", 1),
+    ("""<img align="mid\\\ndle">""", """<img align="middle">""", 1),
     # href with $
     ("""<a href="123$456">""", """<a href="123$456">""", 0),
     # quoting
@@ -138,11 +139,11 @@ parsetests = [
     ("""</td<td  a="b" >""", """</td><td a="b">""", 1),
     # missing beginning quote
     ("""<td a=b">""", """<td a="b">""", 1),
-    # missing end quote (TODO)
-    #("""<td a="b>""", """<td a="b">""", 1),
-    #("""<td a="b></td>""", """<td a="b"></td>""", 1),
-    #("""<td a="b c="d"></td>""", """<td a="b" c="d"></td>""", 1),
-    #("""<a  b="c><a b="c">""", """<a b="c><a b=" c>""", 1),
+    # missing end quote
+    ("""<td a="b>\n""", """<td a="b">\n""", 1),
+    ("""<td a="b></td>\na""", """<td a="b"></td>\na""", 1),
+    #("""<a  b="c><a b="c>\n""", """<a b="c"><a b="c">\n""", 2),
+    #("""<td a="b c="d"></td>\n""", """<td a="b" c="d"></td>\n""", 1),
 ]
 
 flushtests = [
