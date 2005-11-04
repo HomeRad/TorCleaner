@@ -889,10 +889,14 @@ RX_DATA  [-a-zA-Z0-9_:]+
     BEGIN(S_ATTR1);
 }
 
-<S_APOSSTRING>\\ {
+<S_APOSSTRING>\\/\r?[^\n] {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
     BEGIN(S_APOSSTRING_ESC);
+}
+
+<S_APOSSTRING>\\ {
+    return T_WAIT;
 }
 
 <S_APOSSTRING>\' {
@@ -908,7 +912,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     BEGIN(S_ATTR1);
 }
 
-<S_APOSSTRING>[^']+ {
+<S_APOSSTRING>[^\\']+ {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
 }
@@ -918,12 +922,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
     BEGIN(S_APOSSTRING);
-}
-
-<S_STRING>\\ {
-    UPDATE_COLUMN;
-    APPEND_TO_TMP(yyleng);
-    BEGIN(S_STRING_ESC);
 }
 
 <S_STRING>\" {
@@ -939,7 +937,24 @@ RX_DATA  [-a-zA-Z0-9_:]+
     BEGIN(S_ATTR1);
 }
 
-<S_STRING>[^"]+ {
+<S_STRING>\\/\r?[^\n] {
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+    BEGIN(S_STRING_ESC);
+}
+
+<S_STRING,S_APOSSTRING>\\\r?\n {
+    PyObject* msg;
+    CHECK_NULL(msg = PyString_FromString("invalid line continuation in attribute value"));
+    ADD_ERROR(msg);
+    UPDATE_LINE;
+}
+
+<S_STRING>\\ {
+    return T_WAIT;
+}
+
+<S_STRING>[^\\"]+ {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
 }
