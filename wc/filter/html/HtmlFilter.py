@@ -58,24 +58,6 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         return HtmlFilter(self.rules, self.ratings, self.url,
                           self.localhost, **opts)
 
-    def error (self, msg):
-        """
-        Report a filter/parser error.
-        """
-        wc.log.error(wc.LOG_FILTER, msg)
-
-    def warning (self, msg):
-        """
-        Report a filter/parser warning.
-        """
-        wc.log.warn(wc.LOG_FILTER, msg)
-
-    def fatal_error (self, msg):
-        """
-        Report a fatal filter/parser error.
-        """
-        wc.log.critical(wc.LOG_FILTER, msg)
-
     def __repr__ (self):
         """
         Representation with recursion level and state.
