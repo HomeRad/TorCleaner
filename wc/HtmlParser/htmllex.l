@@ -241,7 +241,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     BEGIN(S_COMMENT);
 }
 
-<INITIAL><![ ]+--? {
+<INITIAL><![ ]+-- {
     PyObject* msg;
     CHECK_NULL(msg = PyString_FromString("malformed comment begin"));
     ADD_ERROR(msg);
@@ -749,12 +749,21 @@ RX_DATA  [-a-zA-Z0-9_:]+
     APPEND_TO_TMP(yyleng);
 }
 
-<S_ATTR2>\\\n {
+<S_ATTR2>\\\r?\n {
     /* Line continuations */
     PyObject* msg;
     CHECK_NULL(msg = PyString_FromString("invalid line continuation `\\\\n'"));
     ADD_ERROR(msg);
     UPDATE_LINE;
+}
+
+<S_ATTR2>\\\r?[^\n] {
+    UPDATE_COLUMN;
+    APPEND_TO_TMP(yyleng);
+}
+
+<S_ATTR2>\\\r? {
+    return T_WAIT;
 }
 
 <S_ATTR2>{RX_WHITE_SPACE}+ {
@@ -1015,6 +1024,10 @@ RX_DATA  [-a-zA-Z0-9_:]+
     UPDATE_LINE;
     /* ignore any trailing garbage of this end tag */
     BEGIN(S_TAGEND2);
+}
+
+<S_TAGEND>. {
+    return T_WAIT;
 }
 
 <S_TAGEND2>> {
