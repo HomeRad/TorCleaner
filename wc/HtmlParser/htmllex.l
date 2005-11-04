@@ -14,10 +14,15 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-/* HTML lexical anaylizer. Finds recognizable tokens in (probably
-   bad formatted) HTML streams.
-   Unrecognizable character data is passed on as a TEXT token.
-*/
+
+/* Lexical analyzer for finding recognizable tokens in (probably
+ * bad formatted) HTML streams.
+ * Unrecognizable character data is passed on as a TEXT token.
+ *
+ * Note that you cannot rely on the "longest match" preference of
+ * flex here since input data might be truncated at any given position.
+ * This explains some of the more complicated lookahead rules below.
+ */
 
 %{
 #include "htmlsax.h"
@@ -129,17 +134,17 @@
     }
 
 /* update the buffer and scanner positions */
-#define _UPDATE_BUFPOS yyextra->bufpos += yyleng; yyextra->pos += yyleng
+#define UPDATE_BUFPOS yyextra->bufpos += yyleng; yyextra->pos += yyleng
 
 /* update the column position; use this *only* in rules that cannot match
  the newline char '\n'!
  */
-#define UPDATE_COLUMN _UPDATE_BUFPOS; yyextra->column += yyleng
+#define UPDATE_COLUMN UPDATE_BUFPOS; yyextra->column += yyleng
 
 /* update the line and column position; use this in rules that can match the
  newline char '\n'.
  */
-#define UPDATE_LINE _UPDATE_BUFPOS; { \
+#define UPDATE_LINE UPDATE_BUFPOS; { \
     int i; \
     for (i=0; i<yyleng; ++i) { \
         if (yytext[i] == '\n') { \
@@ -1076,7 +1081,7 @@ int htmllexDebug (void** scanner, int debug) {
 int htmllexStart (void* scanner, UserData* data, const char* s, int slen) {
     /* append s to data buffer and scan those bytes.
      As Flex does not distinguish between NUL and EOF characters,
-     we must replace NUL with ' '. */
+     replace NUL with ' '. */
     int len = strlen(data->buf);
     int i;
     RESIZE_BUF(data->buf, len + slen + 1);
@@ -1117,6 +1122,7 @@ int htmllexStop (void* scanner, UserData* data) {
             data->buf[j] = data->buf[i];
 	}
 	data->buf[j] = '\0';
+        /* Can return T_ERROR, which is guaranteed to be non-zero. */
 	RESIZE_BUF(data->buf, len-data->nextpos + 1);
         data->bufpos -= data->nextpos;
 	data->nextpos = 0;
