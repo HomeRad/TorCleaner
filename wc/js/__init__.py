@@ -29,7 +29,7 @@ def clean (script, jscomments=True):
 
 
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
-_end_js_comment = re.compile(r"\s*//[^\r\n]*-->[ \t]*$").search
+_end_js_comment = re.compile(r"\s*(?P<comment>//)?[^/\r\n]*-->[ \t]*$").search
 def remove_html_comments (script):
     """
     Remove leading and trailing HTML comments from the script text.
@@ -39,14 +39,11 @@ def remove_html_comments (script):
         script = script[mo.end():]
     mo = _end_js_comment(script)
     if mo:
-        # note: this could have matched too much, for example:
-        # 'a="http://foo";//-->' matches '//foo";//-->'
-        # try to find this case:
-        last_comment = script.rindex("//")
-        if last_comment != mo.group().index("//"):
-            script = script[:last_comment]
+        if mo.group("comment") is not None:
+            i = script.rindex("//")
         else:
-            script = script[:mo.start()]
+            i = script.rindex("-->")
+        script = script[:i]
     return script.strip()
 
 
