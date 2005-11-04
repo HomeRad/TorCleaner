@@ -129,13 +129,6 @@
         Py_CLEAR(yyextra->tmp_attrname); \
     }
 
-/* add error message to error list */
-#define ADD_ERROR(msg) \
-    if (PyList_Append(yyextra->errors, msg) != 0) { \
-        Py_DECREF(msg); \
-        return T_ERROR; \
-    }
-
 /* update the buffer and scanner positions */
 #define UPDATE_BUFPOS yyextra->bufpos += yyleng; yyextra->pos += yyleng
 
@@ -242,17 +235,11 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <INITIAL><![ ]+-- {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment begin"));
-    ADD_ERROR(msg);
     UPDATE_COLUMN;
     BEGIN(S_COMMENT);
 }
 
 <INITIAL><!-/[ ] {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment begin"));
-    ADD_ERROR(msg);
     UPDATE_COLUMN;
     BEGIN(S_COMMENT);
 }
@@ -265,9 +252,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_COMMENT>--[ ]+> {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment end"));
-    ADD_ERROR(msg);
     UPDATE_COLUMN;
     SETLVAL_UNICODE;
     BEGIN(INITIAL);
@@ -275,9 +259,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_COMMENT>-> {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment end"));
-    ADD_ERROR(msg);
     UPDATE_COLUMN;
     SETLVAL_UNICODE;
     BEGIN(INITIAL);
@@ -315,9 +296,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
    /* Note: www.nba.com had some <! Copyright !> comment */
 <INITIAL><![ ]+/[^-] {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment begin"));
-    ADD_ERROR(msg);
     UPDATE_COLUMN;
     BEGIN(S_COMMENT2);
 }
@@ -751,9 +729,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 <S_ATTR2>\\\r?\n {
     /* Line continuations */
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("invalid line continuation `\\\\n'"));
-    ADD_ERROR(msg);
     UPDATE_LINE;
 }
 
@@ -873,9 +848,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_ATTR5>[\"] {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("missing beginning quote in attribute"));
-    ADD_ERROR(msg);
     UPDATE_COLUMN;
     PYSTRING_TMP_UNICODE(yyextra->tmp_attrval);
     RESIZE_BUF(yyextra->tmp_buf, 1);
@@ -956,9 +928,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_STRING,S_APOSSTRING>\\\r?\n {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("invalid line continuation in attribute value"));
-    ADD_ERROR(msg);
     UPDATE_LINE;
 }
 
@@ -998,9 +967,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_TAGEND><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}*/[A-Za-z] {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf));
-    ADD_ERROR(msg);
     UPDATE_LINE;
     LOWER_TMP;
     SETLVAL_ASCII;
@@ -1009,9 +975,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_TAGEND><{RX_WHITE_SPACE}*/[A-Za-z] {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf));
-    ADD_ERROR(msg);
     UPDATE_LINE;
     LOWER_TMP;
     SETLVAL_ASCII;
@@ -1043,9 +1006,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_TAGEND2><{RX_WHITE_SPACE}*\/{RX_WHITE_SPACE}*/[A-Za-z] {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf));
-    ADD_ERROR(msg);
     UPDATE_LINE;
     LOWER_TMP;
     SETLVAL_ASCII;
@@ -1054,9 +1014,6 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
 <S_TAGEND2><{RX_WHITE_SPACE}*/[A-Za-z] {
-    PyObject* msg;
-    CHECK_NULL(msg = PyString_FromFormat("missing > in end tag `%s'", yyextra->tmp_buf));
-    ADD_ERROR(msg);
     UPDATE_LINE;
     LOWER_TMP;
     SETLVAL_ASCII;
