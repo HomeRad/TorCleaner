@@ -241,9 +241,9 @@ RX_DATA  [-a-zA-Z0-9_:]+
     BEGIN(S_COMMENT);
 }
 
-<INITIAL><![ ]+-- {
+<INITIAL><![ ]+--? {
     PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment begin `<! --'"));
+    CHECK_NULL(msg = PyString_FromString("malformed comment begin"));
     ADD_ERROR(msg);
     UPDATE_COLUMN;
     BEGIN(S_COMMENT);
@@ -251,7 +251,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 <INITIAL><!-/[ ] {
     PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment begin `<!- '"));
+    CHECK_NULL(msg = PyString_FromString("malformed comment begin"));
     ADD_ERROR(msg);
     UPDATE_COLUMN;
     BEGIN(S_COMMENT);
@@ -266,7 +266,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 <S_COMMENT>--[ ]+> {
     PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment end `-- >'"));
+    CHECK_NULL(msg = PyString_FromString("malformed comment end"));
     ADD_ERROR(msg);
     UPDATE_COLUMN;
     SETLVAL_UNICODE;
@@ -276,7 +276,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 <S_COMMENT>-> {
     PyObject* msg;
-    CHECK_NULL(msg = PyString_FromString("malformed comment end `->'"));
+    CHECK_NULL(msg = PyString_FromString("malformed comment end"));
     ADD_ERROR(msg);
     UPDATE_COLUMN;
     SETLVAL_UNICODE;
@@ -314,7 +314,10 @@ RX_DATA  [-a-zA-Z0-9_:]+
 }
 
    /* Note: www.nba.com had some <! Copyright !> comment */
-<INITIAL><![ ]+ {
+<INITIAL><![ ]+/[^-] {
+    PyObject* msg;
+    CHECK_NULL(msg = PyString_FromString("malformed comment begin"));
+    ADD_ERROR(msg);
     UPDATE_COLUMN;
     BEGIN(S_COMMENT2);
 }
