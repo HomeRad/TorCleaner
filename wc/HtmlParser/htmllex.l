@@ -36,11 +36,14 @@
 /* type of user-specified data */
 #define YY_EXTRA_TYPE UserData*
 
-/* Return T_ERROR if argument is NULL. Returning T_ERROR is the standard
- * error-out reaction for this lexer.
- */
+/* Returning T_ERROR is the standard error-out reaction for this lexer. */
+/* Return T_ERROR if argument is NULL. */
 #define CHECK_NULL(a) \
     if ((a) == NULL) return T_ERROR
+
+/* Return T_ERROR if argument is -1 (minus one). */
+#define CHECK_MINUSONE(a) \
+    if ((a) == -1) return T_ERROR
 
 /* resize buffer b, returning T_ERROR on error */
 #define RESIZE_BUF(b, n) \
@@ -122,7 +125,7 @@
     if (strlen(yyextra->tmp_buf) > 0) { \
         PYSTRING_TMP_UNICODE(yyextra->tmp_attrname); \
 	RESIZE_BUF(yyextra->tmp_buf, 1); \
-        if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)==-1) return T_ERROR; \
+        CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None)); \
         Py_CLEAR(yyextra->tmp_attrname); \
     }
 
@@ -770,8 +773,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
     PYSTRING_TMP_UNICODE(yyextra->tmp_attrname);
     RESIZE_BUF(yyextra->tmp_buf, 1);
     if (yyextra->tmp_attrval != NULL) return T_ERROR;
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-                         Py_None) == -1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname, Py_None));
     Py_CLEAR(yyextra->tmp_attrname);
     APPEND_TO_TMP(yyleng);
     BEGIN(S_ATTR2);
@@ -810,8 +812,8 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     CHECK_NULL(yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities,
                                                  "O", yyextra->tmp_attrval));
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-		         yyextra->tmp_attrval)==-1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
+                                    yyextra->tmp_attrval));
     Py_CLEAR(yyextra->tmp_attrname);
     Py_CLEAR(yyextra->tmp_attrval);
     SCRIPT_CHECK;
@@ -834,8 +836,8 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     CHECK_NULL(yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities,
                                                  "O", yyextra->tmp_attrval));
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-		         yyextra->tmp_attrval)==-1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
+                                    yyextra->tmp_attrval));
     Py_CLEAR(yyextra->tmp_attrname);
     Py_CLEAR(yyextra->tmp_attrval);
     SCRIPT_CHECK;
@@ -849,8 +851,8 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     CHECK_NULL(yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities,
                                                  "O", yyextra->tmp_attrval));
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-		         yyextra->tmp_attrval)==-1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
+                                    yyextra->tmp_attrval));
     Py_CLEAR(yyextra->tmp_attrname);
     Py_CLEAR(yyextra->tmp_attrval);
     BEGIN(INITIAL);
@@ -867,8 +869,8 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     CHECK_NULL(yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities,
                                                  "O", yyextra->tmp_attrval));
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-		         yyextra->tmp_attrval)==-1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
+                                    yyextra->tmp_attrval));
     Py_CLEAR(yyextra->tmp_attrname);
     Py_CLEAR(yyextra->tmp_attrval);
     BEGIN(S_ATTR1);
@@ -880,8 +882,8 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     CHECK_NULL(yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities,
                                                  "O", yyextra->tmp_attrval));
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-		         yyextra->tmp_attrval)==-1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
+                                    yyextra->tmp_attrval));
     Py_CLEAR(yyextra->tmp_attrname);
     Py_CLEAR(yyextra->tmp_attrval);
     BEGIN(S_ATTR1);
@@ -899,8 +901,8 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     CHECK_NULL(yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities,
                                                  "O", yyextra->tmp_attrval));
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-		         yyextra->tmp_attrval)==-1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
+                                    yyextra->tmp_attrval));
     Py_CLEAR(yyextra->tmp_attrname);
     Py_CLEAR(yyextra->tmp_attrval);
     BEGIN(S_ATTR1);
@@ -930,8 +932,8 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RESIZE_BUF(yyextra->tmp_buf, 1);
     CHECK_NULL(yyextra->tmp_attrval = PyObject_CallFunction(yyextra->resolve_entities,
                                                  "O", yyextra->tmp_attrval));
-    if (PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
-		         yyextra->tmp_attrval)==-1) return T_ERROR;
+    CHECK_MINUSONE(PyObject_SetItem(yyextra->tmp_attrs, yyextra->tmp_attrname,
+                                    yyextra->tmp_attrval));
     Py_CLEAR(yyextra->tmp_attrname);
     Py_CLEAR(yyextra->tmp_attrval);
     BEGIN(S_ATTR1);
