@@ -24,6 +24,22 @@
     Type: feature
     Changed: wc/js/jslib.c
 
+  * Improve error detection of missing quotes in the HTML parser.
+    Type: feature
+    Changed: wc/HtmlParser/htmllex.l
+
+  * Improved JavaScript comment cleaning.
+    Type: feature
+    Changed: wc/js/__init__.py
+
+  * When URL norming encode the query from Unicode to ASCII before parsing.
+    Type: bugfix
+    Changed: wc/url.py
+
+  * Decode content of background download if needed.
+    Type: bugfix
+    Changed: wc/proxy/HttpProxyClient.py
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled

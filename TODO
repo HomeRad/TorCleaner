@@ -9,6 +9,19 @@ TODO
 
 - if an unknown port is forbidden (403 status), add an explaining message
 
+- HTML parser should recognize a missing ending quote of attribute values.
+  Right now the parser parses all subsequent stuff as TEXT.
+  A solution:
+  If end-of-line is encountered assume a missing end quote.
+  Now roll back the scanner to the first white-space or '>' character
+  after the beginning quote, and assume the missing end quote at this
+  position.
+  Does catch stuff like <a b="c> ... but not stuff like
+  <a b="c d="e"> ...
+  
+- Use HTML parser with Unicode support, ie. rewrite this bugger in Python
+  with regexes (slow?).
+  
 - Mac OS X and BSD support for network interface list:
   from the www.dents.org C source (GPL license):
   /* Loop through all of the interfaces, getting the IP address for each */
@@ -35,8 +48,10 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
 
 - squid uses an external auth configuration, we could use that too
 
-- http://www.sane.com/demo/NetTracker/intranet/index.html
-  JS navi not there
+- JavaScript evaluation stops on errors. This is bad since some errors
+  (like external frame references) cannot be avoided.
+  A workaround would be to generate JS objects that have _all_
+  properties by overloading the property getter.
 
 - ssl certificate verification
 
@@ -63,34 +78,6 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
   Big problem: how do we decide when to send out IPv6 DNS queries?
 
 - use IPpy.py
-
-- Problem on WinXP box:
- The instance's SvcRun() method failed 
-   File "C:\Python24\Lib\site-packages\win32\lib\win32serviceutil.py",
- line 715, in SvcRun
-     self.SvcDoRun()
-   File "C:\Python24\Lib\site-packages\wc\win32start.py", line 74, in
- SvcDoRun
-     filelogs=self.filelogs)
-   File "C:\Python24\Lib\site-packages\wc\start.py", line 59, in
- wstartfunc
-     wc.proxy.mainloop(handle=handle, abort=abort)
-   File "C:\Python24\Lib\site-packages\wc\proxy\__init__.py", line 168,
- in mainloop
-     proxy_poll(timeout=max(0, run_timers()))
-   File "C:\Python24\Lib\site-packages\wc\proxy\__init__.py", line 122,
- in proxy_poll
-     x.handle_read_event()
-   File "C:\Python24\Lib\site-packages\wc\proxy\Dispatcher.py", line 424,
- in handle_read_event
-     self.handle_read()
-   File "C:\Python24\Lib\site-packages\wc\proxy\Connection.py", line 95,
- in handle_read
-     self.process_read()
-   File "C:\Python24\Lib\site-packages\wc\proxy\dns_lookups.py", line
- 567, in process_read
-     callback(self.hostname, DnsResponse('found', ip_addrs)) 
- exceptions.TypeError: 'NoneType' object is not callable
 
 - Streaming clamav scanning, try to detect virii immediately
   Note: clamav does _not_ support streaming, so this is currently not
