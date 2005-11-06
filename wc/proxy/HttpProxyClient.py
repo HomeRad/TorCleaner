@@ -24,6 +24,7 @@ import wc.proxy.Headers
 import wc.proxy.HttpServer
 import wc.proxy.HttpClient
 import wc.proxy.ClientServerMatchmaker
+import wc.proxy.decoder.UnchunkStream
 import wc.filter
 import wc.log
 import wc.url
@@ -44,6 +45,7 @@ class HttpProxyClient (object):
         self.handler = handler
         self.args = args
         self.method = "GET"
+        self.decoders = []
         self.url = wc.url.url_norm(self.args[0])[0]
         self.scheme, self.hostname, self.port, self.document = \
                                                   wc.url.url_split(self.url)
@@ -76,12 +78,23 @@ class HttpProxyClient (object):
                 handler = self.handler.im_class.__name__+"."+handler
         return '<%s: %s %s>' % ('proxyclient', self.args[0], handler)
 
+    def flush_coders (self, coders, data=""):
+        while coders:
+            wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
+            data = coders[0].process(data)
+            data += coders[0].flush()
+            del coders[0]
+        return data
+
     def finish (self):
         """
         Tell handler all data is written and remove handler.
         """
         wc.log.debug(wc.LOG_PROXY, '%s finish', self)
+        data = self.flush_coders(self.decoders)
         if self.handler:
+            if data:
+                self.handler(data, *self.args)
             self.handler(None, *self.args)
             self.handler = None
 
@@ -97,8 +110,9 @@ class HttpProxyClient (object):
         """
         Give data to handler.
         """
-        if self.handler:
-            assert data is not None
+        for decoder in self.decoders:
+            data = decoder.process(data)
+        if self.handler and data:
             self.handler(data, *self.args)
 
     def server_response (self, server, response, status, headers):
@@ -119,6 +133,15 @@ class HttpProxyClient (object):
             wc.log.error(wc.LOG_PROXY, "%s got %s status %d %r",
                          self, version, status, msg)
             self.finish()
+        if headers.has_key('Transfer-Encoding'):
+            # XXX don't look at value, assume chunked encoding for now
+            wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
+                         self, headers['Transfer-encoding'])
+            unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(self)
+            self.decoders.append(unchunker)
+
+    def write_trailer (self, data):
+        pass
 
     def server_content (self, data):
         """
