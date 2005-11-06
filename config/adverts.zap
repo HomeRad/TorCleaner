@@ -244,4 +244,11 @@
   <title lang="de">Verknüpfungen mit 'adlog'</title>
   <attr>adlog\.com\.</attr>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.52"
+ tag="script">
+  <title lang="de">JavaScript Werbung</title>
+  <description lang="de">JavaScript in HTML von Werberechnern.</description>
+  <attr name="src">(adbrite|advertising)\.com</attr>
+</htmlrewrite>
 </folder>
