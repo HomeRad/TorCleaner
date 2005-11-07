@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-10-30 17:40+0100\n"
+"POT-Creation-Date: 2005-11-07 17:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "inserting new rule %s"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:147
+#: ../wc/filter/rules/FolderRule.py:145
 msgid "with 1 rule"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:149
+#: ../wc/filter/rules/FolderRule.py:147
 #, python-format
 msgid "with %d rules"
 msgstr ""
@@ -146,12 +146,12 @@ msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
 
-#: ../wc/filter/html/JSFilter.py:356
+#: ../wc/filter/html/JSFilter.py:357
 #, python-format
 msgid "error fetching script from %r"
 msgstr ""
 
-#: ../wc/filter/html/JSFilter.py:359
+#: ../wc/filter/html/JSFilter.py:360
 #, python-format
 msgid "fetched script from %r"
 msgstr ""
