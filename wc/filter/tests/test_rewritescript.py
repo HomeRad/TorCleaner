@@ -345,6 +345,12 @@ a();
 </script>""",
 """""")
 
+    def testFilter (self):
+        self.filt(
+"""<script src="adbrite.com">
+</script>""",
+"""""")
+
 
 def test_suite ():
     return unittest.makeSuite(TestRewriteScript)
