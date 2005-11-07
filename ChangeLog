@@ -1,4 +1,4 @@
-2.34 "" (released xx.xx.xxxx)
+2.34 "" (released xx.xx.2005)
 
   * Document the Antivirus rule type.
     Type: documentation
@@ -39,6 +39,12 @@
   * Decode content of background download if needed.
     Type: bugfix
     Changed: wc/proxy/HttpProxyClient.py
+
+  * Fixed rule updating by using an extra variable in XmlrewriteRule
+    for storing the numeric replace type value.
+    Type: bugfix
+    Changed: wc/filter/rules/XmlrewriteRule.py,
+      wc/webgui/context/filterconfig_html.py
 
 2.33 "The Stunt Man" (released 12.10.2005)
 
