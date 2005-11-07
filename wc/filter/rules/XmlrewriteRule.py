@@ -118,8 +118,9 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
     replacements. Replacement matching occurs in order and allows for
     more than one replacment rule to trigger.
     """
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, selector=u"", replacetype=RSSHTML,
+                  disable=0, selector=u"", replacetype=u"rsshtml",
                   value=u""):
         """
         Initialize rule data.
@@ -134,13 +135,12 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
 
     def compile_data (self):
         """
-        Parse selector.
+        Parse selector and set replacetype value.
         """
         super(XmlrewriteRule, self).compile_data()
         self.selector_list = parse_xpath(self.selector)
-        if self.replacetype in replacetypenums:
-            self.replacetype = replacetypenums[self.replacetype]
-        if self.replacetype == RSSHTML:
+        self.replacetypenum = replacetypenums.get(self.replacetype, RSSHTML)
+        if self.replacetypenum == RSSHTML:
             self.rsshtml = wc.filter.html.RssHtmlFilter.RssHtmlFilter()
 
     def toxml (self):
@@ -150,8 +150,7 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         s = super(XmlrewriteRule, self).toxml()
         quote = wc.XmlUtils.xmlquoteattr
         s += u'\n selector="%s"' % quote(self.selector)
-        replace = replacetypenames[self.replacetype]
-        s += u'\n replacetype="%s"' % quote(replace)
+        s += u'\n replacetype="%s"' % quote(self.replacetype)
         if self.value:
             s += u'\n value="%s"' % quote(self.value)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
@@ -167,16 +166,16 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         enc = locale.getpreferredencoding()
         s = super(XmlrewriteRule, self).__str__()
         s += "selector %s\n" % self.selector.encode(enc)
-        replace = replacetypenames[self.replacetype]
-        value = self.value
-        s += "replace %s %r\n" % (replace.encode(enc), value.encode(enc))
+        replace = self.replacetype.encode(enc)
+        value = self.value.encode(enc)
+        s += "replace %s %r\n" % (replace, value)
         return s
 
     def match_tag (self, stack):
         return match_stack(stack, self.selector_list)
 
     def filter_tag (self, pos, tagbuf, tag, url, htmlrules):
-        if self.replacetype == RSSHTML:
+        if self.replacetypenum == RSSHTML:
             for item in tagbuf[pos:]:
                 if item[0] == wc.filter.xmlfilt.DATA:
                     data = item[1]
@@ -184,7 +183,7 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                     data = self.filter_html(data, url, htmlrules)
                     item[1] = data
             tagbuf.append([wc.filter.xmlfilt.ENDTAG, tag])
-        elif self.replacetype == REMOVE:
+        elif self.replacetypenum == REMOVE:
             del tagbuf[pos:]
         else:
             wc.log.warn(wc.LOG_FILTER, "%s: unimplemented replace type", self)

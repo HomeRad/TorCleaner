@@ -29,7 +29,7 @@ from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.filter.rules.Rule import compileRegex as _compileRegex
 from wc.filter.rules.HtmlrewriteRule import partvalnames, partnames
 from wc.filter.rules.HtmlrewriteRule import part_num as _part_num
-from wc.filter.rules.XmlrewriteRule import replacetypenums
+from wc.filter.rules.XmlrewriteRule import replacetypenums, replacetypenames
 from wc.filter.rules.XmlrewriteRule import parse_xpath as _parse_xpath
 from wc.filter.rules.FolderRule import FolderRule as _FolderRule
 from wc.filter.rules.FolderRule import recalc_up_down as _recalc_up_down
@@ -304,7 +304,7 @@ def _form_selrule (index):
             global curreplacetypes
             curreplacetypes = {}
             for name, num in replacetypenums.items():
-                curreplacetypes[name] = (currule.replacetype == num)
+                curreplacetypes[name] = (currule.replacetypenum == num)
         elif currule.get_name() == u"header":
             global curfilterstage, curheaderaction
             curfilterstage = {
@@ -830,14 +830,15 @@ def _form_apply_xmlrewrite (form):
         currule.selector = selector
         currule.selector_list = _parse_xpath(selector)
         info['xmlselector'] = True
-    replacetype = _getval(form, 'rule_xmlreplacetype').strip()
+    replacetypenum = _getval(form, 'rule_xmlreplacetype').strip()
     try:
-        replacetype = int(replacetype)
+        replacetypenum = int(replacetypenum)
     except (ValueError, OverflowError):
         error['xmlreplacetype'] = True
         return
-    if replacetype != currule.replacetype:
-        currule.replacetype = replacetype
+    if replacetypenum != currule.replacetypenum:
+        currule.replacetype = replacetypenames[replacetypenum]
+        currule.replacetypenum = replacetypenum
         info['xmlreplacetype'] = True
     replacevalue = _getval(form, 'rule_xmlreplacevalue').strip()
     if replacevalue:
