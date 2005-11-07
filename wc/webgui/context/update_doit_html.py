@@ -23,8 +23,10 @@ from wc.configuration import config
 from wc.update import update_filter as _update_filter
 from wc.update import update_ratings as _update_ratings
 from cStringIO import StringIO as _StringIO
+import traceback as _traceback
 
 updatelog = u""
+
 
 def _exec_form (form, lang):
     global updatelog
@@ -45,8 +47,9 @@ def _updatezapper ():
         doreload = _update_filter(config, log=log, dryrun=False)
         updatelog = log.getvalue()
         config.write_filterconf()
-    except IOError, msg:
-        updatelog = _("Error: %s") % msg
+    except:
+        updatelog = log.getvalue()
+        updatelog += _traceback.format_exc()
     else:
         if doreload:
             # pass
@@ -60,5 +63,7 @@ def _updaterating ():
         doreload = _update_ratings(config, log=log, dryrun=False)
         updatelog = log.getvalue()
         # XXX
-    except IOError, msg:
-        updatelog = _("Error: %s") % msg
+    except:
+        updatelog = log.getvalue()
+        updatelog += _traceback.format_exc()
+
