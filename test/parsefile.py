@@ -38,7 +38,7 @@ def _main (args):
     p = htmlsax.parser(klass())
     p.debug(1)
     size = 1024
-    #size = 1
+    #size = 1 # feed data to parser one character-at-a-time
     data = f.read(size)
     while data:
         p.feed(data)
