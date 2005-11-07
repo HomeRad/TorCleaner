@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-07 17:50+0100\n"
+"POT-Creation-Date: 2005-11-07 20:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -165,9 +165,9 @@ msgstr ""
 msgid "error fetching %s"
 msgstr ""
 
-#: ../wc/update.py:227 ../wc/update.py:237 ../wc/update.py:276
-#: ../wc/update.py:284 ../wc/update.py:321 ../wc/update.py:337
-#: ../wc/update.py:341
+#: ../wc/update.py:227 ../wc/update.py:237 ../wc/update.py:275
+#: ../wc/update.py:283 ../wc/update.py:320 ../wc/update.py:336
+#: ../wc/update.py:340
 msgid "done"
 msgstr ""
 
@@ -191,36 +191,36 @@ msgstr ""
 msgid "Incompatible folder version %s, must be %s"
 msgstr ""
 
-#: ../wc/update.py:275 ../wc/update.py:282 ../wc/update.py:311
-#: ../wc/update.py:315 ../wc/update.py:336
+#: ../wc/update.py:274 ../wc/update.py:281 ../wc/update.py:310
+#: ../wc/update.py:314 ../wc/update.py:335
 #, python-format
 msgid "error fetching %s:"
 msgstr ""
 
-#: ../wc/update.py:283
+#: ../wc/update.py:282
 msgid "invalid content"
 msgstr ""
 
-#: ../wc/update.py:300
+#: ../wc/update.py:299
 #, python-format
 msgid "extern filter %s not changed, ignoring"
 msgstr ""
 
-#: ../wc/update.py:302
+#: ../wc/update.py:301
 #, python-format
 msgid "updating extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:304
+#: ../wc/update.py:303
 #, python-format
 msgid "adding new extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:316
+#: ../wc/update.py:315
 msgid "got no data"
 msgstr ""
 
-#: ../wc/update.py:329
+#: ../wc/update.py:328
 msgid "updating ratings..."
 msgstr ""
 
@@ -332,14 +332,8 @@ msgstr ""
 msgid "Unknown reason"
 msgstr ""
 
-#: ../wc/webgui/context/update_doit_html.py:37
+#: ../wc/webgui/context/update_doit_html.py:39
 msgid "Error: nothing to update."
-msgstr ""
-
-#: ../wc/webgui/context/update_doit_html.py:49
-#: ../wc/webgui/context/update_doit_html.py:64
-#, python-format
-msgid "Error: %s"
 msgstr ""
 
 #: ../wc/proxy/Dispatcher.py:325
