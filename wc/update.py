@@ -256,7 +256,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         else:
             print >> log, _("adding new filter %s") % filename
         # parse new filter
-        url = baseurl+filename
+        url = baseurl + filename
         page = open_url(url)
         p = wc.configuration.ZapperParser(fullname, compile_data=False)
         p.parse(fp=page)
@@ -267,8 +267,7 @@ def update_filter (wconfig, dryrun=False, log=None):
                 (wconfig['configversion'], p.folder.configversion)
         if wconfig.merge_folder(p.folder, dryrun=dryrun, log=log):
             chg = True
-
-    url = baseurl+"extern-md5sums.txt"
+    url = baseurl + "extern-md5sums.txt"
     try:
         page = open_url(url)
     except IOError, msg:
