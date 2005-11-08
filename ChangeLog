@@ -46,6 +46,11 @@
     Changed: wc/filter/rules/XmlrewriteRule.py,
       wc/webgui/context/filterconfig_html.py
 
+  * Check the length format of width and height attributes
+    in the HTML security filter.
+    Type: feature
+    Changed: wc/filter/html/HtmlSecurity.py
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled

@@ -31,7 +31,9 @@ import wc.log
 import wc.url
 
 
-def _has_lots_of_percents (url):
+# helper methods to check/sanitize values
+
+def has_lots_of_percents (url):
     """
     Return True iff URL has more than 10 percent chars in a row.
     """
@@ -40,7 +42,7 @@ def _has_lots_of_percents (url):
     return '%'*11 in url
 
 
-def _has_dashes_in_hostname (url):
+def has_dashes_in_hostname (url):
     """
     Return True iff URL hostname has more than 1 consecutive dash.
     """
@@ -53,6 +55,85 @@ def _has_dashes_in_hostname (url):
         host = host[:i]
     return "--" in host
 
+
+def check_javascript_url (attrs, name, htmlfilter):
+    """
+    Check if url has javascript: embedded.
+    """
+    if name not in attrs:
+        return
+    url = attrs.get_true(name, u"").strip().lower()
+    # to be sure catch all javascript: stuff
+    if "javascript:" in url:
+        msg = "%s\n Detected and prevented invlalid JS URL reference"
+        wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
+        del attrs[name]
+
+
+def check_length (attrs, name, htmlfilter):
+    """
+    Check correct format of a length attribute. Allowed are
+    digits, followed by 'pt', 'px' or '%'.
+    """
+    value = attrs.get_true(name, u"")
+    if not value:
+        return
+    tvalue = value.lower().strip()
+    if tvalue.endswith('pt'):
+        tvalue = tvalue[:-2]
+    elif tvalue.endswith('px'):
+        tvalue = tvalue[:-2]
+    elif tvalue.endswith('%'):
+        tvalue = tvalue[:-1]
+    if not tvalue.isdigit():
+        msg = "%s\n Detected invalid length format %r"
+        wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, value)
+
+
+def check_attr_size (attrs, name, htmlfilter, maxlen=4):
+    """
+    Sanitize too large values (usually used for length attributes).
+    """
+    if name not in attrs:
+        return
+    # Note that a maxlen of 4 is recommended to also allow
+    # percentages like '100%'.
+    val = attrs.get_true(name, u"").lower()
+    l = len(val)
+    # subtract common units
+    if val.endswith("%"):
+        l -= 1
+    elif val.endswith("pt") or val.endswith("px"):
+        l -= 2
+    if l > maxlen:
+        msg = "%s %r\n Detected a too large %s attribute value"
+        msg += " (length %d > %d)" % (len(val), maxlen)
+        wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
+        del attrs[name]
+
+
+def check_url (attrs, name, htmlfilter):
+    """
+    Check if url has suspicious patterns.
+    """
+    if name not in attrs:
+        return
+    url = attrs.get_true(name, u"")
+    if has_lots_of_percents(url):
+        # prevent CAN-2003-0870
+        msg = "%s %r\n Detected and prevented Opera percent " \
+              "encoding overflow crash"
+        wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
+        del attrs[name]
+    if has_dashes_in_hostname(url):
+        # prevent firefox crash
+        msg = "%s %r\n Detected and prevented Firefox " \
+              "dashes-in-hostname overflow crash"
+        wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
+        del attrs[name]
+
+
+# security checker
 
 class HtmlSecurity (object):
     """
@@ -72,6 +153,9 @@ class HtmlSecurity (object):
         fun = "%s_start" % tag
         if hasattr(self, fun):
             getattr(self, fun)(attrs, htmlfilter)
+        # generic length checking
+        check_length(attrs, 'width', htmlfilter)
+        check_length(attrs, 'height', htmlfilter)
 
     def scan_end_tag (self, tag):
         """
@@ -82,69 +166,19 @@ class HtmlSecurity (object):
         if hasattr(self, fun):
             getattr(self, fun)()
 
-    # helper methods to check/sanitize values
-
-    def _check_attr_size (self, attrs, name, htmlfilter, maxlen=4):
-        """
-        Sanitize too large values.
-        """
-        if name not in attrs:
-            return
-        # Note that a maxlen of 4 is recommended to also allow
-        # percentages like '100%'.
-        val = attrs.get_true(name, u"").lower()
-        l = len(val)
-        # subtract common units
-        if val.endswith("%"):
-            l -= 1
-        elif val.endswith("pt") or val.endswith("px"):
-            l -= 2
-        if l > maxlen:
-            msg = "%s %r\n Detected a too large %s attribute value"
-            msg += " (length %d > %d)" % (len(val), maxlen)
-            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, val, name)
-            del attrs[name]
-
-    def _check_javascript_url (self, attrs, name, htmlfilter):
-        """
-        Check if url has javascript: embedded.
-        """
-        if name not in attrs:
-            return
-        url = attrs.get_true(name, u"").strip().lower()
-        # to be sure catch all javascript: stuff
-        if "javascript:" in url:
-            msg = "%s\n Detected and prevented invlalid JS URL reference"
-            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter)
-            del attrs[name]
-
-    def _check_url (self, attrs, name, htmlfilter):
-        """
-        Check if url has suspicious patterns.
-        """
-        if name not in attrs:
-            return
-        url = attrs.get_true(name, u"")
-        if _has_lots_of_percents(url):
-            # prevent CAN-2003-0870
-            msg = "%s %r\n Detected and prevented Opera percent " \
-                  "encoding overflow crash"
-            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
-            del attrs[name]
-        if _has_dashes_in_hostname(url):
-            # prevent firefox crash
-            msg = "%s %r\n Detected and prevented Firefox " \
-                  "dashes-in-hostname overflow crash"
-            wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, url)
-            del attrs[name]
-
     # tag specific scan methods, sorted alphabetically
 
     def a_start (self, attrs, htmlfilter):
         """
         Check <a> start tag.
         """
-        self._check_url(attrs, 'href', htmlfilter)
+        check_url(attrs, 'href', htmlfilter)
+
+    def applet_start (self, attrs, htmlfilter):
+        """
+        Check <applet> start tag.
+        """
+        check_length(attrs, 'hspace', htmlfilter)
 
     def body_start (self, attrs, htmlfilter):
         """
@@ -162,8 +196,8 @@ class HtmlSecurity (object):
         """
         Check <embed> start tag.
         """
-        self._check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
-        self._check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
+        check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
+        check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
         if attrs.has_key('src'):
             src = attrs['src']
             if '?' in src:
@@ -194,41 +228,44 @@ class HtmlSecurity (object):
         """
         Check <font> start tag.
         """
-        self._check_attr_size(attrs, 'size', htmlfilter)
+        check_attr_size(attrs, 'size', htmlfilter)
 
     def frame_start (self, attrs, htmlfilter):
         """
         Check <frame> start tag.
         """
-        self._check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
-        self._check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
+        check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
+        check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
 
     def hr_start (self, attrs, htmlfilter):
         """
         Check <hr> start tag.
         """
         # prevent CAN-2003-0469
-        self._check_attr_size(attrs, 'align', htmlfilter, maxlen=50)
+        check_attr_size(attrs, 'align', htmlfilter, maxlen=50)
 
     def iframe_start (self, attrs, htmlfilter):
         """
         Check <iframe> start tag.
         """
-        self._check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
-        self._check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
+        check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
+        check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
+        check_attr_size(attrs, 'width', htmlfilter, maxlen=5)
+        check_attr_size(attrs, 'height', htmlfilter, maxlen=6)
+        check_url(attrs, 'src', htmlfilter)
 
     def img_start (self, attrs, htmlfilter):
         """
         Check <img> start tag.
         """
         # sanitize *src values
-        self._check_url(attrs, 'src', htmlfilter)
-        self._check_javascript_url(attrs, 'src', htmlfilter)
-        self._check_url(attrs, 'lowsrc', htmlfilter)
-        self._check_javascript_url(attrs, 'lowsrc', htmlfilter)
+        check_url(attrs, 'src', htmlfilter)
+        check_javascript_url(attrs, 'src', htmlfilter)
+        check_url(attrs, 'lowsrc', htmlfilter)
+        check_javascript_url(attrs, 'lowsrc', htmlfilter)
         # sanitize width/height values
-        self._check_attr_size(attrs, 'width', htmlfilter)
-        self._check_attr_size(attrs, 'height', htmlfilter)
+        check_attr_size(attrs, 'width', htmlfilter)
+        check_attr_size(attrs, 'height', htmlfilter)
 
     def input_start (self, attrs, htmlfilter):
         """
@@ -245,13 +282,13 @@ class HtmlSecurity (object):
         # CAN-2005-1155 and others
         if attrs.has_key('rel') and attrs.has_key('href'):
             if attrs['rel'].strip().lower() == 'icon':
-                self._check_javascript_url(attrs, 'href', htmlfilter)
+                check_javascript_url(attrs, 'href', htmlfilter)
 
     def marquee_start (self, attrs, htmlfilter):
         """
         Check <marquee> start tag.
         """
-        self._check_attr_size(attrs, 'height', htmlfilter)
+        check_attr_size(attrs, 'height', htmlfilter)
 
     def meta_start (self, attrs, htmlfilter):
         """
