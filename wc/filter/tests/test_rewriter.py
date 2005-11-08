@@ -290,8 +290,8 @@ class TestRewriter (MsgTestCase):
                   """<html><body><p></p></body></html>""")
 
     def testAppletHspace (self):
-        self.filt("""<frameset><frame src="aaa"><embed name="sp", style><applet hspace="file:\\">""",
-                  """<frameset><frame src="aaa"><embed name="sp", style><applet>""")
+        self.filt("""<frameset><frame src="aaa"><embed name="sp" style><applet hspace="file:\\\\">""",
+                  """<frameset><frame src="aaa"><embed name="sp" style><applet>""")
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)
