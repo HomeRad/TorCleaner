@@ -88,6 +88,7 @@ def check_length (attrs, name, htmlfilter):
     if not tvalue.isdigit():
         msg = "%s\n Detected invalid length format %r"
         wc.log.warn(wc.LOG_FILTER, msg, htmlfilter, value)
+        del attrs[name]
 
 
 def check_attr_size (attrs, name, htmlfilter, maxlen=4):
