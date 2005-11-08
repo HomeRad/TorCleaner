@@ -88,13 +88,13 @@ except ImportError:
 # logger areas
 LOG_FILTER = "wc.filter"
 LOG_JS = "wc.filter.js"
+LOG_RATING = "wc.filter.rating"
 LOG_NET = "wc.net"
 LOG_PROXY = "wc.proxy"
 LOG_AUTH = "wc.proxy.auth"
 LOG_DNS = "wc.proxy.dns"
 LOG_GUI = "wc.gui"
 LOG_ACCESS = "wc.access"
-LOG_RATING = "wc.rating"
 LOG_TAL = "TAL"
 LOG_TALES = "TALES"
 
