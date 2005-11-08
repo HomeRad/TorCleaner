@@ -141,8 +141,7 @@ def _form_url (form):
 def _form_generic (form):
     """Check generic validity"""
     global generic
-    if form.has_key('generic'):
-        generic = True
+    generic = form.has_key('generic'):
     return True
 
 
