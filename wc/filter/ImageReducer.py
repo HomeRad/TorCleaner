@@ -28,6 +28,7 @@ if wc.HasPil:
     import Image
 
 
+# XXX honor minimal_size_bytes
 class ImageReducer (wc.filter.Filter.Filter):
     """
     Reduce the image size by making low quality JPEGs.
@@ -73,6 +74,7 @@ class ImageReducer (wc.filter.Filter.Filter):
         if not attrs.has_key('imgreducer_buf'):
             return data
         p = attrs['imgreducer_buf']
+        quality = attrs['imgreducer_quality']
         if data:
             p.write(data)
         p.seek(0)
@@ -85,7 +87,7 @@ class ImageReducer (wc.filter.Filter.Filter):
             if img.mode not in ('RGB', 'L'):
                 img.draft("RGB", img.size)
                 img = img.convert("RGB")
-            img.save(data, "JPEG", quality=self.quality, optimize=1)
+            img.save(data, "JPEG", quality=quality, optimize=1)
         except IOError, msg:
             # return original image data on error
             wc.log.warn(wc.LOG_FILTER,
@@ -95,6 +97,9 @@ class ImageReducer (wc.filter.Filter.Filter):
         return data.getvalue()
 
     def set_ctype_header (self, attrs):
+        """
+        Set Content-Type header value to JPEG.
+        """
         headers = attrs['headers']
         headers['data']['Content-Type'] = 'image/jpeg'
         wc.proxy.Headers.remove_headers(headers['data'], ['Content-Length'])
@@ -132,6 +137,8 @@ class ImageReducer (wc.filter.Filter.Filter):
         elif 0 < length < minimal_size_bytes:
             return d
         d['imgreducer_buf'] = StringIO.StringIO()
+        d['imgreducer_quality'] = quality
+        d['imgreducer_minsize'] = minimal_size_bytes
         # some images have to be convert()ed before saving
         ctype = headers['server'].get('Content-Type')
         return d
