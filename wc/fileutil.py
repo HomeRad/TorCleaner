@@ -19,7 +19,7 @@ File and path utilities.
 """
 import os
 
-def write_file_save (filename, content, backup=False):
+def write_file_save (filename, content, backup=False, callback=None):
     """
     Overwrite a possibly existing file with new content. Do this
     in a manner that does not leave truncated or broken files behind.
@@ -29,10 +29,15 @@ def write_file_save (filename, content, backup=False):
     @type content: string
     @param backup: if backup file should be left
     @type backup: bool
+    @param callback: non-default storage function
+    @type callback: None or function taking two parameters (fileobj, content)
     """
     # first write in a temp file
     f = file(filename+".tmp", 'wb')
-    f.write(content)
+    if callback is None:
+        f.write(content)
+    else:
+        callback(f, content)
     f.close()
     # move orig file to backup
     os.rename(filename, filename+".bak")
