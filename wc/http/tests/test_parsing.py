@@ -67,13 +67,15 @@ class TestBasic (MsgTestCase):
     def test_warning (self):
         now = time.time()
         date = wc.http.date.get_date_rfc1123(now)
-        datewarn= '119 smee "hulla" "%s"' % date
+        warn= '119 smee "hulla" "%s"' % date
+        self.assertEquals(wc.http.parse_http_warning(warn),
+                          (119, "smee", "hulla", time.gmtime(now)))
         warn = '119 smee "wulla"'
         self.assertEquals(wc.http.parse_http_warning(warn),
                           (119, "smee", "wulla", None))
-        self.assertEquals(wc.http.parse_http_warning(datewarn),
-                          (119, "smee", "hulla", time.gmtime(now)))
-
+        warn = '110 Response is stale'
+        self.assertEquals(wc.http.parse_http_warning(warn),
+                          (110, "", "Response is stale", None))
 
 def test_suite ():
     """
