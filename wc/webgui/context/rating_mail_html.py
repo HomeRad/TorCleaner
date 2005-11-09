@@ -43,8 +43,10 @@ rating = None
 smtphost = "localhost"
 rating_store = _get_rating_store(_PickleStorage)
 
-# form execution
 def _exec_form (form, lang):
+    """
+    HTML CGI form handling.
+    """
     # calculate global vars
     if not _form_url(form):
         return
@@ -56,6 +58,9 @@ def _exec_form (form, lang):
 
 
 def _form_reset ():
+    """
+    Reset form values.
+    """
     for key in info.keys():
         info[key] = False
     for key in error.keys():
@@ -66,6 +71,9 @@ def _form_reset ():
 
 
 def _form_url (form):
+    """
+    Set rating URL.
+    """
     global url, rating
     if form.has_key('url'):
         val = _getval(form, 'url')
@@ -77,6 +85,9 @@ def _form_url (form):
 
 
 def _get_rating ():
+    """
+    Select a rating.
+    """
     if not url:
         error["url"] = True
         return False
@@ -89,6 +100,9 @@ def _get_rating ():
 
 
 def _form_send (form):
+    """
+    Email a rating.
+    """
     if not form.has_key('smtphost'):
         error['smtphost'] = True
         return False

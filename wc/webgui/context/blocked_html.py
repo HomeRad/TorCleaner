@@ -25,8 +25,10 @@ ruletitle = None
 selfolder = 0
 selrule = 0
 
-# form execution
 def _exec_form (form, lang):
+    """
+    HTML CGI form handling.
+    """
     global ruletitle, selfolder, selrule
     if form.has_key('ruletitle'):
         ruletitle = _getval(form, 'ruletitle')

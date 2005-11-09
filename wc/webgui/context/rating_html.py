@@ -52,6 +52,9 @@ rating_modified = {}
 
 
 def _reset_values ():
+    """
+    Reset category values.
+    """
     for category in categories:
         if category.iterable:
             values[category.name] = {}
@@ -62,6 +65,9 @@ def _reset_values ():
 
 
 def _calc_ratings_display ():
+    """
+    Calculate current set of ratings to display.
+    """
     global ratings_display, rating_modified
     urls = rating_store.keys()
     urls.sort()
@@ -85,8 +91,10 @@ _calc_ratings_display()
 selindex = []
 
 
-# form execution
 def _exec_form (form, lang):
+    """
+    HTML CGI form handling.
+    """
     global url
     # calculate global vars
     if not _form_url(form):
@@ -115,6 +123,9 @@ def _exec_form (form, lang):
 
 
 def _form_reset ():
+    """
+    Reset form variables to default values.
+    """
     for key in info.keys():
         info[key] = False
     for key in error.keys():
@@ -127,7 +138,9 @@ def _form_reset ():
 
 
 def _form_url (form):
-    """Check url validity"""
+    """
+    Check url validity.
+    """
     global url
     if form.has_key('url'):
         val = _getval(form, 'url')
@@ -139,14 +152,18 @@ def _form_url (form):
 
 
 def _form_generic (form):
-    """Check generic validity"""
+    """
+    Check generic validity.
+    """
     global generic
     generic = form.has_key('generic')
     return True
 
 
 def _form_ratings (form):
-    """Check category value validity"""
+    """
+    Check category value validity.
+    """
     for catname, value in _get_prefix_vals(form, 'category_'):
         category = _get_category(catname)
         if category is None:
@@ -169,7 +186,9 @@ def _form_ratings (form):
 
 
 def _form_selindex (index):
-    """display entries from given index"""
+    """
+    Display entries from given index.
+    """
     global curindex
     try:
         curindex = int(index)
@@ -178,6 +197,9 @@ def _form_selindex (index):
 
 
 def _calc_selindex (index):
+    """
+    Calculate ratings selection index.
+    """
     global selindex
     res = [index-1000, index-250, index-50, index, index+50,
            index+250, index+1000]
@@ -185,7 +207,9 @@ def _calc_selindex (index):
 
 
 def _form_apply ():
-    # store rating
+    """
+    Store changed ratings.
+    """
     if url in rating_store:
         rating = rating_store[url]
     else:
@@ -210,6 +234,9 @@ def _form_apply ():
 
 
 def _form_delete ():
+    """
+    Delete rating.
+    """
     global url
     try:
         del rating_store[url]
@@ -220,6 +247,9 @@ def _form_delete ():
 
 
 def _form_load ():
+    """
+    Load ratings.
+    """
     global generic, url
     if url in rating_store:
         rating = rating_store[url]

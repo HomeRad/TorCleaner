@@ -104,7 +104,9 @@ else:
 
 
 def _form_reset ():
-    """reset info/error and global vars"""
+    """
+    Reset info/error and global variables.
+    """
     global filterenabled, filterdisabled
     filterenabled = u""
     filterdisabled = u""
@@ -116,6 +118,9 @@ def _form_reset ():
 
 # form execution
 def _exec_form (form, lang):
+    """
+    HTML CGI form handling.
+    """
     res = [None]
     # bind address
     if form.has_key('bindaddress'):
@@ -257,6 +262,9 @@ def _exec_form (form, lang):
 
 
 def _form_bindaddress (addr):
+    """
+    Form handling for bind address changes.
+    """
     if addr != config['newbindaddress']:
         # note: bind address change takes effect after restart
         config['newbindaddress'] = addr
@@ -268,6 +276,9 @@ def _form_bindaddress (addr):
 
 
 def _form_proxyport (port):
+    """
+    Form handling for proxy port changes.
+    """
     try:
         port = int(port)
         if port != config['newport']:
@@ -283,6 +294,9 @@ def _form_proxyport (port):
 
 
 def _form_sslport (port):
+    """
+    Form handling for proxy SSL port changes.
+    """
     try:
         port = int(port)
         if port != config['newsslport']:
@@ -298,6 +312,9 @@ def _form_sslport (port):
 
 
 def _form_sslgateway (enable):
+    """
+    Form handling for SSL gateway flag changes.
+    """
     if enable != config['newsslgateway']:
         config['newsslgateway'] = enable
         oldval = config['sslgateway']
@@ -309,6 +326,9 @@ def _form_sslgateway (enable):
 
 
 def _form_adminuser (adminuser, res):
+    """
+    Form handling for admin user changes.
+    """
     if not _is_ascii(adminuser):
         error['adminuser'] = True
     elif adminuser != config['adminuser']:
@@ -319,6 +339,9 @@ def _form_adminuser (adminuser, res):
 
 
 def _form_adminpass (adminpass, res):
+    """
+    Form handling for admin password changes.
+    """
     if not _is_ascii(adminpass):
         error['adminpass'] = True
     elif adminpass != config['adminpass']:
@@ -330,6 +353,9 @@ def _form_adminpass (adminpass, res):
 
 
 def _form_proxyuser (proxyuser):
+    """
+    Form handling for proxy user changes.
+    """
     if not _is_ascii(proxyuser):
         error['proxyuser'] = True
     elif proxyuser != config['proxyuser']:
@@ -339,6 +365,9 @@ def _form_proxyuser (proxyuser):
 
 
 def _form_proxypass (proxypass):
+    """
+    Form handling for proxy password changes.
+    """
     if not _is_ascii(proxypass):
         error['proxypass'] = True
     elif proxypass != config['proxypass']:
@@ -346,13 +375,21 @@ def _form_proxypass (proxypass):
         config.write_proxyconf()
         info['proxypass'] = True
 
+
 def _form_clamavconf (clamavconf):
+    """
+    Form handling for clamav config changes.
+    """
     if clamavconf != config['clamavconf']:
         config['clamavconf'] = clamavconf
         config.write_proxyconf()
         info['clamavconf'] = True
 
+
 def _form_parentproxy (parentproxy):
+    """
+    Form handling for parent proxy host changes.
+    """
     if parentproxy != config['parentproxy']:
         config['parentproxy'] = parentproxy
         config.write_proxyconf()
@@ -360,6 +397,9 @@ def _form_parentproxy (parentproxy):
 
 
 def _form_parentproxyport (parentproxyport):
+    """
+    Form handling for parent proxy port changes.
+    """
     try:
         parentproxyport = int(parentproxyport)
         if parentproxyport != config['parentproxyport']:
@@ -371,6 +411,9 @@ def _form_parentproxyport (parentproxyport):
 
 
 def _form_parentproxyuser (parentproxyuser):
+    """
+    Form handling for parent proxy user changes.
+    """
     if not _is_ascii(parentproxyuser):
         error['parentproxyuser'] = True
     elif parentproxyuser != config['parentproxyuser']:
@@ -380,6 +423,9 @@ def _form_parentproxyuser (parentproxyuser):
 
 
 def _form_parentproxypass (parentproxypass):
+    """
+    Form handling for parent proxy password changes.
+    """
     if not _is_ascii(parentproxypass):
         error['parentproxypass'] = True
     elif parentproxypass != config['parentproxypass']:
@@ -389,6 +435,9 @@ def _form_parentproxypass (parentproxypass):
 
 
 def _form_timeout (timeout):
+    """
+    Form handling for timeout value changes.
+    """
     try:
         timeout = int(timeout)
         if timeout != config['timeout']:
@@ -400,6 +449,9 @@ def _form_timeout (timeout):
 
 
 def _form_filtermodules (form):
+    """
+    Form handling for filter module list changes.
+    """
     newfilters = []
     for key in form.keys():
         if key.startswith('filter'):
@@ -425,6 +477,9 @@ def _form_filtermodules (form):
 
 
 def _form_addallowed (host):
+    """
+    Form handling for allowed host list additions.
+    """
     if host not in config['allowedhosts']:
         try:
             hosts = config['allowedhosts'][:]
@@ -439,6 +494,9 @@ def _form_addallowed (host):
 
 
 def _form_delallowed (form):
+    """
+    Form handling for allowed host list deletions.
+    """
     removed = 0
     for host in _getlist(form, 'allowedhosts'):
         if host in config['allowedhosts']:
@@ -451,6 +509,9 @@ def _form_delallowed (form):
 
 
 def _form_addnofilter (host):
+    """
+    Form handling for nofilter host list additions.
+    """
     if host not in config['nofilterhosts']:
         config['nofilterhosts'].append(host)
         config.write_proxyconf()
@@ -458,6 +519,9 @@ def _form_addnofilter (host):
 
 
 def _form_delnofilter (hosts):
+    """
+    Form handling for nofilter host list deletions.
+    """
     removed = 0
     for host in hosts:
         if host in config['nofilterhosts']:

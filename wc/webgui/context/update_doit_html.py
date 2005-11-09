@@ -29,6 +29,9 @@ updatelog = u""
 
 
 def _exec_form (form, lang):
+    """
+    HTML CGI form handling.
+    """
     global updatelog
     updatelog = u""
     if form.has_key('updatezapper'):
@@ -40,6 +43,9 @@ def _exec_form (form, lang):
 
 
 def _updatezapper ():
+    """
+    Update filter rules (.zap files).
+    """
     global updatelog
     log = _StringIO()
     doreload = False
@@ -57,6 +63,9 @@ def _updatezapper ():
 
 
 def _updaterating ():
+    """
+    Update ratings.
+    """
     global updatelog
     log = _StringIO()
     try:

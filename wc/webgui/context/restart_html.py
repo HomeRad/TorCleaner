@@ -20,7 +20,9 @@ Parameters for restart.html page.
 
 from wc import AppName, Version
 
-# form execution
 def _exec_form (form, lang):
+    """
+    HTML CGI form handling.
+    """
     if form.has_key('restart'):
         return "restart"

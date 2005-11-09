@@ -33,6 +33,9 @@ def _form_reset ():
 
 # form execution
 def _exec_form (form, lang):
+    """
+    HTML CGI form handling.
+    """
     global url, reason
     if form.has_key('url'):
         url = _getval(form, 'url')
