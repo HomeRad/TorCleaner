@@ -22,6 +22,7 @@ import re
 import wc
 import wc.log
 
+
 def parse_http_request (request):
     """
     Parse a HTTP request line into tokens.
@@ -74,7 +75,7 @@ def parse_http_version (version):
     @rtype: (int, int)
     """
     # set to invalid version
-    res = (2,0)
+    res = (2, 0)
     if version.upper().startswith("HTTP/") and "." in version:
         major, minor = version[5:].split(".", 1)
         try:
@@ -112,7 +113,7 @@ def parse_http_warning (warning):
             warndate = wc.http.date.parse_http_date(warndate)
         else:
             warndate = None
-    except ValueError, OverflowError:
+    except (ValueError, OverflowError):
         return None
     return warncode, warnagent, warntext, warndate
 

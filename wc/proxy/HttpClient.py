@@ -640,7 +640,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         form = self.get_form_data()
         # this object will call server_connected at some point
         protocol = "HTTP/%d.%d" % self.version
-        wc.webgui.webconfig.WebConfig(self, self.url, form, protocol, self.headers)
+        wc.webgui.webconfig.WebConfig(self, self.url, form, protocol,
+                                      self.headers)
 
     def get_form_data (self):
         """
