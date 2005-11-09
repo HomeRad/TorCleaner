@@ -96,28 +96,38 @@ class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
 
         if flag & self.FEXTRA:
             # Read & discard the extra field, if present
-            if len(s) < 2: return # Incomplete
+            if len(s) < 2:
+                # Incomplete
+                return
             xlen = ord(s[0])
             xlen += 256*ord(s[1])
-            if len(s) < 2+xlen: return # Incomplete
+            if len(s) < 2+xlen:
+                # Incomplete
+                return
             s = s[2+xlen:]
 
         if flag & self.FNAME:
             # Read and discard a null-terminated string containing the
             # filename
             i = s.find('\000')
-            if i < 0: return # Incomplete
+            if i < 0:
+                # Incomplete
+                return
             s = s[i+1:]
 
         if flag & self.FCOMMENT:
             # Read and discard a null-terminated string containing a comment
             i = s.find('\000')
-            if i < 0: return # Incomplete
+            if i < 0:
+                # Incomplete
+                return
             s = s[i+1:]
 
         if flag & self.FHCRC:
             # Read & discard the 16-bit header CRC
-            if len(s) < 2: return # Incomplete
+            if len(s) < 2:
+                # Incomplete
+                return
             s = s[2:]
         # We actually got through the header
         self.buf = s
