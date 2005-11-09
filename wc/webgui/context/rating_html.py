@@ -33,7 +33,8 @@ from wc.filter.rating.category import intrange_from_string as \
 from wc.filter.rating.category import string_from_intrange as \
      _string_from_intrange
 from wc.filter.rating.storage import get_rating_store as _get_rating_store
-from wc.filter.rating.storage.pickle import PickleStorage as _PickleStorage
+#from wc.filter.rating.storage.filesystem import FileStorage as _Storage
+from wc.filter.rating.storage.pickle import PickleStorage as _Storage
 
 _entries_per_page = 50
 
@@ -79,7 +80,7 @@ def _calc_ratings_display ():
 
 
 _reset_values()
-rating_store = _get_rating_store(_PickleStorage)
+rating_store = _get_rating_store(_Storage)
 url = u""
 generic = False
 # current index of entry to display
