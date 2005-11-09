@@ -51,6 +51,10 @@
     Type: feature
     Changed: wc/filter/html/HtmlSecurity.py
 
+  * Parse and accept invalid formatted HTTP Warning: headers.
+    Type: feature
+    Changed: wc/http/__init__.py, wc/http/tests/test_parsing.py
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled
