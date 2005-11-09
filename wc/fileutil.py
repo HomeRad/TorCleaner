@@ -47,3 +47,15 @@ def write_file_save (filename, content, backup=False, callback=None):
     if not backup:
         os.remove(filename+".bak")
 
+
+def has_module (name):
+    """
+    Test if given module can be imported.
+    @return: flag if import is successful
+    @rtype: bool
+    """
+    try:
+        exec "import %s" % name
+	return True
+    except ImportError:
+        return False
