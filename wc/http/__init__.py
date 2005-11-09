@@ -103,8 +103,13 @@ def parse_http_warning (warning):
     try:
         warncode, warning = warning.split(None, 1)
         warncode = int(warncode)
-        warnagent, warning = warning.split(None, 1)
-        warntext, warning = split_quoted_string(warning)
+        # support unquoted warnings (eg. '110 Response is stale')
+        if '"' in warning:
+            warnagent, warning = warning.split(None, 1)
+            warntext, warning = split_quoted_string(warning)
+        else:
+            warnagent = ""
+            warntext, warning = warning, None
         if warning:
             if warning.startswith('"'):
                 warndate, warning = split_quoted_string(warning)
