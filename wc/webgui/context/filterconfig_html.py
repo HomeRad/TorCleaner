@@ -90,9 +90,11 @@ error = {
     "renamefolder": False,
     "disablefolder": False,
     "enablefolder": False,
+    "removefolder": False,
     "newrule": False,
     "disablerule": False,
     "enablerule": False,
+    "removerule": False,
     "htmlrewrite_addattr": False,
     "htmlrewrite_delattr": False,
     "folderup": False,
@@ -143,15 +145,24 @@ newrulenames.sort()
 # ruletype flag for tal condition
 ruletype = {}
 
-def _is_valid_header_filterstage (filterstage):
-    return filterstage in ('request', 'response', 'both')
+def _is_valid_header_filterstage (stage):
+    """
+    Check if stage is a valid header filter stage.
+    """
+    return stage in ('request', 'response', 'both')
 
 
 def _is_valid_header_action (action):
+    """
+    Check if action is a valid header filter action.
+    """
     return action in ('add', 'replace', 'remove')
 
 
 def set_indexstr (folder):
+    """
+    Add indexstr variable to folder indicating the filter index.
+    """
     if not folder:
         return
     l = len(folder.rules)
@@ -164,7 +175,9 @@ def set_indexstr (folder):
 
 
 def _exec_form (form, lang):
-    """form execution"""
+    """
+    HTML CGI form handling.
+    """
     # select a folder
     if form.has_key('selfolder'):
         _form_selfolder(_getval(form, 'selfolder'))
@@ -246,6 +259,9 @@ def _exec_form (form, lang):
 
 
 def _form_reset ():
+    """
+    Set default values for form variables.
+    """
     for key in info.keys():
         info[key] = False
     for key in error.keys():
@@ -264,6 +280,9 @@ def _form_reset ():
 
 
 def _form_set_tags ():
+    """
+    Set folder and rule tags for displaying.
+    """
     for folder in config['folderrules']:
         folder.selected = False
         for i, rule in enumerate(folder.rules):
@@ -277,6 +296,9 @@ def _form_set_tags ():
 
 
 def _form_selfolder (index):
+    """
+    Select a folder.
+    """
     try:
         index = int(index)
         global curfolder
@@ -286,6 +308,9 @@ def _form_selfolder (index):
 
 
 def _form_selrule (index):
+    """
+    Select a rule.
+    """
     try:
         index = int(index)
         global currule
@@ -322,7 +347,9 @@ def _form_selrule (index):
 
 
 def _form_selindex (index):
-    """display rules in curfolder from given index"""
+    """
+    Display rules in curfolder from given index.
+    """
     global curindex
     try:
         curindex = int(index)
@@ -331,6 +358,11 @@ def _form_selindex (index):
 
 
 def _calc_selindex (folder, index):
+    """
+    Calculate rule selection index of given folder.
+    """
+    # This index scales to several thousand rules per folder
+    # which should be enough.
     res = [index-1000, index-250, index-50, index, index+50,
            index+250, index+1000]
     folder.selindex = [x for x in res
@@ -338,10 +370,16 @@ def _calc_selindex (folder, index):
 
 
 def _reinit_filters ():
+    """
+    Reinitialize filter modules.
+    """
     config.init_filter_modules()
 
 
 def _form_newfolder (foldername, lang):
+    """
+    Create a new folder.
+    """
     if not foldername:
         error['newfolder'] = True
         return
@@ -365,6 +403,9 @@ def _form_newfolder (foldername, lang):
 
 
 def _form_renamefolder (foldername, lang):
+    """
+    Rename a folder.
+    """
     if not foldername:
         error['renamefolder'] = True
         return
@@ -374,6 +415,9 @@ def _form_renamefolder (foldername, lang):
 
 
 def _form_disablefolder (folder):
+    """
+    Disable a folder.
+    """
     if folder.disable:
         error['disablefolder'] = True
         return
@@ -384,6 +428,9 @@ def _form_disablefolder (folder):
 
 
 def _form_enablefolder (folder):
+    """
+    Enable a folder.
+    """
     if not folder.disable:
         error['enablefolder'] = True
         return
@@ -394,17 +441,25 @@ def _form_enablefolder (folder):
 
 
 def _form_removefolder (folder):
-    # XXX error handling
+    """
+    Remove a folder.
+    """
     config['folderrules'].remove(folder)
     global curfolder, currule
     curfolder = None
     currule = None
-    os.remove(folder.filename)
-    _reinit_filters()
-    info['removefolder'] = True
+    try:
+        os.remove(folder.filename)
+        _reinit_filters()
+        info['removefolder'] = True
+    except OSError:
+        error['removefolder'] = True
 
 
 def _form_newrule (rtype, lang):
+    """
+    Create a new rule.
+    """
     if rtype not in rulenames:
         error['newrule'] = True
         return
@@ -429,6 +484,9 @@ def _form_newrule (rtype, lang):
 
 
 def _form_disablerule (rule):
+    """
+    Disable a rule.
+    """
     if rule.disable:
         error['disablerule'] = True
         return
@@ -439,6 +497,9 @@ def _form_disablerule (rule):
 
 
 def _form_enablerule (rule):
+    """
+    Enable a rule.
+    """
     if not rule.disable:
         error['enablerule'] = True
         return
@@ -449,20 +510,28 @@ def _form_enablerule (rule):
 
 
 def _form_removerule (rule):
-    # XXX error handling
+    """
+    Remove a rule.
+    """
     rules = curfolder.rules
     rules.remove(rule)
     for i in range(rule.oid, len(rules)):
         rules[i].oid = i
-    curfolder.write()
-    _reinit_filters()
-    # deselect current rule
-    global currule
-    currule = None
-    info['removerule'] = True
+    try:
+        curfolder.write()
+        _reinit_filters()
+        # deselect current rule
+        global currule
+        currule = None
+        info['removerule'] = True
+    except OSError:
+        error['removerule'] = True
 
 
 def _form_htmlrewrite_addattr (form):
+    """
+    Add attribute to Htmlrewrite rule.
+    """
     name = _getval(form, "attrname").strip()
     if not name:
         error['htmlrewrite_addattr'] = True
@@ -475,6 +544,9 @@ def _form_htmlrewrite_addattr (form):
 
 
 def _form_htmlrewrite_removeattrs (form):
+    """
+    Remove attribute from Htmlrewrite rule.
+    """
     toremove = _getlist(form, 'delattr')
     if toremove:
         for attr in toremove:
@@ -489,13 +561,19 @@ def _form_htmlrewrite_removeattrs (form):
 
 
 def _swap_rules (rules, idx):
+    """
+    Swap rules[idx] and rules[idx+1]. Helper function for moving
+    rules or folders up and down.
+    """
     # swap rules
     rules[idx].oid, rules[idx+1].oid = rules[idx+1].oid, rules[idx].oid
     rules[idx], rules[idx+1] = rules[idx+1], rules[idx]
 
 
 def _form_folder_down (oid):
-    """move folder with given oid one down"""
+    """
+    Move folder with given oid one down.
+    """
     folders = config['folderrules']
     if not (0 <= oid < len(folders)):
         error['folderdown'] = True
@@ -513,7 +591,9 @@ def _form_folder_down (oid):
 
 
 def _form_folder_up (oid):
-    """move folder with given oid one up"""
+    """
+    Move folder with given oid one up.
+    """
     folders = config['folderrules']
     if not (0 < oid <= len(folders)):
         error['folderup'] = True
@@ -531,7 +611,9 @@ def _form_folder_up (oid):
 
 
 def _form_rule_down (oid):
-    """move rule with given oid one down"""
+    """
+    Move rule with given oid one down.
+    """
     rules = curfolder.rules
     if not (0 <= oid < len(rules)):
         error['ruledown'] = True
@@ -547,7 +629,9 @@ def _form_rule_down (oid):
 
 
 def _form_rule_up (oid):
-    """move rule with given oid one up"""
+    """
+    Move rule with given oid one up.
+    """
     rules = curfolder.rules
     if not (0 < oid <= len(rules)):
         error['ruleup'] = True
@@ -563,7 +647,9 @@ def _form_rule_up (oid):
 
 
 def _form_apply (form, lang):
-    """delegate rule apply to different apply_* functions"""
+    """
+    Delegate rule apply to different apply_* functions.
+    """
     # title and description apply for all rules:
     _form_rule_titledesc(form, lang)
     # delegate
@@ -574,6 +660,9 @@ def _form_apply (form, lang):
 
 
 def _form_rule_titledesc (form, lang):
+    """
+    Change rule title and description.
+    """
     title = _getval(form, 'rule_title')
     if not title:
         error['ruletitle'] = True
@@ -588,6 +677,9 @@ def _form_rule_titledesc (form, lang):
 
 
 def _form_rule_addmimetype (form):
+    """
+    Add rule MIME type.
+    """
     if not form.has_key('newmimetype'):
         return
     mimetype = _getval(form, 'newmimetype').strip()
@@ -599,6 +691,9 @@ def _form_rule_addmimetype (form):
 
 
 def _form_rule_delmimetypes (form):
+    """
+    Remove rule MIME type.
+    """
     toremove = [u for u in _getlist(form, 'rule_mimetypes')
                 if u in currule.mimes]
     if toremove:
@@ -610,6 +705,9 @@ def _form_rule_delmimetypes (form):
 
 
 def _form_rule_addmatchurl (form):
+    """
+    Add rule match URL.
+    """
     if not form.has_key('newmatchurl'):
         return
     matchurl = _getval(form, 'newmatchurl').strip()
@@ -621,6 +719,9 @@ def _form_rule_addmatchurl (form):
 
 
 def _form_rule_delmatchurls (form):
+    """
+    Remove rule match URL.
+    """
     toremove = [u for u in _getlist(form, 'rule_matchurls')
                 if u in currule.matchurls]
     if toremove:
@@ -632,6 +733,9 @@ def _form_rule_delmatchurls (form):
 
 
 def _form_rule_addnomatchurl (form):
+    """
+    Add rule nomatch URL.
+    """
     if not form.has_key('newnomatchurl'):
         return
     nomatchurl = _getval(form, 'newnomatchurl').strip()
@@ -643,6 +747,9 @@ def _form_rule_addnomatchurl (form):
 
 
 def _form_rule_delnomatchurls (form):
+    """
+    Remove rule nomatch URL.
+    """
     toremove = [u for u in _getlist(form, 'rule_nomatchurls')
                 if u in currule.nomatchurls]
     if toremove:
@@ -653,7 +760,12 @@ def _form_rule_delnomatchurls (form):
         info['rulenomatchurl'] = True
 
 
+# The _form_apply_* methods handle all rule types.
+
 def _form_apply_allow (form):
+    """
+    Change AllowRule.
+    """
     url = _getval(form, 'rule_url').strip()
     if url != currule.url:
         currule.url = url
@@ -661,6 +773,9 @@ def _form_apply_allow (form):
 
 
 def _form_apply_block (form):
+    """
+    Change BlockwRule.
+    """
     _form_apply_allow(form)
     replacement = _getval(form, 'rule_replacement').strip()
     if replacement != currule.replacement:
@@ -669,6 +784,9 @@ def _form_apply_block (form):
 
 
 def _form_apply_header (form):
+    """
+    Change HeaderRule.
+    """
     name = _getval(form, 'rule_headername').strip()
     if not name:
         error['ruleheadername'] = True
@@ -700,6 +818,9 @@ def _form_apply_header (form):
 
 
 def _form_apply_image (form):
+    """
+    Change ImageRule.
+    """
     width = _getval(form, 'rule_imgwidth').strip()
     try:
         width = int(width)
@@ -722,6 +843,9 @@ def _form_apply_image (form):
 
 
 def _form_apply_imagereduce (form):
+    """
+    Change ImagereduceRule.
+    """
     quality = _getval(form, 'rule_imgquality').strip()
     try:
         quality = int(quality)
@@ -743,19 +867,34 @@ def _form_apply_imagereduce (form):
 
 
 def _form_apply_javascript (form):
+    """
+    Change JavascriptRule.
+    """
     pass
 
 def _form_apply_antivirus (form):
+    """
+    Change AntivirusRule.
+    """
     pass
 
 def _form_apply_nocomments (form):
+    """
+    Change NocommentsRule.
+    """
     pass
 
 def _form_apply_nojscomments (form):
+    """
+    Change NojscommentsRule.
+    """
     pass
 
 
 def _form_apply_rating (form):
+    """
+    Change RatingRule.
+    """
     # rating categories
     for catname, value in _get_prefix_vals(form, 'category_'):
         category = _get_category(catname)
@@ -777,7 +916,10 @@ def _form_apply_rating (form):
 
 
 def _form_apply_replace (form):
-    # note: do not strip() the search and replace form values
+    """
+    Change ReplaceRule.
+    """
+    # Note: do not strip() the search and replace form values.
     search = _getval(form, 'rule_search')
     if not search:
         error['rulesearch'] = True
@@ -793,6 +935,9 @@ def _form_apply_replace (form):
 
 
 def _form_apply_htmlrewrite (form):
+    """
+    Change HtmlrewriteRule.
+    """
     tag = _getval(form, 'rule_tag').strip()
     if not tag:
         error['ruletag'] = True
@@ -822,6 +967,9 @@ def _form_apply_htmlrewrite (form):
 
 
 def _form_apply_xmlrewrite (form):
+    """
+    Change XmlrewriteRule.
+    """
     selector = _getval(form, 'rule_xmlselector').strip()
     if not selector:
         error['xmlselector'] = True
