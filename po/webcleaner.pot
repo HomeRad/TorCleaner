@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-07 20:59+0100\n"
+"POT-Creation-Date: 2005-11-09 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "inserting new rule %s"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:145
+#: ../wc/filter/rules/FolderRule.py:146
 msgid "with 1 rule"
 msgstr ""
 
-#: ../wc/filter/rules/FolderRule.py:147
+#: ../wc/filter/rules/FolderRule.py:148
 #, python-format
 msgid "with %d rules"
 msgstr ""
@@ -306,8 +306,8 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:614
-#: ../wc/proxy/HttpClient.py:619 ../wc/proxy/HttpClient.py:630
+#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:620
+#: ../wc/proxy/HttpClient.py:625 ../wc/proxy/HttpClient.py:636
 msgid "Authentication Required"
 msgstr ""
 
@@ -324,7 +324,7 @@ msgstr ""
 msgid "%s error"
 msgstr ""
 
-#: ../wc/webgui/context/filterconfig_html.py:414
+#: ../wc/webgui/context/filterconfig_html.py:469
 msgid "No title"
 msgstr ""
 
@@ -332,7 +332,7 @@ msgstr ""
 msgid "Unknown reason"
 msgstr ""
 
-#: ../wc/webgui/context/update_doit_html.py:39
+#: ../wc/webgui/context/update_doit_html.py:42
 msgid "Error: nothing to update."
 msgstr ""
 
@@ -438,20 +438,20 @@ msgstr ""
 msgid "Forbidden"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:306 ../wc/proxy/HttpClient.py:313
+#: ../wc/proxy/HttpClient.py:309 ../wc/proxy/HttpClient.py:316
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:333 ../wc/proxy/HttpClient.py:344
-#: ../wc/proxy/HttpClient.py:355
+#: ../wc/proxy/HttpClient.py:336 ../wc/proxy/HttpClient.py:347
+#: ../wc/proxy/HttpClient.py:358
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:477 ../wc/proxy/HttpServer.py:401
+#: ../wc/proxy/HttpClient.py:483 ../wc/proxy/HttpServer.py:401
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:606
+#: ../wc/proxy/HttpClient.py:612
 msgid "Invalid Method"
 msgstr ""
 
@@ -996,7 +996,7 @@ msgstr ""
 msgid "Email this rating to the author"
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:234
+#: ../templates/classic/filterconfig.html:236
 msgid "Empty attribute name."
 msgstr ""
 
@@ -1005,19 +1005,19 @@ msgstr ""
 msgid "Empty folder name."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:241
+#: ../templates/classic/filterconfig.html:243
 msgid "Empty header rule name."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:248
+#: ../templates/classic/filterconfig.html:250
 msgid "Empty replace search value."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:249
+#: ../templates/classic/filterconfig.html:251
 msgid "Empty rewrite tag name."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:240
+#: ../templates/classic/filterconfig.html:242
 msgid "Empty rule title."
 msgstr ""
 
@@ -1031,6 +1031,14 @@ msgstr ""
 
 #: ../templates/classic/config.html:494
 msgid "Enabled filter module(s) ${enabled-filter}."
+msgstr ""
+
+#: ../templates/classic/filterconfig.html:231
+msgid "Error removing folder."
+msgstr ""
+
+#: ../templates/classic/filterconfig.html:235
+msgid "Error removing rule."
 msgstr ""
 
 #: ../templates/classic/rating_mail.html:58
@@ -1288,32 +1296,32 @@ msgstr ""
 msgid "Invalid SSL server port."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:256
+#: ../templates/classic/filterconfig.html:258
 msgid "Invalid XML replace type."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:255
+#: ../templates/classic/filterconfig.html:257
 msgid "Invalid XML selector."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:235
+#: ../templates/classic/filterconfig.html:237
 msgid "Invalid attribute name."
 msgstr ""
 
 #: ../templates/classic/rating.html:134
-#: ../templates/classic/filterconfig.html:254
+#: ../templates/classic/filterconfig.html:256
 msgid "Invalid category value."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:251
+#: ../templates/classic/filterconfig.html:253
 msgid "Invalid folder index."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:237
+#: ../templates/classic/filterconfig.html:239
 msgid "Invalid folder move down id."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:236
+#: ../templates/classic/filterconfig.html:238
 msgid "Invalid folder move up id."
 msgstr ""
 
@@ -1321,19 +1329,19 @@ msgstr ""
 msgid "Invalid host name."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:245
+#: ../templates/classic/filterconfig.html:247
 msgid "Invalid image height value."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:246
+#: ../templates/classic/filterconfig.html:248
 msgid "Invalid image quality value."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:244
+#: ../templates/classic/filterconfig.html:246
 msgid "Invalid image width value."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:247
+#: ../templates/classic/filterconfig.html:249
 msgid "Invalid minimum size bytes value."
 msgstr ""
 
@@ -1357,36 +1365,36 @@ msgstr ""
 msgid "Invalid rating."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:250
+#: ../templates/classic/filterconfig.html:252
 msgid "Invalid rewrite part name."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:242
+#: ../templates/classic/filterconfig.html:244
 msgid "Invalid rule header action."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:243
+#: ../templates/classic/filterconfig.html:245
 msgid "Invalid rule header filter stage."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:252
+#: ../templates/classic/filterconfig.html:254
 msgid "Invalid rule index."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:239
+#: ../templates/classic/filterconfig.html:241
 msgid "Invalid rule move down id."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:238
+#: ../templates/classic/filterconfig.html:240
 msgid "Invalid rule move up id."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:231
+#: ../templates/classic/filterconfig.html:232
 msgid "Invalid rule type."
 msgstr ""
 
 #: ../templates/classic/rating.html:135
-#: ../templates/classic/filterconfig.html:253
+#: ../templates/classic/filterconfig.html:255
 msgid "Invalid selection index."
 msgstr ""
 
@@ -1869,11 +1877,11 @@ msgstr ""
 msgid "Rule XML selector successfully changed."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:232
+#: ../templates/classic/filterconfig.html:233
 msgid "Rule already disabled."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:233
+#: ../templates/classic/filterconfig.html:234
 msgid "Rule already enabled."
 msgstr ""
 
