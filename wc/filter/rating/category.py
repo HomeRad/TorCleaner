@@ -60,7 +60,8 @@ class ValueCategory (Category):
         """
         Initialize name and values.
         """
-        _ = lambda x: x
+        def _ (x):
+            return x
         values = [_("none"), _("mild"), _("heavy")]
         del _
         super(ValueCategory, self).__init__(name, values, iterable=True)
@@ -117,6 +118,7 @@ class RangeCategory (Category):
             return _("Rating %r for category %r is not in range %s") % \
                      (value, self.name, limit)
         return None
+
 
 def value_in_range (num, prange):
     """
