@@ -14,15 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+A proxy class.
+"""
 
 class Proxy (object):
-    """A proxy class."""
+    """
+    A proxy class.
+    """
 
     def __init__ (self, delegate):
-        """Store delegate object."""
+        """
+        Store delegate object.
+        """
         super(Proxy, self).__init__()
         self._delegate = delegate
 
     def __getattr__ (self, name):
-        """Get attribute from delegate."""
+        """
+        Get attribute from delegate.
+        """
         return getattr(self._delegate, name)
