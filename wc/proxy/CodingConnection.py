@@ -26,8 +26,14 @@ from wc.decorators import notimplemented
 
 
 class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
+    """
+    Connection storing a list of decoders and encoders.
+    """
 
     def reset (self):
+        """
+        Reset the connection data and status.
+        """
         super(CodingConnection, self).reset()
         # Handle each of these, left to right
         self.decoders = []

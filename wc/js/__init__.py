@@ -22,6 +22,9 @@ import re
 
 
 def clean (script, jscomments=True):
+    """
+    Clean script from comments and HTML.
+    """
     script = escape_js(remove_html_comments(script))
     if not jscomments:
         script = remove_js_comments(script)
@@ -51,7 +54,6 @@ def remove_js_comments (script):
     """
     XXX use spidermonkey scanner here
     """
-    comment = False
     res = []
     for line in script.splitlines():
         if not line.lstrip().startswith('//'):

@@ -302,7 +302,13 @@ class Rule (object):
         return u"%s #%s" % (self.get_name().capitalize(), self.sid)
 
     def applies_to_url (self, url):
+        """
+        Wether rule applies to given URL.
+        """
         return True
 
     def applies_to_mime (self, mime):
+        """
+        Wether rule applies to given MIME type.
+        """
         return True

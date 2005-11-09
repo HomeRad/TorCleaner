@@ -172,9 +172,15 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         return s
 
     def match_tag (self, stack):
+        """
+        Match XML tag to given stack of XML elements.
+        """
         return match_stack(stack, self.selector_list)
 
     def filter_tag (self, pos, tagbuf, tag, url, htmlrules):
+        """
+        Filter XML tag data.
+        """
         if self.replacetypenum == RSSHTML:
             for item in tagbuf[pos:]:
                 if item[0] == wc.filter.xmlfilt.DATA:
@@ -189,6 +195,9 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             wc.log.warn(wc.LOG_FILTER, "%s: unimplemented replace type", self)
 
     def filter_html (self, data, url, htmlrules):
+        """
+        Filter HTML data.
+        """
         # generate the HTML filter
         ratings = []
         localhost = "localhost"

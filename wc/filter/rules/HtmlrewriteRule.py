@@ -88,7 +88,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         super(HtmlrewriteRule, self).__init__(sid=sid, titles=titles,
                                   descriptions=descriptions, disable=disable)
         self.tag = tag
-        self.tag_ro = re.compile(r"^%s$" % tag)
+        self.tag_ro = None
         if attrs is None:
             self.attrs = {}
         else:
@@ -97,6 +97,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         self.part = part
         self.replacement = replacement
         self.enclosed = enclosed
+        self.enclosed_ro = None
         if self.enclosed and self.tag in NO_CLOSE_TAGS:
             raise ValueError, "reading rule %r: tag %r has no end tag, " \
                               "so specifying an enclose value is invalid." % \

@@ -40,6 +40,7 @@ class MimeRule (wc.filter.rules.Rule.Rule):
             self.mimes = []
         else:
             self.mimes = mimes
+        self.mimes_ro = None
 
     def applies_to_mime (self, mime):
         """

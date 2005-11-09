@@ -147,8 +147,8 @@ class ServerPool (object):
         wc.log.debug(wc.LOG_PROXY, "pool expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
-        for addr, set in self.smap.items():
-            for server, status in set.items():
+        for addr, dataset in self.smap.items():
+            for server, status in dataset.items():
                 if status[0] == 'available' and status[1] < expire_time:
                     # It's old .. let's get rid of it
                     to_expire.append((addr, server))

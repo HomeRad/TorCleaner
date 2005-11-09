@@ -40,10 +40,12 @@ class UrlRule (wc.filter.rules.MimeRule.MimeRule):
             self.matchurls = []
         else:
             self.matchurls = matchurls
+        self.matchurls_ro = None
         if nomatchurls is None:
             self.nomatchurls = []
         else:
             self.nomatchurls = nomatchurls
+        self.nomatchurls_ro = None
 
     def applies_to_url (self, url):
         """

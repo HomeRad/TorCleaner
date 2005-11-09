@@ -260,6 +260,9 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         return True
 
     def get_default_scheme (self):
+        """
+        Get default URL scheme.
+        """
         return "http"
 
     def process_headers (self):
@@ -375,6 +378,9 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         self.state = 'content'
 
     def filter_headers (self, msg):
+        """
+        Filter and return client headers.
+        """
         stage = wc.filter.STAGE_REQUEST_HEADER
         self.attrs = wc.filter.get_filterattrs(self.url,
                        self.localhost, [stage],

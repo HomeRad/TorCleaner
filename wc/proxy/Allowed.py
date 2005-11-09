@@ -87,9 +87,15 @@ class AllowedHttpClient (object):
         return wc.configuration.config.allowed(host)
 
     def method (self, method):
+        """
+        Check if givem method is allowed.
+        """
         return method in self.methods
 
     def is_allowed (self, method, scheme, port):
+        """
+        Check if givem method, scheme and port are allowed.
+        """
         if not self.method(method):
             wc.log.warn(wc.LOG_PROXY, "illegal method %s", method)
             return False

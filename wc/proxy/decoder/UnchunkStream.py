@@ -134,6 +134,9 @@ class UnchunkStream (object):
         return s
 
     def read_trailer (self):
+        """
+        Read trailer data from buffer.
+        """
         i = self.buf.find('\r\n')
         if i >= 0:
             line = self.buf[:i].strip()

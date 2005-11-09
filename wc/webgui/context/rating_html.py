@@ -56,7 +56,7 @@ def _reset_values ():
         if category.iterable:
             values[category.name] = {}
             for value in category.values:
-                values[category.name][value] = value=='none'
+                values[category.name][value] = (value == 'none')
         else:
             values[category.name] = ""
 

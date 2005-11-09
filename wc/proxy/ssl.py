@@ -46,7 +46,7 @@ def dump_certificate (cert, filetype=crypto.FILETYPE_PEM):
 def verify_server_cb (conn, cert, errnum, depth, ok):
     """
     The browser (or commandline client) has sent a SSL certificate to
-    the webcleaner server.
+    the WebCleaner server.
     """
     expired = cert.has_expired()
     if expired:
@@ -57,6 +57,9 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
 
 serverctx = None
 def get_serverctx (configdir):
+    """
+    Get SSL context for server.
+    """
     global serverctx
     if serverctx is None:
         # Initialize context
@@ -73,7 +76,9 @@ def get_serverctx (configdir):
 
 
 def verify_client_cb (conn, cert, errnum, depth, ok):
-    """Verify expiration of the given certificate."""
+    """
+    Verify expiration of the given certificate.
+    """
     expired = cert.has_expired()
     if expired:
         wc.log.warn(wc.LOG_PROXY, "%s expired certificate %s", conn,
@@ -83,6 +88,9 @@ def verify_client_cb (conn, cert, errnum, depth, ok):
 
 clientctx = None
 def get_clientctx (configdir):
+    """
+    Get SSL context for client.
+    """
     global clientctx
     if clientctx is None:
         # construct client context
@@ -98,7 +106,9 @@ def get_clientctx (configdir):
     return clientctx
 
 def create_certificates (configdir):
-    """Create certificates and private keys for webcleaner"""
+    """
+    Create certificates and private keys for WebCleaner.
+    """
     cakey = create_key_pair(TYPE_RSA, 1024)
     careq = create_cert_request(cakey, CN='Certificate Authority')
     # five years
