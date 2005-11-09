@@ -177,7 +177,9 @@ class JSFilter (wc.js.JSListener.JSListener):
                 wc.log.debug(wc.LOG_JS, "%s JS subprocessor is waiting", self)
                 self.htmlparser.state = ('wait', 'recursive script')
                 self.htmlparser.waited = 1
-                wc.proxy.make_timer(1, lambda: self.js_end_script(item))
+                def _lazy ():
+                    self.js_end_script(item)
+                wc.proxy.make_timer(1, _lazy)
                 return
             self.js_htmlparser.debugbuf(wc.LOG_JS)
             assert not self.js_htmlparser.inbuf.getvalue()
