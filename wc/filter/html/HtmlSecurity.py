@@ -73,15 +73,13 @@ def check_javascript_url (attrs, name, htmlfilter):
 def check_length (attrs, name, htmlfilter):
     """
     Check correct format of a length attribute. Allowed are
-    digits, followed by 'pt', 'px' or '%'.
+    digits, followed by 'px' or '%'.
     """
     value = attrs.get_true(name, u"")
     if not value:
         return
     tvalue = value.lower().strip()
-    if tvalue.endswith('pt'):
-        tvalue = tvalue[:-2]
-    elif tvalue.endswith('px'):
+    if tvalue.endswith('px'):
         tvalue = tvalue[:-2]
     elif tvalue.endswith('%'):
         tvalue = tvalue[:-1]
