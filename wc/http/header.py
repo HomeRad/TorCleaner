@@ -34,6 +34,9 @@ class WcMessage (rfc822.Message, object):
         super(WcMessage, self).__init__(fp, seekable=seekable)
 
     def remove_multiple_headers (self, name):
+        """
+        Remove all occurrences of given header name except the first.
+        """
         values = self.getheaders(name)
         if len(values) > 1:
             self[name] = values[0]
@@ -52,7 +55,13 @@ class WcMessage (rfc822.Message, object):
         self.dict[name] = value
 
     def __str__ (self):
+        """
+        HTTP conform string representation.
+        """
         return "\n".join([ repr(s) for s in self.headers ])
 
     def copy (self):
+        """
+        Copy these headers into a new WcHeaders object.
+        """
         return WcMessage(fp=StringIO.StringIO("".join(self.headers)))
