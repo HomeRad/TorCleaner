@@ -1046,6 +1046,12 @@ RX_DATA  [-a-zA-Z0-9_:]+
     SETLVAL_UNICODE;
     RETURN(T_TEXT);
 }
+<INITIAL><![^- dD\[] {
+    UPDATE_LINE;
+    APPEND_TO_TMP(yyleng);
+    SETLVAL_UNICODE;
+    RETURN(T_TEXT);
+}
 
 <INITIAL>. {
     return T_WAIT;
