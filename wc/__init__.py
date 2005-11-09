@@ -30,6 +30,7 @@ import logging.handlers
 import _webcleaner2_configdata as configdata
 import wc.log
 import wc.i18n
+import wc.fileutil
 
 def abspath (path):
     """
@@ -64,26 +65,10 @@ InstallData = abspath(configdata.install_data)
 ScriptDir = abspath(configdata.install_scripts)
 
 # optional features
-try:
-    import OpenSSL
-    HasSsl = True
-except ImportError:
-    HasSsl = False
-try:
-    import Crypto
-    HasCrypto = True
-except ImportError:
-    HasCrypto = False
-try:
-    import PIL
-    HasPil = True
-except ImportError:
-    HasPil = False
-try:
-    import psyco
-    HasPsyco = True
-except ImportError:
-    HasPsyco = False
+HasSsl = wc.fileutil.has_module("OpenSSL")
+HasCrypto = wc.fileutil.has_module("Crypto")
+HasPil = wc.fileutil.has_module("PIL")
+HasPsyco = wc.fileutil.has_module("psyco")
 
 # logger areas
 LOG_FILTER = "wc.filter"
