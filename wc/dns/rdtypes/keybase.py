@@ -98,7 +98,7 @@ class KEYBase(wc.dns.rdata.Rdata):
             for flag in flag_names:
                 v = _flags_from_text.get(flag)
                 if v is None:
-                    raise wc.dns.exception.SyntaxError, 'unknown flag %s' % flag
+                    raise wc.dns.exception.DNSSyntaxError, 'unknown flag %s' % flag
                 flags &= ~v[1]
                 flags |= v[0]
         protocol = tok.get_string()
@@ -107,7 +107,7 @@ class KEYBase(wc.dns.rdata.Rdata):
         else:
             protocol = _protocol_from_text.get(protocol)
             if protocol is None:
-                raise wc.dns.exception.SyntaxError, \
+                raise wc.dns.exception.DNSSyntaxError, \
                       'unknown protocol %s' % protocol
 
         algorithm = wc.dns.dnssec.algorithm_from_text(tok.get_string())
@@ -117,7 +117,7 @@ class KEYBase(wc.dns.rdata.Rdata):
             if t[0] == wc.dns.tokenizer.EOL or t[0] == wc.dns.tokenizer.EOF:
                 break
             if t[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
             chunks.append(t[1])
         b64 = ''.join(chunks)
         key = b64.decode('base64_codec')

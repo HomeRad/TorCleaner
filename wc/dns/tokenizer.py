@@ -184,7 +184,7 @@ class Tokenizer(object):
         @type want_comment: bool
         @rtype: (int, string) tuple
         @raises wc.dns.exception.UnexpectedEnd: input ended prematurely
-        @raises wc.dns.exception.SyntaxError: input was badly formed
+        @raises wc.dns.exception.DNSSyntaxError: input was badly formed
         """
 
         if not self.ungotten_token is None:
@@ -215,7 +215,7 @@ class Tokenizer(object):
                         continue
                     elif c == ')':
                         if not self.multiline > 0:
-                            raise wc.dns.exception.SyntaxError
+                            raise wc.dns.exception.DNSSyntaxError
                         self.multiline -= 1
                         self.skip_whitespace()
                         continue
@@ -243,7 +243,7 @@ class Tokenizer(object):
                             return (COMMENT, token)
                         elif c == '':
                             if self.multiline:
-                                raise wc.dns.exception.SyntaxError, \
+                                raise wc.dns.exception.DNSSyntaxError, \
                                       'unbalanced parentheses'
                             return (EOF, '')
                         elif self.multiline:
@@ -274,10 +274,10 @@ class Tokenizer(object):
                         if c == '':
                             raise wc.dns.exception.UnexpectedEnd
                         if not (c2.isdigit() and c3.isdigit()):
-                            raise wc.dns.exception.SyntaxError
+                            raise wc.dns.exception.DNSSyntaxError
                         c = chr(int(c) * 100 + int(c2) * 10 + int(c3))
                 elif c == '\n':
-                    raise wc.dns.exception.SyntaxError, 'newline in quoted string'
+                    raise wc.dns.exception.DNSSyntaxError, 'newline in quoted string'
             elif c == '\\':
                 #
                 # Treat \ followed by a delimiter as the
@@ -290,7 +290,7 @@ class Tokenizer(object):
             token += c
         if token == '' and ttype != QUOTED_STRING:
             if self.multiline:
-                raise wc.dns.exception.SyntaxError, 'unbalanced parentheses'
+                raise wc.dns.exception.DNSSyntaxError, 'unbalanced parentheses'
             ttype = EOF
         return (ttype, token)
 
@@ -328,28 +328,28 @@ class Tokenizer(object):
     def get_int(self):
         """Read the next token and interpret it as an integer.
 
-        @raises wc.dns.exception.SyntaxError:
+        @raises wc.dns.exception.DNSSyntaxError:
         @rtype: int
         """
 
         (ttype, value) = self.get()
         if ttype != IDENTIFIER:
-            raise wc.dns.exception.SyntaxError, 'expecting an identifier'
+            raise wc.dns.exception.DNSSyntaxError, 'expecting an identifier'
         if not value.isdigit():
-            raise wc.dns.exception.SyntaxError, 'expecting an integer'
+            raise wc.dns.exception.DNSSyntaxError, 'expecting an integer'
         return int(value)
 
     def get_uint8(self):
         """Read the next token and interpret it as an 8-bit unsigned
         integer.
 
-        @raises wc.dns.exception.SyntaxError:
+        @raises wc.dns.exception.DNSSyntaxError:
         @rtype: int
         """
 
         value = self.get_int()
         if value < 0 or value > 255:
-            raise wc.dns.exception.SyntaxError, \
+            raise wc.dns.exception.DNSSyntaxError, \
                   '%d is not an unsigned 8-bit integer' % value
         return value
 
@@ -357,13 +357,13 @@ class Tokenizer(object):
         """Read the next token and interpret it as a 16-bit unsigned
         integer.
 
-        @raises wc.dns.exception.SyntaxError:
+        @raises wc.dns.exception.DNSSyntaxError:
         @rtype: int
         """
 
         value = self.get_int()
         if value < 0 or value > 65535:
-            raise wc.dns.exception.SyntaxError, \
+            raise wc.dns.exception.DNSSyntaxError, \
                   '%d is not an unsigned 16-bit integer' % value
         return value
 
@@ -371,51 +371,51 @@ class Tokenizer(object):
         """Read the next token and interpret it as a 32-bit unsigned
         integer.
 
-        @raises wc.dns.exception.SyntaxError:
+        @raises wc.dns.exception.DNSSyntaxError:
         @rtype: int
         """
         (ttype, value) = self.get()
         if ttype != IDENTIFIER:
-            raise wc.dns.exception.SyntaxError, 'expecting an identifier'
+            raise wc.dns.exception.DNSSyntaxError, 'expecting an identifier'
         if not value.isdigit():
-            raise wc.dns.exception.SyntaxError, 'expecting an integer'
+            raise wc.dns.exception.DNSSyntaxError, 'expecting an integer'
         value = long(value)
         if value < 0 or value > 4294967296L:
-            raise wc.dns.exception.SyntaxError, \
+            raise wc.dns.exception.DNSSyntaxError, \
                   '%d is not an unsigned 32-bit integer' % value
         return value
 
     def get_string(self, origin=None):
         """Read the next token and interpret it as a string.
 
-        @raises wc.dns.exception.SyntaxError:
+        @raises wc.dns.exception.DNSSyntaxError:
         @rtype: string
         """
         (ttype, t) = self.get()
         if ttype != IDENTIFIER and ttype != QUOTED_STRING:
-            raise wc.dns.exception.SyntaxError, 'expecting a string'
+            raise wc.dns.exception.DNSSyntaxError, 'expecting a string'
         return t
 
     def get_name(self, origin=None):
         """Read the next token and interpret it as a DNS name.
 
-        @raises wc.dns.exception.SyntaxError:
+        @raises wc.dns.exception.DNSSyntaxError:
         @rtype: wc.dns.name.Name object"""
         (ttype, t) = self.get()
         if ttype != IDENTIFIER:
-            raise wc.dns.exception.SyntaxError, 'expecting an identifier'
+            raise wc.dns.exception.DNSSyntaxError, 'expecting an identifier'
         return wc.dns.name.from_text(t, origin)
 
     def get_eol(self):
         """Read the next token and raise an exception if it isn't EOL or
         EOF.
 
-        @raises wc.dns.exception.SyntaxError:
+        @raises wc.dns.exception.DNSSyntaxError:
         @rtype: string
         """
 
         (ttype, t) = self.get()
         if ttype != EOL and ttype != EOF:
-            raise wc.dns.exception.SyntaxError, \
+            raise wc.dns.exception.DNSSyntaxError, \
                   'expected EOL or EOF, got %d "%s"' % (ttype, t)
         return t

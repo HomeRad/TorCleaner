@@ -48,9 +48,9 @@ class TXT(wc.dns.rdata.Rdata):
             if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
                 break
             if ttype != wc.dns.tokenizer.QUOTED_STRING:
-                raise wc.dns.exception.SyntaxError, "expected a quoted string"
+                raise wc.dns.exception.DNSSyntaxError, "expected a quoted string"
             if len(s) > 255:
-                raise wc.dns.exception.SyntaxError, "string too long"
+                raise wc.dns.exception.DNSSyntaxError, "string too long"
             strings.append(s)
         if len(strings) == 0:
             raise wc.dns.exception.UnexpectedEnd

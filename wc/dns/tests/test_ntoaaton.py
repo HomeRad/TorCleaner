@@ -45,17 +45,17 @@ class TestNtoAAtoN (unittest.TestCase):
     def test_bad_aton1(self):
         def bad():
             a = wc.dns.ipv6.inet_aton('abcd:dcba')
-        self.assertRaises(wc.dns.exception.SyntaxError, bad)
+        self.assertRaises(wc.dns.exception.DNSSyntaxError, bad)
 
     def test_bad_aton2(self):
         def bad():
             a = wc.dns.ipv6.inet_aton('abcd::dcba::1')
-        self.assertRaises(wc.dns.exception.SyntaxError, bad)
+        self.assertRaises(wc.dns.exception.DNSSyntaxError, bad)
 
     def test_bad_aton3(self):
         def bad():
             a = wc.dns.ipv6.inet_aton('1:2:3:4:5:6:7:8:9')
-        self.assertRaises(wc.dns.exception.SyntaxError, bad)
+        self.assertRaises(wc.dns.exception.DNSSyntaxError, bad)
 
     def test_aton1(self):
         a = wc.dns.ipv6.inet_aton('::')

@@ -396,7 +396,7 @@ class TestZone (unittest.TestCase):
         def bad():
             z = wc.dns.zone.from_text(bad_directive_text, 'example.',
                                       relativize=True)
-        self.assertRaises(wc.dns.exception.SyntaxError, bad)
+        self.assertRaises(wc.dns.exception.DNSSyntaxError, bad)
 
 
 def test_suite ():

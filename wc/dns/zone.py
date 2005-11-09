@@ -583,13 +583,13 @@ class _MasterReader(object):
             name = name.relativize(self.zone.origin)
         token = self.tok.get()
         if token[0] != wc.dns.tokenizer.IDENTIFIER:
-            raise wc.dns.exception.SyntaxError
+            raise wc.dns.exception.DNSSyntaxError
         # TTL
         try:
             ttl = wc.dns.ttl.from_text(token[1])
             token = self.tok.get()
             if token[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
         except wc.dns.ttl.BadTTL:
             ttl = self.ttl
         # Class
@@ -597,18 +597,18 @@ class _MasterReader(object):
             rdclass = wc.dns.rdataclass.from_text(token[1])
             token = self.tok.get()
             if token[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
-        except wc.dns.exception.SyntaxError:
-            raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
+        except wc.dns.exception.DNSSyntaxError:
+            raise wc.dns.exception.DNSSyntaxError
         except:
             rdclass = self.zone.rdclass
         if rdclass != self.zone.rdclass:
-            raise wc.dns.exception.SyntaxError, "RR class is not zone's class"
+            raise wc.dns.exception.DNSSyntaxError, "RR class is not zone's class"
         # Type
         try:
             rdtype = wc.dns.rdatatype.from_text(token[1])
         except:
-            raise wc.dns.exception.SyntaxError, \
+            raise wc.dns.exception.DNSSyntaxError, \
                   "unknown rdatatype '%s'" % token[1]
         n = self.zone.nodes.get(name)
         if n is None:
@@ -617,7 +617,7 @@ class _MasterReader(object):
         try:
             rd = wc.dns.rdata.from_text(rdclass, rdtype, self.tok,
                                      self.current_origin, False)
-        except wc.dns.exception.SyntaxError:
+        except wc.dns.exception.DNSSyntaxError:
             # Catch and reraise.
             (ty, va) = sys.exc_info()[:2]
             raise ty, va
@@ -629,7 +629,7 @@ class _MasterReader(object):
             # helpful filename:line info.
 
             (ty, va) = sys.exc_info()[:2]
-            raise wc.dns.exception.SyntaxError, \
+            raise wc.dns.exception.DNSSyntaxError, \
                   "caught exception %s: %s" % (str(ty), str(va))
 
         rd.choose_relativity(self.zone.origin, self.relativize)
@@ -668,7 +668,7 @@ class _MasterReader(object):
                     if u == '$TTL':
                         token = self.tok.get()
                         if token[0] != wc.dns.tokenizer.IDENTIFIER:
-                            raise wc.dns.exception.SyntaxError, "bad $TTL"
+                            raise wc.dns.exception.DNSSyntaxError, "bad $TTL"
                         self.ttl = wc.dns.ttl.from_text(token[1])
                         self.tok.get_eol()
                     elif u == '$ORIGIN':
@@ -677,7 +677,7 @@ class _MasterReader(object):
                     elif u == '$INCLUDE' and self.allow_include:
                         token = self.tok.get()
                         if token[0] != wc.dns.tokenizer.QUOTED_STRING:
-                            raise wc.dns.exception.SyntaxError, \
+                            raise wc.dns.exception.DNSSyntaxError, \
                                   "bad filename in $INCLUDE"
                         filename = token[1]
                         token = self.tok.get()
@@ -687,7 +687,7 @@ class _MasterReader(object):
                             self.tok.get_eol()
                         elif token[0] != wc.dns.tokenizer.EOL and \
                              token[0] != wc.dns.tokenizer.EOF:
-                            raise wc.dns.exception.SyntaxError, \
+                            raise wc.dns.exception.DNSSyntaxError, \
                                   "bad origin in $INCLUDE"
                         else:
                             new_origin = self.current_origin
@@ -701,16 +701,16 @@ class _MasterReader(object):
                                                            filename)
                         self.current_origin = new_origin
                     else:
-                        raise wc.dns.exception.SyntaxError, \
+                        raise wc.dns.exception.DNSSyntaxError, \
                               "Unknown master file directive '" + u + "'"
                     continue
                 self.tok.unget(token)
                 self._rr_line()
-        except wc.dns.exception.SyntaxError, detail:
+        except wc.dns.exception.DNSSyntaxError, detail:
             (filename, line_number) = self.tok.where()
             if detail is None:
                 detail = "syntax error"
-            raise wc.dns.exception.SyntaxError, \
+            raise wc.dns.exception.DNSSyntaxError, \
                   "%s:%d: %s" % (filename, line_number, detail)
 
         # Now that we're done reading, do some basic checking of the zone.

@@ -84,14 +84,14 @@ class CERT(wc.dns.rdata.Rdata):
         key_tag = tok.get_uint16()
         algorithm = wc.dns.dnssec.algorithm_from_text(tok.get_string())
         if algorithm < 0 or algorithm > 255:
-            raise wc.dns.exception.SyntaxError, "bad algorithm type"
+            raise wc.dns.exception.DNSSyntaxError, "bad algorithm type"
         chunks = []
         while 1:
             t = tok.get()
             if t[0] == wc.dns.tokenizer.EOL or t[0] == wc.dns.tokenizer.EOF:
                 break
             if t[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
             chunks.append(t[1])
         b64 = ''.join(chunks)
         certificate = b64.decode('base64_codec')

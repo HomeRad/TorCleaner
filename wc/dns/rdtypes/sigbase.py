@@ -114,7 +114,7 @@ class SIGBase(wc.dns.rdata.Rdata):
             if t[0] == wc.dns.tokenizer.EOL or t[0] == wc.dns.tokenizer.EOF:
                 break
             if t[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
             chunks.append(t[1])
         b64 = ''.join(chunks)
         signature = b64.decode('base64_codec')

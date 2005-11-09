@@ -743,15 +743,15 @@ class _TextReader(object):
         name = self.last_name
         token = self.tok.get()
         if token[0] != wc.dns.tokenizer.IDENTIFIER:
-            raise wc.dns.exception.SyntaxError
+            raise wc.dns.exception.DNSSyntaxError
         # Class
         try:
             rdclass = wc.dns.rdataclass.from_text(token[1])
             token = self.tok.get()
             if token[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
-        except wc.dns.exception.SyntaxError:
-            raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
+        except wc.dns.exception.DNSSyntaxError:
+            raise wc.dns.exception.DNSSyntaxError
         except:
             rdclass = wc.dns.rdataclass.IN
         # Type
@@ -775,15 +775,15 @@ class _TextReader(object):
         name = self.last_name
         token = self.tok.get()
         if token[0] != wc.dns.tokenizer.IDENTIFIER:
-            raise wc.dns.exception.SyntaxError
+            raise wc.dns.exception.DNSSyntaxError
         # TTL
         try:
             ttl = int(token[1], 0)
             token = self.tok.get()
             if token[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
-        except wc.dns.exception.SyntaxError:
-            raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
+        except wc.dns.exception.DNSSyntaxError:
+            raise wc.dns.exception.DNSSyntaxError
         except:
             ttl = 0
         # Class
@@ -791,12 +791,12 @@ class _TextReader(object):
             rdclass = wc.dns.rdataclass.from_text(token[1])
             token = self.tok.get()
             if token[0] != wc.dns.tokenizer.IDENTIFIER:
-                raise wc.dns.exception.SyntaxError
+                raise wc.dns.exception.DNSSyntaxError
             if rdclass == wc.dns.rdataclass.ANY or rdclass == wc.dns.rdataclass.NONE:
                 deleting = rdclass
                 rdclass = self.zone_rdclass
-        except wc.dns.exception.SyntaxError:
-            raise wc.dns.exception.SyntaxError
+        except wc.dns.exception.DNSSyntaxError:
+            raise wc.dns.exception.DNSSyntaxError
         except:
             rdclass = wc.dns.rdataclass.IN
         # Type
@@ -852,7 +852,7 @@ def from_text(text):
     @param text: The text format message.
     @type text: string
     @raises UnknownHeaderField:
-    @raises wc.dns.exception.SyntaxError:
+    @raises wc.dns.exception.DNSSyntaxError:
     @rtype: wc.dns.message.Message object"""
 
     # 'text' can also be a file, but we don't publish that fact
@@ -870,7 +870,7 @@ def from_file(f):
     @param f: file or string.  If I{f} is a string, it is treated
     as the name of a file to open.
     @raises UnknownHeaderField:
-    @raises wc.dns.exception.SyntaxError:
+    @raises wc.dns.exception.DNSSyntaxError:
     @rtype: wc.dns.message.Message object"""
     if sys.hexversion >= 0x02030000:
         # allow Unicode filenames; turn on universal newline support

@@ -62,9 +62,9 @@ class NXT(wc.dns.rdata.Rdata):
             else:
                 nrdtype = wc.dns.rdatatype.from_text(value)
             if nrdtype == 0:
-                raise wc.dns.exception.SyntaxError, "NXT with bit 0"
+                raise wc.dns.exception.DNSSyntaxError, "NXT with bit 0"
             if nrdtype > 127:
-                raise wc.dns.exception.SyntaxError, "NXT with bit > 127"
+                raise wc.dns.exception.DNSSyntaxError, "NXT with bit > 127"
             i = nrdtype // 8
             bitmap[i] = chr(ord(bitmap[i]) | (0x80 >> (nrdtype % 8)))
         bitmap = wc.dns.rdata._truncate_bitmap(bitmap)

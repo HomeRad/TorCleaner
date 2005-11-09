@@ -34,11 +34,11 @@ NAMERELN_SUBDOMAIN = 2
 NAMERELN_EQUAL = 3
 NAMERELN_COMMONANCESTOR = 4
 
-class EmptyLabel(wc.dns.exception.SyntaxError):
+class EmptyLabel(wc.dns.exception.DNSSyntaxError):
     """Raised if a label is empty."""
     pass
 
-class BadEscape(wc.dns.exception.SyntaxError):
+class BadEscape(wc.dns.exception.DNSSyntaxError):
     """Raised if an escaped code in a text format name is invalid."""
     pass
 
@@ -59,7 +59,7 @@ class NameTooLong(wc.dns.exception.FormError):
     """Raised if a name is > 255 octets long."""
     pass
 
-class LabelTooLong(wc.dns.exception.SyntaxError):
+class LabelTooLong(wc.dns.exception.DNSSyntaxError):
     """Raised if a label is > 63 octets long."""
     pass
 

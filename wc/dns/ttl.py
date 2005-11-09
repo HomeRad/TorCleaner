@@ -18,7 +18,7 @@
 
 import wc.dns.exception
 
-class BadTTL(wc.dns.exception.SyntaxError):
+class BadTTL(wc.dns.exception.DNSSyntaxError):
     pass
 
 def from_text(text):

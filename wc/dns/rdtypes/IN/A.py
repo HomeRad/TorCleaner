@@ -39,7 +39,7 @@ class A(wc.dns.rdata.Rdata):
     def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
         (ttype, address) = tok.get()
         if ttype != wc.dns.tokenizer.IDENTIFIER:
-            raise wc.dns.exception.SyntaxError
+            raise wc.dns.exception.DNSSyntaxError
         t = tok.get_eol()
         return cls(rdclass, rdtype, address)
 

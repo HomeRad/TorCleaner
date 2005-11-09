@@ -59,9 +59,9 @@ class NSEC(wc.dns.rdata.Rdata):
                 break
             nrdtype = wc.dns.rdatatype.from_text(value)
             if nrdtype == 0:
-                raise wc.dns.exception.SyntaxError, "NSEC with bit 0"
+                raise wc.dns.exception.DNSSyntaxError, "NSEC with bit 0"
             if nrdtype > 65535:
-                raise wc.dns.exception.SyntaxError, "NSEC with bit > 65535"
+                raise wc.dns.exception.DNSSyntaxError, "NSEC with bit > 65535"
             rdtypes.append(nrdtype)
         rdtypes.sort()
         window = 0
