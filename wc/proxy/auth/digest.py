@@ -28,7 +28,7 @@ import random
 import base64
 import time
 
-from parse import *
+from parse import parse_auth
 
 import wc
 import wc.log
