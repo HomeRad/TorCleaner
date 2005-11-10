@@ -335,7 +335,8 @@ def update_ratings (wconfig, dryrun=False, log=None):
         print >> log, _("error fetching %s:") % url, msg
         print >> log, "...", _("done")
         return chg
-    # build local rating cache, and merge
-    chg = rating_cache_merge(rating_cache_parse(page), dryrun=dryrun, log=log)
+    # Merge new ratings.
+    new_ratings = wc.filter.rating.storage.rating_parse(page)
+    chg = wc.filter.rating.ratings.merge(new_ratings, dryrun=dryrun, log=log)
     print >> log, "...", _("done")
     return chg
