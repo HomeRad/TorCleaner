@@ -18,7 +18,6 @@
 Parameters for rating.html page.
 """
 
-import time as _time
 from wc import AppName, Email, Version
 from wc.configuration import config
 from wc.webgui.context import getval as _getval
