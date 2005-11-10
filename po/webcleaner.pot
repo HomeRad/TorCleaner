@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-09 22:19+0100\n"
+"POT-Creation-Date: 2005-11-10 21:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "updating rule %s:"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:30
+#: ../wc/filter/rules/RatingRule.py:29
 msgid "Unknown page"
 msgstr ""
 
@@ -77,46 +77,46 @@ msgstr ""
 msgid "Enclosed block"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:64
+#: ../wc/filter/rating/category.py:69
 msgid "none"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:64
+#: ../wc/filter/rating/category.py:69
 msgid "mild"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:64
+#: ../wc/filter/rating/category.py:69
 msgid "heavy"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:79
+#: ../wc/filter/rating/category.py:84
 #, python-format
 msgid "Rating %r for category %r exceeds limit %r"
 msgstr ""
 
-#: ../wc/filter/rating/category.py:117
+#: ../wc/filter/rating/category.py:122
 #, python-format
 msgid "Rating %r for category %r is not in range %s"
 msgstr ""
 
-#: ../wc/filter/rating/storage/filesystem.py:57
+#: ../wc/filter/rating/storage.py:115
+#, python-format
+msgid "adding new rating for %r"
+msgstr ""
+
+#: ../wc/filter/rating/storage.py:257
 #, python-format
 msgid "malformed rating line %r"
 msgstr ""
 
-#: ../wc/filter/rating/storage/filesystem.py:59
+#: ../wc/filter/rating/storage.py:259
 #, python-format
 msgid "malformed modified time %r"
 msgstr ""
 
-#: ../wc/filter/rating/storage/filesystem.py:63
+#: ../wc/filter/rating/storage.py:263
 #, python-format
 msgid "generic url %r doesn't match %r"
-msgstr ""
-
-#: ../wc/filter/rating/__init__.py:143
-#, python-format
-msgid "adding new rating for %r"
 msgstr ""
 
 #: ../wc/filter/VirusFilter.py:89
@@ -146,12 +146,12 @@ msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
 
-#: ../wc/filter/html/JSFilter.py:357
+#: ../wc/filter/html/JSFilter.py:359
 #, python-format
 msgid "error fetching script from %r"
 msgstr ""
 
-#: ../wc/filter/html/JSFilter.py:360
+#: ../wc/filter/html/JSFilter.py:362
 #, python-format
 msgid "fetched script from %r"
 msgstr ""
@@ -167,7 +167,7 @@ msgstr ""
 
 #: ../wc/update.py:227 ../wc/update.py:237 ../wc/update.py:275
 #: ../wc/update.py:283 ../wc/update.py:320 ../wc/update.py:336
-#: ../wc/update.py:340
+#: ../wc/update.py:341
 msgid "done"
 msgstr ""
 
@@ -336,7 +336,7 @@ msgstr ""
 msgid "Error: nothing to update."
 msgstr ""
 
-#: ../wc/proxy/Dispatcher.py:325
+#: ../wc/proxy/Dispatcher.py:329
 #, python-format
 msgid "Connect error %s."
 msgstr ""
@@ -1308,7 +1308,7 @@ msgstr ""
 msgid "Invalid attribute name."
 msgstr ""
 
-#: ../templates/classic/rating.html:134
+#: ../templates/classic/rating.html:136
 #: ../templates/classic/filterconfig.html:256
 msgid "Invalid category value."
 msgstr ""
@@ -1393,7 +1393,7 @@ msgstr ""
 msgid "Invalid rule type."
 msgstr ""
 
-#: ../templates/classic/rating.html:135
+#: ../templates/classic/rating.html:137
 #: ../templates/classic/filterconfig.html:255
 msgid "Invalid selection index."
 msgstr ""
@@ -1406,7 +1406,7 @@ msgstr ""
 msgid "Invalid url."
 msgstr ""
 
-#: ../templates/classic/rating.html:136
+#: ../templates/classic/rating.html:138
 msgid "Invalid url. The url has to start with <code>http://</code>, <code>https://</code> or <code>ftp://</code>."
 msgstr ""
 
@@ -1736,6 +1736,14 @@ msgstr ""
 
 #: ../templates/classic/filterconfig.html:214
 msgid "Rating category limit successfully changed."
+msgstr ""
+
+#: ../templates/classic/rating.html:135
+msgid "Rating could not be deleted."
+msgstr ""
+
+#: ../templates/classic/rating.html:134
+msgid "Rating could not be updated."
 msgstr ""
 
 #: ../templates/classic/rating_mail.html:52
