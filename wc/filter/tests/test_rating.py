@@ -93,7 +93,6 @@ class TestRating (MsgTestCase):
         self.assertEqual(rating_range("1-"), (1, None))
         self.assertEqual(rating_range("-1"), (None, 1))
         self.assertEqual(rating_range("1-1"), (1, 1))
-        self.assertEqual(rating_range("1"), None)
         self.assertEqual(rating_range("-1-"), None)
 
 
