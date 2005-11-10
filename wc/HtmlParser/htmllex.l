@@ -189,6 +189,7 @@ void yyfree (void* ptr, void* yyscanner) {
 /* scanner states */
 %x S_PI
 %x S_COMMENT
+%x S_COMMENT1
 %x S_COMMENT2
 %x S_DOCTYPE
 %x S_CDATA
@@ -241,7 +242,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 <INITIAL><!-/[ ] {
     UPDATE_COLUMN;
-    BEGIN(S_COMMENT);
+    BEGIN(S_COMMENT1);
 }
 
 <S_COMMENT>--> {
@@ -258,39 +259,39 @@ RX_DATA  [-a-zA-Z0-9_:]+
     RETURN(T_COMMENT);
 }
 
-<S_COMMENT>-> {
+<S_COMMENT1>-> {
     UPDATE_COLUMN;
     SETLVAL_UNICODE;
     BEGIN(INITIAL);
     RETURN(T_COMMENT);
 }
 
-<S_COMMENT>-/-- {
+<S_COMMENT,S_COMMENT1>-/-- {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>-/[^-] {
+<S_COMMENT,S_COMMENT1>-/[^-] {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>--/[^- >] {
+<S_COMMENT,S_COMMENT1>--/[^- >] {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>--[ ]+/[^ >] {
+<S_COMMENT,S_COMMENT1>--[ ]+/[^ >] {
     UPDATE_COLUMN;
     APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>[^-]+ {
+<S_COMMENT,S_COMMENT1>[^-]+ {
     UPDATE_LINE;
     APPEND_TO_TMP(yyleng);
 }
 
-<S_COMMENT>. {
+<S_COMMENT,S_COMMENT1>. {
     return T_WAIT;
 }
 
