@@ -195,16 +195,16 @@ class PickleStorage (Storage):
         """
         Write pickled cache to disk.
         """
-        wc.log.debug(wc.LOG_RATING, "Write ratings to %r", self.filename)
+        wc.log.debug(wc.LOG_RATING, "Write ratings to %r.", self.filename)
         def callback (fp, obj):
             pickle.dump(obj, fp, 1)
-        wc.fileutil.write_save(self.filename, self.cache, callback=callback)
+        wc.fileutil.write_file(self.filename, self.cache, callback=callback)
 
     def load (self):
         """
         Load pickled cache from disk.
         """
-        wc.log.debug(wc.LOG_RATING, "Loading ratings from %r", self.filename)
+        wc.log.debug(wc.LOG_RATING, "Loading ratings from %r.", self.filename)
         if os.path.isfile(self.filename):
             fp = file(self.filename, 'rb')
             self.cache = pickle.load(fp)
