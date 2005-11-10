@@ -41,6 +41,9 @@ class Service (object):
         """
         return cmp(self.name, other.name)
 
+    def __str__ (self):
+        return "Service %r (%r)" % (self.name, self.url)
+
 
 class WebCleanerService (Service):
     """

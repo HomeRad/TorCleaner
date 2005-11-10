@@ -132,17 +132,10 @@ def get_category (category_name):
     return None
 
 
-def XXXrating_cache_merge (newrating_cache, dryrun=False, log=None):
-    """
-    Add new ratings, but do not change existing ones.
-    """
-    chg = False
-    for url, rating in newrating_cache.iteritems():
-        if url not in rating_cache:
-            chg = True
-            print >> log, _("adding new rating for %r") % url
-            if not dryrun:
-                rating_cache[url] = rating
-    if not dryrun and chg:
-        rating_cache_write()
-    return chg
+_ratings = None
+def get_ratings ():
+    global _ratings
+    if _ratings is None:
+        import wc.filter.rating.storage
+        _ratings = wc.filter.rating.storage.PickleStorage()
+    return _ratings

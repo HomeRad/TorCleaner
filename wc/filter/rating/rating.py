@@ -78,3 +78,6 @@ class Rating (object):
                 value = wc.filter.rating.category.string_from_intrange(value)
             lines.append("category %s=%s" % (name, value))
         return "\n".join(lines)
+
+    def __str__ (self):
+        return "Rating\n%s" % self.serialize()
