@@ -131,6 +131,8 @@ several given categories.</p>
 </div>
 
 <div class="error">
+<div tal:condition="error/ratingupdated" i18n:translate="">Rating could not be updated.</div>
+<div tal:condition="error/ratingdeleted" i18n:translate="">Rating could not be deleted.</div>
 <div tal:condition="error/categoryvalue" i18n:translate="">Invalid category value.</div>
 <div tal:condition="error/selindex" i18n:translate="">Invalid selection index.</div>
 <div tal:condition="error/url" i18n:translate="">Invalid url.
