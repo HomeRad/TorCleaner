@@ -26,14 +26,12 @@ from wc.url import is_safe_url as _is_safe_url
 from wc.strformat import strtime as _strtime
 from wc.filter.rating import services, categories
 from wc.filter.rating import get_category as _get_category
+from wc.filter.rating import get_ratings as _get_ratings
 from wc.filter.rating.rating import Rating as _Rating
 from wc.filter.rating.category import intrange_from_string as \
      _intrange_from_string
 from wc.filter.rating.category import string_from_intrange as \
      _string_from_intrange
-from wc.filter.rating.storage import get_rating_store as _get_rating_store
-#from wc.filter.rating.storage.filesystem import FileStorage as _Storage
-from wc.filter.rating.storage.pickle import PickleStorage as _Storage
 
 _entries_per_page = 50
 
@@ -43,6 +41,8 @@ info = {
     "ratingdeleted": False,
 }
 error = {
+    "ratingupdated": False,
+    "ratingdeleted": False,
     "categoryvalue": False,
     "selindex": False,
     "url": False,
@@ -79,7 +79,7 @@ def _calc_ratings_display ():
 
 
 _reset_values()
-rating_store = _get_rating_store(_Storage)
+rating_store = _get_ratings()
 url = u""
 generic = False
 # current index of entry to display
@@ -210,10 +210,7 @@ def _form_apply ():
     """
     Store changed ratings.
     """
-    if url in rating_store:
-        rating = rating_store[url]
-    else:
-        rating = _Rating(url, generic)
+    rating = _Rating(url, generic)
     rating.remove_categories()
     for catname, value in values.items():
         category = _get_category(catname)
