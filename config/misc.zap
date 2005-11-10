@@ -135,4 +135,13 @@
   <description lang="en">The&lt;parsererror&gt; element is not an official HTML element and crashes some Browsers..</description>
   <replacement part="tag"/>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.369"
+ tag="iframe">
+  <title lang="de">Entferne &lt;iframe&gt;</title>
+  <title lang="en">Remove &lt;iframe&gt;</title>
+  <description lang="de">&lt;iframe&gt; Inhalte sind fast immer Werbungen.</description>
+  <description lang="en">&lt;iframe&gt; content is almost always advertising.</description>
+  <matchurl>imdb.com</matchurl>
+</htmlrewrite>
 </folder>
