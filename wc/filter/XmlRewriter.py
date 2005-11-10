@@ -18,7 +18,6 @@
 Filter a HTML stream.
 """
 
-import xml.sax
 import xml.sax.expatreader
 
 import wc.filter

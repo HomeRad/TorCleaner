@@ -29,10 +29,9 @@ import popen2
 import stat
 import string
 import glob
+import distutils
 from distutils.core import setup, Extension, DEBUG
 from distutils.spawn import find_executable
-import distutils.dist
-import distutils.command
 from distutils.command.bdist_wininst import bdist_wininst
 from distutils.command.install import install
 from distutils.command.install_data import install_data
@@ -43,7 +42,6 @@ from distutils.dir_util import remove_tree
 from distutils.file_util import write_file
 from distutils.sysconfig import get_python_version
 from distutils.errors import DistutilsPlatformError
-from distutils import util, log
 
 # cross compile config
 cc = os.environ.get("CC")
@@ -203,7 +201,7 @@ class MyDistribution (distutils.dist.Distribution, object):
               data.append(cmd)
         data.append('appname = "WebCleaner"')
         # write the config file
-        util.execute(write_file, (filename, data),
+        distutils.util.execute(write_file, (filename, data),
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
 
@@ -243,7 +241,8 @@ class MyBdistWininst (bdist_wininst, object):
         if not target_version:
             assert self.skip_build, "Should have already checked this"
             target_version = sys.version[0:3]
-        plat_specifier = ".%s-%s" % (util.get_platform(), target_version)
+        plat_specifier = ".%s-%s" % (distutils.util.get_platform(),
+                                     target_version)
         build = self.get_finalized_command('build')
         build.build_lib = os.path.join(build.build_base,
                                        'lib' + plat_specifier)
@@ -258,7 +257,7 @@ class MyBdistWininst (bdist_wininst, object):
                     'install_' + key,
                     value)
 
-        log.info("installing to %s", self.bdist_dir)
+        distutils.log.info("installing to %s", self.bdist_dir)
         install.ensure_finalized()
 
         # avoid warning of 'install_lib' about installing
@@ -279,7 +278,7 @@ class MyBdistWininst (bdist_wininst, object):
         # create an exe containing the zip-file
         self.create_exe(arcname, fullname, self.bitmap)
         # remove the zip-file again
-        log.debug("removing temporary file '%s'", arcname)
+        distutils.log.debug("removing temporary file '%s'", arcname)
         os.remove(arcname)
 
         if not self.keep_temp:
@@ -357,7 +356,7 @@ def compress_library (upx, filename):
     Compresses a dynamic library file with upx (currently only .dll
     files are supported).
     """
-    log.info("upx-compressing %s", filename)
+    distutils.log.info("upx-compressing %s", filename)
     os.system('%s -q --best "%s"' % (upx, filename))
 
 
@@ -393,8 +392,8 @@ def check_manifest ():
     err = [line for line in manifest if not os.path.exists(line)]
     if err:
         n = len(manifest)
-        print '\n*** SOURCE WARNING: There are files missing (%d/%d found)!'%(
-            n-len(err), n)
+        print '\n*** SOURCE WARNING: There are files missing (%d/%d found)!' \
+              % (n - len(err), n)
         print 'Missing:', '\nMissing: '.join(err)
 
 
@@ -414,7 +413,7 @@ class MyBuild (build, object):
                 self.mkpath(destdir)
             if not os.path.exists(_build_dst) or \
               (os.path.getmtime(_build_dst) < os.path.getmtime(_src)):
-                log.info("compiling %s -> %s" % (_src, _build_dst))
+                distutils.log.info("compiling %s -> %s" % (_src, _build_dst))
                 from wc import msgfmt
                 msgfmt.make(_src, _build_dst)
 
@@ -436,7 +435,8 @@ class MyClean (clean, object):
             if os.path.exists(directory):
                 remove_tree(directory, dry_run=self.dry_run)
             else:
-                log.warn("'%s' does not exist -- can't clean it", directory)
+                distutils.log.warn("'%s' does not exist -- can't clean it",
+                                   directory)
         clean.run(self)
 
 
@@ -627,7 +627,8 @@ setup (name = "webcleaner",
        maintainer = myname,
        maintainer_email = myemail,
        url = "http://webcleaner.sourceforge.net/",
-       download_url = "http://sourceforge.net/project/showfiles.php?group_id=7692",
+       download_url = \
+               "http://sourceforge.net/project/showfiles.php?group_id=7692",
        license = "GPL",
        packages = ['wc', 'wc.filter', 'wc.filter.rating', 'wc.filter.rules',
            'wc.filter.html', 'wc.filter.xmlfilt',
