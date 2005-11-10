@@ -1,11 +1,15 @@
 TODO
 
+- <a href> advert rules should be duplicated with
+  <iframe src> and <script src>
+
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 
-- more HTTP RFC2616 unit tests
+- https URLs have a lot of these:
+  WARNING wc.proxy <HttpServer:client   localhost:8443/ client> flush without status
 
-- fix rating store
+- more HTTP RFC2616 unit tests
 
 - if an unknown port is forbidden (403 status), add an explaining message
 
