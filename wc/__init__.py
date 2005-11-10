@@ -74,6 +74,7 @@ HasPsyco = wc.fileutil.has_module("psyco")
 LOG_FILTER = "wc.filter"
 LOG_JS = "wc.filter.js"
 LOG_RATING = "wc.filter.rating"
+LOG_HTML = "wc.filter.html"
 LOG_NET = "wc.net"
 LOG_PROXY = "wc.proxy"
 LOG_AUTH = "wc.proxy.auth"

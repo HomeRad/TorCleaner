@@ -76,7 +76,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         return "%s in state %s" % (self.__class__.__name__, str(self.state))
 
-    def debugbuf (self, cat=wc.LOG_FILTER):
+    def debugbuf (self, cat=wc.LOG_HTML):
         """
         Print debugging information about buffered data.
         """
@@ -90,7 +90,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         Append serialized tag items of the tag buffer to the output buffer
         and clear the tag buffer.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s tagbuf2data", self)
+        wc.log.debug(wc.LOG_HTML, "%s tagbuf2data", self)
         wc.filter.html.tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
@@ -98,7 +98,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         Feed some data to the parser.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s feed %r", self, data)
+        wc.log.debug(wc.LOG_HTML, "%s feed %r", self, data)
         if self.state[0] == 'parse':
             # look if we must replay something
             if self.waited > 0:
@@ -114,14 +114,14 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                 self.inbuf = StringIO()
             if data:
                 # only feed non-empty data
-                wc.log.debug(wc.LOG_FILTER, "%s parser feed %r", self, data)
+                wc.log.debug(wc.LOG_HTML, "%s parser feed %r", self, data)
                 super(HtmlParser, self).feed(data)
             else:
-                wc.log.debug(wc.LOG_FILTER, "%s empty parser feed", self)
+                wc.log.debug(wc.LOG_HTML, "%s empty parser feed", self)
                 pass
         elif self.state[0] == 'wait':
             # wait state ==> put in input buffer
-            wc.log.debug(wc.LOG_FILTER, "%s waits", self)
+            wc.log.debug(wc.LOG_HTML, "%s waits", self)
             self.inbuf.write(data)
         else:
             assert False, "parser %s has unknown parser state" % str(self)
@@ -130,7 +130,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         Flush pending data.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s flush", self)
+        wc.log.debug(wc.LOG_HTML, "%s flush", self)
         if self.state[0] == 'wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
@@ -151,7 +151,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         Call the handler functions again with buffer data.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s replays %r", self, waitbuf)
+        wc.log.debug(wc.LOG_HTML, "%s replays %r", self, waitbuf)
         for item in waitbuf:
             if self.state[0] == 'wait':
                 # the replaying itself can switch to wait state

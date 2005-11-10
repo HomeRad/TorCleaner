@@ -86,14 +86,14 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         Character data.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s cdata %r", self, data)
+        wc.log.debug(wc.LOG_HTML, "%s cdata %r", self, data)
         return self._data(data)
 
     def characters (self, data):
         """
         Characters.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s characters %r", self, data)
+        wc.log.debug(wc.LOG_HTML, "%s characters %r", self, data)
         return self._data(data)
 
     def comment (self, data):
@@ -102,7 +102,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         if not (self.comments and data):
             return
-        wc.log.debug(wc.LOG_FILTER, "%s comment %r", self, data)
+        wc.log.debug(wc.LOG_HTML, "%s comment %r", self, data)
         item = [wc.filter.html.COMMENT, data]
         if self._is_waiting(item):
             return
@@ -112,21 +112,21 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         HTML doctype.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s doctype %r", self, data)
+        wc.log.debug(wc.LOG_HTML, "%s doctype %r", self, data)
         return self._data(u"<!DOCTYPE%s>" % data)
 
     def pi (self, data):
         """
         HTML pi.
         """
-        wc.log.debug(wc.LOG_FILTER, "%s pi %r", self, data)
+        wc.log.debug(wc.LOG_HTML, "%s pi %r", self, data)
         return self._data(u"<?%s?>" % data)
 
     def start_element (self, tag, attrs):
         """
         HTML start element.
         """
-        wc.log.debug(wc.LOG_FILTER,
+        wc.log.debug(wc.LOG_HTML,
                      "%s start_element %r %s", self, tag, attrs)
         self._start_element(tag, attrs, wc.filter.html.STARTTAG)
 
@@ -134,7 +134,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         HTML start-end element (<a/>).
         """
-        wc.log.debug(wc.LOG_FILTER,
+        wc.log.debug(wc.LOG_HTML,
                      "%s start_end_element %r %s", self, tag, attrs)
         self._start_element(tag, attrs, wc.filter.html.STARTENDTAG)
 
@@ -173,7 +173,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                 self.base_url = "%s://%s" % \
                                 (urllib.splittype(self.url)[0], self.base_url)
             self.base_url = wc.url.url_norm(self.base_url)[0]
-            wc.log.debug(wc.LOG_FILTER, "%s using base url %r",
+            wc.log.debug(wc.LOG_HTML, "%s using base url %r",
                          self, self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
@@ -192,13 +192,13 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         item = [starttype, tag, attrs]
         for rule in self.rules:
             if rule.match_tag(tag) and rule.match_attrs(attrs):
-                wc.log.debug(wc.LOG_FILTER, "%s matched rule %r on tag %r",
+                wc.log.debug(wc.LOG_HTML, "%s matched rule %r on tag %r",
                              self, rule.titles['en'], tag)
                 if rule.matches_starttag():
                     item = rule.filter_tag(tag, attrs, starttype)
                     filtered = True
                 if rule.matches_endtag():
-                    wc.log.debug(wc.LOG_FILTER, "%s put rule %r on buffer",
+                    wc.log.debug(wc.LOG_HTML, "%s put rule %r on buffer",
                                  self, rule.titles['en'])
                     rulelist.append(rule)
                 if item[0] == starttype and item[1] == tag:
@@ -232,7 +232,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         If it matches and the rule stack is now empty we can flush
         the tag buffer (calling tagbuf2data).
         """
-        wc.log.debug(wc.LOG_FILTER, "%s end_element %r", self, tag)
+        wc.log.debug(wc.LOG_HTML, "%s end_element %r", self, tag)
         if self._is_waiting([wc.filter.html.ENDTAG, tag]):
             return
         tag = wc.filter.html.check_spelling(tag, self.url)
