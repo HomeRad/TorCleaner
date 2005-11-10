@@ -267,7 +267,7 @@ class Configuration (dict):
             lines.append('<filter name="%s"/>' % xmlquoteattr(key))
         lines.append('</webcleaner>')
         content = os.linesep.join(lines)
-        wc.fileutil.write_file_save(self.configfile, content)
+        wc.fileutil.write_file(self.configfile, content)
 
     def read_filterconf (self):
         """

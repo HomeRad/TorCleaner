@@ -135,7 +135,7 @@ class FolderRule (wc.filter.rules.Rule.Rule):
         @raise: OSError if file could not be written.
         """
         s = self.toxml().encode("iso-8859-1", "replace")
-        wc.fileutil.write_file_save(self.filename, s)
+        wc.fileutil.write_file(self.filename, s)
 
     def tiptext (self):
         """
