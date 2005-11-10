@@ -24,7 +24,6 @@ import wc.filter.rules.UrlRule
 import wc.XmlUtils
 import wc.filter.rating
 import wc.filter.rating.storage
-import wc.filter.rating.storage.pickle
 
 
 MISSING = _("Unknown page")
@@ -100,8 +99,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         Asks cache if the rule allows the rating data for given url
         Looks up cache to find rating data, if not returns a MISSING message.
         """
-        klass = wc.filter.rating.storage.pickle.PickleStorage
-        rating_store = wc.filter.rating.storage.get_rating_store(klass)
+        rating_store = wc.filter.rating.get_ratings()
         # sanitize url
         url = wc.filter.rating.make_safe_url(url)
         if url in rating_store:
