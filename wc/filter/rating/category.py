@@ -50,6 +50,10 @@ class Category (object):
         """
         return cmp(self.name, other.name)
 
+    def __str__ (self):
+        args = (self.__class__.__name__, self.name, str(self.values))
+        return "%s %r: %s" % args
+
 
 class ValueCategory (Category):
     """
@@ -150,11 +154,15 @@ def range_in_range (vrange, prange):
 _range_re = re.compile(r'^(\d*)-(\d*)$')
 def intrange_from_string (value):
     """
-    Parse value as range; return tuple (rmin, rmax) or None on error.
+    Parse value as range.
+    @return: tuple (rmin, rmax) or None on error
+    @rtype: tuple (int/None, int/None)
     """
     if not value:
         # empty range
         return (None, None)
+    if value.isdigit():
+        return (int(value), None)
     mo = _range_re.match(value)
     if not mo:
         return None
