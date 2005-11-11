@@ -284,15 +284,12 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         Rule data as XML for storing.
         """
         s = super(HtmlrewriteRule, self).toxml()
-        if self.tag != u'a':
-            s += u'\n tag="%s"' % wc.XmlUtils.xmlquoteattr(self.tag)
+        s += u'\n tag="%s"' % wc.XmlUtils.xmlquoteattr(self.tag)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         for key, val in self.attrs.items():
-            s += u"\n  <attr"
-            if key != u'href':
-                s += u' name="%s"' % key
+            s += u'\n  <attr name="%s"' % wc.XmlUtils.xmlquoteattr(key)
             if val:
                 s += u">%s</attr>" % wc.XmlUtils.xmlquote(val)
             else:
