@@ -122,40 +122,13 @@ Server response <b tal:content="response" i18n:name="response">Oops</b></span>
 </p>
 
 <p>
-<span style="" tal:replace="nothing">XXX use safeSearch parameter,
-see http://www.google.com/apis/reference.html</span>
-<span i18n:translate="">Search in
-<span tal:replace="site" i18n:name="site">www.imadoofus.org</span></span>
-<form method="POST" action="http://www.google.com/custom">
-<span style="" tal:replace="nothing">Query parameters</span>
-<input class="text" type="text" name="q" size="10" maxlength="255">
-<input type="hidden" name="q" value="site:www.imadoofus.org"
- tal:attributes="value string:site:${site}">
-<span style="" tal:replace="nothing">Number of hits</span>
-<input type="hidden" name="num" value="20">
-<span style="" tal:replace="nothing">XXX</span>
-<input type="hidden" name="hl" value="en">
-<span style="" tal:replace="nothing">Input encoding</span>
-<input type="hidden" name="ie" value="ISO-8859-1">
-<span style="" tal:replace="nothing">XXX</span>
-<input type="hidden" name="as_qdr" value="all">
-<span style="" tal:replace="nothing">XXX</span>
-<input type="hidden" name="cof" value="GIMP:darkblue;LW:380;ALC:red;L:http://webcleaner.sourceforge.net/logo.png;GFNT:lightblue;LC:red;LH:100;AH:left;VLC:gray;S:http://webcleaner.sourceforge.net/;GALT:blue;AWFID:ba6ecf243ae3d16f;">
-<span style="" tal:replace="nothing">submit button</span>
-<input class="submit" type="submit" name="sa" value="Search">
-</form>
-</p>
-
-<p>
 <span i18n:translate="">Search Google</span>
-<form method="POST" action="http://www.google.com/custom">
-<input class="text" type="text" name="q" size="10" maxlength="255">
+<form method="POST" action="http://www.google.com/search">
+<input class="text" type="text" name="q" size="25" maxlength="255">
+<input class="submit" type="submit" name="btnG" value="Search">
 <input type="hidden" name="num" value="20">
-<input class="submit" type="submit" name="sa" value="Search">
-<input type="hidden" name="hl" value="en">
 <input type="hidden" name="ie" value="ISO-8859-1">
-<input type="hidden" name="as_qdr" value="all">
-<input type="hidden" name="cof" value="GIMP:darkblue;LW:380;ALC:red;L:http://webcleaner.sourceforge.net/logo.png;GFNT:lightblue;LC:red;LH:100;AH:left;VLC:gray;S:http://webcleaner.sourceforge.net/;GALT:blue;AWFID:ba6ecf243ae3d16f;">
+<input type="hidden" name="oe" value="ISO-8859-1">
 </form>
 </p>
 
