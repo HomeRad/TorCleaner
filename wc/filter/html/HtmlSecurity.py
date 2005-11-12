@@ -44,7 +44,7 @@ def has_lots_of_percents (url):
 
 def has_dashes_in_hostname (url):
     """
-    Return True iff URL hostname has more than 1 consecutive dash.
+    Return True iff URL hostname has more than 2 consecutive dashes.
     """
     i = url.find(":")
     if i == -1:
@@ -53,7 +53,7 @@ def has_dashes_in_hostname (url):
     i = host.find("/")
     if i != -1:
         host = host[:i]
-    return "--" in host
+    return "---" in host
 
 
 def check_javascript_url (attrs, name, htmlfilter):
