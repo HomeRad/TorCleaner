@@ -244,11 +244,11 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         else:
             self.scheme, self.hostname, self.port, self.document = \
                                                 wc.url.url_split(self.url)
-            # fix missing trailing /
+            # Add missing trailing slash.
             if not self.document:
                 self.document = '/'
-        # some clients send partial URI's without scheme, hostname
-        # and port to clients, so we have to handle this
+        # Some clients (eg. SSL client) send partial URI's without scheme,
+        # hostname and port to clients, so we have to handle this.
         if not self.scheme:
             self.scheme = self.get_default_scheme()
             self.port = wc.url.default_ports[self.scheme]
@@ -310,7 +310,15 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                 return
         elif not self.hostname:
             host = self.headers['Host']
-            self.hostname, self.port = urllib.splitnport(host, self.port)
+            self.hostname, port = urllib.splitnport(host, self.port)
+            if port != self.port:
+                wc.log.error(wc.LOG_PROXY, "%s port change %d -> %d",
+                             self, self.port, port)
+                self.error(400, _("Bad Request"))
+                return
+            self.url = "%s://%s:%d%s" % (self.scheme, self.hostname, self.port, self.url)
+            self.request = "%s %s HTTP/1.1" % (self.method, self.url)
+            # XXX should filter request again
         if not self.hostname:
             wc.log.error(wc.LOG_PROXY, "%s missing hostname in request", self)
             self.error(400, _("Bad Request"))
@@ -510,6 +518,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         assert self.state == 'receive', \
                              "%s server_request in non-receive state" % self
+        wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
                                 self.request, self.headers, self.content)
