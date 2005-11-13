@@ -5,21 +5,24 @@
 <title lang="en">Scripting</title>
 <description lang="en">Scripting related.</description>
 
-<htmlrewrite sid="wc.290">
+<htmlrewrite sid="wc.290"
+ tag="a">
   <title lang="de">Entferne &lt;a&gt; onfocus</title>
   <title lang="en">&lt;a&gt; onfocus</title>
   <attr name="onfocus"/>
   <replacement part="attr"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.291">
+<htmlrewrite sid="wc.291"
+ tag="a">
   <title lang="de">Entferne &lt;a&gt; onmouseout</title>
   <title lang="en">&lt;a&gt; onmouseout</title>
   <attr name="onmouseout"/>
   <replacement part="attr"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.292">
+<htmlrewrite sid="wc.292"
+ tag="a">
   <title lang="de">Entferne &lt;a&gt; onmouseover</title>
   <title lang="en">&lt;a&gt; onmouseover</title>
   <attr name="onmouseover"/>
@@ -95,12 +98,13 @@
   <matchurl>apnews\.excite\.com</matchurl>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.301" disable="1">
+<htmlrewrite sid="wc.301" disable="1"
+ tag="a">
   <title lang="de">Entferne Javascript Verknüpfungen</title>
   <title lang="en">Remove Javascript links</title>
   <description lang="de">Aktivieren Sie diese Regel nur wenn Sie JavaScript in Ihrem Browser abgeschaltet haben.</description>
   <description lang="en">Only activate this rule if Javascript is disabled in your browser.</description>
-  <attr>javascript:.*</attr>
+  <attr name="href">javascript:.*</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.302" disable="1"

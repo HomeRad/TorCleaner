@@ -13,10 +13,11 @@
   <description lang="en">Some tracker sites</description>
 </block>
 
-<htmlrewrite sid="wc.6">
+<htmlrewrite sid="wc.6"
+ tag="a">
   <title lang="de">Statistik Seiten 2</title>
   <title lang="en">Statistic sites 2</title>
-  <attr>^https?://[0-9a-z.]*(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)</attr>
+  <attr name="href">^https?://[0-9a-z.]*(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.364"
@@ -60,12 +61,13 @@
   <title lang="en">Siemens StatServ</title>
 </block>
 
-<htmlrewrite sid="wc.21">
+<htmlrewrite sid="wc.21"
+ tag="a">
   <title lang="de">Verschiedene Zählskripte</title>
   <title lang="en">Counter scripts</title>
   <description lang="de">CGI Skripte zur Zählung</description>
   <description lang="en">CGI scripts counting web hits</description>
-  <attr>/(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
+  <attr name="href">/(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.406"

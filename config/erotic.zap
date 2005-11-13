@@ -11,10 +11,11 @@
   <title lang="en">Bad words in the host/path name</title>
 </block>
 
-<htmlrewrite sid="wc.328" disable="1">
+<htmlrewrite sid="wc.328" disable="1"
+ tag="a">
   <title lang="de">Erotische Wörter in der URL 2</title>
   <title lang="en">Bad words in the url 1</title>
-  <attr>https?://[^/]*\.(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn)[^/]*\.(com|org|net|de)</attr>
+  <attr name="href">https?://[^/]*\.(naughty|cumshot|lesbian|hardcore|puss(ie|y)|playboy|ficken|penis|xxx|adult|porn)[^/]*\.(com|org|net|de)</attr>
   <replacement part="attrval">http://www.calvinandhobbes.com/</replacement>
 </htmlrewrite>
 </folder>

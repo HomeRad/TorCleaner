@@ -74,7 +74,8 @@
   <replacement part="attr"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.377">
+<htmlrewrite sid="wc.377"
+ tag="a">
   <title lang="de">Entferne &lt;href&gt; targets</title>
   <title lang="en">Remove &lt;href&gt; targets</title>
   <description lang="en">Can't believe I have to make this case-insensitive 8-)</description>
@@ -90,7 +91,8 @@
   <replacement part="attr"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.3">
+<htmlrewrite sid="wc.3"
+ tag="a">
   <title lang="de">Markiere &lt;href&gt; targets</title>
   <title lang="en">Mark &lt;href&gt; targets</title>
   <description lang="de">Verändere den Mauszeiger wenn Verknüpfungen ein neues Fenster öffnen.</description>

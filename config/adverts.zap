@@ -5,36 +5,41 @@
 <title lang="en">General adverts</title>
 <description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href="http://company.com"&gt;&lt;img  src="http://adserver.de/banner.gif"&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
 
-<htmlrewrite sid="wc.334">
+<htmlrewrite sid="wc.334"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'ad'</title>
   <title lang="en">Ad servers 01</title>
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'ad' im Rechnernamen.</description>
   <description lang="en">Kill links with 'ad' in the host name.</description>
-  <attr>https?://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
+  <attr name="href">https?://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.344">
+<htmlrewrite sid="wc.344"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'ad' 2</title>
   <title lang="en">Adverts in the path name 01</title>
   <description lang="en">Kill links with ad words in the path name.</description>
-  <attr>/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
+  <attr name="href">/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.402">
+<htmlrewrite sid="wc.402"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'adbouncer'</title>
   <title lang="en">adbouncer</title>
   <description lang="en">Kill links with ad words in the path name.</description>
-  <attr>/adbouncer\.phtml</attr>
+  <attr name="href">/adbouncer\.phtml</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.403">
+<htmlrewrite sid="wc.403"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'easy-cash'</title>
   <title lang="en">easy-cash</title>
   <description lang="en">Kill links with ad words in the host name.</description>
-  <attr>easy-cash</attr>
+  <attr name="href">easy-cash</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.414">
+<htmlrewrite sid="wc.414"
+ tag="a">
   <title lang="de">Onmouseover Werbung</title>
   <title lang="en">Onmouseover ads</title>
   <description lang="de">Dies entfernt die neueste Kreation der Werbepfuscher.</description>
@@ -43,94 +48,106 @@
   <replacement part="attr"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.336">
+<htmlrewrite sid="wc.336"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'ads'</title>
   <title lang="en">Ad servers 03</title>
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'ads' im Rechnernamen.</description>
-  <attr>https?://(servedby\.)?ad(s|server(\d+)?|vertising)?\.</attr>
+  <attr name="href">https?://(servedby\.)?ad(s|server(\d+)?|vertising)?\.</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.335">
+<htmlrewrite sid="wc.335"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'trade' u.a.</title>
   <title lang="en">Ad servers 02</title>
   <description lang="de">Entferne Verknüpfungen mit den Worten 'tradedoubler' 'emerchandise' 'ecommercetimes'</description>
   <description lang="en">Kill links with ad words in the host name.</description>
-  <attr>https?://[^/]*(tradedoubler|emerchandise|ecommercetimes)\.</attr>
+  <attr name="href">https?://[^/]*(tradedoubler|emerchandise|ecommercetimes)\.</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.337">
+<htmlrewrite sid="wc.337"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'linkexchange' u.a.</title>
   <title lang="en">Ad servers 05</title>
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'linkexchange' u.a. im Rechnernamen.</description>
   <description lang="en">Kill links with ad words in the host name.</description>
-  <attr>https?://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
+  <attr name="href">https?://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.343">
+<htmlrewrite sid="wc.343"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'adclick'</title>
   <title lang="en">Ad servers 12</title>
   <description lang="de">Entfernt Verknüpfungen mit dem Wort 'adclick' in der URL.</description>
   <description lang="en">adclick stuff</description>
-  <attr>/adclick\.(exe|php)</attr>
+  <attr name="href">/adclick\.(exe|php)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.345">
+<htmlrewrite sid="wc.345"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'banner' 2</title>
   <title lang="en">Adverts in the path name 02</title>
   <description lang="de">Entferne Verknüpfungen mit 'banner' u.a. im Pfadnamen.</description>
   <description lang="en">Kill links with ad words in the path name.</description>
-  <attr>/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick)/</attr>
+  <attr name="href">/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick)/</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.346">
+<htmlrewrite sid="wc.346"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'event.ng'</title>
   <title lang="en">Adverts in the path name 03</title>
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'event.ng' im Pfad.</description>
   <description lang="en">Kill links with ad words in the path name.</description>
-  <attr>/event\.ng(\?|/)Type=click</attr>
+  <attr name="href">/event\.ng(\?|/)Type=click</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.347">
+<htmlrewrite sid="wc.347"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'eu-adcenter'</title>
   <title lang="en">Adverts in the path name 04</title>
   <description lang="de">Lösche Verknüpfungen mit 'eu-adcenter' im Namen.</description>
   <description lang="en">Kill links with ad words in the path name.</description>
-  <attr>\.eu-adcenter\.net</attr>
+  <attr name="href">\.eu-adcenter\.net</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.348">
+<htmlrewrite sid="wc.348"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'click' u.a.</title>
   <title lang="en">Adverts in the path name 7</title>
-  <attr>([\.\?]click\?|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
+  <attr name="href">([\.\?]click\?|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.355">
+<htmlrewrite sid="wc.355"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'werbung' u.a.</title>
   <title lang="en">German adverts</title>
   <description lang="en">Kill links with german ad words in the path.</description>
-  <attr>/(publicite|werbung|rekla(ma|me|am)|annonse|maino(kset|nta|s)?)/</attr>
+  <attr name="href">/(publicite|werbung|rekla(ma|me|am)|annonse|maino(kset|nta|s)?)/</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.338">
+<htmlrewrite sid="wc.338"
+ tag="a">
   <title lang="de">Verschiedene Werberechner 1</title>
   <title lang="en">Ad servers 06</title>
   <description lang="de">Entferne Verknüpfungen zu verschiedenen Werberechnern.</description>
   <description lang="en">Kill ad servers.</description>
-  <attr>https?://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
+  <attr name="href">https?://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.342">
+<htmlrewrite sid="wc.342"
+ tag="a">
   <title lang="de">Verschiedene Werberechner 2</title>
   <title lang="en">Ad servers 11</title>
   <description lang="en">Tribal fusion</description>
-  <attr>(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
+  <attr name="href">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.359">
+<htmlrewrite sid="wc.359"
+ tag="a">
   <title lang="de">Verschiedene Werberechner 3</title>
   <title lang="en">German ad servers</title>
   <description lang="en">Kill links with ad words in the host name.</description>
-  <attr>(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>
+  <attr name="href">(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>
 </htmlrewrite>
 
 <block sid="wc.340"
@@ -141,12 +158,13 @@
   <description lang="en">matches url hosts beginning with "ad.", "ads." or "adserver."</description>
 </block>
 
-<htmlrewrite sid="wc.341">
+<htmlrewrite sid="wc.341"
+ tag="a">
   <title lang="de">Rechner mit 'click'</title>
   <title lang="en">Ad servers 10</title>
   <description lang="de">Blockiert Rechner mit 'click' im Namen.</description>
   <description lang="en">Kill links with 'click' words in the host name.</description>
-  <attr>https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
+  <attr name="href">https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
 </htmlrewrite>
 
 <block sid="wc.349"
@@ -156,11 +174,12 @@
   <description lang="en">Search for the words "ad" and "click"  in the path and a non-empty query.</description>
 </block>
 
-<htmlrewrite sid="wc.350">
+<htmlrewrite sid="wc.350"
+ tag="a">
   <title lang="de">CGI Werbung mit 'ads'</title>
   <title lang="en">CGI adverts 2</title>
   <description lang="en">Matches imagess served by CGI and with advert words in the path.</description>
-  <attr>/cgi-bin/ads?(log(\.pl)?|click)?\?</attr>
+  <attr name="href">/cgi-bin/ads?(log(\.pl)?|click)?\?</attr>
 </htmlrewrite>
 
 <block sid="wc.351"
@@ -171,11 +190,12 @@
   <description lang="en">Search for advert,banner,adid,profileid in the path.</description>
 </block>
 
-<htmlrewrite sid="wc.352">
+<htmlrewrite sid="wc.352"
+ tag="a">
   <title lang="de">CGI Werbung mit 'clickthru'</title>
   <title lang="en">CGI adverts 4</title>
   <description lang="en">Matches imagess served by CGI and with advert words in the path.</description>
-  <attr>clickthru.(acc|aspx)\?</attr>
+  <attr name="href">clickthru.(acc|aspx)\?</attr>
 </htmlrewrite>
 
 <block sid="wc.353"
@@ -213,36 +233,42 @@
   <replacement part="tag"/>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.27">
+<htmlrewrite sid="wc.27"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'doubleclick'</title>
   <title lang="en">Script adverts</title>
   <description lang="en">JavaScript adverts</description>
-  <attr>(double|fast)click\.(net|com)</attr>
+  <attr name="href">(double|fast)click\.(net|com)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.34">
+<htmlrewrite sid="wc.34"
+ tag="a">
   <title lang="de">Verknüpfungen mit buy_assets</title>
-  <attr>/buy_assets/</attr>
+  <attr name="href">/buy_assets/</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.35">
+<htmlrewrite sid="wc.35"
+ tag="a">
   <title lang="de">Verknüpfungen mit value</title>
-  <attr>value(stream|xchange|click)</attr>
+  <attr name="href">value(stream|xchange|click)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.36">
+<htmlrewrite sid="wc.36"
+ tag="a">
   <title lang="de">Verknüpfungen mit banner</title>
-  <attr>(top|bottom|left|right|)?banner(s|id=|\d|_)</attr>
+  <attr name="href">(top|bottom|left|right|)?banner(s|id=|\d|_)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.37">
+<htmlrewrite sid="wc.37"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'dime'</title>
-  <attr>dime(xchange|click)</attr>
+  <attr name="href">dime(xchange|click)</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.38">
+<htmlrewrite sid="wc.38"
+ tag="a">
   <title lang="de">Verknüpfungen mit 'adlog'</title>
-  <attr>adlog\.com\.</attr>
+  <attr name="href">adlog\.com\.</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.52"

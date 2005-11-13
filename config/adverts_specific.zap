@@ -5,11 +5,12 @@
 <title lang="en">Specific adverts</title>
 <description lang="en">A lot of web sites have advertisments. The typical advert has an anchor tag and included the advert image:  &lt;a href="http://company.com"&gt;&lt;img  src="http://adserver.de/banner.gif"&gt;&lt;a&gt;.  So we search for the &lt;a&gt; tag and remove it.</description>
 
-<htmlrewrite sid="wc.398">
+<htmlrewrite sid="wc.398"
+ tag="a">
   <title lang="de">www.deja.com</title>
   <title lang="en">Deja.com adverts</title>
   <description lang="en">Kill links with ad words in the host name.</description>
-  <attr>www\.deja\.com/jump/</attr>
+  <attr name="href">www\.deja\.com/jump/</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.399"
@@ -47,20 +48,22 @@
   <enclosed>&lt;big&gt;O&lt;/big&gt;NLINE-&lt;big&gt;M&lt;/big&gt;</enclosed>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.401">
+<htmlrewrite sid="wc.401"
+ tag="a">
   <title lang="de">userfriendly.org</title>
   <title lang="en">Userfriendly outbound links</title>
   <description lang="en">Links on userfriendly.org which point outbound. This is a redirector host.</description>
-  <attr>https?://links\.userfriendly\.org</attr>
+  <attr name="href">https?://links\.userfriendly\.org</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.404">
+<htmlrewrite sid="wc.404"
+ tag="a">
   <title lang="de">salon.com</title>
   <title lang="en">Salon.com</title>
   <description lang="de">jump.salon.com Verknüpfungen sind Werbung.</description>
   <description lang="en">Jump ads at Salon</description>
   <matchurl>salon\.com</matchurl>
-  <attr>jump.salon.com</attr>
+  <attr name="href">jump.salon.com</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.405"
@@ -93,13 +96,14 @@
   <attr name="style">border-top: 2px #666666 solid; border-bottom:\s*1px #222222 solid;</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.407">
+<htmlrewrite sid="wc.407"
+ tag="a">
   <title lang="de">IMDB Werbung 1</title>
   <title lang="en">IMDB Advert</title>
   <description lang="de">tiger_redirect Werbung</description>
   <description lang="en">adverts are redirections</description>
   <matchurl>imdb\.</matchurl>
-  <attr>/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS|TSEARCH|TSEARCH_RHS|[A-Z_]*AD_LOWRES|[A-Z_]*LOWRES_BUY|EGAL_[A-Z]+)</attr>
+  <attr name="href">/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS|TSEARCH|TSEARCH_RHS|[A-Z_]*AD_LOWRES|[A-Z_]*LOWRES_BUY|EGAL_[A-Z]+)</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.408"
@@ -109,7 +113,7 @@
   <description lang="de">Werbung in Image Maps.</description>
   <description lang="en">image map adverts</description>
   <matchurl>imdb\.</matchurl>
-  <attr>/tiger_redirect\?</attr>
+  <attr name="href">/tiger_redirect\?</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.409"
@@ -122,13 +126,14 @@
   <attr name="usemap">^#m_pro-</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.410">
+<htmlrewrite sid="wc.410"
+ tag="a">
   <title lang="de">IMDB Werbung 4</title>
   <title lang="en">IMDB Advert 4</title>
   <description lang="de">/r/ Zeugs und IMDB Pro</description>
   <description lang="en">/r/ stuff and imdb pro</description>
   <matchurl>imdb\.</matchurl>
-  <attr>(/r/|/register/subscribe)</attr>
+  <attr name="href">(/r/|/register/subscribe)</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.411"
@@ -158,10 +163,11 @@
   <attr name="src">ia?\.imdb\.com</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.415">
+<htmlrewrite sid="wc.415"
+ tag="a">
   <title lang="de">EOnline Werbung</title>
   <title lang="en">EOnline ads</title>
-  <attr>/cgi-bin/acc_clickthru\?</attr>
+  <attr name="href">/cgi-bin/acc_clickthru\?</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.416"
@@ -209,12 +215,13 @@
   <attr name="src">pagead\.googlesyndication\.com</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.422">
+<htmlrewrite sid="wc.422"
+ tag="a">
   <title lang="de">lwn.net Werbung</title>
   <title lang="en">LWN ad</title>
   <description lang="en">Pagead at linux weekly news</description>
   <matchurl>lwn\.net</matchurl>
-  <attr>oasis\.lwn\.net/oasisc\.php</attr>
+  <attr name="href">oasis\.lwn\.net/oasisc\.php</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.423"
@@ -226,24 +233,27 @@
   <attr name="src">fmads\.osdn\.com</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.26">
+<htmlrewrite sid="wc.26"
+ tag="a">
   <title lang="de">OSDN Werbung 2</title>
-  <attr>ads\d\.osdn\.com</attr>
+  <attr name="href">ads\d\.osdn\.com</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.425">
+<htmlrewrite sid="wc.425"
+ tag="a">
   <title lang="en">Schmidtie</title>
   <description lang="de">Harald-Schmidt-Show homepage suxxorz</description>
   <description lang="en">Harald-Schmidt-Show homepage sux</description>
   <matchurl>www\.sat1\.de</matchurl>
-  <attr>/jump\.hbs</attr>
+  <attr name="href">/jump\.hbs</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.426">
+<htmlrewrite sid="wc.426"
+ tag="a">
   <title lang="de">MSN Werbungen</title>
   <title lang="en">MSN ads</title>
   <description lang="en">Found at MSN</description>
-  <attr>g\.msn(bc)?\.com</attr>
+  <attr name="href">g\.msn(bc)?\.com</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.427"
@@ -252,13 +262,14 @@
   <title lang="en">MSN ads 2</title>
   <description lang="de">Diesmal im area tag</description>
   <description lang="en">Same as MSN ads, only in area</description>
-  <attr>g\.msn(bc)?\.com</attr>
+  <attr name="href">g\.msn(bc)?\.com</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.428">
+<htmlrewrite sid="wc.428"
+ tag="a">
   <title lang="de">Falk AG Verknüpfungen</title>
   <title lang="en">Falk ag link</title>
-  <attr>as1\.falkag\.de/server/link\.asp</attr>
+  <attr name="href">as1\.falkag\.de/server/link\.asp</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.28"
@@ -287,9 +298,10 @@
   <attr name="src">\.googlesyndication\.</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.32">
+<htmlrewrite sid="wc.32"
+ tag="a">
   <title lang="de">Blog Werbungen</title>
   <title lang="en">Blog ads</title>
-  <attr>blogads\.com</attr>
+  <attr name="href">blogads\.com</attr>
 </htmlrewrite>
 </folder>
