@@ -181,7 +181,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                     self.js_end_script(item)
                 wc.proxy.make_timer(1, _lazy)
                 return
-            self.js_htmlparser.debugbuf(wc.LOG_JS)
+            self.js_htmlparser.debugbuf(cat=wc.LOG_JS)
             assert not self.js_htmlparser.inbuf.getvalue()
             assert not self.js_htmlparser.waitbuf
             assert len(self.htmlparser.tagbuf) >= 2, \
@@ -190,7 +190,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                            self.js_htmlparser.encoding)
             self.htmlparser.tagbuf[-2:-2] = \
                    [[wc.filter.html.DATA, data]] + self.js_htmlparser.tagbuf
-            self.htmlparser.debugbuf(wc.LOG_JS)
+            self.htmlparser.debugbuf(cat=wc.LOG_JS)
         self.js_htmlparser = None
         if self.js_popup or self.js_output:
             # either the javascript part popped up some windows or
@@ -206,7 +206,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.htmlparser.tagbuf.append(item)
         self.htmlparser.state = ('parse',)
         wc.log.debug(wc.LOG_JS, "%s switching back to parse with", self)
-        self.htmlparser.debugbuf(wc.LOG_JS)
+        self.htmlparser.debugbuf(cat=wc.LOG_JS)
 
     def filter_end_element (self, tag):
         """
@@ -377,7 +377,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.js_script = u''
             self.htmlparser.state = ('parse',)
             wc.log.debug(wc.LOG_JS, "%s switching back to parse with", self)
-            self.htmlparser.debugbuf(wc.LOG_JS)
+            self.htmlparser.debugbuf(cat=wc.LOG_JS)
         else:
             wc.log.debug(wc.LOG_JS, "JS read %d <= %s", len(data), url)
             self.js_script += data.decode(self.htmlparser.encoding, "ignore")
