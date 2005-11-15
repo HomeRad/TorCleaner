@@ -541,7 +541,7 @@ class HttpServer (wc.proxy.Server.Server):
         the client. return True if flush was successful.
         """
         wc.log.debug(wc.LOG_PROXY, "%s HttpServer.flush", self)
-        if not self.statuscode:
+        if not self.statuscode and self.method != 'CONNECT':
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
         data = self.flush_coders(self.decoders)
         try:
