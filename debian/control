@@ -34,6 +34,8 @@ Package: webcleaner-common
 Architecture: all
 Suggests: webcleaner
 Description: data files for the WebCleaner filtering HTTP proxy
+ *** Unofficial package from calvin@users.sourceforge.net ***
+ .
  Included are HTML templates, images, and other architecture
  independent data files used by the webcleaner package.
 
