@@ -346,10 +346,7 @@ a();
 """""")
 
     def testFilter (self):
-        self.filt(
-"""<script src="adbrite.com">
-</script>""",
-"""""")
+        self.filt("""<script src="#ivwbox.de"></script>""", "")
 
 
 def test_suite ():
