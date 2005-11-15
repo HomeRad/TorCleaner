@@ -165,7 +165,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         A </script> was encountered.
         """
         wc.log.debug(wc.LOG_JS, "%s js_end_script %s", self, item)
-        self.htmlparser.debugbuf(wc.LOG_JS)
+        self.htmlparser.debugbuf(cat=wc.LOG_JS)
         if len(self.htmlparser.tagbuf) < 2:
             assert False, "parser %s must have script start and content " \
                           "tags in tag buffer" % self.htmlparser
@@ -189,7 +189,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             data = unicode(self.js_htmlparser.getoutput(),
                            self.js_htmlparser.encoding)
             self.htmlparser.tagbuf[-2:-2] = \
-        [[wc.filter.html.DATA, data]]+self.js_htmlparser.tagbuf
+                   [[wc.filter.html.DATA, data]] + self.js_htmlparser.tagbuf
             self.htmlparser.debugbuf(wc.LOG_JS)
         self.js_htmlparser = None
         if self.js_popup or self.js_output:
@@ -220,7 +220,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         """
         wc.log.debug(wc.LOG_JS,
                      "%s js_end_element buf %r", self, self.htmlparser.tagbuf)
-        if len(self.htmlparser.tagbuf)<2:
+        if len(self.htmlparser.tagbuf) < 2:
             # syntax error, ignore
             wc.log.debug(wc.LOG_JS,
                     "JS syntax error, self.tagbuf %r", self.htmlparser.tagbuf)
@@ -229,7 +229,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             wc.log.debug(wc.LOG_JS,
                          "JS src, self.tagbuf %r", self.htmlparser.tagbuf)
             del self.htmlparser.tagbuf[-1]
-            if len(self.htmlparser.tagbuf)<2:
+            if len(self.htmlparser.tagbuf) < 2:
                 # syntax error, ignore
                 wc.log.warn(wc.LOG_JS,
                             "JS end, self.tagbuf %s", self.htmlparser.tagbuf)
@@ -239,11 +239,9 @@ class JSFilter (wc.js.JSListener.JSListener):
                wc.filter.html.STARTTAG and \
                self.htmlparser.tagbuf[-3][1] == 'script':
                 del self.htmlparser.tagbuf[-1]
-        if len(self.htmlparser.tagbuf)<2 or \
-           self.htmlparser.tagbuf[-1][0] != \
-           wc.filter.html.DATA or \
-           self.htmlparser.tagbuf[-2][0] != \
-           wc.filter.html.STARTTAG or \
+        if len(self.htmlparser.tagbuf) < 2 or \
+           self.htmlparser.tagbuf[-1][0] != wc.filter.html.DATA or \
+           self.htmlparser.tagbuf[-2][0] != wc.filter.html.STARTTAG or \
            self.htmlparser.tagbuf[-2][1] != 'script':
             # syntax error, ignore
             return
@@ -258,9 +256,11 @@ class JSFilter (wc.js.JSListener.JSListener):
         # remove html comments
         script = wc.js.remove_html_comments(script)
         if not script:
-            # again, ignore an empty script
-            del self.htmlparser.tagbuf[-1]
-            del self.htmlparser.tagbuf[-1]
+            # Delete empty script without src attribute.
+            attrs = self.htmlparser.tagbuf[-2][2]
+            if not attrs.get("src"):
+                del self.htmlparser.tagbuf[-1]
+                del self.htmlparser.tagbuf[-1]
             return
         # put correctly quoted script data into buffer
         script = wc.js.clean(script, jscomments=self.jscomments)
@@ -288,18 +288,19 @@ class JSFilter (wc.js.JSListener.JSListener):
         elif tag == 'script':
             js_ok, js_lang = wc.js.get_js_data(attrs)
             url = attrs.get_true('src', u"")
-            # sanitize script src url
-            url = _replace_ws(u'', url)
-            url = wc.HtmlParser.resolve_html_entities(url)
-            # some urls are relative, need to make absolut
-            if self.base_url:
-                url = urlparse.urljoin(self.base_url, url)
-            else:
-                url = urlparse.urljoin(self.url, url)
-            # XXX TODO: support https background downloads
-            if js_ok and url and not url.startswith("https"):
-                self.jsScriptSrc(url, js_lang)
-                return
+            if url:
+                # sanitize script src url
+                url = _replace_ws(u'', url)
+                url = wc.HtmlParser.resolve_html_entities(url)
+                # some urls are relative, need to make absolut
+                if self.base_url:
+                    url = urlparse.urljoin(self.base_url, url)
+                else:
+                    url = urlparse.urljoin(self.url, url)
+                # XXX TODO: support https background downloads
+                if js_ok and url and not url.startswith("https"):
+                    self.jsScriptSrc(url, js_lang)
+                    return
         self.htmlparser.tagbuf.append([starttype, tag, attrs])
 
     def jsForm (self, name, action, target):
