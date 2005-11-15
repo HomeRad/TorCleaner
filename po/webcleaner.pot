@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-10 21:07+0100\n"
+"POT-Creation-Date: 2005-11-15 16:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -306,8 +306,8 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:620
-#: ../wc/proxy/HttpClient.py:625 ../wc/proxy/HttpClient.py:636
+#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:624
+#: ../wc/proxy/HttpClient.py:629 ../wc/proxy/HttpClient.py:640
 msgid "Authentication Required"
 msgstr ""
 
@@ -438,20 +438,20 @@ msgstr ""
 msgid "Forbidden"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:309 ../wc/proxy/HttpClient.py:316
+#: ../wc/proxy/HttpClient.py:309 ../wc/proxy/HttpClient.py:319
 msgid "Bad Request"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:336 ../wc/proxy/HttpClient.py:347
-#: ../wc/proxy/HttpClient.py:358
+#: ../wc/proxy/HttpClient.py:339 ../wc/proxy/HttpClient.py:350
+#: ../wc/proxy/HttpClient.py:361
 msgid "Proxy Authentication Required"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:483 ../wc/proxy/HttpServer.py:401
+#: ../wc/proxy/HttpClient.py:486 ../wc/proxy/HttpServer.py:401
 msgid "Moved Temporarily"
 msgstr ""
 
-#: ../wc/proxy/HttpClient.py:612
+#: ../wc/proxy/HttpClient.py:616
 msgid "Invalid Method"
 msgstr ""
 
@@ -694,11 +694,11 @@ msgstr ""
 msgid "Add and replace HTTP header values."
 msgstr ""
 
-#: ../templates/classic/config.html:410
-#: ../templates/classic/config.html:449
 #: ../templates/classic/macros/rules.html:78
 #: ../templates/classic/macros/rules.html:102
 #: ../templates/classic/macros/rules.html:119
+#: ../templates/classic/config.html:410
+#: ../templates/classic/config.html:449
 msgid "Add new"
 msgstr ""
 
@@ -805,7 +805,6 @@ msgstr ""
 msgid "Applies to all pages starting with url?"
 msgstr ""
 
-#: ../templates/classic/config.html:465
 #: ../templates/classic/macros/rules.html:185
 #: ../templates/classic/macros/rules.html:250
 #: ../templates/classic/macros/rules.html:328
@@ -820,6 +819,7 @@ msgstr ""
 #: ../templates/classic/macros/rules.html:697
 #: ../templates/classic/macros/rules.html:747
 #: ../templates/classic/rating.html:69
+#: ../templates/classic/config.html:465
 msgid "Apply"
 msgstr ""
 
@@ -1027,6 +1027,10 @@ msgstr ""
 
 #: ../templates/classic/filterconfig.html:171
 msgid "Enable rule"
+msgstr ""
+
+#: ../templates/classic/config.html:224
+msgid "Enable the VirusFilter module."
 msgstr ""
 
 #: ../templates/classic/config.html:494
@@ -1524,11 +1528,11 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: ../templates/classic/config.html:309
 #: ../templates/classic/macros/rules.html:628
 #: ../templates/classic/macros/rules.html:653
 #: ../templates/classic/help.html:94
 #: ../templates/classic/help.html:181
+#: ../templates/classic/config.html:309
 msgid "Name"
 msgstr ""
 
@@ -1685,8 +1689,8 @@ msgstr ""
 msgid "Proxy configuration"
 msgstr ""
 
-#: ../templates/classic/config.html:305
 #: ../templates/classic/help.html:82
+#: ../templates/classic/config.html:305
 msgid "Proxy filter modules"
 msgstr ""
 
@@ -1782,11 +1786,11 @@ msgstr ""
 msgid "Remove rule"
 msgstr ""
 
-#: ../templates/classic/config.html:399
-#: ../templates/classic/config.html:438
 #: ../templates/classic/macros/rules.html:75
 #: ../templates/classic/macros/rules.html:99
 #: ../templates/classic/macros/rules.html:116
+#: ../templates/classic/config.html:399
+#: ../templates/classic/config.html:438
 msgid "Remove selected"
 msgstr ""
 
@@ -2013,16 +2017,12 @@ msgstr ""
 msgid "Scan content data for viruses."
 msgstr ""
 
-#: ../templates/classic/google.html:150
+#: ../templates/classic/google.html:125
 msgid "Search Google"
 msgstr ""
 
 #: ../templates/classic/macros/rules.html:579
 msgid "Search for"
-msgstr ""
-
-#: ../templates/classic/google.html:128
-msgid "Search in ${site}"
 msgstr ""
 
 #: ../templates/classic/help.html:29
@@ -2243,14 +2243,14 @@ msgstr ""
 msgid "control-key"
 msgstr ""
 
-#: ../templates/classic/config.html:232
 #: ../templates/classic/macros/rules.html:19
 #: ../templates/classic/macros/rules.html:28
+#: ../templates/classic/config.html:232
 msgid "footnote 1"
 msgstr ""
 
-#: ../templates/classic/config.html:235
 #: ../templates/classic/macros/rules.html:33
+#: ../templates/classic/config.html:235
 msgid "footnote 2"
 msgstr ""
 
@@ -2323,22 +2323,22 @@ msgstr ""
 msgid "return window.confirm('Really remove this rule?')"
 msgstr ""
 
-#: ../templates/classic/config.html:33
-#: ../templates/classic/config.html:58
-#: ../templates/classic/config.html:72
-#: ../templates/classic/config.html:99
 #: ../templates/classic/macros/rules.html:65
 #: ../templates/classic/macros/rules.html:89
 #: ../templates/classic/macros/rules.html:106
 #: ../templates/classic/macros/rules.html:132
 #: ../templates/classic/macros/rules.html:579
 #: ../templates/classic/macros/rules.html:661
+#: ../templates/classic/config.html:33
+#: ../templates/classic/config.html:58
+#: ../templates/classic/config.html:72
+#: ../templates/classic/config.html:99
 msgid "see footnote 1"
 msgstr ""
 
+#: ../templates/classic/macros/rules.html:294
 #: ../templates/classic/config.html:142
 #: ../templates/classic/config.html:170
-#: ../templates/classic/macros/rules.html:294
 msgid "see footnote 2"
 msgstr ""
 
