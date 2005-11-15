@@ -189,3 +189,18 @@ update-blacklists:
 reindent:
 	$(PYTHON) config/reindent.py -r -v wc
 
+.PHONY: debug
+debug:
+	@for f in `find wc -name \*.py  | grep -v "tests/"`; do \
+	    echo $$f; \
+	    sed -i "s/assert not wc\.log\.debug/wc.log.debug/" $$f; \
+	done
+
+
+.PHONY: ndebug
+ndebug:
+	@for f in `find wc -name \*.py  | grep -v "tests/"`; do \
+	    echo $$f; \
+	    sed -i 's/wc\.log\.debug/assert not wc.log.debug/' $$f; \
+	done
+
