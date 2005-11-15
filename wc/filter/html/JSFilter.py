@@ -291,7 +291,13 @@ class JSFilter (wc.js.JSListener.JSListener):
             # sanitize script src url
             url = _replace_ws(u'', url)
             url = wc.HtmlParser.resolve_html_entities(url)
-            if js_ok and url:
+            # some urls are relative, need to make absolut
+            if self.base_url:
+                url = urlparse.urljoin(self.base_url, url)
+            else:
+                url = urlparse.urljoin(self.url, url)
+            # XXX TODO: support https background downloads
+            if js_ok and url and not url.startswith("https"):
                 self.jsScriptSrc(url, js_lang)
                 return
         self.htmlparser.tagbuf.append([starttype, tag, attrs])
@@ -311,18 +317,13 @@ class JSFilter (wc.js.JSListener.JSListener):
 
     def jsScriptSrc (self, url, language):
         """
-        Start a background download for <script src=""> tags
+        Start a background download for <script src=""> tags.
         After that, self.js_client points to the proxy client object.
         """
         wc.log.debug(wc.LOG_JS, "%s jsScriptSrc %r", self, url)
         assert self.htmlparser.state[0] == 'parse', \
                "non-parse state %s" % self.htmlparser.state
         ver = wc.js.get_js_ver(language)
-        # some urls are relative, need to make absolut
-        if self.base_url:
-            url = urlparse.urljoin(self.base_url, url)
-        else:
-            url = urlparse.urljoin(self.url, url)
         if not wc.url.is_safe_js_url(url):
             wc.log.warn(wc.LOG_JS,
                         "invalid script src url %r at %s (base %r)",
