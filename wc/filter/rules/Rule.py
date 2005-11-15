@@ -32,7 +32,7 @@ def compileRegex (obj, attr, fullmatch=False, flags=0):
         val = getattr(obj, attr)
         if val:
             if fullmatch:
-                val = "^%s$" % val
+                val = "^(%s)$" % val
             setattr(obj, attr+"_ro", re.compile(val, flags))
 
 
