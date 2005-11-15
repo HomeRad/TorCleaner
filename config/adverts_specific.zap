@@ -288,8 +288,8 @@
 
 <htmlrewrite sid="wc.49"
  tag="script">
-  <title lang="de">Google pageads 2</title>
-  <attr name="src">\.googlesyndication\.</attr>
+  <title lang="de">Google annoyances</title>
+  <attr name="src">\.google(syndication|-analytics)\.</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.50"
