@@ -197,12 +197,16 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                 if rule.matches_starttag():
                     item = rule.filter_tag(tag, attrs, starttype)
                     filtered = True
+                elif not rule.enclosed:
+                    # If no enclosed string has to be matched, this rule
+                    # is a sure hit. Therefore set the filtered flag.
+                    filtered = True
                 if rule.matches_endtag():
                     wc.log.debug(wc.LOG_HTML, "%s put rule %r on buffer",
                                  self, rule.titles['en'])
                     rulelist.append(rule)
                 if item[0] == starttype and item[1] == tag:
-                    # If tag type and name did not change, more than one
+                    # If both tag type and name did not change, more than one
                     # rule has a chance to replace data.
                     foo, tag, attrs = item
                     continue
@@ -210,7 +214,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                     # If tag type or name changed, it's over.
                     break
         if rulelist:
-            # remember buffer position for end tag matching
+            # Remember buffer position for end tag matching.
             pos = len(self.htmlparser.tagbuf)
             self.rulestack.append((pos, rulelist))
             self.stackcount.append([tag, 1])
