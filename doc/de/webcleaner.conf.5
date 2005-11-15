@@ -8,103 +8,103 @@ webcleaner.conf \- Konfigurationsdatei für WebCleaner
 Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokument 
 Definition der Datei \fBwebcleaner.dtd\fP folgt.
 .SH EINSTELLUNGEN
-.TP
+.TP 
 \fBversion\fP
 Die Version des Konfigurationsformats.
-.TP
+.TP 
 \fBport\fP
 Die Portnummer unter der der WebCleaner Proxy läuft.
-.TP
+.TP 
 \fBsslport\fP
 Die Portnummer für den WebCleaner SSL Server.
-.TP
+.TP 
 \fBsslgateway\fP
 Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer einen SSL 
 Server starten, um HTTPS Daten weiterzuleiten und zu filtern.
-.TP
+.TP 
 \fBadminuser\fP
 Der Benutzername für die Proxy Konfigurationsoberfläche.
-.TP
+.TP 
 \fBadminpass\fP
 Der base64\-kodierte Passwort für die Proxy Konfigurationsoberfläche.
-.TP
+.TP 
 \fBproxyuser\fP
 Der Benutzername für Proxy Authentifizierung.
-.TP
+.TP 
 \fBproxypass\fP
 Das base64\-kodierte Passwort für Proxy Authentifizierung.
-.TP
+.TP 
 \fBparentproxy\fP
 Der Rechnername des übergeordneten HTTP Proxy. Lassen Sie den Rechnernamen 
 leer, um keinen übergeordneten Proxy zu benutzen.
-.TP
+.TP 
 \fBparentproxyport\fP
 Die Portnummer des übergeordneten Proxy.
-.TP
+.TP 
 \fBparentproxyuser\fP
 Der Benutzername zur Authentifizierung des übergeordneten Proxy.
-.TP
+.TP 
 \fBparentproxypass\fP
 Das base64\-kodierte Passwort zur Authentifizierung des übergeordneten 
 Proxy.
-.TP
+.TP 
 \fBtimeout\fP
 Zeitüberschreitungslimit für Verbindungen in Sekunden.
-.TP
+.TP 
 \fBgui\_theme\fP
 Themenauswahl für die Weboberfläche.
-.TP
+.TP 
 \fBnofilterhosts\fP
 Komma separierte Liste von Rechnernamen für die Filtern deaktiviert ist.
-.TP
+.TP 
 \fBallowedhosts\fP
 Komma separierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen.
-.TP
+.TP 
 \fBauth_ntlm\fP
 Falls auf Eins gesetzt, wird mit NTLM Algorithmus authentifiziert.
-.TP
+.TP 
 \fBtry_google\fP
 Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung eine 
 Seite mit Verweisen zum Google Cache der angeforderten Seiten dargestellt.
 .SH FILTER
-.TP
+.TP 
 \fBBlocker\fP
 Blockiert bestimmte URLs. Dies ersetzt Werbebilder und \-frames.
-.TP
+.TP 
 \fBCompress\fP
 Komprimiert Dokumente mit guter Kompressionsrate (HTML, WAV, ...).
-.TP
+.TP 
 \fBBinaryCharFilter\fP
 Ersetzt einige Binärzeichen (besonders die illegalen Microsoft 
 Anführungszeichen).
-.TP
+.TP 
 \fBGifImage\fP
 Deanimiert GIF Bilder und entfernt GIF Kommentare.
-.TP
+.TP 
 \fBHeader\fP
 Ersetzen, modifizieren und hinzufügen von beliebigen HTTP Kopfdaten.
-.TP
+.TP 
 \fBImageReducer\fP
 Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.Nützlich für 
 Benutzer mit sehr niedriger Bandbreite.
-.TP
+.TP 
 \fBImageSize\fP
 Filtere Bilder nach Größe.
-.TP
+.TP 
 \fBMimeRecognizer\fP
 Erkenne und korrigiere fehlende oder falsche Angaben im Content\-Type 
 Kopfdatum.
-.TP
+.TP 
 \fBPicsHeader\fP
 Ein PICS Filter.
-.TP
+.TP 
 \fBReplacer\fP
 Ersetzt Daten im Textdateien (HTML, reiner Text, ...).
-.TP
+.TP 
 \fBRewriter\fP
 Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filtert die 
 meiste Werbung heraus.
-.TP
+.TP 
 \fBVirusFilter\fP
 Aktiviert den Clamav Virusfilter (falls Clamav installiert ist).
 .SH BEISPIEL
