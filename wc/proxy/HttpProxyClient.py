@@ -53,7 +53,7 @@ class HttpProxyClient (object):
         if not self.document:
             self.document = '/'
         self.connected = True
-        self.addr = ('localhost', 80)
+        self.addr = ('#wc_proxy_client#', 80)
         self.localhost = localhost
         self.isredirect = False
         self.headers = wc.http.header.WcMessage()
