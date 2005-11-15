@@ -191,6 +191,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             ro = self.attrs_ro.get(attr)
             if ro and not ro.search(val):
                 return False
+        # Check if every attribute matched.
         for attr in self.attrs.keys():
             if attr not in occurred:
                 return False
