@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-15 16:30+0100\n"
+"POT-Creation-Date: 2005-11-15 23:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,12 +146,12 @@ msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr ""
 
-#: ../wc/filter/html/JSFilter.py:359
+#: ../wc/filter/html/JSFilter.py:361
 #, python-format
 msgid "error fetching script from %r"
 msgstr ""
 
-#: ../wc/filter/html/JSFilter.py:362
+#: ../wc/filter/html/JSFilter.py:364
 #, python-format
 msgid "fetched script from %r"
 msgstr ""

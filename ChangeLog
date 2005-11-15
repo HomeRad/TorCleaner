@@ -55,6 +55,24 @@
     Type: feature
     Changed: wc/http/__init__.py, wc/http/tests/test_parsing.py
 
+  * Fixed the google search page.
+    Type: bugfix
+    Changed: templates/classic/google.html
+
+  * Fix syntax of regular expressions that have to match the whole string.
+    Type: bugfix
+    Changed: wc/filter/rules/Rule.py
+
+  * Added more filter rules so that all advertising that match to <a href>
+    also match to <script src> and <iframe src>.
+    Type: feature
+    Changed: config/adverts.zap
+
+  * Better detection of the case when a filter rule definitely matches.
+    Saves unnecessary script background downloads.
+    Type: feature
+    Changed: wc/filter/html/HtmlFilter.py
+
 2.33 "The Stunt Man" (released 12.10.2005)
 
   * Added enable class attr to filters, allowing them to be disabled

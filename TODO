@@ -1,17 +1,16 @@
 TODO
 
-- <a href> advert rules should be duplicated with
-  <iframe src> and <script src>
-
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 
-- https URLs have a lot of these:
-  WARNING wc.proxy <HttpServer:client   localhost:8443/ client> flush without status
+- Add more HTTP RFC2616 unit tests.
 
-- more HTTP RFC2616 unit tests
+- Add support for https JS urls background download.
 
-- if an unknown port is forbidden (403 status), add an explaining message
+- Reevaluate calling wc.url.is_safe_js_url(). Is this really better
+  for security?
+
+- If an unknown port is forbidden (403 status), add an explaining message.
 
 - HTML parser should recognize a missing ending quote of attribute values.
   Right now the parser parses all subsequent stuff as TEXT.
@@ -46,10 +45,6 @@ TODO
     if (ifr->ifr_addr.sa_family != AF_INET)
         continue;
 
-- invalid js url:
-http://www.burstnet.com/cgi-bin/ads/ad8328a.cgi/v=2.0S/sz=468x60A|728x90A/65740/RETURN-CODE/JS/
-http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
-
 - squid uses an external auth configuration, we could use that too
 
 - JavaScript evaluation stops on errors. This is bad since some errors
@@ -57,11 +52,11 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
   A workaround would be to generate JS objects that have _all_
   properties by overloading the property getter.
 
-- ssl certificate verification
+- SSL certificate verification.
 
-- memory leaks while operating the proxy
+- Memory is not freed while operating the proxy.
 
-- allow filtering/blocking by MIME type
+- Allow filtering/blocking by MIME type.
 
 - bfilter has Flash parse and generation library, I want that too .)
 
@@ -80,8 +75,6 @@ http://adstome.com/phpads/adjs.php?n=864959011&what=zone:5&exclude=,
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
   Big problem: how do we decide when to send out IPv6 DNS queries?
-
-- use IPpy.py
 
 - Streaming clamav scanning, try to detect virii immediately
   Note: clamav does _not_ support streaming, so this is currently not
