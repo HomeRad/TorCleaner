@@ -12,6 +12,7 @@
   <description lang="de">Entferne alle mit &lt;object&gt; eingebundenen Inhalte.</description>
   <description lang="en">Kill &lt;object&gt; things.</description>
   <matchurl>www\.heise\.de</matchurl>
+  <matchurl>\.imdb\.com</matchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.287"
