@@ -29,7 +29,6 @@ def _main (fname):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        fname = sys.argv[1]
+        _main(sys.argv[1])
     else:
-        fname = "filter.prof"
-    _main(fname)
+        _main("filter.prof")

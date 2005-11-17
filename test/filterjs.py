@@ -28,7 +28,6 @@ import wc
 import wc.js
 import wc.js.jslib
 import wc.js.JSListener
-import wc.filter.rules.RewriteRule
 
 
 class JSFilter (wc.js.JSListener.JSListener):
@@ -43,15 +42,15 @@ class JSFilter (wc.js.JSListener.JSListener):
     def _str__ (self):
         return self.__class__.__name__
 
-    def jsProcessData (self, data):
+    def js_process_data (self, data):
         """produced by document.write() JavaScript"""
         print "jsProcessData", repr(data)
 
-    def jsProcessPopup (self):
+    def js_process_popup (self):
         """process javascript popup"""
         print "jsProcessPopup"
 
-    def jsProcessError (self, msg):
+    def js_process_error (self, msg):
         """process javascript syntax error"""
         print "jsProcessError", msg
 
@@ -65,7 +64,7 @@ def _main ():
         sys.exit(1)
     confdir = sys.argv[1]
     fname = sys.argv[2]
-    if fname=="-":
+    if fname == "-":
         f = sys.stdin
     else:
         f = file(fname)

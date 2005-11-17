@@ -38,7 +38,7 @@ def _main ():
     else:
         f = file(fname)
     try:
-       data = f.read()
+        data = f.read()
     finally:
         f.close()
     logfile = os.path.join(confdir, "logging.conf")
