@@ -186,7 +186,7 @@
   <description lang="en">The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()</description>
   <nomatchurl>msdn\.microsoft\.com</nomatchurl>
   <nomatchurl>www\.mvhs\.de</nomatchurl>
-  <nomatchurl>suprnova\.org</nomatchurl>
+  <nomatchurl>map\.search\.ch</nomatchurl>
   <nomatchurl>www\.litek(-gmbh)?\.de</nomatchurl>
 </javascript>
 
