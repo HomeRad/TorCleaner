@@ -19,26 +19,31 @@
 JavaScript engine listener.
 """
 
+import wc.decorators
+
 
 class JSListener (object):
     """
     Define handler functions for javascript events.
     """
 
+    @wc.decorators.notimplemented
     def js_process_data (self, data):
         """
         Handler for document.write content.
         """
-        raise NotImplementedError, "abstract method js_process_data"
+        pass
 
+    @wc.decorators.notimplemented
     def js_process_popup (self):
         """
         Handler for popup windows.
         """
-        raise NotImplementedError, "abstract method js_process_popup"
+        pass
 
+    @wc.decorators.notimplemented
     def js_process_error (self, msg):
         """
         Handler for syntax errors.
         """
-        raise NotImplementedError, "abstract method js_process_error"
+        pass
