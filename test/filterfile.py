@@ -38,7 +38,7 @@ extensions = {
 
 def get_content_type (filename, fp):
     default_type = "text/html"
-    root, extension = os.path.splitext(filename)
+    extension = os.path.splitext(filename)[1]
     if extension in extensions:
         # found a known extension
         return extensions[extension]
@@ -95,29 +95,29 @@ def _filter (f, attrs):
     filtered = ""
     data = f.read(2048)
     while data:
-        print >>sys.stderr, "Test: data", len(data)
+        print >> sys.stderr, "Test: data", len(data)
         try:
             filtered += wc.filter.applyfilter(
                        wc.filter.STAGE_RESPONSE_MODIFY, data, 'filter', attrs)
         except wc.filter.FilterException, msg:
-            print >>sys.stderr, "Test: exception:", msg
+            print >> sys.stderr, "Test: exception:", msg
             pass
         data = f.read(2048)
-    print >>sys.stderr, "Test: finishing"
+    print >> sys.stderr, "Test: finishing"
     i = 1
     while True:
-        print >>sys.stderr, "Test: finish", i
+        print >> sys.stderr, "Test: finish", i
         try:
             filtered += wc.filter.applyfilter(
                          wc.filter.STAGE_RESPONSE_MODIFY, "", 'finish', attrs)
             break
         except wc.filter.FilterException, msg:
-            print >>sys.stderr, "Test: finish: exception:", msg
+            print >> sys.stderr, "Test: finish: exception:", msg
             wc.proxy.proxy_poll(timeout=max(0, wc.proxy.run_timers()))
         i += 1
-        if i==200:
+        if i == 200:
             # background downloading if javascript is too slow
-            print >>sys.stderr, "Test: oooooops"
+            print >> sys.stderr, "Test: oooooops"
             break
     print filtered,
 
