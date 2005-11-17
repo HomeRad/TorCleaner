@@ -37,7 +37,7 @@ def request1 (url, port):
     h.putrequest("GET", url, skip_host=0)
     h.endheaders()
     req = h.getresponse()
-    if req.status==302:
+    if req.status == 302:
         url = req.msg.get('Location')
         print "redirected to", url
         request1(url, port)
@@ -59,7 +59,7 @@ def proxyrequest1 (url, port):
     h.putheader("Host", host)
     h.endheaders()
     req = h.getresponse()
-    if req.status==302:
+    if req.status == 302:
         url = req.msg.get('Location')
         print "redirected to", url
         proxyrequest1(url, port)
@@ -211,5 +211,5 @@ def _main ():
     #proxyrequest4(sys.argv[1], port)
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _main()

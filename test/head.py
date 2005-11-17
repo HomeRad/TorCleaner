@@ -42,5 +42,5 @@ def _main ():
     print req.msg
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _main()

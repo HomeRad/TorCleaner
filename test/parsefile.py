@@ -45,6 +45,6 @@ def _main (args):
         data = f.read(size)
     p.flush()
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import sys
     _main(sys.argv[1:])

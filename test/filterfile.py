@@ -122,5 +122,5 @@ def _filter (f, attrs):
     print filtered,
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _main()

@@ -54,5 +54,5 @@ def _main ():
     assert data.startswith(buf.getvalue())
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _main()

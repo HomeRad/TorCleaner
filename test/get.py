@@ -44,5 +44,5 @@ def _main ():
     print req.read()
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _main()

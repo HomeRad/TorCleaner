@@ -26,7 +26,7 @@ def _main (fname):
     stats.sort_stats('time', 'calls')
     stats.print_stats(25)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
         fname = sys.argv[1]

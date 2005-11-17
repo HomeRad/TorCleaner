@@ -43,5 +43,5 @@ def _main ():
     print applyfilter(FILTER_REQUEST, data, 'finish', attrs)
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _main()

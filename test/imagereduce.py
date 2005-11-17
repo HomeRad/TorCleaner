@@ -55,5 +55,5 @@ def _main ():
     print filtered,
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     _main()
