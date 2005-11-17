@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-15 23:25+0100\n"
+"POT-Creation-Date: 2005-11-17 10:20+0100\n"
 "PO-Revision-Date: 2005-11-15 17:55+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -820,7 +820,7 @@ msgid "Add, modify and delete HTTP headers of request and response."
 msgstr ""
 "Hinzufügen, Ändern und Löschen von HTTP Headern bei Anfrage und Antwort."
 
-#: ../templates/classic/macros/rules.html:668
+#: ../templates/classic/macros/rules.html:670
 msgid "Add/replace attribute"
 msgstr "Attribut hinzufügen/ersetzen"
 
@@ -963,13 +963,13 @@ msgstr "Gilt für alle Seiten die mit dieser URL beginnen?"
 #: ../templates/classic/macros/rules.html:491
 #: ../templates/classic/macros/rules.html:557
 #: ../templates/classic/macros/rules.html:594
-#: ../templates/classic/macros/rules.html:697
-#: ../templates/classic/macros/rules.html:747
+#: ../templates/classic/macros/rules.html:701
+#: ../templates/classic/macros/rules.html:751
 #: ../templates/classic/rating.html:69 ../templates/classic/config.html:465
 msgid "Apply"
 msgstr "Übernehmen"
 
-#: ../templates/classic/macros/rules.html:622
+#: ../templates/classic/macros/rules.html:624
 msgid "Attributes"
 msgstr "Attribute"
 
@@ -1761,8 +1761,8 @@ msgstr "Regel nach unten schieben"
 msgid "Move rule up"
 msgstr "Regel nach oben schieben"
 
-#: ../templates/classic/macros/rules.html:628
-#: ../templates/classic/macros/rules.html:653
+#: ../templates/classic/macros/rules.html:630
+#: ../templates/classic/macros/rules.html:655
 #: ../templates/classic/help.html:94 ../templates/classic/help.html:181
 #: ../templates/classic/config.html:309
 msgid "Name"
@@ -2057,7 +2057,7 @@ msgstr "Regel löschen"
 msgid "Remove selected"
 msgstr "Lösche Auswahl"
 
-#: ../templates/classic/macros/rules.html:648
+#: ../templates/classic/macros/rules.html:650
 msgid "Remove selected attributes"
 msgstr "Lösche ausgewählte Attribute"
 
@@ -2086,7 +2086,7 @@ msgstr "Ersetze Bilder mit bestimmter Breite und Höhe."
 msgid "Replace images with small, low-quality JPEGs."
 msgstr "Ersetze Bilder durch kleine JPEGs niedriger Qualität."
 
-#: ../templates/classic/macros/rules.html:679
+#: ../templates/classic/macros/rules.html:683
 msgid "Replace part"
 msgstr "Ersetzter Teil"
 
@@ -2102,12 +2102,12 @@ msgstr "Ersetze reguläre Ausdrücke in HTML oder Java-Script Seiten."
 msgid "Replace regular expressions in data streams."
 msgstr "Ersetze reguläre Ausdrücke in Daten."
 
-#: ../templates/classic/macros/rules.html:726
+#: ../templates/classic/macros/rules.html:730
 msgid "Replace type"
 msgstr "Ersatztyp"
 
-#: ../templates/classic/macros/rules.html:691
-#: ../templates/classic/macros/rules.html:740
+#: ../templates/classic/macros/rules.html:695
+#: ../templates/classic/macros/rules.html:744
 msgid "Replace value"
 msgstr "Zu ersetzender Text"
 
@@ -2533,8 +2533,8 @@ msgstr "Benutzername zur Authentifizierung des übergeordneten Proxy"
 msgid "Username used for proxy authentication"
 msgstr "Benutzername zur Proxy Authentifizierung"
 
-#: ../templates/classic/macros/rules.html:629
-#: ../templates/classic/macros/rules.html:661
+#: ../templates/classic/macros/rules.html:631
+#: ../templates/classic/macros/rules.html:663
 msgid "Value"
 msgstr "Wert"
 
@@ -2561,7 +2561,7 @@ msgstr ""
 "Information dem Autor von ${appname} an die Adresse\n"
 "${email} geschickt:"
 
-#: ../templates/classic/macros/rules.html:719
+#: ../templates/classic/macros/rules.html:723
 msgid "XML Selector"
 msgstr "XML Selektor"
 
@@ -2734,7 +2734,9 @@ msgstr "return window.confirm('Diese Regel wirklich löschen?')"
 #: ../templates/classic/macros/rules.html:106
 #: ../templates/classic/macros/rules.html:132
 #: ../templates/classic/macros/rules.html:579
-#: ../templates/classic/macros/rules.html:661
+#: ../templates/classic/macros/rules.html:616
+#: ../templates/classic/macros/rules.html:663
+#: ../templates/classic/macros/rules.html:675
 #: ../templates/classic/config.html:33 ../templates/classic/config.html:58
 #: ../templates/classic/config.html:72 ../templates/classic/config.html:99
 msgid "see footnote 1"

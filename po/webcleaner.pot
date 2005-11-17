@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-15 23:25+0100\n"
+"POT-Creation-Date: 2005-11-17 23:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -710,7 +710,7 @@ msgstr ""
 msgid "Add, modify and delete HTTP headers of request and response."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:668
+#: ../templates/classic/macros/rules.html:670
 msgid "Add/replace attribute"
 msgstr ""
 
@@ -816,14 +816,14 @@ msgstr ""
 #: ../templates/classic/macros/rules.html:491
 #: ../templates/classic/macros/rules.html:557
 #: ../templates/classic/macros/rules.html:594
-#: ../templates/classic/macros/rules.html:697
-#: ../templates/classic/macros/rules.html:747
+#: ../templates/classic/macros/rules.html:701
+#: ../templates/classic/macros/rules.html:751
 #: ../templates/classic/rating.html:69
 #: ../templates/classic/config.html:465
 msgid "Apply"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:622
+#: ../templates/classic/macros/rules.html:624
 msgid "Attributes"
 msgstr ""
 
@@ -1528,8 +1528,8 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:628
-#: ../templates/classic/macros/rules.html:653
+#: ../templates/classic/macros/rules.html:630
+#: ../templates/classic/macros/rules.html:655
 #: ../templates/classic/help.html:94
 #: ../templates/classic/help.html:181
 #: ../templates/classic/config.html:309
@@ -1794,7 +1794,7 @@ msgstr ""
 msgid "Remove selected"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:648
+#: ../templates/classic/macros/rules.html:650
 msgid "Remove selected attributes"
 msgstr ""
 
@@ -1818,7 +1818,7 @@ msgstr ""
 msgid "Replace images with small, low-quality JPEGs."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:679
+#: ../templates/classic/macros/rules.html:683
 msgid "Replace part"
 msgstr ""
 
@@ -1834,12 +1834,12 @@ msgstr ""
 msgid "Replace regular expressions in data streams."
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:726
+#: ../templates/classic/macros/rules.html:730
 msgid "Replace type"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:691
-#: ../templates/classic/macros/rules.html:740
+#: ../templates/classic/macros/rules.html:695
+#: ../templates/classic/macros/rules.html:744
 msgid "Replace value"
 msgstr ""
 
@@ -2161,8 +2161,8 @@ msgstr ""
 msgid "Username used for proxy authentication"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:629
-#: ../templates/classic/macros/rules.html:661
+#: ../templates/classic/macros/rules.html:631
+#: ../templates/classic/macros/rules.html:663
 msgid "Value"
 msgstr ""
 
@@ -2182,7 +2182,7 @@ msgstr ""
 msgid "When you klick on the send button below, the following information will be mailed to the author of ${appname} at ${email}:"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:719
+#: ../templates/classic/macros/rules.html:723
 msgid "XML Selector"
 msgstr ""
 
@@ -2328,7 +2328,9 @@ msgstr ""
 #: ../templates/classic/macros/rules.html:106
 #: ../templates/classic/macros/rules.html:132
 #: ../templates/classic/macros/rules.html:579
-#: ../templates/classic/macros/rules.html:661
+#: ../templates/classic/macros/rules.html:616
+#: ../templates/classic/macros/rules.html:663
+#: ../templates/classic/macros/rules.html:675
 #: ../templates/classic/config.html:33
 #: ../templates/classic/config.html:58
 #: ../templates/classic/config.html:72
