@@ -28,15 +28,13 @@ PYLINTIGNORE = wc/win32start.py
 PYLINTFILES = $(filter-out $(PYLINTIGNORE),$(PYFILES))
 PYFLAKES:=pyflakes
 # test files
-# XXX todo
-TESTFILES :=
+TESTFILES := test/*.py
 # "runit" service directory
 SERVICEDIR := /etc/webcleaner/service
 # run unittests on check
 TESTS = test/test.sh
 # Debian settings
 DEB_GPG_KEY:=2DE589F5
-#DEB_GPG_KEY:=32EC6F3E
 
 MANIFEST: MANIFEST.in setup.py
 	rm -f share
@@ -94,6 +92,16 @@ distclean-local:
 	rm -f webcleaner-$(VERSION).tar.gz
 	rm -f webcleaner-$(VERSION).tar.gz.asc
 	rm -f MANIFEST _*_configdata.*
+
+# add upstream release tag
+.PHONY: tag_upstream
+tag_upstream:
+	cvs tag upstream_version_$(subst .,_,$(VERSION))
+
+# add debian release tag
+.PHONY: tag_debian
+tag_debian:
+	cvs tag debian_version_$(subst .,_,$(shell dpkg-parsechangelog | grep -e "^Version:" | cut -f2 -d" "))
 
 # ready for upload, signed with my GPG key
 .PHONY: deb_signed
