@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2005-11-15 18:02+0100\n"
+"POT-Creation-Date: 2005-11-19  1:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,8 +104,19 @@ msgid "AUTHOR"
 msgstr ""
 
 # type: Plain text
-#: en/webcleaner-certificates.1:22 en/webcleaner.1:34 en/webcleaner.conf.5:124
+#: en/webcleaner-certificates.1:23 en/webcleaner.1:35 en/webcleaner.conf.5:125
 msgid "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
+msgstr ""
+
+# type: SH
+#: en/webcleaner-certificates.1:23 en/webcleaner.1:35 en/webcleaner.conf.5:125
+#, no-wrap
+msgid "COPYRIGHT"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:24 en/webcleaner.1:36 en/webcleaner.conf.5:126
+msgid "Copyright \\(co 2000-2005 Bastian Kleineidam"
 msgstr ""
 
 # type: TH
