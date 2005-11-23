@@ -175,6 +175,15 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
             self.base_url = wc.url.url_norm(self.base_url)[0]
             wc.log.debug(wc.LOG_HTML, "%s using base url %r",
                          self, self.base_url)
+        elif tag == "img" and \
+             attrs.has_key("alt") and not attrs.has_key("title"):
+            # Mozilla only displays title as tooltip.
+            title = attrs.get_true('alt', "")
+            # Get rid of the split() when bug #67127 is fixed:
+            # https://bugzilla.mozilla.org/show_bug.cgi?id=67127
+            if '\n' in title:
+                title = title.split('\n')[0].strip()
+            attrs['title'] = title
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply
