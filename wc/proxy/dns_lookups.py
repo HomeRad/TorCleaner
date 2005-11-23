@@ -399,8 +399,9 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         super(DnsLookupConnection, self).__init__()
         try:
             self.establish_connection()
-        except socket.error, e:
+        except socket.error:
             # We couldn't even connect .. bah!
+            e = sys.exc_info()[1]
             wc.log.debug(wc.LOG_DNS, "%s connect error %s", self, str(e))
             callback(hostname,
                      DnsResponse('error', 'could not connect to DNS server'))
@@ -439,7 +440,16 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
     def handle_connect (self):
         if self.tcp:
             dns_accepts_tcp[self.nameserver] = True
-        self.send_dns_request()
+        try:
+            self.send_dns_request()
+        except wc.dns.exception.DNSException:
+            if self.callback:
+                e = sys.exc_info()[1]
+                wc.log.debug(wc.LOG_DNS, "%s DNS error %s", self, str(e))
+                self.callback(self.hostname,
+                              DnsResponse('error', 'DNS error %s' % str(e)))
+                self.callback = None
+                self.close()
 
     def handle_connect_timeout (self):
         # We're trying to perform a TCP connect
