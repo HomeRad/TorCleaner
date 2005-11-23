@@ -1,3 +1,14 @@
+2.35 "" (released xx.xx.xxxx)
+
+  * A missing alt attribute of an <img> tag is copied from the title
+    attribute. This enables Mozilla tooltips.
+    Type: feature
+    Changed: wc/filter/html/HtmlFilter.py
+
+  * Catch DNS syntax errors when issueing DNS requests.
+    Type: bugfix
+    Changed: wc/proxy/dns_lookups.py
+
 2.34 "The Exorcism of Emily Rose" (released 17.11.2005)
 
   * Document the Antivirus rule type.
