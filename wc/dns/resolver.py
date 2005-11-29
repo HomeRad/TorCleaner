@@ -738,5 +738,5 @@ def zone_for_name(name, rdclass=wc.dns.rdataclass.IN,
         except (wc.dns.resolver.NXDOMAIN, wc.dns.resolver.NoAnswer):
             try:
                 name = name.parent()
-            except NoParent:
-                raise NoRootSoa
+            except wc.dns.name.NoParent:
+                raise NoRootSOA
