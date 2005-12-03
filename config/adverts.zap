@@ -212,6 +212,7 @@
   <title lang="en">Remove &lt;ilayer&gt; tag</title>
   <description lang="de">Viele Werbungen sind in &lt;ilayer&gt;.</description>
   <description lang="en">Lots of ads come nowadays in ilayer tags.</description>
+  <matchurl>dummy\.com</matchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.357"
@@ -220,7 +221,7 @@
   <title lang="en">Remove &lt;layer&gt; tag</title>
   <description lang="de">Layers enthalten meist Werbung.</description>
   <description lang="en">Don't know some example sites, but I don't want layers.</description>
-  <nomatchurl>imdb\.com</nomatchurl>
+  <matchurl>dummy\.com</matchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.358"
