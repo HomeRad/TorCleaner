@@ -7,7 +7,7 @@ WebCleaner - a filtering HTTP proxy
 ===================================
 
 The latest version of this document is available at
-http://webcleaner.sf.net/.
+http://webcleaner.sourceforge.net/.
 
 Features
 ========
