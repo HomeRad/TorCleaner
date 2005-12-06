@@ -427,15 +427,15 @@ MarkSharpObjects(JSContext *cx, JSObject *obj, JSIdArray **idap)
             return NULL;
         }
 
-        /* 
+        /*
          * Increment map->depth to protect js_EnterSharpObject from reentering
          * itself badly.  Without this fix, if we reenter the basis case where
          * map->depth == 0, when unwinding the inner call we will destroy the
          * newly-created hash table and crash.
          */
-	++map->depth;
+        ++map->depth;
         ida = JS_Enumerate(cx, obj);
-	--map->depth;
+        --map->depth;
         if (!ida)
             return NULL;
 
@@ -3017,8 +3017,25 @@ js_SetProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
         if ((attrs & JSPROP_READONLY) ||
             (SCOPE_IS_SEALED(scope) && pobj == obj)) {
             JS_UNLOCK_SCOPE(cx, scope);
-            if ((attrs & JSPROP_READONLY) && JS_VERSION_IS_ECMA(cx))
-                return JS_TRUE;
+
+            /*
+             * Here, we'll either return true or goto read_only_error, which
+             * reports a strict warning or throws an error.  So we redefine
+             * the |flags| local variable to be JSREPORT_* flags to pass to
+             * JS_ReportErrorFlagsAndNumberUC at label read_only_error.  We
+             * must likewise re-task flags further below for the other 'goto
+             * read_only_error;' case.
+             */
+            flags = JSREPORT_ERROR;
+            if ((attrs & JSPROP_READONLY) && JS_VERSION_IS_ECMA(cx)) {
+                if (!JS_HAS_STRICT_OPTION(cx)) {
+                    /* Just return true per ECMA if not in strict mode. */
+                    return JS_TRUE;
+                }
+
+                /* Strict mode: report a read-only strict warning. */
+                flags = JSREPORT_STRICT | JSREPORT_WARNING;
+            }
             goto read_only_error;
         }
 
@@ -3065,8 +3082,10 @@ js_SetProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
     }
 
     if (!sprop) {
-        if (SCOPE_IS_SEALED(OBJ_SCOPE(obj)) && OBJ_SCOPE(obj)->object == obj)
+        if (SCOPE_IS_SEALED(OBJ_SCOPE(obj)) && OBJ_SCOPE(obj)->object == obj) {
+            flags = JSREPORT_ERROR;
             goto read_only_error;
+        }
 
         /* Find or make a property descriptor with the right heritage. */
         JS_LOCK_OBJ(cx, obj);
@@ -3140,12 +3159,11 @@ js_SetProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
                                                JSDVG_IGNORE_STACK,
                                                ID_TO_VALUE(id),
                                                NULL);
-    if (str) {
-        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
-                             JSMSG_READ_ONLY,
-                             JS_GetStringBytes(str));
-    }
-    return JS_FALSE;
+    if (!str)
+        return JS_FALSE;
+    return JS_ReportErrorFlagsAndNumberUC(cx, flags, js_GetErrorMessage,
+                                          NULL, JSMSG_READ_ONLY,
+                                          JS_GetStringChars(str));
   }
 }
 
