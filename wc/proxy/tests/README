@@ -1,0 +1,46 @@
+Specification for proxy tests
+=============================
+
+All test cases are simple Python unit tests as defined by the Python unit
+testing framework. All tests are run by a test runner script.
+
+The basic HTTP connectivity test case should be the first test case that
+is run. The reason for this is that a failure of this test case usually
+means that the proxy to test is not running and subsequently all other
+test cases will fail as well.
+
+There exists a ProxyTest class that provides basic test helper methods to
+start HTTP client and server, send HTTP requests and responses, and to
+compare test results with a defined expected result set.
+
+A proxy test usually involves the following steps:
+
+1) Start a HTTP client
+2) Start a HTTP server
+3) HTTP client writes one request constructed from the HTTP test data
+4) HTTP server reads the request
+5) HTTP server sends back one response
+6) HTTP client reads the response and converts it to a test result
+7) The test result is compared with the expected result.
+
+HTTP test data consists of the following parts:
+
+- HTTP request method
+- requested resource in form of a URI
+- HTTP version
+- A list of HTTP headers as key/value pairs
+- (optional) data for the content body
+
+Note that the constructed HTTP request is not necessarily well formed.
+This is used to test protocol anomalies.
+
+A test result consists of the following parts:
+
+- The complete received data string
+- If the received data is a valid HTTP response:
+  - HTTP version
+  - HTTP status code
+  - HTTP status message
+  - a list of HTTP headers as key/value pairs
+  - (optional) data for the content body
+
