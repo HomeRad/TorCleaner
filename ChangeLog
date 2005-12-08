@@ -9,6 +9,10 @@
     Type: bugfix
     Changed: wc/proxy/dns_lookups.py
 
+  * Blacklist <layer> and <ilayer> instead of whitelist.
+    Type: feature
+    Changed: config/adverts.zap
+
 2.34 "The Exorcism of Emily Rose" (released 17.11.2005)
 
   * Document the Antivirus rule type.
