@@ -1,7 +1,8 @@
-2.35 "" (released xx.xx.xxxx)
+2.35 "Lord of War" (released 18.12.2005)
 
-  * A missing alt attribute of an <img> tag is copied from the title
-    attribute. This enables Mozilla tooltips.
+  * A missing alt="" attribute of an <img> tag is copied from the
+    title="" attribute (if it's there). This enables Mozilla tooltips,
+    since Mozilla only displays the alt="" content as image tooltip.
     Type: feature
     Changed: wc/filter/html/HtmlFilter.py
 
@@ -16,6 +17,14 @@
   * Improved JavaScript escaping of embedded "</script>".
     Type: feature
     Changed: wc/js/__init__.py
+
+  * Improved HTML charset detection.
+    Type: feature
+    Changed: wc/HtmlParser/__init__.py
+
+  * Several performance improvements for HTML filtering.
+    Type: feature
+    Changed: wc/filter/*.py
 
 2.34 "The Exorcism of Emily Rose" (released 17.11.2005)
 
