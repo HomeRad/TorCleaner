@@ -146,10 +146,20 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         if self._is_waiting([starttype, tag, attrs]):
             return
         tag = wc.filter.html.check_spelling(tag, self.url)
-        if self.stackcount and starttype == wc.filter.html.STARTTAG:
-            if self.stackcount[-1][0] == tag:
-                self.stackcount[-1][1] += 1
-        if tag == "meta":
+        if self.stackcount and \
+           starttype == wc.filter.html.STARTTAG and \
+           self.stackcount[-1][0] == tag:
+            self.stackcount[-1][1] += 1
+        if tag == "img":
+            if attrs.has_key("alt") and not attrs.has_key("title"):
+                # Mozilla only displays title as tooltip.
+                title = attrs.get_true('alt', "")
+                # Get rid of the split() when bug #67127 is fixed:
+                # https://bugzilla.mozilla.org/show_bug.cgi?id=67127
+                if '\n' in title:
+                    title = title.split('\n')[0].strip()
+                attrs['title'] = title
+        elif tag == "meta":
             if attrs.get_true('http-equiv', u'').lower() == 'content-rating':
                 rating = wc.HtmlParser.resolve_html_entities(
                                                attrs.get_true('content', u''))
@@ -166,24 +176,16 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                     if msg:
                         raise wc.filter.FilterRating, msg
                 self.ratings = []
-        elif tag == "base" and attrs.has_key('href'):
-            self.base_url = attrs['href']
-            # some base urls are just the host name, eg. www.imadoofus.com
-            if not urllib.splittype(self.base_url)[0]:
-                self.base_url = "%s://%s" % \
-                                (urllib.splittype(self.url)[0], self.base_url)
-            self.base_url = wc.url.url_norm(self.base_url)[0]
-            assert wc.log.debug(wc.LOG_HTML, "%s using base url %r",
-                                self, self.base_url)
-        elif tag == "img" and \
-             attrs.has_key("alt") and not attrs.has_key("title"):
-            # Mozilla only displays title as tooltip.
-            title = attrs.get_true('alt', "")
-            # Get rid of the split() when bug #67127 is fixed:
-            # https://bugzilla.mozilla.org/show_bug.cgi?id=67127
-            if '\n' in title:
-                title = title.split('\n')[0].strip()
-            attrs['title'] = title
+        elif tag == "base":
+            if attrs.has_key('href'):
+                self.base_url = attrs['href']
+                # some base urls are just the host name, eg. www.imadoofus.com
+                if not urllib.splittype(self.base_url)[0]:
+                    self.base_url = "%s://%s" % \
+                               (urllib.splittype(self.url)[0], self.base_url)
+                self.base_url = wc.url.url_norm(self.base_url)[0]
+                assert wc.log.debug(wc.LOG_HTML, "%s using base url %r",
+                                    self, self.base_url)
         # search for and prevent known security flaws in HTML
         self.security.scan_start_tag(tag, attrs, self)
         # look for filter rules which apply

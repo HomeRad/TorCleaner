@@ -81,5 +81,5 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         if self.value:
             s += u'\n  <replacement>%s</replacement>' % \
                wc.XmlUtils.xmlquote(self.value)
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s

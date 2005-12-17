@@ -80,6 +80,8 @@ class Rule (object):
         Initialize basic rule data.
         """
         self.sid = sid
+        # class name without "Rule" suffix, in lowercase
+        self.name = self.__class__.__name__[:-4].lower()
         self.titles = LangDict()
         if titles is not None:
             self.titles.update(titles)
@@ -239,7 +241,7 @@ class Rule (object):
         """
         Called when XML end element was reached.
         """
-        if name == self.get_name():
+        if name == self.name:
             self._data = u""
         else:
             self._data = wc.XmlUtils.xmlunquote(self._data)
@@ -254,18 +256,11 @@ class Rule (object):
         """
         wc.filter.rules.register_rule(self)
 
-    def get_name (self):
-        """
-        Class name without "Rule" suffix, in lowercase.
-        """
-        return self.__class__.__name__[:-4].lower()
-
     def toxml (self):
         """
         Rule data as XML for storing, must be overridden in subclass.
         """
-        s = u'<%s sid="%s"' % (self.get_name(),
-                               wc.XmlUtils.xmlquoteattr(self.sid))
+        s = u'<%s sid="%s"' % (self.name, wc.XmlUtils.xmlquoteattr(self.sid))
         if self.disable:
             s += u' disable="%d"' % self.disable
         return s
@@ -288,7 +283,7 @@ class Rule (object):
         """
         Basic rule data as ISO-8859-1 encoded string.
         """
-        s = "Rule %s\n" % self.get_name()
+        s = "Rule %s\n" % self.name
         if self.sid is not None:
             s += "sid     %s\n" % self.sid.encode("iso-8859-1")
         s += "disable %d\n" % self.disable
@@ -299,7 +294,7 @@ class Rule (object):
         """
         Short info for gui display.
         """
-        return u"%s #%s" % (self.get_name().capitalize(), self.sid)
+        return u"%s #%s" % (self.name.capitalize(), self.sid)
 
     def applies_to_url (self, url):
         """

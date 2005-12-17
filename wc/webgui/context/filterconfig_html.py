@@ -317,20 +317,20 @@ def _form_selrule (index):
         currule = [r for r in curfolder.rules if r.oid == index][0]
         # fill ruletype flags
         for rt in rulenames:
-            ruletype[rt] = (currule.get_name() == rt)
+            ruletype[rt] = (currule.name == rt)
         # XXX this side effect is bad :(
         # fill part flags
-        if currule.get_name() == u"htmlrewrite":
+        if currule.name == u"htmlrewrite":
             global curparts
             curparts = {}
             for i, part in enumerate(partvalnames):
                 curparts[part] = (currule.part == i)
-        elif currule.get_name() == u"xmlrewrite":
+        elif currule.name == u"xmlrewrite":
             global curreplacetypes
             curreplacetypes = {}
             for name, num in replacetypenums.items():
                 curreplacetypes[name] = (currule.replacetypenum == num)
-        elif currule.get_name() == u"header":
+        elif currule.name == u"header":
             global curfilterstage, curheaderaction
             curfilterstage = {
                 u'both': currule.filterstage == u'both',
@@ -653,7 +653,7 @@ def _form_apply (form, lang):
     # title and description apply for all rules:
     _form_rule_titledesc(form, lang)
     # delegate
-    attr = "_form_apply_%s" % currule.get_name()
+    attr = "_form_apply_%s" % currule.name
     globals()[attr](form)
     if info:
         curfolder.write()

@@ -53,5 +53,5 @@ class ExternfileRule (wc.filter.rules.Rule.Rule):
         s = super(ExternfileRule, self).toxml()
         s += u' filename="%s"' % wc.XmlUtils.xmlquoteattr(self.filename)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s

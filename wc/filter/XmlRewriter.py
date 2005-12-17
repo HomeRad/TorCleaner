@@ -91,9 +91,9 @@ class XmlRewriter (wc.filter.Filter.Filter):
         for rule in self.rules:
             if not rule.applies_to_url(url):
                 continue
-            if rule.get_name() == u'xmlrewrite':
+            if rule.name == u'xmlrewrite':
                 xmlrules.append(rule)
-            elif rule.get_name() == u'htmlrewrite':
+            elif rule.name == u'htmlrewrite':
                 htmlrules.append(rule)
         handler = wc.filter.xmlfilt.XmlFilter.XmlFilter(xmlrules, htmlrules,
                                                         url, localhost)

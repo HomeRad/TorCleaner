@@ -577,9 +577,7 @@ class HttpServer (wc.proxy.Server.Server):
         assert wc.log.debug(wc.LOG_PROXY,
                             "%s HttpServer.set_unreadable", self)
         oldstate, self.state = self.state, 'unreadable'
-        def readable ():
-            self.set_readable(oldstate)
-        wc.proxy.make_timer(secs, readable)
+        wc.proxy.make_timer(secs, lambda: self.set_readable(oldstate))
 
     def set_readable (self, state):
         """

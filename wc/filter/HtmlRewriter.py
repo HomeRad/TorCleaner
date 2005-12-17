@@ -91,15 +91,15 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         for rule in self.rules:
             if not rule.applies_to_url(url):
                 continue
-            if rule.get_name() == 'htmlrewrite':
+            if rule.name == 'htmlrewrite':
                 rewrites.append(rule)
-            elif rule.get_name() == 'nocomments':
+            elif rule.name == 'nocomments':
                 opts['comments'] = False
-            elif rule.get_name() == 'nojscomments':
+            elif rule.name == 'nojscomments':
                 opts['jscomments'] = False
-            elif rule.get_name() == 'javascript':
+            elif rule.name == 'javascript':
                 opts['javascript'] = True
-            elif rule.get_name() == 'rating':
+            elif rule.name == 'rating':
                 ratings.append(rule)
         # generate the HTML filter
         handler = wc.filter.html.HtmlFilter.HtmlFilter(rewrites, ratings,

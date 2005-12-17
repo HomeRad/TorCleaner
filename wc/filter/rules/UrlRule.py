@@ -110,7 +110,7 @@ class UrlRule (wc.filter.rules.MimeRule.MimeRule):
             s += u"\n"+self.mimestoxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s
 
     def __str__ (self):

@@ -144,5 +144,5 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                 s += u"\n  <category name=\"%s\">%s</category>" % \
                       (wc.XmlUtils.xmlquoteattr(category),
                        wc.XmlUtils.xmlquote(value))
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s

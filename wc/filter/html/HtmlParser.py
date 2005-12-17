@@ -179,18 +179,15 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
             if self.state[0] == 'wait':
                 # the replaying itself can switch to wait state
                 self.waitbuf.append(item)
-            elif item[0] == wc.filter.html.DATA and \
-                 hasattr(self.handler, "characters"):
-                self.handler.characters(item[1])
-            elif item[0] == wc.filter.html.STARTTAG and \
-                 hasattr(self.handler, "start_element"):
-                self.handler.start_element(item[1], item[2])
-            elif item[0] == wc.filter.html.STARTENDTAG and \
-                 hasattr(self.handler, "start_end_element"):
-                self.handler.start_end_element(item[1], item[2])
-            elif item[0] == wc.filter.html.ENDTAG and \
-                 hasattr(self.handler, "end_element"):
-                self.handler.end_element(item[1])
-            elif item[0] == wc.filter.html.COMMENT and \
-                 hasattr(self.handler, "comment"):
-                self.handler.comment(item[1])
+            else:
+                i = item[0]
+                if i == wc.filter.html.DATA:
+                    self.handler.characters(item[1])
+                elif i == wc.filter.html.STARTTAG:
+                    self.handler.start_element(item[1], item[2])
+                elif i == wc.filter.html.ENDTAG:
+                    self.handler.end_element(item[1])
+                elif i == wc.filter.html.STARTENDTAG:
+                    self.handler.start_end_element(item[1], item[2])
+                elif i == wc.filter.html.COMMENT:
+                    self.handler.comment(item[1])

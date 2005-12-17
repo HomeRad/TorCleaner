@@ -89,7 +89,7 @@ class MimeRule (wc.filter.rules.Rule.Rule):
         s = u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.mimes:
             s += u"\n"+self.mimestoxml(prefix=u"  ")
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s
 
     def __str__ (self):

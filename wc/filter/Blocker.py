@@ -155,7 +155,7 @@ class Blocker (wc.filter.Filter.Filter):
         Add rule data to blocker, delegated to add_* methods.
         """
         super(Blocker, self).addrule(rule)
-        getattr(self, "add_"+rule.get_name())(rule)
+        getattr(self, "add_"+rule.name)(rule)
 
     def add_allow (self, rule):
         """

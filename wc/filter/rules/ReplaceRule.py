@@ -74,5 +74,5 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
         if self.replacement:
             s += u'\n  <replacement>%s</replacement>' % \
               wc.XmlUtils.xmlquote(self.replacement)
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s

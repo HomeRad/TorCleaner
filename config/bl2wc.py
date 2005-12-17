@@ -94,7 +94,7 @@ def read_ids (filename, ids):
     ids['folder']['configversion'] = str(p.folder.configversion)
     for rule in p.folder.rules:
         for ftype in ('domains', 'urls'):
-            if rule.get_name().endswith(ftype):
+            if rule.name.endswith(ftype):
                 ids[ftype]['sid'] = str(rule.sid)
 
 

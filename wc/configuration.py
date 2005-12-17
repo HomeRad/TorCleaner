@@ -350,7 +350,7 @@ class Configuration (dict):
                 for rule in folder.rules:
                     if rule.disable:
                         continue
-                    if rule.get_name() in instance.rulenames:
+                    if rule.name in instance.rulenames:
                         instance.addrule(rule)
             for stage in instance.stages:
                 self['filterlist'][stage].append(instance)

@@ -60,5 +60,5 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
         if self.replacement:
             s += u"\n  <replacement>%s</replacement>" % \
               wc.XmlUtils.xmlquote(self.replacement)
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s
