@@ -21,9 +21,9 @@ Test html parsing.
 import wc.HtmlParser
 import wc.HtmlParser.htmlsax
 import wc.HtmlParser.htmllib
+import tests
 import cStringIO as StringIO
 import unittest
-from wc.tests import MsgTestCase
 
 
 # list of tuples
@@ -153,7 +153,7 @@ flushtests = [
 ]
 
 
-class TestParser (MsgTestCase):
+class TestParser (tests.StandardTest):
     """
     Test html parser.
     """
