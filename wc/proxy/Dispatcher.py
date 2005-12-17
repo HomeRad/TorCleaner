@@ -44,7 +44,6 @@ import errno
 import wc
 import wc.configuration
 import wc.log
-import wc.objproxy
 
 
 # map of sockets
@@ -71,12 +70,6 @@ def create_socket (family, socktype, proto=0):
     is given an SSL socket is created.
     """
     sock = socket.socket(family, socktype, proto=proto)
-    # since socket object cannot store additional attributes use a proxy
-    sock = wc.objproxy.Proxy(sock)
-    # store family, type and proto in the (proxied) object
-    sock.family = family
-    sock.socktype = socktype
-    sock.proto = proto
     # XXX disable custom timeouts for now
     #sock.settimeout(wc.configuration.config['timeout'])
     socktypes_inet = [socket.AF_INET]
@@ -95,7 +88,7 @@ class Dispatcher (object):
     Dispatch socket events to handler functions.
     """
 
-    def __init__ (self, sock=None):
+    def __init__ (self, sock=None, socktype=None):
         """
         Initialize connection.
 
@@ -107,8 +100,9 @@ class Dispatcher (object):
         self.closing = False
         self.addr = None
         self.socket = None
+        self._fileno = -1
         if sock is not None:
-            self.set_socket(sock)
+            self.set_socket(sock, socktype)
             # I think it should inherit this anyway
             self.socket.setblocking(0)
             self.connected = True
@@ -165,14 +159,16 @@ class Dispatcher (object):
         """
         Create a new socket.
         """
-        self.set_socket(create_socket(family, socktype))
+        self.set_socket(create_socket(family, socktype), socktype)
 
-    def set_socket (self, sock):
+    def set_socket (self, sock, socktype):
         """
         Set new socket.
         """
         sock.setblocking(0)
         self.socket = sock
+        self.socktype = socktype
+        self._fileno = sock.fileno()
         self.socket_rcvbuf = \
              sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
         self.socket_sndbuf = \
@@ -227,7 +223,7 @@ class Dispatcher (object):
         @return: socket file number
         @rtype: int
         """
-        return self.socket.fileno()
+        return self._fileno
 
     def listen (self, num):
         """
@@ -339,13 +335,7 @@ class Dispatcher (object):
         """
         # XXX can return either an address pair or None
         try:
-            res = self.socket.accept()
-            if res is not None:
-                sock = wc.objproxy.Proxy(res[0])
-                sock.family = self.socket.family
-                sock.socktype = self.socket.socktype
-                sock.proto = self.socket.proto
-                return (sock, res[1])
+            return self.socket.accept()
         except socket.error, why:
             if why[0] == errno.EWOULDBLOCK:
                 pass
@@ -404,13 +394,13 @@ class Dispatcher (object):
         @rtype: string
         @raise: socket.error on error
         """
-        if self.socket.socktype == socket.SOCK_DGRAM:
+        if self.socktype != socket.SOCK_DGRAM:
+            data = self.socket.recv(buffer_size, flags)
+        else:
             data, addr = self.socket.recvfrom(buffer_size)
             if addr != self.addr:
                 # answer was for someone else
                 raise socket.error, (errno.EREMCHG, str(addr))
-        else:
-            data = self.socket.recv(buffer_size, flags)
         return data
 
     def close (self):
