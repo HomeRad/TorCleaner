@@ -117,40 +117,25 @@ def proxy_poll (timeout=0.0):
         # don't want to call another handle_* on it
         for x in e:
             assert wc.log.debug(wc.LOG_PROXY, "%s poll handle exception", x)
-            t = time.time()
             x.handle_expt_event()
             handlerCount += 1
-            _slow_check(x, t, 'eslow')
         for x in w:
             assert wc.log.debug(wc.LOG_PROXY, "poll handle write %s", x)
             # note: do not put the following "if" in a list filter
             if not x.writable():
                 assert wc.log.debug(wc.LOG_PROXY, "not writable %s", x)
                 continue
-            t = time.time()
             x.handle_write_event()
             handlerCount += 1
-            _slow_check(x, t, 'wslow')
         for x in r:
             assert wc.log.debug(wc.LOG_PROXY, "poll handle read %s", x)
             # note: do not put the following "if" in a list filter
             if not x.readable():
                 assert wc.log.debug(wc.LOG_PROXY, "not readable %s", x)
                 continue
-            t = time.time()
             x.handle_read_event()
             handlerCount += 1
-            _slow_check(x, t, 'rslow')
     return handlerCount
-
-
-def _slow_check (x, t, stype):
-    """
-    Check if processing of connection x took too much time and print a
-    warning.
-    """
-    if time.time()-t > 2:
-        wc.log.warn(wc.LOG_PROXY, '%s %4.1fs %s', stype, (time.time()-t), x)
 
 
 def mainloop (handle=None, abort=None):
@@ -169,9 +154,6 @@ def mainloop (handle=None, abort=None):
         sslctx = wc.proxy.ssl.get_serverctx(wc.configuration.config.configdir)
         wc.proxy.Listener.Listener(host, port, wc.proxy.SslClient.SslClient,
                                    sslctx=sslctx)
-    # periodic statistics (only useful for speed profiling)
-    #make_timer(5, transport.http_server.speedcheck_print_status)
-    #make_timer(60, periodic_print_socketlist)
     if abort is not None:
         # regular abort check every second
         global MAX_TIMEOUT
