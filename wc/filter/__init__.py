@@ -52,6 +52,7 @@ import wc.log
 import wc.configuration
 import wc.filter.rules
 import wc.http.header
+import wc.HtmlParser
 
 # filter stages
 
@@ -183,22 +184,11 @@ def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
         'browser': browser,
     }
     if attrs['mime']:
-        charset = get_mime_charset(attrs['mime'])
-        if charset:
+        charset = wc.HtmlParser.get_ctype_charset(attrs['mime'])
+        if charset is not None:
             attrs['charset'] = charset
     for f in wc.configuration.config['filtermodules']:
         # note: get attributes of _all_ filters since the
         # mime type can change dynamically
         attrs.update(f.get_attrs(url, localhost, filterstages, attrheaders))
     return attrs
-
-
-def get_mime_charset (mime):
-    """
-    Extract charset information from mime string, eg.
-    "text/html; charset=iso8859-1".
-    """
-    for param in mime.split(';'):
-        if param.lower().startswith('charset='):
-            return param[8:]
-    return None
