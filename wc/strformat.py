@@ -52,10 +52,10 @@ def ascii_safe (s):
 
     @param s: the Unicode string to be encoded
     @type s: unicode or None
-    @return: encoded ASCII version of s, or s itself if s evaluated to False
+    @return: encoded ASCII version of s, or None if s was None
     @rtype: string
     """
-    if s:
+    if isinstance(s, unicode):
         s = s.encode('ascii', 'ignore')
     return s
 
