@@ -35,7 +35,7 @@
   <title lang="de">Verknüpfungen mit 'easy-cash'</title>
   <title lang="en">easy-cash</title>
   <description lang="en">Kill links with ad words in the host name.</description>
-  <attr name="href">easy-cash</attr>
+  <attr name="href">easy-cash|/jsads/</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.414"
@@ -302,7 +302,7 @@
   <title lang="de">Verknüpfungen mit 'easy-cash'</title>
   <title lang="en">easy-cash</title>
   <description lang="en">Kill links with ad words in the host name.</description>
-  <attr name="src">easy-cash</attr>
+  <attr name="src">easy-cash|/jsads/</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.55"
