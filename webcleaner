@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.4 -O
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2005  Bastian Kleineidam
 #
@@ -133,7 +133,7 @@ def parse_options (sysargs):
     try:
         # Note: cut out the name of the script in sys.argv
         options, args = getopt.getopt(sysargs, "hd:",
-                                      ["help", "configdir=", "no-file-logs"])
+                           ["help", "configdir=", "no-file-logs"])
     except getopt.error:
         print_usage(sys.exc_info()[1])
     for opt, arg in options:
@@ -173,7 +173,7 @@ def main_nt (configdir, filelogs, args):
     wc.win32start.ProxyService.filelogs = filelogs
     if configdir:
         wc.win32start.ProxyService.configdir = configdir
-    if command=='status':
+    if command == 'status':
         print wc.win32start.status()
     elif command in ['start', 'stop', 'restart', 'install', 'remove']:
         import win32serviceutil
@@ -187,9 +187,11 @@ def main (sysargs):
        are usually sys.argv[1:].
     """
     configdir, filelogs, args = parse_options(sysargs)
-    if os.name=='nt':
-        return main_nt(configdir, filelogs, args)
-    return main_posix(configdir, filelogs, args)
+    if os.name == 'nt':
+        _main = main_nt
+    else:
+        _main = main_posix
+    return _main(configdir, filelogs, args)
 
 
 if __name__ == '__main__':
