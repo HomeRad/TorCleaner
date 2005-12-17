@@ -47,3 +47,4 @@ crossbuild.log
 localbuild.log
 localconfig
 dist
+coverage
