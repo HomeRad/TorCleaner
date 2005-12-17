@@ -19,16 +19,30 @@
 Show previously generated profile data.
 """
 
-def _main (fname):
-    import hotshot.stats
-    stats = hotshot.stats.load(fname)
-    stats.strip_dirs()
-    stats.sort_stats('time', 'calls')
-    stats.print_stats(25)
+import sys
+import os
+import wc
+
+_profile = "webcleaner.prof"
+
+def _main (filename):
+    """
+    Print profiling data and exit.
+    """
+    if not wc.HasPstats:
+        print >>sys.stderr, "The `pstats' Python module is not installed."
+        sys.exit(1)
+    if not os.path.isfile(filename):
+        print >>sys.stderr, "Could not find regular file %r." % filename
+        sys.exit(1)
+    import pstats
+    stats = pstats.Stats(filename)
+    stats.strip_dirs().sort_stats("cumulative").print_stats(100)
+    sys.exit(0)
+
 
 if __name__ == '__main__':
-    import sys
     if len(sys.argv) > 1:
         _main(sys.argv[1])
     else:
-        _main("filter.prof")
+        _main(_profile)
