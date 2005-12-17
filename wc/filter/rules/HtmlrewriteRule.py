@@ -135,6 +135,11 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         super(HtmlrewriteRule, self).compile_data()
         wc.filter.rules.Rule.compileRegex(self, "enclosed")
         wc.filter.rules.Rule.compileRegex(self, "tag", fullmatch=True)
+        # optimization: use string equality if tag is a plain string
+        if self.tag.isalpha():
+            self.match_tag = self._match_tag
+        else:
+            self.match_tag = self._match_tag_ro
         for attr, val in self.attrs.items():
             self.attrs_ro[attr] = re.compile(val)
 
@@ -170,11 +175,17 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             wc.filter.html.ATTRNAME,
         ]
 
-    def match_tag (self, tag):
+    def _match_tag_ro (self, tag):
         """
         Return True iff tag name matches this rule.
         """
         return self.tag_ro.search(tag)
+
+    def _match_tag (self, tag):
+        """
+        Return True iff tag name matches this rule.
+        """
+        return self.tag == tag
 
     def match_attrs (self, attrs):
         """
@@ -192,7 +203,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             if ro and not ro.search(val):
                 return False
         # Check if every attribute matched.
-        for attr in self.attrs.keys():
+        for attr in self.attrs:
             if attr not in occurred:
                 return False
         return True
@@ -307,7 +318,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                      wc.XmlUtils.xmlquote(self.replacement)
             else:
                 s += u"/>"
-        s += u"\n</%s>" % self.get_name()
+        s += u"\n</%s>" % self.name
         return s
 
     def __str__ (self):
