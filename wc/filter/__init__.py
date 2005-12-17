@@ -142,12 +142,11 @@ def applyfilter (filterstage, data, fun, attrs):
     """
     attrs['filterstage'] = filterstage
     assert wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
-                 fun, len(data), filterstage)
-    if attrs.get('nofilter') or (fun!='finish' and not data):
+                        fun, len(data), filterstage)
+    if attrs.get('nofilter') or (fun != 'finish' and not data):
         assert wc.log.debug(wc.LOG_FILTER, "..don't filter")
         return data
-    filters = wc.configuration.config['filterlist'][filterstage]
-    for f in filters:
+    for f in wc.configuration.config['filterlist'][filterstage]:
         assert wc.log.debug(wc.LOG_FILTER, "..filter with %s" % f)
         if f.applies_to_mime(attrs['mime']):
             assert wc.log.debug(wc.LOG_FILTER, "..applying")

@@ -456,9 +456,8 @@ class HttpServer (wc.proxy.Server.Server):
             data = encoder.process(data)
             assert wc.log.debug(wc.LOG_PROXY, "%s have run encoder %s",
                          self, encoder)
-        underflow = self.bytes_remaining is not None and \
-                   self.bytes_remaining < 0
-        if underflow:
+        if self.bytes_remaining is not None and self.bytes_remaining < 0:
+            # underflow
             wc.log.warn(wc.LOG_PROXY,
                       _("server received %d bytes more than content-length"),
                       (-self.bytes_remaining))
