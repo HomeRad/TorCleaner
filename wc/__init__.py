@@ -68,8 +68,11 @@ HasSsl = wc.fileutil.has_module("OpenSSL")
 HasCrypto = wc.fileutil.has_module("Crypto")
 HasPil = wc.fileutil.has_module("PIL")
 HasPsyco = wc.fileutil.has_module("psyco")
+HasProfile = wc.fileutil.has_module("profile")
+HasPstats = wc.fileutil.has_module("pstats")
 
 # logger areas
+LOG_WC = "wc"
 LOG_FILTER = "wc.filter"
 LOG_JS = "wc.filter.js"
 LOG_RATING = "wc.filter.rating"
