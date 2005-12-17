@@ -66,7 +66,7 @@ class Filter (object):
 
     def filter (self, data, attrs):
         """
-        Filter given data.
+        Filter given data. The data must be non-empty.
 
         @param attrs: filter-specific state data
         """
@@ -75,6 +75,7 @@ class Filter (object):
     def finish (self, data, attrs):
         """
         Filter given data and finish filtering (eg flushing buffers).
+        The data may be empty.
 
         @param attrs: filter-specific state data
         """

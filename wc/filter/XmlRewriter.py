@@ -51,13 +51,12 @@ class XmlRewriter (wc.filter.Filter.Filter):
             return data
         p = attrs['xmlrewriter_parser']
         f = attrs['xmlrewriter_filter']
-        if data:
-            try:
-                p.feed(data)
-            except xml.sax.SAXException, msg:
-                wc.log.error(wc.LOG_FILTER, "XML filter error at %s: %s",
-                             attrs['url'], str(msg))
-                return data
+        try:
+            p.feed(data)
+        except xml.sax.SAXException, msg:
+            wc.log.error(wc.LOG_FILTER, "XML filter error at %s: %s",
+                         attrs['url'], str(msg))
+            return data
         return f.getoutput()
 
     def finish (self, data, attrs):

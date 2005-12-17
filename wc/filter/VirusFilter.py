@@ -72,13 +72,12 @@ class VirusFilter (wc.filter.Filter.Filter):
         scanner = attrs['virus_scanner']
         buf = attrs['virus_buf']
         size = attrs['virus_buf_size'][0]
-        if data:
-            data_length = len(data)
-            if size+data_length > VirusFilter.MAX_FILE_BYTES:
-                self.size_error()
-            attrs['virus_buf_size'][0] += data_length
-            scanner.scan(data)
-            buf.write(data)
+        data_length = len(data)
+        if size+data_length > VirusFilter.MAX_FILE_BYTES:
+            self.size_error()
+        attrs['virus_buf_size'][0] += data_length
+        scanner.scan(data)
+        buf.write(data)
         return ""
 
     def size_error (self):
