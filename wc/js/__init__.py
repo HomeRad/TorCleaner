@@ -66,6 +66,14 @@ def escape_js (script):
     """
     Escape HTML stuff in JS script.
     """
+    lines = []
+    for line in script.splitlines():
+        line = line.strip()
+        if line:
+            lines.append(escape_js_line(line))
+    return "\n".join(lines)
+
+def escape_js_line (script):
     # if we encounter "</script>" in the script, we assume that is
     # in a quoted string. The solution is to split it into
     # "</scr"+"ipt>" (with the proper quotes of course)
