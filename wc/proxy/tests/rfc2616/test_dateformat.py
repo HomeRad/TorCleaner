@@ -18,7 +18,7 @@
 """
 
 import time
-from wc.proxy.ftests import ProxyTest, make_suite
+from wc.proxy.tests import ProxyTest, make_suite
 from wc.http.date import get_date_rfc850, get_date_rfc1123, get_date_asctime
 
 class test_dateformat_warn_rfc1123_rfc850 (ProxyTest):

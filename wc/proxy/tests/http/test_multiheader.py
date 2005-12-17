@@ -18,7 +18,7 @@
 Test handling of multiple headers.
 """
 
-from wc.proxy.ftests import ProxyTest, make_suite
+from wc.proxy.tests import ProxyTest, make_suite
 
 
 class test_multiheader_clen_toSrv (ProxyTest):

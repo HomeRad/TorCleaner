@@ -18,7 +18,7 @@
 Test HTTP request version compatibility.
 """
 
-from wc.proxy.ftests import ProxyTest, make_suite
+from wc.proxy.tests import ProxyTest, make_suite
 
 class HighverTest (ProxyTest):
 

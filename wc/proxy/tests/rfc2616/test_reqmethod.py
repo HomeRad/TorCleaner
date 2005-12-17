@@ -18,7 +18,7 @@
 Test required methods.
 """
 
-from wc.proxy.ftests import ProxyTest, make_suite
+from wc.proxy.tests import ProxyTest, make_suite
 
 class test_reqmethod_head (ProxyTest):
     """

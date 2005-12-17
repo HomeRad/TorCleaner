@@ -18,7 +18,7 @@
 """
 
 import time
-from wc.proxy.ftests import ProxyTest, make_suite
+from wc.proxy.tests import ProxyTest, make_suite
 from wc.http.date import get_date_rfc1123
 
 

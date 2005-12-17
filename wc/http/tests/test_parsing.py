@@ -17,12 +17,12 @@
 
 import unittest
 import time
+import tests
 import wc.http
 import wc.http.date
-from wc.tests import MsgTestCase
 
 
-class TestBasic (MsgTestCase):
+class TestBasic (tests.StandardTest):
 
     def test_http_version (self):
         self.assertEquals(wc.http.parse_http_version("HTTP/0.0"), (0, 0))
@@ -77,8 +77,13 @@ class TestBasic (MsgTestCase):
         self.assertEquals(wc.http.parse_http_warning(warn),
                           (110, "", "Response is stale", None))
 
+
 def test_suite ():
     """
     Build and return a TestSuite.
     """
     return unittest.makeSuite(TestBasic)
+
+
+if __name__ == '__main__':
+    unittest.main()

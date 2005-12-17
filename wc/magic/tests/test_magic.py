@@ -5,10 +5,10 @@ A magic(5) tester.
 
 import unittest
 import os
+import tests
 from wc.magic import convert, classify
-from wc.tests import MsgTestCase
 
-class TestMagic (MsgTestCase):
+class TestMagic (tests.StandardTest):
 
     def setUp (self):
         self.basedir = os.path.join(os.getcwd(), "wc", "magic", "tests")
@@ -66,6 +66,7 @@ def test_suite ():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestMagic))
     return suite
+
 
 if __name__ == '__main__':
     unittest.main()

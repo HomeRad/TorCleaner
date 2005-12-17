@@ -15,12 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import unittest
+import tests
 import wc.proxy.decoder.UnchunkStream
 import wc.dummy
-from wc.tests import MsgTestCase
 
 
-class TestUnchunk (MsgTestCase):
+class TestUnchunk (tests.StandardTest):
 
     def testUnchunk (self):
         dummy = wc.dummy.Dummy()
@@ -34,6 +34,7 @@ def test_suite ():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestUnchunk))
     return suite
+
 
 if __name__ == '__main__':
     unittest.main()

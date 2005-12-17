@@ -17,11 +17,11 @@
 
 import unittest
 import time
+import tests
 import wc.http.date
-from wc.tests import MsgTestCase
 
 
-class TestDate (MsgTestCase):
+class TestDate (tests.StandardTest):
 
     def test_rfc1123 (self):
         now = time.time()
@@ -65,3 +65,7 @@ def test_suite ():
     Build and return a TestSuite.
     """
     return unittest.makeSuite(TestDate)
+
+
+if __name__ == '__main__':
+    unittest.main()

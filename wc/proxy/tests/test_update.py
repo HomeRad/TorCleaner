@@ -15,10 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 import unittest
+import tests
 import wc
 import wc.configuration
 import wc.update
-from wc.tests import MsgTestCase
 
 
 class NoLog (object):
@@ -26,7 +26,7 @@ class NoLog (object):
         pass
 
 
-class TestUpdate (MsgTestCase):
+class TestUpdate (tests.StandardTest):
 
     def setUp (self):
         self.nolog = NoLog()
@@ -43,6 +43,7 @@ def test_suite ():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestUpdate))
     return suite
+
 
 if __name__ == '__main__':
     unittest.main()

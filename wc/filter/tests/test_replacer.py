@@ -19,14 +19,13 @@ Test script to test filtering.
 """
 import unittest
 import random
-
+import tests
 import wc
 import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
-from wc.tests import MsgTestCase
 
 
-class TestReplacer (MsgTestCase):
+class TestReplacer (tests.StandardTest):
 
     def init (self):
         super(TestReplacer, self).init()
@@ -51,6 +50,7 @@ class TestReplacer (MsgTestCase):
 
 def test_suite ():
     return unittest.makeSuite(TestReplacer)
+
 
 if __name__ == '__main__':
     unittest.main()

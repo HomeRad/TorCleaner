@@ -20,13 +20,13 @@ Test script to test filtering.
 """
 
 import unittest
-
+import tests
 import wc
 import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, STAGE_REQUEST
-from wc.tests import MsgTestCase
 
-class TestBlocker (MsgTestCase):
+
+class TestBlocker (tests.StandardTest):
 
     def setUp (self):
         self.url = "http://ads.realmedia.com/"
@@ -43,6 +43,7 @@ class TestBlocker (MsgTestCase):
 
 def test_suite ():
     return unittest.makeSuite(TestBlocker)
+
 
 if __name__ == '__main__':
     unittest.main()

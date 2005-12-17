@@ -19,11 +19,11 @@ Test spell checker.
 """
 
 import unittest
+import tests
 from wc.filter.html import check_spelling
-from wc.tests import MsgTestCase
 
 
-class TestSpelling (MsgTestCase):
+class TestSpelling (tests.StandardTest):
 
     def test_htmltags (self):
         url = "unknown"
@@ -37,6 +37,7 @@ class TestSpelling (MsgTestCase):
 
 def test_suite ():
     return unittest.makeSuite(TestSpelling)
+
 
 if __name__ == '__main__':
     unittest.main()

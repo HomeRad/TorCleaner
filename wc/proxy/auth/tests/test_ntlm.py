@@ -17,12 +17,13 @@
 
 import unittest
 import base64
+import tests
 import wc
 import wc.configuration
 import wc.proxy.auth
 
 
-class TestNtlm (unittest.TestCase):
+class TestNtlm (tests.StandardTest):
     """
     Test ntlm authentication routines.
     """
@@ -83,6 +84,7 @@ def test_suite ():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestNtlm))
     return suite
+
 
 if __name__ == '__main__':
     unittest.main()

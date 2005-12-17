@@ -19,16 +19,16 @@ Test javascript filtering.
 """
 
 import unittest
+import tests
 import wc
 import wc.configuration
 from wc.proxy import proxy_poll, run_timers
 from wc.http.header import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
-from wc.tests import MsgTestCase
 
 
-class TestRewriteScript (MsgTestCase):
+class TestRewriteScript (tests.StandardTest):
     """
     All these tests work with a _default_ filter configuration.
     If you change any of the *.zap filter configs, tests can fail...
@@ -351,6 +351,7 @@ a();
 
 def test_suite ():
     return unittest.makeSuite(TestRewriteScript)
+
 
 if __name__ == '__main__':
     unittest.main()

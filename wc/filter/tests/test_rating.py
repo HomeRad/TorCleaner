@@ -19,13 +19,12 @@ Test rating routines.
 """
 
 import unittest
-
+import tests
 import wc.filter.rating
 import wc.filter.rating.category
-from wc.tests import MsgTestCase
 
 
-class TestRating (MsgTestCase):
+class TestRating (tests.StandardTest):
 
     def test_split_url (self):
         """
@@ -98,6 +97,7 @@ class TestRating (MsgTestCase):
 
 def test_suite ():
     return unittest.makeSuite(TestRating)
+
 
 if __name__ == '__main__':
     unittest.main()

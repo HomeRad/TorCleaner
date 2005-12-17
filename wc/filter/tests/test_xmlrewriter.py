@@ -20,15 +20,15 @@ Test script to test filtering.
 
 import unittest
 import os
+import tests
 import wc
 import wc.configuration
 import wc.filter.xmlfilt.XmlFilter
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 from wc.http.header import WcMessage
-from wc.tests import MsgTestCase
 
 
-class TestXmlRewriter (MsgTestCase):
+class TestXmlRewriter (tests.StandardTest):
     """
     All these tests work with a _default_ filter configuration.
     If you change any of the *.zap filter configs, tests can fail...
@@ -98,6 +98,7 @@ class TestXmlRewriter (MsgTestCase):
 
 def test_suite ():
     return unittest.makeSuite(TestXmlRewriter)
+
 
 if __name__ == '__main__':
     unittest.main()

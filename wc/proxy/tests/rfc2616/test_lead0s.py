@@ -18,7 +18,7 @@
 Test leading zeros in HTTP version
 """
 
-from wc.proxy.ftests import ProxyTest, make_suite
+from wc.proxy.tests import ProxyTest, make_suite
 
 
 class test_lead0s_major_toSrv (ProxyTest):
