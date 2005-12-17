@@ -52,6 +52,12 @@ look at the ChangeLog_.
 .. _install documentation: install.html
 .. _ChangeLog: http://cvs.sourceforge.net/viewcvs.py/webcleaner/webcleaner2/ChangeLog?view=markup
 
+I also suggest using the `SwitchProxy`_ Mozilla/Firefox extension.
+It allows easy switching between different proxy settings.
+
+.. _SwitchProxy:
+   https://addons.mozilla.org/extensions/moreinfo.php?id=125
+
 
 Screenshots
 ===========
