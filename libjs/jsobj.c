@@ -1146,6 +1146,14 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_TRUE;
     }
 
+    /*
+     * If the caller is a lightweight function and doesn't have a variables
+     * object, then we need to provide one for the compiler to stick any
+     * declared (var) variables into.
+     */
+    if (caller && !caller->varobj && !js_GetCallObject(cx, caller, NULL))
+        return JS_FALSE;
+
 #if JS_HAS_SCRIPT_OBJECT
     /*
      * Script.prototype.compile/exec and Object.prototype.eval all take an
@@ -2532,7 +2540,7 @@ bad:
 
 /*
  * Given pc pointing after a property accessing bytecode, return true if the
- * access is a "object-detecting" in the sense used by web pages, e.g., when
+ * access is "object-detecting" in the sense used by web scripts, e.g., when
  * checking whether document.all is defined.
  */
 static JSBool
@@ -2565,7 +2573,7 @@ Detecting(JSContext *cx, jsbytecode *pc)
         /*
          * Special case #2: handle (document.all == undefined).  Don't worry
          * about someone redefining undefined, which was added by Edition 3,
-         * so was read/write for backward compatibility.
+         * so is read/write for backward compatibility.
          */
         if (op == JSOP_NAME) {
             atom = GET_ATOM(cx, script, pc);
