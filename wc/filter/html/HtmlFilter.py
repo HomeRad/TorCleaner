@@ -50,6 +50,8 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         self.base_url = None
         # for security flaw scanning
         self.security = wc.filter.html.HtmlSecurity.HtmlSecurity()
+        # cache rule match_tag into {tag -> list of rules}
+        self.rule_tag_cache = {}
 
     def new_instance (self, **opts):
         """
@@ -194,6 +196,12 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         if not self.rulestack and not self.javascript:
             self.htmlparser.tagbuf2data()
 
+    def get_tag_rules (self, tag):
+        if tag not in self.rule_tag_cache:
+            self.rule_tag_cache[tag] = \
+                         [rule for rule in self.rules if rule.match_tag(tag)]
+        return self.rule_tag_cache[tag]
+
     def filter_start_element (self, tag, attrs, starttype):
         """
         Filter the start element according to filter rules.
@@ -201,8 +209,8 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         rulelist = []
         filtered = False
         item = [starttype, tag, attrs]
-        for rule in self.rules:
-            if rule.match_tag(tag) and rule.match_attrs(attrs):
+        for rule in self.get_tag_rules(tag):
+            if rule.match_attrs(attrs):
                 assert wc.log.debug(wc.LOG_HTML,
                  "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
                 if rule.matches_starttag():
