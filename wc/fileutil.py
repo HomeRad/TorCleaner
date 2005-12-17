@@ -17,7 +17,9 @@
 """
 File and path utilities.
 """
+
 import os
+import fnmatch
 
 
 def write_file (filename, content, backup=False, callback=None):
@@ -61,3 +63,35 @@ def has_module (name):
 	return True
     except ImportError:
         return False
+
+
+class GlobDirectoryWalker (object):
+    # a forward iterator that traverses a directory tree
+
+    def __init__ (self, directory, pattern="*"):
+        self.stack = [directory]
+        self.pattern = pattern
+        self.files = []
+        self.index = 0
+
+    def __getitem__ (self, index):
+        while True:
+            try:
+                filename = self.files[self.index]
+                self.index += 1
+            except IndexError:
+                # pop next directory from stack
+                self.directory = self.stack.pop()
+                self.files = os.listdir(self.directory)
+                self.index = 0
+            else:
+                # got a filename
+                fullname = os.path.join(self.directory, filename)
+                if os.path.isdir(fullname) and not os.path.islink(fullname):
+                    self.stack.append(fullname)
+                if fnmatch.fnmatch(filename, self.pattern):
+                    return fullname
+
+
+def rglob (directory, pattern):
+    return GlobDirectoryWalker(directory, pattern=pattern)
