@@ -19,11 +19,21 @@ Buffered HTML parser.
 """
 
 from StringIO import StringIO
-
+import codecs
 import wc.log
 import wc.filter
 import wc.filter.html
 import wc.HtmlParser.htmlsax
+
+BOMS = [
+    codecs.BOM_UTF8,
+    codecs.BOM_UTF16,
+    codecs.BOM_UTF16_BE,
+    codecs.BOM_UTF16_LE,
+    codecs.BOM_UTF32,
+    codecs.BOM_UTF32_BE,
+    codecs.BOM_UTF32_LE,
+]
 
 
 class HtmlParser (wc.HtmlParser.htmlsax.parser):
@@ -69,6 +79,10 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         self.waitbuf = []
         # wait indicator flag
         self.waited = 0
+        # initial data feed to check for unicode BOM
+        # XXX remove when parser supports unicode
+        self.initial = True
+        self.bom = None
 
     def __str__ (self):
         """
@@ -99,6 +113,14 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         Feed some data to the parser.
         """
         wc.log.debug(wc.LOG_HTML, "%s feed %r", self, data)
+        if self.initial:
+            self.initial = False
+            for bom in BOMS:
+                if data.startswith(bom):
+                    # remove unicode marker
+                    self.bom = bom
+                    data = data[len(bom):]
+                    break
         if self.state[0] == 'parse':
             # look if we must replay something
             if self.waited > 0:

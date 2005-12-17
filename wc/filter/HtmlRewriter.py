@@ -54,6 +54,9 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         if p.handler.ratings:
             # XXX correct raise
             raise wc.filter.FilterWait, "wait for rating decision"
+        if p.bom is not None:
+            bom, p.bom = p.bom, None
+            return bom + p.getoutput()
         return p.getoutput()
 
     def finish (self, data, attrs):
