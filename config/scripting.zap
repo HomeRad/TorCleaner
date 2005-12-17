@@ -195,7 +195,7 @@
   <title lang="de">Verhindere Rechter-Mausklick kaputtnik</title>
   <title lang="en">Prevent right-click disablement</title>
   <description lang="en">Good! Adaptation, improvisation, but your weakness is not your technique.</description>
-  <enclosed>(?i)document\.onmousedown</enclosed>
+  <enclosed>(?i)(window|document)\.onmousedown</enclosed>
 </htmlrewrite>
 
 <replace sid="wc.303"
