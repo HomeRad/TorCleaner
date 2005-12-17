@@ -52,6 +52,8 @@ class Filter (object):
             self.mimes = []
         # list of rules this filter is interested in
         self.rules = []
+        # cache for mime application {mime (string) -> applies to it (bool)}
+        self.mime_cache = {}
 
     def addrule (self, rule):
         """
@@ -107,14 +109,18 @@ class Filter (object):
         """
         Ask if this filter applies to a mime type.
         """
-        if not self.mimes:
-            return True
-        if mime is None:
-            return False
-        for ro in self.mimes:
-            if ro.match(mime):
-                return True
-        return False
+        if mime not in self.mime_cache:
+            if not self.mimes:
+                self.mime_cache[mime] = True
+            elif mime is None:
+                self.mime_cache[mime] = False
+            else:
+                for ro in self.mimes:
+                    if ro.match(mime):
+                        self.mime_cache[mime] = True
+                else:
+                    self.mime_cache[mime] = False
+        return self.mime_cache[mime]
 
     def __cmp__ (self, other):
         """
