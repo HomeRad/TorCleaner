@@ -105,11 +105,11 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         """
         # note: recognizing a mime type fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024
-        wc.log.debug(wc.LOG_FILTER, "MIME recognize %d bytes of data",
+        assert wc.log.debug(wc.LOG_FILTER, "MIME recognize %d bytes of data",
                      buf.tell())
         try:
             mime = wc.magic.classify(buf)
-            wc.log.debug(wc.LOG_FILTER, "MIME recognized %r", mime)
+            assert wc.log.debug(wc.LOG_FILTER, "MIME recognized %r", mime)
             origmime = attrs['mime']
             if mime and origmime and is_preferred_mime(mime, origmime):
                 wc.log.warn(wc.LOG_FILTER, "Adjusting MIME %r -> %r at %r",

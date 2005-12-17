@@ -43,7 +43,7 @@ class WebConfig (object):
         """
         Load a web configuration template and return response.
         """
-        wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
+        assert wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
         if isinstance(msg, unicode):
             msg = msg.encode("iso8859-1", "ignore")
         self.client = client
@@ -172,7 +172,7 @@ def get_context (dirs, form, localcontext, hostname, lang):
         template_context._form_reset()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
-        wc.log.debug(wc.LOG_GUI, "got form %s", form)
+        assert wc.log.debug(wc.LOG_GUI, "got form %s", form)
         status = template_context._exec_form(form, lang)
         # add form vars to context
         context_add(context, "form", form)
@@ -271,7 +271,7 @@ class Translator (gettext.GNUTranslations):
         Interpolates and translate TAL expression.
         """
         _msg = self.gettext(msgid)
-        wc.log.debug(wc.LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
+        assert wc.log.debug(wc.LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
         return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
 
     def gettext (self, msgid):

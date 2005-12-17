@@ -51,7 +51,7 @@ class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
         @rtype: string
         """
         while coders:
-            wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
+            assert wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
             data = coders[0].process(data)
             data += coders[0].flush()
             del coders[0]
@@ -85,6 +85,7 @@ class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
         # filter headers
         headers = self.filter_headers(headers)
         if headers:
-            wc.log.debug(wc.LOG_PROXY, "chunk trailer headers %s", headers)
+            assert wc.log.debug(wc.LOG_PROXY,
+                                "chunk trailer headers %s", headers)
         self.chunktrailer.close()
         return headers

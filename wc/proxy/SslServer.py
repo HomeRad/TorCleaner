@@ -76,6 +76,6 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
         """
         Recycle this server connection into the connection pool.
         """
-        wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
+        assert wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
         # flush pending client data and try to reuse this connection
         self.delayed_close()

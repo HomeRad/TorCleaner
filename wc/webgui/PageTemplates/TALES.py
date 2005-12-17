@@ -236,7 +236,7 @@ class Context (object):
 
     def evaluate (self, expression,
                   isinstance=isinstance, StringType=StringType):
-        wc.log.debug(wc.LOG_TALES, "Evaluate %r", expression)
+        assert wc.log.debug(wc.LOG_TALES, "Evaluate %r", expression)
         if isinstance(expression, StringType):
             expression = self._compiler.compile(expression)
         __traceback_supplement__ = (
@@ -278,7 +278,7 @@ class Context (object):
 
     def translate (self, domain, msgid, mapping=None,
                   context=None, target_language=None, default=None):
-        wc.log.debug(wc.LOG_TALES, "Translate %r for %r with %s",
+        assert wc.log.debug(wc.LOG_TALES, "Translate %r for %r with %s",
                      msgid, domain, str(self.i18n))
         if context is None:
             context = self.contexts.get('here')

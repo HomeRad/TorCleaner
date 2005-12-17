@@ -51,10 +51,10 @@ def get_header_challenges (headers, key):
     """
     auths = {}
     for auth in headers.getheaders(key):
-        wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
+        assert wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).items():
             auths.setdefault(key, []).extend(data)
-    wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
+    assert wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
     return auths
 
 
@@ -93,7 +93,7 @@ def get_challenges (**args):
             get_basic_challenge(),
             get_digest_challenge(),
         ]
-    wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
+    assert wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
     return chals
 
 
@@ -103,10 +103,10 @@ def get_header_credentials (headers, key):
     """
     creds = {}
     for cred in headers.getheaders(key):
-        wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
+        assert wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).items():
             creds.setdefault(key, []).extend(data)
-    wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
+    assert wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
     return creds
 
 
@@ -147,7 +147,7 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
+    assert wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
     return creds
 
 
@@ -155,7 +155,7 @@ def check_credentials (creds, **attrs):
     """
     Check credentials against given attributes.
     """
-    wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s",
+    assert wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s",
                  creds, attrs)
     if not creds:
         res = False

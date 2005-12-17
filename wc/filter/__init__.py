@@ -141,21 +141,20 @@ def applyfilter (filterstage, data, fun, attrs):
     Look at the filter examples.
     """
     attrs['filterstage'] = filterstage
-    wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
+    assert wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
                  fun, len(data), filterstage)
     if attrs.get('nofilter') or (fun!='finish' and not data):
-        wc.log.debug(wc.LOG_FILTER, "..don't filter")
+        assert wc.log.debug(wc.LOG_FILTER, "..don't filter")
         return data
     filters = wc.configuration.config['filterlist'][filterstage]
     for f in filters:
-        wc.log.debug(wc.LOG_FILTER, "..filter with %s" % f)
-        ffun = getattr(f, fun)
+        assert wc.log.debug(wc.LOG_FILTER, "..filter with %s" % f)
         if f.applies_to_mime(attrs['mime']):
-            wc.log.debug(wc.LOG_FILTER, "..applying")
-            data = ffun(data, attrs)
+            assert wc.log.debug(wc.LOG_FILTER, "..applying")
+            data = getattr(f, fun)(data, attrs)
         else:
-            wc.log.debug(wc.LOG_FILTER, "..not applying")
-    wc.log.debug(wc.LOG_FILTER, "..result %d bytes", len(data))
+            assert wc.log.debug(wc.LOG_FILTER, "..not applying")
+    assert wc.log.debug(wc.LOG_FILTER, "..result %d bytes", len(data))
     return data
 
 

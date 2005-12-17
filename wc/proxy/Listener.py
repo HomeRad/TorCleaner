@@ -86,6 +86,6 @@ class Listener (wc.proxy.Dispatcher.Dispatcher):
         """
         Start the handler class with the new socket.
         """
-        wc.log.debug(wc.LOG_PROXY, '%s accept', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s accept', self)
         args = self.accept()
         self.handler(*args)

@@ -64,7 +64,7 @@ class HttpProxyClient (object):
         for stage in wc.proxy.HttpClient.FilterStages:
             request = wc.filter.applyfilter(stage, request, "filter", attrs)
         self.request = request
-        wc.log.debug(wc.LOG_PROXY, '%s init', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s init', self)
 
     def __repr__ (self):
         """
@@ -80,7 +80,7 @@ class HttpProxyClient (object):
 
     def flush_coders (self, coders, data=""):
         while coders:
-            wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
+            assert wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
             data = coders[0].process(data)
             data += coders[0].flush()
             del coders[0]
@@ -90,7 +90,7 @@ class HttpProxyClient (object):
         """
         Tell handler all data is written and remove handler.
         """
-        wc.log.debug(wc.LOG_PROXY, '%s finish', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s finish', self)
         data = self.flush_coders(self.decoders)
         if self.handler:
             if data:
@@ -121,21 +121,22 @@ class HttpProxyClient (object):
         """
         self.server = server
         assert self.server.connected
-        wc.log.debug(wc.LOG_PROXY, '%s server_response %r', self, response)
+        assert wc.log.debug(wc.LOG_PROXY,
+                            '%s server_response %r', self, response)
         version, status, msg = \
                wc.http.parse_http_response(response, self.args[0])
         # XXX check version
-        wc.log.debug(wc.LOG_PROXY, '%s response %s %d %s',
+        assert wc.log.debug(wc.LOG_PROXY, '%s response %s %d %s',
                      self, version, status, msg)
         if status in (302, 301):
             self.isredirect = True
         elif not (200 <= status < 300):
-            wc.log.debug(wc.LOG_PROXY, "%s got %s status %d %r",
+            assert wc.log.debug(wc.LOG_PROXY, "%s got %s status %d %r",
                          self, version, status, msg)
             self.finish()
         if headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
-            wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
+            assert wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
                          self, headers['Transfer-encoding'])
             unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(self)
             self.decoders.append(unchunker)
@@ -149,7 +150,7 @@ class HttpProxyClient (object):
         response.
         """
         assert self.server
-        wc.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes',
+        assert wc.log.debug(wc.LOG_PROXY, '%s server_content with %d bytes',
                      self, len(data))
         if data and not self.isredirect:
             self.write(data)
@@ -159,7 +160,7 @@ class HttpProxyClient (object):
         The server has closed. Either redirect to new url, or finish.
         """
         assert self.server
-        wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
         if self.isredirect:
             self.redirect()
         else:
@@ -169,7 +170,7 @@ class HttpProxyClient (object):
         """
         The server aborted, so finish.
         """
-        wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.finish()
 
     def handle_local (self):
@@ -192,7 +193,7 @@ class HttpProxyClient (object):
         self.url = wc.url.url_norm(url)[0]
         self.args = (self.url, self.args[1])
         self.isredirect = False
-        wc.log.debug(wc.LOG_PROXY, "%s redirected", self)
+        assert wc.log.debug(wc.LOG_PROXY, "%s redirected", self)
         self.scheme, self.hostname, self.port, self.document = \
                                                   wc.url.url_split(self.url)
         # fix missing trailing /

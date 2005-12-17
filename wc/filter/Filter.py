@@ -57,7 +57,7 @@ class Filter (object):
         """
         Append given rule to rule list.
         """
-        wc.log.debug(wc.LOG_FILTER, "enable %s ", rule)
+        assert wc.log.debug(wc.LOG_FILTER, "enable %s ", rule)
         for r in self.rules:
             assert r.sid != rule.sid
         self.rules.append(rule)

@@ -64,7 +64,8 @@ def make_timer (delay, callback):
     """
     After DELAY seconds, run the CALLBACK function.
     """
-    wc.log.debug(wc.LOG_PROXY, "Adding %s to %d timers", callback, len(TIMERS))
+    assert wc.log.debug(wc.LOG_PROXY,
+                        "Adding %s to %d timers", callback, len(TIMERS))
     TIMERS.append( (time.time()+delay, callback) )
     TIMERS.sort()
 
@@ -101,7 +102,7 @@ def proxy_poll (timeout=0.0):
         e = wc.proxy.Dispatcher.socket_map.values()
         r = [x for x in e if x.readable()]
         w = [x for x in e if x.writable()]
-        wc.log.debug(wc.LOG_PROXY, "select with %f timeout", timeout)
+        assert wc.log.debug(wc.LOG_PROXY, "select with %f timeout", timeout)
         try:
             (r, w, e) = select.select(r, w, e, timeout)
         except select.error, why:
@@ -110,31 +111,31 @@ def proxy_poll (timeout=0.0):
                 return
             else:
                 raise
-        wc.log.debug(wc.LOG_PROXY, "poll result %s", (r, w, e))
+        assert wc.log.debug(wc.LOG_PROXY, "poll result %s", (r, w, e))
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
         for x in e:
-            wc.log.debug(wc.LOG_PROXY, "%s poll handle exception", x)
+            assert wc.log.debug(wc.LOG_PROXY, "%s poll handle exception", x)
             t = time.time()
             x.handle_expt_event()
             handlerCount += 1
             _slow_check(x, t, 'eslow')
         for x in w:
-            wc.log.debug(wc.LOG_PROXY, "poll handle write %s", x)
+            assert wc.log.debug(wc.LOG_PROXY, "poll handle write %s", x)
             # note: do not put the following "if" in a list filter
             if not x.writable():
-                wc.log.debug(wc.LOG_PROXY, "not writable %s", x)
+                assert wc.log.debug(wc.LOG_PROXY, "not writable %s", x)
                 continue
             t = time.time()
             x.handle_write_event()
             handlerCount += 1
             _slow_check(x, t, 'wslow')
         for x in r:
-            wc.log.debug(wc.LOG_PROXY, "poll handle read %s", x)
+            assert wc.log.debug(wc.LOG_PROXY, "poll handle read %s", x)
             # note: do not put the following "if" in a list filter
             if not x.readable():
-                wc.log.debug(wc.LOG_PROXY, "not readable %s", x)
+                assert wc.log.debug(wc.LOG_PROXY, "not readable %s", x)
                 continue
             t = time.time()
             x.handle_read_event()

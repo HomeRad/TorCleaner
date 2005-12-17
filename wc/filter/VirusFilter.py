@@ -97,7 +97,7 @@ class VirusFilter (wc.filter.Filter.Filter):
         message and return an empty string.
         """
         if not attrs.has_key('virus_scanner'):
-            wc.log.debug(wc.LOG_FILTER, "No virus scanner found.")
+            assert wc.log.debug(wc.LOG_FILTER, "No virus scanner found.")
             return data
         scanner = attrs['virus_scanner']
         buf = attrs['virus_buf']

@@ -106,14 +106,14 @@ class Header (wc.filter.Filter.Filter):
         for h in data.keys():
             for name_match in attrs['header_delete'][stage]:
                 if name_match(h):
-                    wc.log.debug(wc.LOG_FILTER,
+                    assert wc.log.debug(wc.LOG_FILTER,
                                  "%s removing header %r", self, h)
                     delete.add(h.lower())
                     # go to next header name
                     break
         wc.proxy.Headers.remove_headers(data, delete)
         for name, val in attrs['header_add'][stage]:
-            wc.log.debug(wc.LOG_FILTER,
+            assert wc.log.debug(wc.LOG_FILTER,
                          "%s adding header %r: %r", self, name, val)
             if "$" in val:
                 # substitute template
@@ -122,7 +122,7 @@ class Header (wc.filter.Filter.Filter):
                 val = t.safe_substitute(d)
             data[name] = val+"\r"
         for name, val in attrs['header_replace'][stage]:
-            wc.log.debug(wc.LOG_FILTER,
+            assert wc.log.debug(wc.LOG_FILTER,
                          "%s replacing header %r: %r", self, name, val)
             if name not in data:
                 continue

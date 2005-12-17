@@ -66,7 +66,7 @@ def background_lookup (hostname, callback):
     Return immediately, but call callback with a DnsResponse object later.
     """
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    wc.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
+    assert wc.log.debug(wc.LOG_DNS, 'background_lookup %r', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
@@ -165,7 +165,7 @@ class DnsExpandHostname (object):
             wc.proxy.make_timer(self.delay, self.handle_issue_request)
 
     def handle_issue_request (self):
-        wc.log.debug(wc.LOG_DNS, 'issue_request')
+        assert wc.log.debug(wc.LOG_DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             hostname = self.requests[0]
@@ -179,7 +179,7 @@ class DnsExpandHostname (object):
                 wc.proxy.make_timer(self.delay, self.handle_issue_request)
 
     def handle_dns (self, hostname, answer):
-        wc.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
+        assert wc.log.debug(wc.LOG_DNS, 'handle_dns %r %s', hostname, answer)
         if not self.callback:
             # Already handled this query
             return
@@ -272,7 +272,7 @@ class DnsCache (object):
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
-        wc.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
+        assert wc.log.debug(wc.LOG_DNS, 'dnscache lookup %r', hostname)
         if hostname[-1:] == '.':
             # We should just remove the trailing '.'
             DnsResponse('redirect', hostname[:-1])
@@ -281,7 +281,7 @@ class DnsCache (object):
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
-                wc.log.debug(wc.LOG_DNS, 'cached! %r', hostname)
+                assert wc.log.debug(wc.LOG_DNS, 'cached! %r', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -402,7 +402,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         except socket.error:
             # We couldn't even connect .. bah!
             e = sys.exc_info()[1]
-            wc.log.debug(wc.LOG_DNS, "%s connect error %s", self, str(e))
+            assert wc.log.debug(wc.LOG_DNS,
+                                "%s connect error %s", self, str(e))
             callback(hostname,
                      DnsResponse('error', 'could not connect to DNS server'))
             self.callback = None
@@ -445,7 +446,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         except wc.dns.exception.DNSException:
             if self.callback:
                 e = sys.exc_info()[1]
-                wc.log.debug(wc.LOG_DNS, "%s DNS error %s", self, str(e))
+                assert wc.log.debug(wc.LOG_DNS,
+                                    "%s DNS error %s", self, str(e))
                 self.callback(self.hostname,
                               DnsResponse('error', 'DNS error %s' % str(e)))
                 self.callback = None
@@ -473,7 +475,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.query.use_tsig(resolver.keyring, resolver.keyname)
         self.query.use_edns(resolver.edns, resolver.ednsflags,
                             resolver.payload)
-        wc.log.debug(wc.LOG_DNS, "%s sending DNS query %s",
+        assert wc.log.debug(wc.LOG_DNS, "%s sending DNS query %s",
                      self, wc.strformat.indent(self.query))
         wire = self.query.to_wire()
         if self.tcp:
@@ -492,7 +494,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if not self.callback:
             return # It's already handled, so ignore this
         if not self.connected:
-            wc.log.debug(wc.LOG_DNS, "%s DNS connect timeout", self)
+            assert wc.log.debug(wc.LOG_DNS, "%s DNS connect timeout", self)
             self.callback(self.hostname,
                           DnsResponse('error', 'timed out connecting'))
             self.callback = None
@@ -501,7 +503,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         if (not self.tcp) and \
            dns_accepts_tcp.get(self.nameserver, True) and \
            self.retries == 2:
-            wc.log.debug(wc.LOG_DNS, "%s switching to TCP", self)
+            assert wc.log.debug(wc.LOG_DNS, "%s switching to TCP", self)
             self.TIMEOUT = 20
             self.close()
             self.tcp = True
@@ -511,7 +513,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         elif not self.tcp and self.retries < 12:
             self.send_dns_request()
         else:
-            wc.log.debug(wc.LOG_DNS, "%s DNS timeout", self)
+            assert wc.log.debug(wc.LOG_DNS, "%s DNS timeout", self)
             if self.callback:
                 self.callback(self.hostname,
                               DnsResponse('error', 'timed out'))
@@ -561,7 +563,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             # Anyway, if this is the answer to a different question,
             # we ignore this read, and let the timeout take its course
             return
-        wc.log.debug(wc.LOG_DNS, "%s got DNS response %s",
+        assert wc.log.debug(wc.LOG_DNS, "%s got DNS response %s",
                      self, wc.strformat.indent(response))
         # check truncate flag
         if (response.flags & wc.dns.flags.TC) != 0:
@@ -591,7 +593,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             name = wc.dns.name.from_text(self.hostname)
             answer = wc.dns.resolver.Answer(
                                    name, self.rdtype, self.rdclass, response)
-            wc.log.debug(wc.LOG_DNS, "%s DNS answer %s",
+            assert wc.log.debug(wc.LOG_DNS, "%s DNS answer %s",
                          self, wc.strformat.indent(answer))
         except wc.dns.resolver.NoAnswer:
             wc.log.warn(wc.LOG_DNS, "%s no answer", self)

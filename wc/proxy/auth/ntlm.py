@@ -334,7 +334,7 @@ def parse_message1 (msg):
     """
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
-    wc.log.debug(wc.LOG_AUTH, "msg1 flags %s",
+    assert wc.log.debug(wc.LOG_AUTH, "msg1 flags %s",
                  "\n".join(str_flags(res['flags'])))
     if res['flags'] & NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED:
         domain_offset = getint32(msg[20:24])
@@ -397,7 +397,7 @@ def parse_message2 (msg):
         return res
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])
-    wc.log.debug(wc.LOG_AUTH, "msg2 flags %s",
+    assert wc.log.debug(wc.LOG_AUTH, "msg2 flags %s",
                  "\n".join(str_flags(res['flags'])))
     res['nonce'] = msg[24:32]
     if res['flags'] & NTLMSSP_TARGET_TYPE_DOMAIN:
@@ -478,7 +478,7 @@ def parse_message3 (msg):
     host_offset = getint32(msg[48:52])
     session_offset = getint32(msg[56:60])
     res['flags'] = getint16(msg[60:62])
-    wc.log.debug(wc.LOG_AUTH, "msg3 flags %s",
+    assert wc.log.debug(wc.LOG_AUTH, "msg3 flags %s",
                  "\n".join(str_flags(res['flags'])))
     res['domain'] = unicode2str(msg[domain_offset:username_offset])
     res['username'] = unicode2str(msg[username_offset:host_offset])

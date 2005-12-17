@@ -63,7 +63,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         Reset send and receive buffers.
         """
-        wc.log.debug(wc.LOG_PROXY, '%s buffer reset', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s buffer reset', self)
         self.recv_buffer = ''
         self.send_buffer = ''
         # True if data has still to be written before closing
@@ -93,7 +93,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         process_read.
         """
         assert self.connected
-        wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_read', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_read', self)
         if len(self.recv_buffer) > MAX_BUFSIZE:
             self.handle_error('read buffer full')
             return
@@ -106,11 +106,12 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             self.handle_error('read error')
             return
         if not data: # It's been closed, and handle_close has been called
-            wc.log.debug(wc.LOG_PROXY, "%s closed, got empty data", self)
+            assert wc.log.debug(wc.LOG_PROXY,
+                                "%s closed, got empty data", self)
             self.persistent = False
             return
-        wc.log.debug(wc.LOG_NET, '%s <= read %d', self, len(data))
-        wc.log.debug(wc.LOG_NET, 'data %r', data)
+        assert wc.log.debug(wc.LOG_NET, '%s <= read %d', self, len(data))
+        assert wc.log.debug(wc.LOG_NET, 'data %r', data)
         self.recv_buffer += data
         self.process_read()
 
@@ -139,7 +140,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         assert self.connected
         assert self.send_buffer
-        wc.log.debug(wc.LOG_PROXY, '%s handle_write', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s handle_write', self)
         num_sent = 0
         data = self.send_buffer[:self.socket_sndbuf]
         try:
@@ -150,8 +151,8 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
                 return
             self.handle_error(str(err))
             return
-        wc.log.debug(wc.LOG_NET, '%s => wrote %d', self, num_sent)
-        wc.log.debug(wc.LOG_NET, 'data %r', data)
+        assert wc.log.debug(wc.LOG_NET, '%s => wrote %d', self, num_sent)
+        assert wc.log.debug(wc.LOG_NET, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and self.close_ready():
             self.close()
@@ -166,7 +167,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         Close connection.
         """
-        wc.log.debug(wc.LOG_PROXY, '%s Connection.close', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s Connection.close', self)
         self.close_pending = False
         if self.persistent:
             self.close_reuse()
@@ -177,7 +178,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         Close the connection socket.
         """
-        wc.log.debug(wc.LOG_PROXY, '%s Connection.close_close', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s Connection.close_close', self)
         if self.connected:
             self.connected = False
             super(Connection, self).close()
@@ -187,7 +188,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         If we are still connected, wait until all data is sent, then close.
         Otherwise just close.
         """
-        wc.log.debug(wc.LOG_PROXY, "%s Connection.handle_close", self)
+        assert wc.log.debug(wc.LOG_PROXY, "%s Connection.handle_close", self)
         if self.connected:
             self.delayed_close()
         else:
@@ -204,10 +205,10 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         Close whenever the data has been sent.
         """
         assert self.connected
-        wc.log.debug(wc.LOG_PROXY, '%s Connection.delayed_close', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s Connection.delayed_close', self)
         if not self.close_ready():
             # Do not close yet because there is still data to send
-            wc.log.debug(wc.LOG_PROXY, '%s close ready channel', self)
+            assert wc.log.debug(wc.LOG_PROXY, '%s close ready channel', self)
             self.close_pending = True
         else:
             self.close()
@@ -219,7 +220,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         assert self.persistent
         assert self.connected
-        wc.log.debug(wc.LOG_PROXY, '%s Connection.close_reuse %d',
+        assert wc.log.debug(wc.LOG_PROXY, '%s Connection.close_reuse %d',
                      self, self.sequence_number)
         self.sequence_number += 1
 
@@ -227,7 +228,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         Print error and close the connection.
         """
-        wc.log.debug(wc.LOG_PROXY, "%s error %s", self, what)
+        assert wc.log.debug(wc.LOG_PROXY, "%s error %s", self, what)
         super(Connection, self).handle_error(what)
         self.close()
 
@@ -235,7 +236,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         """
         Handle socket exception.
         """
-        wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_expt', self)
+        assert wc.log.debug(wc.LOG_PROXY, '%s Connection.handle_expt', self)
         try:
             # Get the socket error and report it. Note that SO_ERROR
             # clears the error.
@@ -267,8 +268,9 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         if not data:
             # Out-of-band data might just not have been arrived, even
             # if the error condition is set.
-            wc.log.debug(wc.LOG_PROXY, "%s got empty out-of-band data", self)
+            assert wc.log.debug(wc.LOG_PROXY,
+                                "%s got empty out-of-band data", self)
             return
-        wc.log.debug(wc.LOG_NET, '%s <= read %d', self, len(data))
-        wc.log.debug(wc.LOG_NET, 'data %r', data)
+        assert wc.log.debug(wc.LOG_NET, '%s <= read %d', self, len(data))
+        assert wc.log.debug(wc.LOG_NET, 'data %r', data)
         self.recv_buffer += data

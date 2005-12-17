@@ -195,7 +195,8 @@ class PickleStorage (Storage):
         """
         Write pickled cache to disk.
         """
-        wc.log.debug(wc.LOG_RATING, "Write ratings to %r.", self.filename)
+        assert wc.log.debug(wc.LOG_RATING,
+                            "Write ratings to %r.", self.filename)
         def callback (fp, obj):
             pickle.dump(obj, fp, 1)
         wc.fileutil.write_file(self.filename, self.cache, callback=callback)
@@ -204,7 +205,8 @@ class PickleStorage (Storage):
         """
         Load pickled cache from disk.
         """
-        wc.log.debug(wc.LOG_RATING, "Loading ratings from %r.", self.filename)
+        assert wc.log.debug(wc.LOG_RATING,
+                            "Loading ratings from %r.", self.filename)
         if os.path.isfile(self.filename):
             fp = file(self.filename, 'rb')
             self.cache = pickle.load(fp)
@@ -220,7 +222,8 @@ class PickleStorage (Storage):
                     del self[url]
                 self.write()
 	else:
-	    wc.log.debug(wc.LOG_RATING, "Not a plain file: %r", self.filename)
+	    assert wc.log.debug(wc.LOG_RATING,
+                                "Not a plain file: %r", self.filename)
 
 
 is_time = re.compile(r"^\d+$").search
@@ -243,7 +246,7 @@ def rating_import (url, ratingdata, debug=0):
     categories = {}
     for line in ratingdata.splitlines():
         if debug:
-            wc.log.debug(wc.LOG_RATING, "Read line %r", line)
+            assert wc.log.debug(wc.LOG_RATING, "Read line %r", line)
         line = line.strip()
         if not line:
             # ignore empty lines

@@ -465,7 +465,7 @@ class BaseParser (object):
         """
         Parse the stored filename, or another source given by fp.
         """
-        wc.log.debug(wc.LOG_PROXY, "Parsing %s", self.filename)
+        assert wc.log.debug(wc.LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
         self._preparse()
@@ -611,7 +611,7 @@ class WConfigParser (BaseParser):
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [sets.Set(), []]
         elif name == 'filter':
-            wc.log.debug(wc.LOG_FILTER, "enable filter module %s",
+            assert wc.log.debug(wc.LOG_FILTER, "enable filter module %s",
                          attrs['name'])
             self.config['filters'].append(attrs['name'])
         else:

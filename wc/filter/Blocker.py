@@ -90,7 +90,7 @@ def get_file_data (filename):
     """
     Return plain file object, possible gunzipping the file.
     """
-    wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
+    assert wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
     config = wc.configuration.config
     filename = os.path.join(config.configdir, filename)
     if filename.endswith(".gz"):
@@ -208,15 +208,18 @@ class Blocker (wc.filter.Filter.Filter):
         if not mime:
             mime = "text/html"
         parts = wc.url.url_split(url)
-        wc.log.debug(wc.LOG_FILTER, "block filter working on url %r", url)
+        assert wc.log.debug(wc.LOG_FILTER,
+                            "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
         if allowed:
-            wc.log.debug(wc.LOG_FILTER, "allowed url %s by rule %s", url, sid)
+            assert wc.log.debug(wc.LOG_FILTER,
+                                "allowed url %s by rule %s", url, sid)
             return data
         blocked, sid = self.blocked(url, parts)
         if blocked:
             # XXX hmmm, make HTTP HEAD request to get content type???
-            wc.log.debug(wc.LOG_FILTER, "blocked url %s by rule %s", url, sid)
+            assert wc.log.debug(wc.LOG_FILTER,
+                                "blocked url %s by rule %s", url, sid)
             if isinstance(blocked, basestring):
                 doc = blocked
             elif is_image_mime(mime) or is_image_url(url):
@@ -256,20 +259,20 @@ class Blocker (wc.filter.Filter.Filter):
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
             if blockdomain == parts[wc.url.DOMAIN]:
-                wc.log.debug(wc.LOG_FILTER,
+                assert wc.log.debug(wc.LOG_FILTER,
                              "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
         for blockurl, sid in self.blocked_urls:
             if blockurl in url:
-                wc.log.debug(wc.LOG_FILTER,
+                assert wc.log.debug(wc.LOG_FILTER,
                              "blocked by blockurl %r", blockurl)
                 return True, sid
         # check block patterns
         for ro, replacement, sid in self.block:
             mo = ro.search(url)
             if mo:
-                wc.log.debug(wc.LOG_FILTER,
+                assert wc.log.debug(wc.LOG_FILTER,
                              "blocked by pattern %s", ro.pattern)
                 if replacement:
                     return mo.expand(replacement), sid

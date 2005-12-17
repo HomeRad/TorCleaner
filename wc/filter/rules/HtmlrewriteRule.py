@@ -214,10 +214,12 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         Return filtered tag data for given tag and attributes.
         """
-        wc.log.debug(wc.LOG_HTML, "rule %s filter_tag", self.titles['en'])
-        wc.log.debug(wc.LOG_HTML, "original tag %r attrs %s", tag, attrs)
-        wc.log.debug(wc.LOG_HTML,
-                "replace %s with %r", num_part(self.part), self.replacement)
+        assert wc.log.debug(wc.LOG_HTML,
+                            "rule %s filter_tag", self.titles['en'])
+        assert wc.log.debug(wc.LOG_HTML,
+                            "original tag %r attrs %s", tag, attrs)
+        assert wc.log.debug(wc.LOG_HTML,
+                 "replace %s with %r", num_part(self.part), self.replacement)
         if self.part == wc.filter.html.COMPLETE:
             return [wc.filter.html.DATA, u""]
         if self.part == wc.filter.html.TAGNAME:
@@ -257,7 +259,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        wc.log.debug(wc.LOG_HTML,
+        assert wc.log.debug(wc.LOG_HTML,
                      "filtered tag %s attrs %s", tag, newattrs)
         return [starttype, tag, newattrs]
 
@@ -265,10 +267,10 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         Replace complete tag data in buf with replacement.
         """
-        wc.log.debug(wc.LOG_HTML, "rule %s filter_complete",
+        assert wc.log.debug(wc.LOG_HTML, "rule %s filter_complete",
                      self.titles['en'])
-        wc.log.debug(wc.LOG_HTML, "original buffer %s", buf)
-        wc.log.debug(wc.LOG_HTML, "part %s", num_part(self.part))
+        assert wc.log.debug(wc.LOG_HTML, "original buffer %s", buf)
+        assert wc.log.debug(wc.LOG_HTML, "part %s", num_part(self.part))
         if self.part == wc.filter.html.COMPLETE:
             buf[i:] = [[wc.filter.html.DATA, self.replacement]]
         elif self.part == wc.filter.html.TAG:
@@ -278,7 +280,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         elif self.part == wc.filter.html.ENCLOSED:
             buf[i+1:] = [[wc.filter.html.DATA, self.replacement]]
             buf.append([wc.filter.html.ENDTAG, tag])
-        wc.log.debug(wc.LOG_HTML, "filtered buffer %s", buf)
+        assert wc.log.debug(wc.LOG_HTML, "filtered buffer %s", buf)
 
     def toxml (self):
         """
