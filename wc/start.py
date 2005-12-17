@@ -63,7 +63,7 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True,
             prof = profile.Profile()
             try:
                 prof.runcall(wc.proxy.mainloop, handle=handle, abort=abort)
-            except:
+            except KeyboardInterrupt:
                 pass
             prof.dump_stats(_profile)
             return
