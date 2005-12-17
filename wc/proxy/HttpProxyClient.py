@@ -130,7 +130,7 @@ class HttpProxyClient (object):
         if status in (302, 301):
             self.isredirect = True
         elif not (200 <= status < 300):
-            wc.log.error(wc.LOG_PROXY, "%s got %s status %d %r",
+            wc.log.debug(wc.LOG_PROXY, "%s got %s status %d %r",
                          self, version, status, msg)
             self.finish()
         if headers.has_key('Transfer-Encoding'):
