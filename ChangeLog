@@ -22,9 +22,10 @@
     Type: feature
     Changed: wc/HtmlParser/__init__.py
 
-  * Several performance improvements for HTML filtering.
+  * Several performance improvements for HTML filtering and socket
+    handling.
     Type: feature
-    Changed: wc/filter/*.py
+    Changed: wc/*.py
 
 2.34 "The Exorcism of Emily Rose" (released 17.11.2005)
 
