@@ -98,10 +98,6 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         self.replacement = replacement
         self.enclosed = enclosed
         self.enclosed_ro = None
-        if self.enclosed and self.tag in NO_CLOSE_TAGS:
-            raise ValueError, "reading rule %r: tag %r has no end tag, " \
-                              "so specifying an enclose value is invalid." % \
-                              (self.titles['en'], tag)
         self.attrnames.append('tag')
 
     def fill_attrs (self, attrs, name):
@@ -142,6 +138,13 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             self.match_tag = self._match_tag_ro
         for attr, val in self.attrs.items():
             self.attrs_ro[attr] = re.compile(val)
+        if self.enclosed:
+            for tag in NO_CLOSE_TAGS:
+                if self.match_tag(tag):
+                    raise ValueError, \
+                              "reading rule %r: tag %r has no end tag, " \
+                              "so specifying an enclose value is invalid." % \
+                              (self.titles['en'], tag)
 
     def update (self, rule, dryrun=False, log=None):
         """
@@ -156,8 +159,9 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         See if this rule matches start tags.
         """
-        if self.tag in NO_CLOSE_TAGS:
-            return True
+        for tag in NO_CLOSE_TAGS:
+            if self.match_tag(tag):
+                return True
         return self.part not in [
             wc.filter.html.ENCLOSED,
             wc.filter.html.COMPLETE,
@@ -167,8 +171,9 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         See if this rule matches end tags.
         """
-        if self.tag in NO_CLOSE_TAGS:
-            return False
+        for tag in NO_CLOSE_TAGS:
+            if self.match_tag(tag):
+                return False
         return self.part not in [
             wc.filter.html.ATTR,
             wc.filter.html.ATTRVAL,
