@@ -1,5 +1,7 @@
 TODO
 
+- The thing is a tad too slow. Do profiling (eg. with a big HTML file).
+
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 

@@ -13,6 +13,10 @@
     Type: feature
     Changed: config/adverts.zap
 
+  * Improved JavaScript escaping of embedded "</script>".
+    Type: feature
+    Changed: wc/js/__init__.py
+
 2.34 "The Exorcism of Emily Rose" (released 17.11.2005)
 
   * Document the Antivirus rule type.
