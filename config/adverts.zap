@@ -114,7 +114,7 @@
  tag="a">
   <title lang="de">Verknüpfungen mit 'click' u.a.</title>
   <title lang="en">Adverts in the path name 7</title>
-  <attr name="href">([\.\?]click\?|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
+  <attr name="href">([\.\?]click[\?=]|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.355"
@@ -371,7 +371,7 @@
  tag="iframe|script">
   <title lang="de">Verknüpfungen mit 'click' u.a.</title>
   <title lang="en">Adverts in the path name 7</title>
-  <attr name="src">([\.\?]click\?|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
+  <attr name="src">([\.\?]click[\?=]|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.63"
