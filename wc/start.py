@@ -30,7 +30,7 @@ import wc.filter.VirusFilter
 
 
 def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True,
-                profiling=True):
+                profiling=False):
     """
     Initalize configuration, start psyco compiling and the proxy loop.
     This function does not return until Ctrl-C is pressed.
