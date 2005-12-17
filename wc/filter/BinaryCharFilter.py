@@ -68,8 +68,8 @@ class BinaryCharFilter (wc.filter.Filter.Filter):
         """
         # The HTML parser does not yet understand Unicode, so this hack
         # disables the binary char filter in this case.
-        if not attrs.get('binarychar_is_utf'):
-            attrs['binarychar_is_utf'] = is_utf(data)
-        if attrs['binarychar_is_utf']:
+        if is_utf(data):
+            attrs['charset'] = "utf-8"
+        if attrs.get('charset') == "utf-8":
             return data
         return data.translate(self.transe)
