@@ -32,7 +32,7 @@ TESTFILES := test/*.py
 # "runit" service directory
 SERVICEDIR := /etc/webcleaner/service
 # run unittests on check
-TESTS = test/test.sh
+TESTS = scripts/test.sh
 # Debian settings
 DEB_GPG_KEY:=2DE589F5
 

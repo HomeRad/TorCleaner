@@ -68,9 +68,8 @@ include test/rating/rating.txt
 include wc/magic/tests/*.py
 include wc/magic/tests/*.html
 include wc/filter/tests/*.py
-include wc/proxy/tests/*.py
-recursive-include wc/proxy/ftests *.py
-include wc/proxy/ftests/README
+recursive-include wc/proxy/tests/*.py
+include wc/proxy/tests/README
 include wc/proxy/auth/tests/*.py
 include test*.py
 include po/*.po
