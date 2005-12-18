@@ -169,7 +169,7 @@ pylint: localbuild
 
 .PHONY: pyflakes
 pyflakes:
-	$(PYFLAKES) *.py test wc config | \
+	$(PYFLAKES) *.py webcleaner* test tests wc config | \
 	  grep -v "redefinition of unused 'wc'" | \
 	  grep -v "undefined name '_'"
 
