@@ -87,13 +87,13 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.10"
- tag="table">
+ tag="ul">
   <title lang="de">sourceforge.net</title>
   <title lang="en">Sourceforge ODSN navbar</title>
   <description lang="de">Ich mag die OSDN Leiste nicht.</description>
   <description lang="en">Sourceforge ODSN navbar</description>
   <matchurl>^http://(sf|sourceforge)\.net/</matchurl>
-  <attr name="style">border-top: 2px #666666 solid; border-bottom:\s*1px #222222 solid;</attr>
+  <attr name="class">ostgnavbar</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.407"
