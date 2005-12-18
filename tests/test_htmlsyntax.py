@@ -21,6 +21,7 @@ Test HTML file syntax.
 import urllib
 import HTMLParser
 import os
+import sys
 import glob
 import wc.fileutil
 import wc.decorators
