@@ -116,11 +116,8 @@ class Filter (object):
             elif mime is None:
                 self.mime_cache[mime] = False
             else:
-                for ro in self.mimes:
-                    if ro.match(mime):
-                        self.mime_cache[mime] = True
-                else:
-                    self.mime_cache[mime] = False
+                self.mime_cache[mime] = \
+                       [ro for ro in self.mimes if ro.match(mime)]
         return self.mime_cache[mime]
 
     def __cmp__ (self, other):
