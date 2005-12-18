@@ -1,12 +1,11 @@
 # -*- coding: iso-8859-1 -*-
 
 import unittest
-
+import tests
 import wc.ip
-from wc.tests import MsgTestCase
 
 
-class TestIp (MsgTestCase):
+class TestIp (tests.StandardTest):
 
     def testNames (self):
         hosts, nets = wc.ip.hosts2map(["www.kampfesser.net",

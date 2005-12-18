@@ -19,13 +19,12 @@ Test dummy object.
 """
 
 import unittest
-
+import tests
 import wc.strformat
 import wc.dummy
-from wc.tests import MsgTestCase
 
 
-class TestDummy (MsgTestCase):
+class TestDummy (tests.StandardTest):
     """
     Test dummy object.
     """
