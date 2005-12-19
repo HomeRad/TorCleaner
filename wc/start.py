@@ -80,7 +80,8 @@ def load_psyco ():
         import psyco
         # psyco >= 1.4.0 final is needed
         if psyco.__version__ >= 0x10400f0:
-            psyco.profile(memory=10000)
+            #psyco.log(logfile="psyco.log")
+            psyco.full(memory=10000)
         else:
             # warn about old psyco version
             wc.log.warn(wc.LOG_PROXY,
