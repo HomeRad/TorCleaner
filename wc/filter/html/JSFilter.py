@@ -326,7 +326,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         assert self.htmlparser.state[0] == 'parse', \
                "non-parse state %s" % self.htmlparser.state
         ver = wc.js.get_js_ver(language)
-        if not wc.url.is_safe_js_url(url):
+        if not wc.js.is_safe_js_url(self.url, url):
             wc.log.warn(wc.LOG_JS,
                         "invalid script src url %r at %s (base %r)",
                         url, self.url, self.base_url)
