@@ -5,6 +5,10 @@
     Type: feature
     Changed: wc/js/__init__.py
 
+  * Improved XML MIME type detection.
+    Type: feature
+    Changed: wc/filter/XmlRewriter.py
+
 2.35 "Lord of War" (released 19.12.2005)
 
   * A missing alt="" attribute of an <img> tag is copied from the
