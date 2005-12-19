@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@users.sourceforge.net>
 Standards-Version: 3.6.2.1
-Build-Depends: python2.4-dev, debhelper (>= 4.1.16), debconf (>= 1.2.9) | debconf-2.0, gettext, cdbs
+Build-Depends: python2.4-dev, debhelper (>= 5), debconf (>= 1.2.9) | debconf-2.0, gettext, cdbs
 
 Package: webcleaner
 Architecture: any
