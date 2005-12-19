@@ -182,7 +182,8 @@ class XmlFilter (object):
         pass
 
     def processingInstruction (self, target, data):
-        print "XXX processingInstruction", target, data
+        item = [wc.filter.xmlfilt.INSTRUCTION, target, data]
+        self.tagbuf.append(item)
 
     def skippedEntity (self, name):
         print "XXX skippedEntity", name

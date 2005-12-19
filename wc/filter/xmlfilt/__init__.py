@@ -31,7 +31,7 @@ STARTENDTAG = 4
 STARTDOCUMENT = 5
 ENDDOCUMENT = 6
 CDATA = 7
-
+INSTRUCTION = 8
 
 def _startout (out, item, start=u"<", end=u">"):
     """
@@ -55,7 +55,7 @@ def tagbuf2data (tagbuf, out, entities=None):
             out.write(wc.XmlUtils.xmlquote(item[1]))
         elif item[0] == CDATA:
             # ']]>' must not occur in item[1]
-            out.write("<![CDATA[%s]]>" % item[1])
+            out.write("u<![CDATA[%s]]>" % item[1])
         elif item[0] == STARTTAG:
             _startout(out, item)
         elif item[0] == ENDTAG:
@@ -66,6 +66,8 @@ def tagbuf2data (tagbuf, out, entities=None):
             _startout(out, item, end=u"/>")
         elif item[0] == STARTDOCUMENT:
             _startout(out, item, start=u"<?", end=u"?>\n")
+        elif item[0] == INSTRUCTION:
+            out.write(u"<?%s %s?>" % (item[1], item[2]))
         else:
             wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
     return out
