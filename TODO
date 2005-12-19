@@ -1,5 +1,7 @@
 TODO
 
+- remove _webcleaner2_configdata.py from the .deb diff
+
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 
@@ -23,7 +25,8 @@ TODO
   <a b="c d="e"> ...
   
 - Use HTML parser with Unicode support, ie. rewrite this bugger in Python
-  with regexes (slow?).
+  with regexes (slow?). Look at TagSoup which claims to be streaming and
+  uses regexes.
   
 - Mac OS X and BSD support for network interface list:
   from the www.dents.org C source (GPL license):

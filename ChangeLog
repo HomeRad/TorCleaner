@@ -1,4 +1,4 @@
-2.35 "Lord of War" (released 18.12.2005)
+2.35 "Lord of War" (released 19.12.2005)
 
   * A missing alt="" attribute of an <img> tag is copied from the
     title="" attribute (if it's there). This enables Mozilla tooltips,

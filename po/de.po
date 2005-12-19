@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-11-17 10:20+0100\n"
+"POT-Creation-Date: 2005-12-19 12:56+0100\n"
 "PO-Revision-Date: 2005-11-15 17:55+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -31,17 +31,17 @@ msgstr "mit einer Regel"
 msgid "with %d rules"
 msgstr "mit %d Regeln"
 
-#: ../wc/filter/rules/Rule.py:128
+#: ../wc/filter/rules/Rule.py:130
 #, python-format
 msgid "updating rule title for language %s:"
 msgstr "aktualisiere Überschrift für Regel %s:"
 
-#: ../wc/filter/rules/Rule.py:142
+#: ../wc/filter/rules/Rule.py:144
 #, python-format
 msgid "updating rule description for language %s:"
 msgstr "aktualisiere Beschreibung der Regel für die Sprache %s:"
 
-#: ../wc/filter/rules/Rule.py:159
+#: ../wc/filter/rules/Rule.py:161
 #, python-format
 msgid "updating rule %s:"
 msgstr "aktualisiere Regel %s:"
@@ -105,46 +105,46 @@ msgstr "Bewertung %r für Kategorie %r ist nicht im Bereich %s"
 msgid "adding new rating for %r"
 msgstr "füge neuen externen Filter %r hinzu"
 
-#: ../wc/filter/rating/storage.py:257
+#: ../wc/filter/rating/storage.py:260
 #, python-format
 msgid "malformed rating line %r"
 msgstr "ungültige Bewertungszeile %r"
 
-#: ../wc/filter/rating/storage.py:259
+#: ../wc/filter/rating/storage.py:262
 #, python-format
 msgid "malformed modified time %r"
 msgstr "ungültige Änderungszeit %r"
 
-#: ../wc/filter/rating/storage.py:263
+#: ../wc/filter/rating/storage.py:266
 #, python-format
 msgid "generic url %r doesn't match %r"
 msgstr "Allgemeine URL %r passt nicht zu %r"
 
-#: ../wc/filter/VirusFilter.py:89
+#: ../wc/filter/VirusFilter.py:88
 msgid "Not acceptable"
 msgstr "Ungültig"
 
-#: ../wc/filter/VirusFilter.py:90
+#: ../wc/filter/VirusFilter.py:89
 #, python-format
 msgid "Maximum data size (%s) exceeded"
 msgstr "Maximale Datengröße (%s) überschritten"
 
-#: ../wc/filter/VirusFilter.py:176
+#: ../wc/filter/VirusFilter.py:175
 msgid "Clamd is not ready for stream scanning"
 msgstr "Clamd ist nicht bereit zum Prüfen eines Datenstroms"
 
-#: ../wc/filter/VirusFilter.py:250
+#: ../wc/filter/VirusFilter.py:249
 msgid "You have to disable ScannerDaemonOutputFormat"
 msgstr "Sie müssen ScannerDaemonOutputFormat deaktivieren"
 
-#: ../wc/filter/VirusFilter.py:252
+#: ../wc/filter/VirusFilter.py:251
 msgid ""
 "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
 msgstr ""
 "Clamd ist nicht richtig konfiguriert: sowohl TCPSocket als auch LocalSocket "
 "sind aktiviert."
 
-#: ../wc/filter/VirusFilter.py:285
+#: ../wc/filter/VirusFilter.py:284
 msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd "
 "configuration"
@@ -152,12 +152,12 @@ msgstr ""
 "Sie müssen entweder TCPSocket oder LocalSocket in Ihrer Clamd Konfiguration "
 "aktivieren"
 
-#: ../wc/filter/html/JSFilter.py:361
+#: ../wc/filter/html/JSFilter.py:362
 #, python-format
 msgid "error fetching script from %r"
 msgstr "Fehler beim Laden von %r"
 
-#: ../wc/filter/html/JSFilter.py:364
+#: ../wc/filter/html/JSFilter.py:365
 #, python-format
 msgid "fetched script from %r"
 msgstr "Skript geladen von %r"
@@ -230,15 +230,15 @@ msgstr "keine Daten erhalten"
 msgid "updating ratings..."
 msgstr "Aktualisierung der Inhaltsbewertung..."
 
-#: ../wc/strformat.py:214
+#: ../wc/strformat.py:225
 msgid "seconds"
 msgstr "Sekunden"
 
-#: ../wc/strformat.py:217
+#: ../wc/strformat.py:228
 msgid "minutes"
 msgstr "Minuten"
 
-#: ../wc/strformat.py:220
+#: ../wc/strformat.py:231
 msgid "hours"
 msgstr "Stunden"
 
@@ -302,7 +302,7 @@ msgstr "füge %s ein"
 msgid "unknown tag name %r"
 msgstr "Unbekannter Tagname %r"
 
-#: ../wc/start.py:57
+#: ../wc/start.py:88
 msgid ""
 "Psyco is installed but not used since the version is too old.\n"
 "Psyco >= 1.4 is needed."
@@ -314,8 +314,8 @@ msgstr ""
 msgid "Ok"
 msgstr "Ok"
 
-#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:624
-#: ../wc/proxy/HttpClient.py:629 ../wc/proxy/HttpClient.py:640
+#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:625
+#: ../wc/proxy/HttpClient.py:630 ../wc/proxy/HttpClient.py:641
 msgid "Authentication Required"
 msgstr "Autorisierung benötigt"
 
@@ -344,7 +344,7 @@ msgstr "Unbekannter Grund"
 msgid "Error: nothing to update."
 msgstr "Fehler: keine Aktualisierungen vorhanden."
 
-#: ../wc/proxy/Dispatcher.py:329
+#: ../wc/proxy/Dispatcher.py:326
 #, python-format
 msgid "Connect error %s."
 msgstr "Verbindungsproblem %s."
@@ -372,102 +372,102 @@ msgstr "zlib Fehler: nicht in gzip Format, deaktiviere gunzip"
 msgid "zlib error: unknown compression method, disabling gunzip"
 msgstr "zlib Fehler: unbekannte Komprimierungsart, deaktiviere gunzip"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:165
+#: ../wc/proxy/ClientServerMatchmaker.py:166
 #, python-format
 msgid "Host %s is an abbreviation for %s"
 msgstr "Rechner %s ist eine Abkürzung für %s"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:170
+#: ../wc/proxy/ClientServerMatchmaker.py:171
 msgid "Host not found"
 msgstr "Rechner nicht gefunden"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:171
+#: ../wc/proxy/ClientServerMatchmaker.py:172
 #, python-format
 msgid "Host %s not found .. %s"
 msgstr "Rechner %s nicht gefunden .. %s"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:202
+#: ../wc/proxy/ClientServerMatchmaker.py:204
 msgid "Service unavailable"
 msgstr "Dienst nicht verfügbar"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:221
+#: ../wc/proxy/ClientServerMatchmaker.py:224
 msgid "Connect error"
 msgstr "Verbindungsproblem"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:254
-#: ../wc/proxy/ClientServerMatchmaker.py:258
+#: ../wc/proxy/ClientServerMatchmaker.py:257
+#: ../wc/proxy/ClientServerMatchmaker.py:261
 msgid "Expectation failed"
 msgstr "Erwartung fehlgeschlagen"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:255
+#: ../wc/proxy/ClientServerMatchmaker.py:258
 msgid "Server does not understand HTTP/1.1"
 msgstr "Server versteht nicht HTTP/1.1"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:259
+#: ../wc/proxy/ClientServerMatchmaker.py:262
 #, python-format
 msgid "Unsupported expectation %r"
 msgstr "Erwartung %r nicht erfüllbar"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:271
+#: ../wc/proxy/ClientServerMatchmaker.py:274
 msgid "No response from server"
 msgstr "Keine Antwort vom Server"
 
-#: ../wc/proxy/ClientServerMatchmaker.py:309
+#: ../wc/proxy/ClientServerMatchmaker.py:312
 msgid "Server did not respond"
 msgstr "Server hat nicht geantwortet"
 
-#: ../wc/proxy/HttpClient.py:122
+#: ../wc/proxy/HttpClient.py:123
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr "Proxy Fehler %d %s"
 
-#: ../wc/proxy/HttpClient.py:202
+#: ../wc/proxy/HttpClient.py:203
 msgid "Method not allowed"
 msgstr "Anfrage nicht erlaubt"
 
-#: ../wc/proxy/HttpClient.py:208
+#: ../wc/proxy/HttpClient.py:209
 msgid "Empty URL"
 msgstr "Leere URL"
 
-#: ../wc/proxy/HttpClient.py:211
+#: ../wc/proxy/HttpClient.py:212
 msgid "HTTP version not supported"
 msgstr "HTTP Version wird nicht unterstützt"
 
-#: ../wc/proxy/HttpClient.py:228
+#: ../wc/proxy/HttpClient.py:229
 msgid "URL too long"
 msgstr "URL zu lang"
 
-#: ../wc/proxy/HttpClient.py:229
+#: ../wc/proxy/HttpClient.py:230
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr "URL Längenbegrenzung ist %d Byte."
 
-#: ../wc/proxy/HttpClient.py:257
+#: ../wc/proxy/HttpClient.py:258
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: ../wc/proxy/HttpClient.py:309 ../wc/proxy/HttpClient.py:319
+#: ../wc/proxy/HttpClient.py:310 ../wc/proxy/HttpClient.py:320
 msgid "Bad Request"
 msgstr "Schlechte Anfrage"
 
-#: ../wc/proxy/HttpClient.py:339 ../wc/proxy/HttpClient.py:350
-#: ../wc/proxy/HttpClient.py:361
+#: ../wc/proxy/HttpClient.py:340 ../wc/proxy/HttpClient.py:351
+#: ../wc/proxy/HttpClient.py:362
 msgid "Proxy Authentication Required"
 msgstr "Proxy Autorisierung benötigt"
 
-#: ../wc/proxy/HttpClient.py:486 ../wc/proxy/HttpServer.py:401
+#: ../wc/proxy/HttpClient.py:487 ../wc/proxy/HttpServer.py:403
 msgid "Moved Temporarily"
 msgstr "Vorübergehend verschoben"
 
-#: ../wc/proxy/HttpClient.py:616
+#: ../wc/proxy/HttpClient.py:617
 msgid "Invalid Method"
 msgstr "Ungültige Anfrage"
 
-#: ../wc/proxy/HttpServer.py:321
+#: ../wc/proxy/HttpServer.py:323
 msgid "redirection to localhost"
 msgstr "Weiterleitung zu localhost"
 
-#: ../wc/proxy/HttpServer.py:460
+#: ../wc/proxy/HttpServer.py:462
 #, python-format
 msgid "server received %d bytes more than content-length"
 msgstr "der Server empfing %d Bytes mehr als angegeben durch content-length"
