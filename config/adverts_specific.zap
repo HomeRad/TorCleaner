@@ -206,15 +206,6 @@
   <attr name="src">http://campaigns\.f2\.com\.au</attr>
 </htmlrewrite>
 
-<htmlrewrite sid="wc.421"
- tag="script">
-  <title lang="de">Google Werbeseiten</title>
-  <title lang="en">Google Pageads</title>
-  <description lang="de">Google Javascript (Text-)Werbung.</description>
-  <description lang="en">Google Javascript (textual) pageads.</description>
-  <attr name="src">pagead\.googlesyndication\.com</attr>
-</htmlrewrite>
-
 <htmlrewrite sid="wc.422"
  tag="a">
   <title lang="de">lwn.net Werbung</title>
@@ -286,16 +277,22 @@
   <title lang="de">Google pageads</title>
 </block>
 
-<htmlrewrite sid="wc.49"
- tag="script">
-  <title lang="de">Google annoyances</title>
-  <attr name="src">\.google(syndication|-analytics)\.</attr>
+<htmlrewrite sid="wc.76"
+ tag="a">
+  <title lang="de">Google Pageads 2</title>
+  <attr name="href">\.googleadservices\.|ads_by_google\.html</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.50"
  tag="iframe">
   <title lang="de">Google pageads 3</title>
   <attr name="src">\.googlesyndication\.</attr>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.49"
+ tag="script">
+  <title lang="de">Google annoyances</title>
+  <attr name="src">\.google(syndication|-analytics)\.</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.32"
