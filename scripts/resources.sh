@@ -13,3 +13,8 @@ PROXY=localhost:8081
 if waitfor -w 1 port:$PROXY; then
     echo "--resource=proxy"
 fi
+
+os=`python -c "import os; print os.name"`
+if [ "x$os" = "xposix" ]; then
+    echo "--resource=posix"
+fi
