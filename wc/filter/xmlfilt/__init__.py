@@ -30,6 +30,7 @@ COMMENT = 3
 STARTENDTAG = 4
 STARTDOCUMENT = 5
 ENDDOCUMENT = 6
+CDATA = 7
 
 
 def _startout (out, item, start=u"<", end=u">"):
@@ -52,6 +53,9 @@ def tagbuf2data (tagbuf, out, entities=None):
     for item in tagbuf:
         if item[0] == DATA:
             out.write(wc.XmlUtils.xmlquote(item[1]))
+        elif item[0] == CDATA:
+            # ']]>' must not occur in item[1]
+            out.write("<![CDATA[%s]]>" % item[1])
         elif item[0] == STARTTAG:
             _startout(out, item)
         elif item[0] == ENDTAG:

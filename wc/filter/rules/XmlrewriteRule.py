@@ -188,11 +188,13 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                     data = self.rsshtml.filter(data, url, htmlrules)
                     data = self.filter_html(data, url, htmlrules)
                     item[1] = data
+                    if "]]>" not in data:
+                        item[0] = wc.filter.xmlfilt.CDATA
             tagbuf.append([wc.filter.xmlfilt.ENDTAG, tag])
         elif self.replacetypenum == REMOVE:
             del tagbuf[pos:]
         else:
-            wc.log.warn(wc.LOG_FILTER, "%s: unimplemented replace type", self)
+            wc.log.warn(wc.LOG_XML, "%s: unimplemented replace type", self)
 
     def filter_html (self, data, url, htmlrules):
         """

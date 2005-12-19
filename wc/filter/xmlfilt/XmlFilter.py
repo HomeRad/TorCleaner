@@ -202,7 +202,6 @@ class XmlFilter (object):
         Append serialized tag items of the tag buffer to the output buffer
         and clear the tag buffer.
         """
-        assert wc.log.debug(wc.LOG_FILTER, "%s tagbuf2data", self)
         wc.filter.xmlfilt.tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
