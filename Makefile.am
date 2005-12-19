@@ -133,10 +133,19 @@ releasecheck:
 	  echo "Could not release: add admin user to config"; false; \
 	fi
 
+.PHONY: upload
+upload:
+#	relaseforge is broken right now
+#	@echo "Starting releaseforge..."
+#	@releaseforge
+	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz
+	-ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).win32-py2.4.exe
+	mozilla -remote "openUrl(https://sourceforge.net/projects/webcleaner, new-tab)"
+	@echo "Make SF release and press return..."
+	@read
+
 .PHONY: release
-release: releasecheck clean dist sign_distfiles homepage
-	@echo "Starting releaseforge..."
-	@releaseforge
+release: releasecheck clean dist sign_distfiles homepage upload
 	@echo "Uploading new WebCleaner Homepage..."
 	$(MAKE) -C ~/public_html/webcleaner.sf.net upload
 	@echo "Register at Python Package Index..."
