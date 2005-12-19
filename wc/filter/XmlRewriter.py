@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-Filter a HTML stream.
+Filter a XML stream.
 """
 
 import xml.sax.expatreader
@@ -39,7 +39,7 @@ class XmlRewriter (wc.filter.Filter.Filter):
         """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['xmlrewrite', 'htmlrewrite']
-        mimes = ['text/xml', 'application/xml', 'application/atom+xml']
+        mimes = ['text/xml', 'application/((rss|atom)\+)?xml', ]
         super(XmlRewriter, self).__init__(stages=stages, rulenames=rulenames,
                                           mimes=mimes)
 
