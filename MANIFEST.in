@@ -59,7 +59,6 @@ include templates/classic/*.xcf
 include templates/classic/blocked.*
 include templates/classic/macros/*.html
 include test/*.py
-include test/*.sh
 include test/*.pot
 include test/*.po
 include test/Makefile
@@ -68,7 +67,7 @@ include test/rating/rating.txt
 include wc/magic/tests/*.py
 include wc/magic/tests/*.html
 include wc/filter/tests/*.py
-recursive-include wc/proxy/tests/*.py
+recursive-include wc/proxy/tests *.py
 include wc/proxy/tests/README
 include wc/proxy/auth/tests/*.py
 include test*.py
