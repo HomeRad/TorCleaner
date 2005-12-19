@@ -49,7 +49,7 @@ clean-local: clean-log
 	rm -f index.html* test.gif
 	rm -f config/magic.mime.mgc
 	rm -f _webcleaner2_configdata.py
-	rm -f crossbuild.log localbuild.log
+	rm -f crossbuild.log
 	rm -rf coverage
 # delete possible aborted dist build
 	rm -rf webcleaner-$(VERSION)
