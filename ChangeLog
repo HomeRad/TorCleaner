@@ -5,9 +5,14 @@
     Type: feature
     Changed: wc/js/__init__.py
 
-  * Improved XML MIME type detection.
+  * Improved XML MIME type detection and parsing.
     Type: feature
     Changed: wc/filter/XmlRewriter.py
+
+  * Allow any port for HTTP request. Only check scheme allowance and
+    localhost redirections.
+    Type: feature
+    Changed: wc/proxy/Allowed.py
 
 2.35 "Lord of War" (released 19.12.2005)
 
