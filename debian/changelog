@@ -1,3 +1,9 @@
+webcleaner (2.35-0calvin2) unstable; urgency=low
+
+  * Build fixes
+
+ -- Bastian Kleineidam <calvin@debian.org>  Mon, 19 Dec 2005 18:22:17 +0100
+
 webcleaner (2.35-0calvin1) unstable; urgency=low
 
   * New upstream release.

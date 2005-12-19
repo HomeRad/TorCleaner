@@ -56,3 +56,5 @@ binary-post-install/webcleaner-common::
 # overrides
 	install -m 0644 debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
 	install -m 0644 debian/webcleaner.linda debian/webcleaner/usr/share/linda/overrides/webcleaner
+# remove generated files
+	rm -f _webcleaner2_configdata.py
