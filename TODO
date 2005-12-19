@@ -1,7 +1,5 @@
 TODO
 
-- http://movies.go.com/filmography/film?person_id=201472
-
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 
