@@ -1,6 +1,7 @@
 SUBDIRS = libjs service po
 DIST_SUBDIRS = $(SUBDIRS) doc
-EXTRA_DIST = wc/tests \
+EXTRA_DIST = tests scripts \
+	wc/tests \
 	wc/dns/tests \
 	wc/filter/tests \
 	wc/proxy/tests \
@@ -187,29 +188,13 @@ installservice:
           ln -s /etc/webcleaner/service /var/service/webcleaner; \
 	fi
 
-test/test.sh:	localbuild
+scripts/test.sh: localbuild
 
 # (re)generate webcleaner blacklists
 .PHONY: update-blacklists
 update-blacklists:
-	test/run.sh config/bl2wc.py
+	scripts/run.sh config/bl2wc.py
 
 .PHONY: reindent
 reindent:
 	$(PYTHON) config/reindent.py -r -v wc
-
-.PHONY: debug
-debug:
-	@for f in `find wc -name \*.py  | grep -v "tests/"`; do \
-	    echo $$f; \
-	    sed -i "s/assert not wc\.log\.debug/wc.log.debug/" $$f; \
-	done
-
-
-.PHONY: ndebug
-ndebug:
-	@for f in `find wc -name \*.py  | grep -v "tests/"`; do \
-	    echo $$f; \
-	    sed -i 's/wc\.log\.debug/assert not wc.log.debug/' $$f; \
-	done
-
