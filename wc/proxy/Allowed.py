@@ -47,8 +47,6 @@ class AllowedHttpClient (object):
         self.methods = ['GET', 'HEAD', 'CONNECT', 'POST']
         self.schemes = ['http', 'https'] # 'nntps' is untested
 
-        self.connect_ports = [443] # 563 (NNTP over SSL) is untested
-        self.http_ports = [80, 81, 8000, 8080, 8081, 8090, 3128]
         self.public_docs = [
           '/blocked.html',
           '/blocked.png',
@@ -92,7 +90,7 @@ class AllowedHttpClient (object):
         """
         return method in self.methods
 
-    def is_allowed (self, method, scheme, port):
+    def is_allowed (self, method, scheme):
         """
         Check if givem method, scheme and port are allowed.
         """
@@ -102,19 +100,9 @@ class AllowedHttpClient (object):
         if scheme not in self.schemes:
             wc.log.warn(wc.LOG_PROXY, "illegal scheme %s", scheme)
             return False
-        if method == 'CONNECT':
-            # CONNECT method sanity
-            if port not in self.connect_ports:
-                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT port %d", port)
-                return False
-            if scheme != 'https':
-                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT scheme %d", scheme)
-                return False
-        else:
-            # all other methods
-            if port not in self.http_ports:
-                wc.log.warn(wc.LOG_PROXY, "illegal port %d", port)
-                return False
+        if method == 'CONNECT' and scheme != 'https':
+            wc.log.warn(wc.LOG_PROXY, "illegal CONNECT scheme %d", scheme)
+            return False
         return True
 
 
@@ -130,5 +118,3 @@ class AllowedSslClient (AllowedHttpClient):
         super(AllowedSslClient, self).__init__()
         self.methods = ['GET', 'HEAD', 'POST']
         self.schemes = ['https']
-        self.connect_ports = []
-        self.http_ports.append(443)
