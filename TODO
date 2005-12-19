@@ -2,8 +2,6 @@ TODO
 
 - http://movies.go.com/filmography/film?person_id=201472
 
-- remove _webcleaner2_configdata.py from the .deb diff
-
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 
