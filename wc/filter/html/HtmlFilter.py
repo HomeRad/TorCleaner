@@ -34,8 +34,6 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
     """
     Filtering HTML parser handler. Has filter rules and a rule stack.
     The callbacks modify parser state and buffers.
-
-    XXX fixme: should make internal functions start with _
     """
 
     def __init__ (self, rules, ratings, url, localhost, **opts):
