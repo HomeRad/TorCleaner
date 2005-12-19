@@ -1,7 +1,13 @@
-webcleaner (2.34-0calvin1) unstable; urgency=low
+webcleaner (2.35-0calvin1) unstable; urgency=low
 
   * New upstream release.
   * Debhelper v5
+
+ -- Bastian Kleineidam <calvin@debian.org>  Mon, 19 Dec 2005 13:57:10 +0100
+
+webcleaner (2.34-0calvin1) unstable; urgency=low
+
+  * New upstream release.
 
  -- Bastian Kleineidam <calvin@debian.org>  Mon, 19 Dec 2005 12:54:29 +0100
 
