@@ -2,8 +2,8 @@
 # example debian/rules for cdbs packages
 
 include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/python-distutils.mk
 include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
 
 DEB_PYTHON_COMPILE_VERSION=2.4
 
@@ -23,6 +23,9 @@ DEB_FIXPERMS_EXCLUDE+=/etc/webcleaner/webcleaner.conf /var/log/webcleaner
 DEB_MAKE_INSTALL_TARGET=
 # webcleaner gets the python files
 DEB_DESTDIR=$(BASE)
+
+clean::
+	rm -f _webcleaner2_configdata.py
 
 makebuilddir/webcleaner::
 	$(PYTHON) setup.py sdist --manifest-only
