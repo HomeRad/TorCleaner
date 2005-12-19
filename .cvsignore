@@ -16,6 +16,7 @@ webcleaner-md5sums.txt
 filter.prof
 config.prof
 error.log
+psyco.log
 stamp-h
 stamp-h1
 stamp-h.in

@@ -59,7 +59,7 @@ cvsclean:
 
 .PHONY: clean-log
 clean-log:
-	rm -f webcleaner*.log* webcleaner.err*
+	rm -f webcleaner*.log* webcleaner.err* psyco.log
 
 # to build in the current directory
 .PHONY: localbuild
