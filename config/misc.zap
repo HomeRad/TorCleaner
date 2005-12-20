@@ -146,4 +146,14 @@
   <description lang="en">&lt;iframe&gt; content is almost always advertising.</description>
   <matchurl>imdb.com</matchurl>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.77"
+ tag="iframe">
+  <title lang="de">Entferne &lt;iframe&gt; Inhalt</title>
+  <title lang="en">Remove &lt;iframe&gt; content</title>
+  <description lang="de">Lösche alles innerhalb von &lt;iframe&gt; weil es für Browser ohne Frame-Unterstützung verwendet wird.</description>
+  <description lang="en">Remove contents of &lt;iframe&gt; since it is intended for browsers without frame support.</description>
+  <enclosed>.</enclosed>
+  <replacement part="enclosed"/>
+</htmlrewrite>
 </folder>
