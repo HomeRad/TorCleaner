@@ -55,7 +55,7 @@ def tagbuf2data (tagbuf, out, entities=None):
             out.write(wc.XmlUtils.xmlquote(item[1]))
         elif item[0] == CDATA:
             # ']]>' must not occur in item[1]
-            out.write("u<![CDATA[%s]]>" % item[1])
+            out.write(u"<![CDATA[%s]]>" % item[1])
         elif item[0] == STARTTAG:
             _startout(out, item)
         elif item[0] == ENDTAG:
