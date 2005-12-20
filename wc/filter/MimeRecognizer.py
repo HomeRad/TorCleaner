@@ -112,7 +112,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
             assert wc.log.debug(wc.LOG_FILTER, "MIME recognized %r", mime)
             origmime = attrs['mime']
             if mime and origmime and is_preferred_mime(mime, origmime):
-                wc.log.warn(wc.LOG_FILTER, "Adjusting MIME %r -> %r at %r",
+                wc.log.info(wc.LOG_FILTER, "Adjusting MIME %r -> %r at %r",
                             origmime, mime, attrs['url'])
                 attrs['mime'] = mime
                 attrs['headers']['data']['Content-Type'] = "%s\r" % mime

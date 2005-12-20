@@ -38,6 +38,7 @@ import errno
 import os
 
 import wc
+import wc.decorators
 import wc.log
 import wc.proxy.Dispatcher
 
@@ -115,11 +116,12 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         self.recv_buffer += data
         self.process_read()
 
+    @wc.decorators.notimplemented
     def process_read (self):
         """
         Handle read event.
         """
-        raise NotImplementedError, "must be implemented in a subclass"
+        pass
 
     def writable (self):
         """

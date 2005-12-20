@@ -63,7 +63,7 @@ def expand_ipv6 (ip, num):
         count += 1
         suffix = ":"+suffix
     if count >= num:
-        raise ValueError, "invalid ipv6 number: %s" % ip
+        raise ValueError("invalid ipv6 number: %s" % ip)
     fill = (num-count-1)*"0:" + "0"
     return prefix+fill+suffix
 

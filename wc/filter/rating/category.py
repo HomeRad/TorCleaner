@@ -19,6 +19,7 @@ Rating categories.
 """
 
 import re
+import wc.decorators
 
 class Category (object):
     """
@@ -32,17 +33,19 @@ class Category (object):
         self.values = values
         self.iterable = iterable
 
+    @wc.decorators.notimplemented
     def valid_value (self, value):
         """
         True if value is valid according to this category.
         """
-        raise NotImplementedError, "unimplemented"
+        pass
 
+    @wc.decorators.notimplemented
     def allowance (self, value, limit):
         """
         Check if value exceeds limit.
         """
-        raise NotImplementedError, "unimplemented"
+        pass
 
     def __cmp__ (self, other):
         """

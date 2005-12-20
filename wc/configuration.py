@@ -475,7 +475,7 @@ class BaseParser (object):
             except (xml.parsers.expat.ExpatError, ParseException):
                 wc.log.exception(wc.LOG_PROXY, "Error parsing %s",
                                  self.filename)
-                raise SystemExit, "parse error in %s" % self.filename
+                raise SystemExit("parse error in %s" % self.filename)
         finally:
             self._postparse()
 

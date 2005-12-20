@@ -213,7 +213,7 @@ class HttpData (object):
         for header in self.headers:
             if header.lower().startswith("%s:" % key):
                 return header.split(":", 1)[1].strip()
-        raise KeyError, name
+        raise KeyError(name)
 
 
 class HttpRequest (HttpData):

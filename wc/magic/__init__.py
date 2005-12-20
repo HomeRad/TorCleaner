@@ -326,7 +326,7 @@ class Magic (object):
         try:
             f = file(magic_file, 'rb')
         except:
-            raise StandardError, "No valid magic file called %r" % magic_file
+            raise StandardError("No valid magic file called %r" % magic_file)
         index = 0
         for line in f.readlines():
             line = line.strip()
@@ -450,7 +450,7 @@ class Magic (object):
         # This may retun IOError
         data = fp.read(number)
         if not data:
-            raise IOError, "out of file access"
+            raise IOError("out of file access")
         return data
 
     def _convert (self, kind, endian, data):
@@ -460,11 +460,11 @@ class Magic (object):
         # Convert the data from the file
         if kind == 'byte':
             if len(data) < 1:
-                raise StandardError, "Should never happen, not enough data"
+                raise StandardError("Should never happen, not enough data")
             value = ord(data[0])
         elif kind == 'short':
             if len(data) < 2:
-                raise StandardError, "Should never happen, not enough data"
+                raise StandardError("Should never happen, not enough data")
             if endian == 'local':
                 value = wc.magic.convert.local2(data)
             elif endian == 'little':
@@ -472,10 +472,10 @@ class Magic (object):
             elif endian == 'big':
                 value = wc.magic.convert.big2(data)
             else:
-                raise StandardError, "Endian type unknown"
+                raise StandardError("Endian type unknown")
         elif kind == 'long':
             if len(data) < 4:
-                raise StandardError, "Should never happen, not enough data"
+                raise StandardError("Should never happen, not enough data")
             if endian == 'local':
                 value = wc.magic.convert.local4(data)
             elif endian == 'little':
@@ -483,7 +483,7 @@ class Magic (object):
             elif endian == 'big':
                 value = wc.magic.convert.big4(data)
             else:
-                raise StandardError, "Endian type unknown"
+                raise StandardError("Endian type unknown")
         elif kind == 'date':
             # XXX: Not done yet
             pass
@@ -506,7 +506,7 @@ class Magic (object):
             #        leng = size
             #        kind = "string"
         else:
-            raise StandardError, "Type %r not recognised" % kind
+            raise StandardError("Type %r not recognised" % kind)
         return value
 
     def _binary_mask (self, oper, value, mask):
@@ -517,7 +517,7 @@ class Magic (object):
         elif oper == '':
             pass
         else:
-            raise StandardError, "Binary operator unknown %r" % oper
+            raise StandardError("Binary operator unknown %r" % oper)
         return value
 
     def _read_string (self, fp):
@@ -532,7 +532,7 @@ class Magic (object):
             result += char
             limit += 1
         if limit == 100:
-            raise Failed, "too much NULL bytes in input"
+            raise Failed("too much NULL bytes in input")
         return result
 
     def _is_null_string (self, data):
@@ -540,7 +540,7 @@ class Magic (object):
 
     def classify (self, f):
         if not self.entries:
-            raise StandardError, "Not initialised properly"
+            raise StandardError("Not initialised properly")
         # Are we still looking for the ruleset to apply or are we in a rule
         found_rule = False
         # If we failed part of the rule there is no point looking for
@@ -607,15 +607,15 @@ class Magic (object):
 
                 # If it is out of the file then the test fails.
                 if file_length < offset:
-                    raise Failed, "Data length %d too small, needed %d" % \
-                                 (file_length, offset)
+                    raise Failed("Data length %d too small, needed %d" %
+                                 (file_length, offset))
 
                 # Make sure we can read the data at the offset position
                 f.seek(offset)
                 extract = self._read(f, leng)
                 if not extract:
-                    raise Failed, "Could not extract %d bytes from offset %d" \
-                                 % (leng, offset)
+                    raise Failed("Could not extract %d bytes from offset %d" %
+                                 (leng, offset))
 
                 # Convert the little/big endian value from the file
                 value = self._convert(kind, endian, extract)
@@ -629,7 +629,7 @@ class Magic (object):
                     if kind.startswith('string'):
                         success = (data==value)
                     elif kind == 'pstring':
-                        raise Failed, "pstring not implemented"
+                        raise Failed("pstring not implemented")
                     else:
                         success = (data[0] == value)
                         replace = value
@@ -642,9 +642,9 @@ class Magic (object):
                                 replace = extract + self._read_string(f)
                                 success = True
                         else:
-                            raise Failed, ">[^0] Not implemented"
+                            raise Failed(">[^0] Not implemented")
                     elif kind == 'pstring':
-                        raise Failed, "pstring not implemented"
+                        raise Failed("pstring not implemented")
                     else:
                         success = (value > data[0])
                         replace = value
@@ -661,7 +661,7 @@ class Magic (object):
                                     success = False
                                     break
                     elif kind == 'pstring':
-                        raise Failed, "pstring not implemented"
+                        raise Failed("pstring not implemented")
                     else:
                         success = (value < data[0])
                         replace = value
@@ -696,12 +696,12 @@ class Magic (object):
                         if limit <= 100:
                             success = True
                     elif kind == 'pstring':
-                        raise Failed, "pstring not implemented"
+                        raise Failed("pstring not implemented")
                     else:
                         success = True
                         replace = value
                 else:
-                    raise StandardError, "test used %r is not defined" % test
+                    raise StandardError("test used %r is not defined" % test)
 
                 if success:
                     found_rule = True
@@ -717,7 +717,7 @@ class Magic (object):
                         result += mime
                         result += ' '
                 else:
-                    raise Failed, "No success"
+                    raise Failed("No success")
             except (Failed, IOError):
                 allow_next = level
         if not found_rule:

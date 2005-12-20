@@ -20,9 +20,9 @@ Basic start and init methods.
 
 import sys
 if not hasattr(sys, "version_info"):
-    raise SystemExit, "This program requires Python 2.4 or later."
+    raise SystemExit("This program requires Python 2.4 or later.")
 if sys.version_info < (2, 4, 0, 'final', 0):
-    raise SystemExit, "This program requires Python 2.4 or later."
+    raise SystemExit("This program requires Python 2.4 or later.")
 import os
 import logging.config
 
@@ -156,8 +156,8 @@ def get_log_file (name, logname, trydirs=None):
         fullname = os.path.join(d, logname)
         if iswritable(fullname):
             return fullname
-    raise IOError, "Could not find writable directory for %s in %s" % \
-                   (logname, str(trydirs))
+    raise IOError("Could not find writable directory for %s in %s" %
+                  (logname, str(trydirs)))
 
 
 def initlog (filename, appname, filelogs=True):

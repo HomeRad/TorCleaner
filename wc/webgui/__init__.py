@@ -75,9 +75,9 @@ def get_safe_template_path (path):
     path = os.path.splitdrive(os.path.join(*tuple(dirs)))[1]
     path = norm(os.path.join(base, path))
     if not os.path.isabs(path):
-        raise IOError, "Relative path %r" % path
+        raise IOError("Relative path %r" % path)
     if not path.startswith(base):
-        raise IOError, "Invalid path %r" % path
+        raise IOError("Invalid path %r" % path)
     return path, dirs
 
 
@@ -95,5 +95,5 @@ def get_template_path (path, defaultlang):
             lang = la
             break
     if not os.path.isfile(path):
-        raise IOError, "Non-file path %r" % path
+        raise IOError("Non-file path %r" % path)
     return path, dirs, lang

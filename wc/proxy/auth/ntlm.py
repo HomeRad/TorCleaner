@@ -196,7 +196,7 @@ def get_ntlm_challenge (**attrs):
         msg = create_message2(attrs['domain'])
         return "NTLM %s" % base64.encodestring(msg).strip()
     else:
-        raise IOError, "Invalid NTLM challenge type"
+        raise IOError("Invalid NTLM challenge type")
 
 
 def parse_ntlm_challenge (challenge):
@@ -237,7 +237,7 @@ def get_ntlm_credentials (challenge, **attrs):
         nt_hpw = create_nt_hashed_password(password)
         msg = create_message3(nonce, domain, username, host, lm_hpw, nt_hpw)
     else:
-        raise IOError, "Invalid NTLM credentials type"
+        raise IOError("Invalid NTLM credentials type")
     return "NTLM %s" % base64.encodestring(msg).strip()
 
 

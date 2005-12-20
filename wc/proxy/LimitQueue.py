@@ -30,7 +30,7 @@ class LimitQueue (object):
         Capacity must be > 0.
         """
         if capacity < 1:
-            raise ValueError, "capacity must be > 0"
+            raise ValueError("capacity must be > 0")
         self._capacity = capacity
         self._queue = []
 

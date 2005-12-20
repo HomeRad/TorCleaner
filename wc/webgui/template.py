@@ -35,8 +35,8 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
         self.mtime = mtime
         self.pt_edit(open(path), 'text/html')
         if self._v_errors:
-            raise wc.webgui.PageTemplates.PageTemplate.PTRuntimeError, \
-                                    'Page Template %s has errors.' % self.id
+            raise wc.webgui.PageTemplates.PageTemplate.PTRuntimeError(
+                                    'Page Template %s has errors.' % self.id)
 
     def html (self):
         """

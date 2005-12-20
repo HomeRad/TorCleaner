@@ -141,10 +141,10 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         if self.enclosed:
             for tag in NO_CLOSE_TAGS:
                 if self.match_tag(tag):
-                    raise ValueError, \
+                    raise ValueError(
                               "reading rule %r: tag %r has no end tag, " \
                               "so specifying an enclose value is invalid." % \
-                              (self.titles['en'], tag)
+                              (self.titles['en'], tag))
 
     def update (self, rule, dryrun=False, log=None):
         """

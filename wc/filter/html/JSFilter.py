@@ -34,6 +34,7 @@ import wc.proxy.Headers
 import wc.js
 import wc.js.jslib
 import wc.js.JSListener
+import wc.decorators
 
 
 _replace_ws = re.compile(ur"\s+").sub
@@ -208,11 +209,12 @@ class JSFilter (wc.js.JSListener.JSListener):
                             "%s switching back to parse with", self)
         self.htmlparser.debugbuf(cat=wc.LOG_JS)
 
+    @wc.decorators.notimplemented
     def filter_end_element (self, tag):
         """
         Filters an end tag, return True if tag was filtered, else False.
         """
-        raise NotImplementedError, "Must be overridden in subclass"
+        pass
 
     def js_end_element (self, item):
         """

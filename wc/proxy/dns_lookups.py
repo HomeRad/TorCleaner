@@ -78,7 +78,7 @@ def coerce_hostname (hostname):
         # XXX encode?
         hostname = str(hostname)
     elif not isinstance(hostname, str):
-        raise ValueError, "invalid hostname type %r" % hostname
+        raise ValueError("invalid hostname type %r" % hostname)
     return hostname
 
 

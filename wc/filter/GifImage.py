@@ -177,7 +177,7 @@ class GifParser (object):
             assert wc.log.debug(wc.LOG_FILTER, 'GIF rewinding')
             self.data = self.consumed + self.data
             self.consumed = ''
-            raise RewindException, "GifImage data delay => rewinding"
+            raise RewindException("GifImage data delay => rewinding")
         self.consumed += self.data[:i]
         self.data = self.data[i:]
         return self.consumed[-i:]
@@ -313,6 +313,6 @@ class GifParser (object):
                 self.data = ''
                 break
             else:
-                raise Exception, "invalid GifParser state"
+                raise Exception("invalid GifParser state")
         # while 1
     # parse

@@ -32,6 +32,7 @@ Server connections.
 import socket
 
 import wc
+import wc.decorators
 import wc.log
 import wc.proxy.CodingConnection
 
@@ -80,8 +81,9 @@ class Server (wc.proxy.CodingConnection.CodingConnection):
             return
         self.process_connect()
 
+    @wc.decorators.notimplemented
     def process_connect (self):
         """
         Connect to remote server, must be implemented in subclass.
         """
-        raise NotImplementedError, "must be implemented in a subclass"
+        pass

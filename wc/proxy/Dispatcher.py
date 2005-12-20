@@ -281,7 +281,7 @@ class Dispatcher (object):
         else:
             # Note that EALREADY is handled as an error. We don't want
             # to connect to an already-connected socket.
-            raise socket.error, (err, errno.errorcode[err])
+            raise socket.error((err, errno.errorcode[err]))
         return err
 
     def check_connect (self, addr):
@@ -400,7 +400,7 @@ class Dispatcher (object):
             data, addr = self.socket.recvfrom(buffer_size)
             if addr != self.addr:
                 # answer was for someone else
-                raise socket.error, (errno.EREMCHG, str(addr))
+                raise socket.error((errno.EREMCHG, str(addr)))
         return data
 
     def close (self):

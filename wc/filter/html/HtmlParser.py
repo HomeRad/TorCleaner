@@ -157,8 +157,8 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         if self.state[0] == 'wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
-            raise wc.filter.FilterWait, "waited %d at parser %s" % \
-                                        (self.waited, str(self))
+            raise wc.filter.FilterWait("waited %d at parser %s" % \
+                                       (self.waited, str(self)))
         super(HtmlParser, self).flush()
 
     def getoutput (self):

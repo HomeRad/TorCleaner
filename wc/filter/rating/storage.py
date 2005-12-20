@@ -87,8 +87,8 @@ class Storage (object):
         If url is not safe raise a RatingParseError.
         """
         if not wc.url.is_safe_url(url):
-            raise wc.filter.rating.RatingParseError, \
-                                  "Invalid rating url %s." % repr(url)
+            raise wc.filter.rating.RatingParseError(
+                                  "Invalid rating url %r." % url)
 
     @wc.decorators.notimplemented
     def load (self):
@@ -155,7 +155,7 @@ class PickleStorage (Storage):
             url = "".join(parts[:i])
             if url in self.cache:
                 return self.cache[url]
-        raise KeyError, url
+        raise KeyError(url)
 
     def __contains__ (self, url):
         """
@@ -257,13 +257,13 @@ def rating_import (url, ratingdata, debug=0):
         try:
             category, value = line.split(None, 1)
         except ValueError:
-            raise RatingParseError, _("malformed rating line %r") % line
+            raise RatingParseError(_("malformed rating line %r") % line)
         if category == "modified" and not is_time(value):
-            raise RatingParseError, _("malformed modified time %r") % value
+            raise RatingParseError(_("malformed modified time %r") % value)
         if category == "generic" and value not in ["true", "false"] and \
            not url.startswith(value):
-            raise RatingParseError, _(
-                            "generic url %r doesn't match %r") % (value, url)
+            raise RatingParseError(
+                         _("generic url %r doesn't match %r") % (value, url))
         categories[category] = value
     return categories
 

@@ -63,7 +63,7 @@ class RatingHeader (wc.filter.Filter.Filter):
             msg = rule.rating_allow(url)
             if msg:
                 assert wc.log.debug(wc.LOG_FILTER, "rated page: %s", msg)
-                raise wc.filter.FilterRating, msg
+                raise wc.filter.FilterRating(msg)
         return data
 
     def update_attrs (self, attrs, url, localhost, stages, headers):

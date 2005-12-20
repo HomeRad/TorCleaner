@@ -280,10 +280,10 @@ def server_set_content_headers (headers, mime_types, url):
     # we have a mime type override, pick the first one out of the list
     mime = mime_types[0]
     if origmime:
-        wc.log.warn(wc.LOG_PROXY,
+        wc.log.info(wc.LOG_PROXY,
             _("Change content type of %r from %r to %r"), url, origmime, mime)
     else:
-        wc.log.warn(wc.LOG_PROXY,
+        wc.log.info(wc.LOG_PROXY,
                     _("Set content type of %r to %r"), url, mime)
     headers['Content-Type'] = "%s\r" % mime
 

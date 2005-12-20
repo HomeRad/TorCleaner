@@ -192,16 +192,16 @@ def open_url (url, proxies=None):
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
         wc.log.error(wc.LOG_GUI, "could not open url %r", url)
-        raise IOError, x
+        raise IOError(x)
     except (socket.gaierror, socket.error, urllib2.URLError), x:
         wc.log.error(wc.LOG_GUI, "could not open url %r", url)
-        raise IOError, "no network access available"
+        raise IOError("no network access available")
     except IOError, data:
         wc.log.error(wc.LOG_GUI, "could not open url %r", url)
         if data and data[0] == 'http error' and data[1] == 404:
-            raise IOError, data
+            raise IOError(data)
         else:
-            raise IOError, "no network access available"
+            raise IOError("no network access available")
     except OSError, data:
         raise IOError, data
     return page

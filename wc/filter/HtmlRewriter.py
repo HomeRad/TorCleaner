@@ -53,7 +53,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         p.feed(data)
         if p.handler.ratings:
             # XXX correct raise
-            raise wc.filter.FilterWait, "wait for rating decision"
+            raise wc.filter.FilterWait("wait for rating decision")
         if p.bom is not None:
             bom, p.bom = p.bom, None
             return bom + p.getoutput()
@@ -72,7 +72,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         p.flush()
         if p.handler.ratings:
             # XXX correct raise
-            raise wc.filter.FilterRating, "missing rating"
+            raise wc.filter.FilterRating("missing rating")
         p.tagbuf2data()
         return p.getoutput()
 
