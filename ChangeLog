@@ -5,9 +5,9 @@
     Type: feature
     Changed: wc/js/__init__.py
 
-  * Improved XML MIME type detection and parsing.
+  * Improved XML MIME type detection and namespace parsing.
     Type: feature
-    Changed: wc/filter/XmlRewriter.py
+    Changed: wc/filter/XmlRewriter.py, wc/filter/xmlfilt/XmlFilter.py
 
   * Allow any port for HTTP request. Only check scheme allowance and
     localhost redirections.

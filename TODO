@@ -7,9 +7,6 @@ TODO
 
 - Add support for https JS urls background download.
 
-- Reevaluate calling wc.url.is_safe_js_url(). Is this really better
-  for security?
-
 - If an unknown port is forbidden (403 status), add an explaining message.
 
 - HTML parser should recognize a missing ending quote of attribute values.
