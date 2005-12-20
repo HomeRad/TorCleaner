@@ -89,16 +89,18 @@ class Filter (object):
         """
         return data
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
-        Get filter-specific state data for all given filter stages.
+        Update filter-specific state data for all given filter stages.
 
+        @param attrs: the attributes to update
         @param url: the complete request url
         @param stages: filter stages (STAGE_*)
         @param headers: dictionary with WcMessage objects under the keys
             ``client``, ``server`` and ``data``
         """
-        return {}
+        # nothing to to per default
+        pass
 
     def applies_to_stages (self, stages):
         """

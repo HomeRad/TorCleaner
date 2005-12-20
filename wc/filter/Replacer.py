@@ -76,19 +76,19 @@ class Replacer (wc.filter.Filter.Filter):
         udata = buf.replace(udata)
         return udata.encode(charset, 'ignore')
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         Initialize replacer buffer object.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(Replacer, self).get_attrs(url, localhost, stages, headers)
+            return
+        parent = super(Replacer, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
         # weed out the rules that don't apply to this url
         rules = [rule for rule in self.rules if rule.applies_to_url(url)]
         if not rules:
-            return d
-        d['replacer_buf'] = Buf(rules)
-        return d
+            return
+        attrs['replacer_buf'] = Buf(rules)
 
 
 class Buf (object):

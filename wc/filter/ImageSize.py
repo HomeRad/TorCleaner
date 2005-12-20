@@ -161,21 +161,22 @@ class ImageSize (wc.filter.Filter.Filter):
                 assert buf.tell() < self.min_bufsize
         return True
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         Initialize image buffer.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(ImageSize, self).get_attrs(url, localhost, stages, headers)
+            return
+        parent = super(ImageSize, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
         # check PIL support
         if not wc.HasPil:
-            return d
+            return
         # weed out the rules that don't apply to this url
         rules = [rule for rule in self.rules if rule.applies_to_url(url)]
         if not rules:
-            return d
-        d['imgsize_sizes'] = [((r.width, r.height), r.formats) for r in rules]
-        d['imgsize_buf'] = StringIO.StringIO()
-        d['imgsize_blocked'] = False
-        return d
+            return
+        sizes = [((r.width, r.height), r.formats) for r in rules]
+        attrs['imgsize_sizes'] = sizes
+        attrs['imgsize_buf'] = StringIO.StringIO()
+        attrs['imgsize_blocked'] = False

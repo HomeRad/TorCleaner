@@ -45,13 +45,14 @@ class Header (wc.filter.Filter.Filter):
         rulenames = ['header']
         super(Header, self).__init__(stages=stages, rulenames=rulenames)
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         Configure header rules to add/delete.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(Header, self).get_attrs(url, localhost, stages, headers)
+            return
+        parent = super(Header, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
         delete = {
             wc.filter.STAGE_REQUEST_HEADER: [],
             wc.filter.STAGE_RESPONSE_HEADER: [],
@@ -91,10 +92,9 @@ class Header (wc.filter.Filter.Filter):
                     d[wc.filter.STAGE_REQUEST_HEADER].append((name, val))
                 if rule.filterstage in ('both', 'response'):
                     d[wc.filter.STAGE_RESPONSE_HEADER].append((name, val))
-        d['header_add'] = add
-        d['header_replace'] = replace
-        d['header_delete'] = delete
-        return d
+        attrs['header_add'] = add
+        attrs['header_replace'] = replace
+        attrs['header_delete'] = delete
 
     def doit (self, data, attrs):
         """

@@ -119,23 +119,23 @@ class VirusFilter (wc.filter.Filter.Filter):
         buf.close()
         return data
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         Return virus scanner and internal data buffer.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(VirusFilter, self).get_attrs(url, localhost, stages, headers)
+            return
+        parent = super(VirusFilter, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
         # weed out the rules that don't apply to this url
         rules = [rule for rule in self.rules if rule.applies_to_url(url)]
         if not rules:
-            return d
+            return
         conf = get_clamav_conf()
         if conf is not None:
-            d['virus_scanner'] = ClamdScanner(conf)
-            d['virus_buf'] = StringIO.StringIO()
-            d['virus_buf_size'] = [0]
-        return d
+            attrs['virus_scanner'] = ClamdScanner(conf)
+            attrs['virus_buf'] = StringIO.StringIO()
+            attrs['virus_buf_size'] = [0]
 
 
 class ClamdScanner (object):

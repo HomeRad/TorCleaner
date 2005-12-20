@@ -104,14 +104,15 @@ class ImageReducer (wc.filter.Filter.Filter):
         headers['data']['Content-Type'] = 'image/jpeg'
         wc.proxy.Headers.remove_headers(headers['data'], ['Content-Length'])
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         Initialize image reducer buffer and flags.
         """
         if not self.applies_to_stages(stages):
-            return {}
+            return
         # don't filter tiny images
-        d = super(ImageReducer, self).get_attrs(url, localhost, stages, headers)
+        parent = super(ImageReducer, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
         # weed out the rules that don't apply to this url
         rules = [ rule for rule in self.rules if rule.applies_to_url(url) ]
         if rules:
@@ -128,17 +129,18 @@ class ImageReducer (wc.filter.Filter.Filter):
             length = int(headers['server'].get('Content-Length', 0))
         except ValueError:
             wc.log.warn(wc.LOG_FILTER, "invalid content length at %r", url)
-            return d
+            return
         if length < 0:
             wc.log.warn(wc.LOG_FILTER, "negative content length at %r", url)
-            return d
+            return
         if length == 0:
             wc.log.warn(wc.LOG_FILTER, "missing content length at %r", url)
         elif 0 < length < minimal_size_bytes:
-            return d
-        d['imgreducer_buf'] = StringIO.StringIO()
-        d['imgreducer_quality'] = quality
-        d['imgreducer_minsize'] = minimal_size_bytes
-        # some images have to be convert()ed before saving
+            return
+        attrs['imgreducer_buf'] = StringIO.StringIO()
+        attrs['imgreducer_quality'] = quality
+        attrs['imgreducer_minsize'] = minimal_size_bytes
+        # remember original content type in case of error
         ctype = headers['server'].get('Content-Type')
-        return d
+        attrs['imgreducer_ctype'] = ctype
+

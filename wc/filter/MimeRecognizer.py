@@ -124,14 +124,13 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         buf.close()
         return data
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         Initialize buffer.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(MimeRecognizer, self).get_attrs(url, localhost,
-                                                  stages, headers)
-        d['mimerecognizer_buf'] = StringIO.StringIO()
-        d['mimerecognizer_ignore'] = False
-        return d
+            return
+        parent = super(MimeRecognizer, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
+        attrs['mimerecognizer_buf'] = StringIO.StringIO()
+        attrs['mimerecognizer_ignore'] = False

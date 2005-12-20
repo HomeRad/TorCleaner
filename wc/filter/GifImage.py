@@ -80,15 +80,15 @@ class GifImage (wc.filter.Filter.Filter):
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         Add GIF parser to attributes.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(GifImage, self).get_attrs(url, localhost, stages, headers)
-        d['gifparser'] = GifParser(url)
-        return d
+            return
+        parent = super(GifImage, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
+        attrs['gifparser'] = GifParser(url)
 
 
 # little 1x1 transparent GIF

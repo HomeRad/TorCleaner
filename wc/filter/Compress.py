@@ -132,7 +132,7 @@ class Compress (wc.filter.Filter.Filter):
         """
         Fix headers for compression, and add a compression object
         to the filter attrs. Since the headers are modified this cannot
-        be done in get_attrs() but only when it is clear that the content
+        be done in update_attrs() but only when it is clear that the content
         is going to be compressed.
         """
         headers = attrs['headers']

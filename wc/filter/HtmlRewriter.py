@@ -76,14 +76,14 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         p.tagbuf2data()
         return p.getoutput()
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         We need a separate filter instance for stateful filtering.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(HtmlRewriter, self).get_attrs(url, localhost,
-                  stages, headers)
+            return
+        parent = super(HtmlRewriter, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
         rewrites = []
         ratings = []
         # look if headers already have rating info
@@ -108,5 +108,4 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = p
-        d['htmlrewriter_filter'] = p
-        return d
+        attrs['htmlrewriter_filter'] = p

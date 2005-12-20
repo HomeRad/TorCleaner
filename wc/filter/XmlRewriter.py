@@ -77,14 +77,14 @@ class XmlRewriter (wc.filter.Filter.Filter):
             return data
         return f.getoutput()
 
-    def get_attrs (self, url, localhost, stages, headers):
+    def update_attrs (self, attrs, url, localhost, stages, headers):
         """
         We need a separate filter instance for stateful filtering.
         """
         if not self.applies_to_stages(stages):
-            return {}
-        d = super(XmlRewriter, self).get_attrs(
-                                             url, localhost, stages, headers)
+            return
+        parent = super(XmlRewriter, self)
+        parent.update_attrs(attrs, url, localhost, stages, headers)
         xmlrules = []
         htmlrules = []
         for rule in self.rules:
@@ -94,10 +94,10 @@ class XmlRewriter (wc.filter.Filter.Filter):
                 xmlrules.append(rule)
             elif rule.name == u'htmlrewrite':
                 htmlrules.append(rule)
-        handler = wc.filter.xmlfilt.XmlFilter.XmlFilter(xmlrules, htmlrules,
-                                                        url, localhost)
+        encoding = attrs.get("charset", "UTF-8")
+        xfilt = wc.filter.xmlfilt.XmlFilter.XmlFilter
+        handler = xfilt(xmlrules, htmlrules, url, localhost, encoding)
         p = xml.sax.expatreader.ExpatParser(namespaceHandling=1)
         p.setContentHandler(handler)
-        d['xmlrewriter_parser'] = p
-        d['xmlrewriter_filter'] = handler
-        return d
+        attrs['xmlrewriter_parser'] = p
+        attrs['xmlrewriter_filter'] = handler
