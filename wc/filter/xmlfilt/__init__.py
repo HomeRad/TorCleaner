@@ -67,7 +67,7 @@ def tagbuf2data (tagbuf, out, entities=None):
         elif item[0] == STARTDOCUMENT:
             _startout(out, item, start=u"<?", end=u"?>\n")
         elif item[0] == INSTRUCTION:
-            out.write(u"<?%s %s?>" % (item[1], item[2]))
+            out.write(u"<?%s %s?>\n" % (item[1], item[2]))
         else:
             wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
     return out
