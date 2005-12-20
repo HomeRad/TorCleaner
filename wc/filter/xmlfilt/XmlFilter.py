@@ -38,7 +38,7 @@ class XmlFilter (object):
     Filtering XML parser handler. Has filter rules and a rule stack.
     """
 
-    def __init__ (self, xmlrules, htmlrules, url, localhost):
+    def __init__ (self, xmlrules, htmlrules, url, localhost, encoding):
         """
         Init rules and buffers.
         """
@@ -55,7 +55,11 @@ class XmlFilter (object):
         self.tagbuf = []
         self.rulestack = []
         self.stack = []
-        self.encoding = "UTF-8"
+        if wc.strformat.is_encoding(encoding):
+            self.encoding = encoding
+        else:
+            self.encoding = "UTF-8"
+            wc.log.warn(wc.LOG_XML, "%s: invalid encoding %r", self, encoding)
 
     # ErrorHandler methods
 
