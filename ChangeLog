@@ -6,6 +6,8 @@
     Changed: wc/js/__init__.py
 
   * Improved XML MIME type detection and namespace parsing.
+    And make sure the XML encoding does not differ from the one
+    advertised in the HTML headers.
     Type: feature
     Changed: wc/filter/XmlRewriter.py, wc/filter/xmlfilt/XmlFilter.py
 
