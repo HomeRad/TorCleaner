@@ -147,7 +147,7 @@ def is_safe_js_url (source_url, target_url):
     """
     source = wc.url.url_split(source_url)
     target = wc.url.url_split(target_url)
-    if target[0].lower() not in ('http', 'https'):
+    if target[0] and target[0].lower() not in ('http', 'https'):
         return False
     # no redirects from external to local host
     localhosts = wc.dns.resolver.get_default_resolver().localhosts
