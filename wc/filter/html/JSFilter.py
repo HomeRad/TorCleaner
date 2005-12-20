@@ -299,7 +299,8 @@ class JSFilter (wc.js.JSListener.JSListener):
                 else:
                     url = urlparse.urljoin(self.url, url)
                 # XXX TODO: support https background downloads
-                if js_ok and url and not url.startswith("https"):
+                if js_ok and wc.url.url_is_absolute(url) and \
+                   not url.startswith("https"):
                     self.jsScriptSrc(url, js_lang)
                     return
         self.htmlparser.tagbuf.append([starttype, tag, attrs])
