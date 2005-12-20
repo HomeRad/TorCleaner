@@ -19,14 +19,15 @@ Filter XML tags.
 """
 
 from StringIO import StringIO
-
+import sys
 import wc.url
 import wc.log
 import wc.filter
+import wc.containers
 
 
 def dict_attrs (attrs):
-    _attrs = {}
+    _attrs = wc.containers.ListDict()
     for name in attrs.getQNames():
         _attrs[name] = attrs.getValueByQName(name)
     return _attrs
@@ -45,9 +46,10 @@ class XmlFilter (object):
         self.xmlrules = xmlrules
         self.htmlrules = htmlrules
         self.url = url
-        # XML namespaces {name -> uri} and {uri -> name}
-        self.prefixuri = {}
-        self.uriprefix = {}
+        # current namespaces
+        self.ns_current = []
+        # stacked namespaces
+        self.ns_stack = []
         # already filtered XML data
         self.outbuf = StringIO()
         self.tagbuf = []
@@ -78,7 +80,7 @@ class XmlFilter (object):
     # ContentHandler methods
 
     def setDocumentLocator (self, locator):
-        print "XXX setDocumentLocator", locator
+        print >>sys.stderr, "XXX setDocumentLocator", locator
 
     def startDocument (self):
         """
@@ -87,6 +89,7 @@ class XmlFilter (object):
         attrs = {
             u"version": u"1.0",
             u"encoding": self.encoding,
+            # XXX no info about 'standalone'
         }
         item = [wc.filter.xmlfilt.STARTDOCUMENT, u"xml", attrs]
         self.tagbuf.append(item)
@@ -99,25 +102,29 @@ class XmlFilter (object):
         self.tagbuf.append(item)
 
     def startPrefixMapping (self, prefix, uri):
-        self.prefixuri[prefix] = uri
-        self.uriprefix[uri] = prefix
+        ns = (prefix, uri)
+        self.ns_stack.append(ns)
+        self.ns_current.append(ns)
 
     def endPrefixMapping (self, prefix):
-        if prefix in self.prefixuri:
-            uri = self.prefixuri[prefix]
-            del self.uriprefix[uri]
-            del self.prefixuri[prefix]
-        else:
-            self.error("Removing unknown prefix mapping %r" % prefix)
+        if not self.ns_stack or self.ns_stack[-1][0] != prefix:
+            self.error("Removing unknown prefix mapping (%r)" % prefix)
+        del self.ns_stack[-1]
+
+    def find_namespace (self, uri):
+        for prefix, nsuri in reversed(self.ns_stack):
+            if nsuri == uri:
+                return (prefix, uri)
+        return None
 
     def startElement (self, name, attrs):
         attrs = dict_attrs(attrs)
-        if not self.stack:
-            for prefix, uri in self.prefixuri.items():
-                if prefix:
-                    attrs[u"xmlns:%s" % prefix] = uri
-                else:
-                    attrs[u"xmlns"] = uri
+        for prefix, uri in self.ns_current:
+            if prefix:
+                attrs["xmlns:%s" % prefix] = uri
+            else:
+                attrs["xmlns"] = uri
+        self.ns_current = []
         self.stack.append((wc.filter.xmlfilt.STARTTAG, name, attrs))
         item = [wc.filter.xmlfilt.STARTTAG, name, attrs]
         self.tagbuf.append(item)
@@ -151,26 +158,18 @@ class XmlFilter (object):
         return False
 
     def startElementNS (self, name, qname, attrs):
-        if name[0]:
-            ns = self.uriprefix[name[0]]
-            if ns:
-                name = u"%s:%s" % (ns, name[1])
-            else:
-                name = name[1]
-        else:
-            name = name[1]
-        self.startElement(name, attrs)
+        tag = name[1]
+        namespace = self.find_namespace(name[0])
+        if namespace and namespace[0]:
+            tag = u"%s:%s" % (namespace[0], name[1])
+        self.startElement(tag, attrs)
 
     def endElementNS (self, name, qname):
-        if name[0]:
-            ns = self.uriprefix[name[0]]
-            if ns:
-                name = u"%s:%s" % (ns, name[1])
-            else:
-                name = name[1]
-        else:
-            name = name[1]
-        self.endElement(name)
+        tag = name[1]
+        namespace = self.find_namespace(name[0])
+        if namespace and namespace[0]:
+            tag = u"%s:%s" % (namespace[0], name[1])
+        self.endElement(tag)
 
     def characters (self, content):
         if self.tagbuf and self.tagbuf[-1][0] == wc.filter.xmlfilt.DATA:
@@ -186,15 +185,15 @@ class XmlFilter (object):
         self.tagbuf.append(item)
 
     def skippedEntity (self, name):
-        print "XXX skippedEntity", name
+        print >>sys.stderr, "XXX skippedEntity", name
 
     # DTDHandler methods
 
     def notationDecl (self, name, publicId, systemId):
-        print "XXX notationDecl", name, publicId, systemId
+        print >>sys.stderr, "XXX notationDecl", name, publicId, systemId
 
     def unparsedEntityDecl (self, name, publicId, systemId, ndata):
-        print "XXX unparsedEntityDecl", name, publicId, systemId, ndata
+        print >>sys.stderr, "XXX unparsedEntityDecl", name, publicId, systemId, ndata
 
     # other methods
 
