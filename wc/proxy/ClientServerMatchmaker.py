@@ -86,7 +86,7 @@ class ClientServerMatchmaker (object):
         mime type, regardless of the Content-Type header value.
         This is useful for JavaScript fetching and blocked pages.
         """
-        self.do_ssl = wc.configuration.config['sslgateway']
+        self.do_ssl = wc.HasSsl and wc.configuration.config['sslgateway']
         self.sslserver = sslserver
         self.client = client
         self.localhost = client.localhost
