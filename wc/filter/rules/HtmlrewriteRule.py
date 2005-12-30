@@ -256,10 +256,9 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                         # for replacement to generate multiple attributes,
                         # eg "a=b c=d"
                         # XXX this is limited, but works so far
-                        # XXX split does not honor quotes
                         for f in self.replacement.split():
                             if u'=' in self.replacement:
-                                k, v = f.split(u'=')
+                                k, v = f.split(u'=', 1)
                                 newattrs[k] = mo.expand(v)
                             else:
                                 newattrs[self.replacement] = None
