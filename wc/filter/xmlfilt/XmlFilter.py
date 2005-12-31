@@ -84,7 +84,8 @@ class XmlFilter (object):
     # ContentHandler methods
 
     def setDocumentLocator (self, locator):
-        print >>sys.stderr, "XXX setDocumentLocator", locator
+        # A Locator is not used here.
+        pass
 
     def startDocument (self):
         """
@@ -189,15 +190,24 @@ class XmlFilter (object):
         self.tagbuf.append(item)
 
     def skippedEntity (self, name):
-        print >>sys.stderr, "XXX skippedEntity", name
+        """
+        An unknown entity was found, for example '&foo;'.
+        """
+        self.tagbuf.append([wc.filter.xmlfilt.DATA, u"&%s;" % name])
 
     # DTDHandler methods
 
     def notationDecl (self, name, publicId, systemId):
-        print >>sys.stderr, "XXX notationDecl", name, publicId, systemId
+        """
+        DTD content is ignored.
+        """
+        pass
 
     def unparsedEntityDecl (self, name, publicId, systemId, ndata):
-        print >>sys.stderr, "XXX unparsedEntityDecl", name, publicId, systemId, ndata
+        """
+        DTD content is ignored.
+        """
+        pass
 
     # other methods
 
