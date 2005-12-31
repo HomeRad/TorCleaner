@@ -465,8 +465,7 @@ static void setJSVersion (JSContext* ctx, double vers) {
 }
 
 
-static void executeScheduledActions (JSEnvObject* self) {
-    /* XXX error checking! */
+static int executeScheduledActions (JSEnvObject* self) {
     jsval rval;
     int len = PyList_Size(self->scheduled_actions);
     int i;
@@ -474,14 +473,12 @@ static void executeScheduledActions (JSEnvObject* self) {
         PyObject* func;
         PyObject* tup = PyList_GetItem(self->scheduled_actions, i);
         if (!tup) {
-            /* XXX error */
-            continue;
+            return -1;
         }
         Py_INCREF(tup);
         if (!(func = PyTuple_GetItem(tup, 1))) {
-            /* XXX error */
             Py_DECREF(tup);
-            continue;
+            return -1;
         }
         Py_INCREF(func);
         JS_EvaluateScript(self->ctx, self->global_obj,
@@ -496,6 +493,7 @@ static void executeScheduledActions (JSEnvObject* self) {
     }
     Py_DECREF(self->scheduled_actions);
     self->scheduled_actions = PyList_New(0);
+    return 0;
 }
 
 
@@ -1080,7 +1078,9 @@ static PyObject* JSEnv_executeScript (JSEnvObject* self, PyObject* args) {
                             PyString_AsString(script),
                             PyString_Size(script),
                             "[unknown]", 1, &rval);
-    executeScheduledActions(self);
+    if (executeScheduledActions(self) < 0) {
+        return NULL;
+    }
     if (res == JS_TRUE) {
         return PyInt_FromLong(1);
     }
