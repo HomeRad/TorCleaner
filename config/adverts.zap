@@ -89,7 +89,7 @@
   <title lang="en">Adverts in the path name 02</title>
   <description lang="de">Entferne Verknüpfungen mit 'banner' u.a. im Pfadnamen.</description>
   <description lang="en">Kill links with ad words in the path name.</description>
-  <attr name="href">/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick)/</attr>
+  <attr name="href">/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick|AdServer)/</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.346"
@@ -237,14 +237,15 @@
 <htmlrewrite sid="wc.27"
  tag="a">
   <title lang="de">Verknüpfungen mit 'doubleclick'</title>
-  <title lang="en">Script adverts</title>
+  <title lang="en">Links with 'doubleclick'</title>
   <description lang="en">JavaScript adverts</description>
   <attr name="href">(double|fast)click\.(net|com)</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.34"
  tag="a">
-  <title lang="de">Verknüpfungen mit buy_assets</title>
+  <title lang="de">Verknüpfungen mit 'buy_assets'</title>
+  <title lang="en">Links with 'buy_assets'</title>
   <attr name="href">/buy_assets/</attr>
 </htmlrewrite>
 
@@ -269,7 +270,7 @@
 <htmlrewrite sid="wc.38"
  tag="a">
   <title lang="de">Verknüpfungen mit 'adlog'</title>
-  <attr name="href">adlog\.com\.</attr>
+  <attr name="href">adlog\.com\.|survey\.questionmarket\.com</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.51"
