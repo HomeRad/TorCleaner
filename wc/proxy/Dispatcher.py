@@ -70,7 +70,7 @@ def create_socket (family, socktype, proto=0):
     is given an SSL socket is created.
     """
     sock = socket.socket(family, socktype, proto=proto)
-    # XXX disable custom timeouts for now
+    # XXX disable custom timeouts for now; enable in Python 2.5
     #sock.settimeout(wc.configuration.config['timeout'])
     socktypes_inet = [socket.AF_INET]
     if has_ipv6:
@@ -106,13 +106,7 @@ class Dispatcher (object):
             # I think it should inherit this anyway
             self.socket.setblocking(0)
             self.connected = True
-            # XXX Does the constructor require that the socket passed
-            # be connected?
-            try:
-                self.addr = sock.getpeername()
-            except socket.error:
-                # The addr isn't crucial
-                pass
+            self.addr = sock.getpeername()
 
     def __repr__ (self):
         """
