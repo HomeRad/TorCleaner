@@ -201,13 +201,16 @@ class XmlFilter (object):
         """
         DTD content is ignored.
         """
-        pass
+        msg = "DTD notation ignored: %r %r %r" % (name, publicId, systemId)
+        wc.log.warn(wc.LOG_XML, "%s: %s", self, msg)
 
     def unparsedEntityDecl (self, name, publicId, systemId, ndata):
         """
         DTD content is ignored.
         """
-        pass
+        msg = "DTD entity ignored: %r %r %r %r" % \
+              (name, publicId, systemId, ndata)
+        wc.log.warn(wc.LOG_XML, "%s: %s", self, msg)
 
     # other methods
 
