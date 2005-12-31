@@ -870,6 +870,20 @@ LogCall(JSContext *cx, jsval callee, uintN argc, jsval *argv)
 #endif /* DUMP_CALL_TABLE */
 
 /*
+ * Conditional assert to detect failure to clear a pending exception that is
+ * suppressed (or unintentional suppression of a wanted exception).
+ */
+#if defined DEBUG_brendan || defined DEBUG_mrbkap || defined DEBUG_shaver
+# define DEBUG_NOT_THROWING 1
+#endif
+
+#ifdef DEBUG_NOT_THROWING
+# define ASSERT_NOT_THROWING(cx) JS_ASSERT(!(cx)->throwing)
+#else
+# define ASSERT_NOT_THROWING(cx) /* nothing */
+#endif
+
+/*
  * Find a function reference and its 'this' object implicit first parameter
  * under argc arguments on cx's stack, and call the function.  Push missing
  * required arguments, allocate declared local variables, and pop everything
@@ -1200,6 +1214,10 @@ have_fun:
 
     /* Call the function, either a native method or an interpreted script. */
     if (native) {
+#ifdef DEBUG_NOT_THROWING
+        JSBool alreadyThrowing = cx->throwing;
+#endif
+
 #if JS_HAS_LVALUE_RETURN
         /* Set by JS_SetCallReturnValue2, used to return reference types. */
         cx->rval2set = JS_FALSE;
@@ -1210,6 +1228,10 @@ have_fun:
         frame.scopeChain = fp->scopeChain;
         ok = native(cx, frame.thisp, argc, frame.argv, &frame.rval);
         JS_RUNTIME_METER(cx->runtime, nativeCalls);
+#ifdef DEBUG_NOT_THROWING
+        if (ok && !alreadyThrowing)
+            ASSERT_NOT_THROWING(cx);
+#endif
     } else if (script) {
 #ifdef DUMP_CALL_TABLE
         LogCall(cx, *vp, argc, frame.argv);
@@ -2044,10 +2066,7 @@ interrupt:
             goto out;
 
           EMPTY_CASE(JSOP_NOP)
-
-          BEGIN_CASE(JSOP_GROUP)
-            obj = NULL;
-          END_CASE(JSOP_GROUP)
+          EMPTY_CASE(JSOP_GROUP)
 
           BEGIN_CASE(JSOP_PUSH)
             PUSH_OPND(JSVAL_VOID);
@@ -2099,6 +2118,7 @@ interrupt:
           END_CASE(JSOP_LEAVEWITH)
 
           BEGIN_CASE(JSOP_SETRVAL)
+            ASSERT_NOT_THROWING(cx);
             fp->rval = POP_OPND();
           END_CASE(JSOP_SETRVAL)
 
@@ -2108,6 +2128,7 @@ interrupt:
             /* FALL THROUGH */
 
           BEGIN_CASE(JSOP_RETRVAL)    /* fp->rval already set */
+            ASSERT_NOT_THROWING(cx);
             if (inlineCallCount)
           inline_return:
             {
@@ -2784,6 +2805,7 @@ interrupt:
                 goto out;
             sp--;
             STORE_OPND(-1, rval);
+            obj = NULL;
           END_CASE(JSOP_SETNAME)
 
 #define INTEGER_OP(OP, EXTRA_CODE)                                            \
@@ -3587,6 +3609,7 @@ interrupt:
             PROPERTY_OP(-2, CACHED_SET(OBJ_SET_PROPERTY(cx, obj, id, &rval)));
             sp--;
             STORE_OPND(-1, rval);
+            obj = NULL;
           END_CASE(JSOP_SETPROP)
 
           BEGIN_CASE(JSOP_GETELEM)
@@ -3600,6 +3623,7 @@ interrupt:
             ELEMENT_OP(-2, CACHED_SET(OBJ_SET_PROPERTY(cx, obj, id, &rval)));
             sp -= 2;
             STORE_OPND(-1, rval);
+            obj = NULL;
           END_CASE(JSOP_SETELEM)
 
           BEGIN_CASE(JSOP_ENUMELEM)
@@ -4482,6 +4506,7 @@ interrupt:
                 GC_POKE(cx, obj->slots[slot]);
                 OBJ_SET_SLOT(cx, obj, slot, rval);
             }
+            obj = NULL;
           END_CASE(JSOP_SETGVAR)
 
           BEGIN_CASE(JSOP_DEFCONST)
@@ -4963,6 +4988,7 @@ interrupt:
             if (!ok)
                 goto out;
 
+            obj = NULL;
             sp += i;
             if (js_CodeSpec[op2].ndefs)
                 STORE_OPND(-1, rval);
@@ -5312,6 +5338,7 @@ interrupt:
                 goto out;
             sp -= 2;
             STORE_OPND(-1, rval);
+            obj = NULL;
           END_CASE(JSOP_SETXMLNAME)
 
           BEGIN_CASE(JSOP_XMLNAME)
@@ -5503,6 +5530,7 @@ interrupt:
                 goto out;
             --sp;
             STORE_OPND(-1, rval);
+            obj = NULL;
           END_LITOPX_CASE(JSOP_SETMETHOD)
 
           BEGIN_CASE(JSOP_GETFUNNS)
