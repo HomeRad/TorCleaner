@@ -240,7 +240,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         if self.method == 'CONNECT':
             # XXX scheme could also be nntps
             self.scheme = 'https'
-            self.hostname, self.port = urllib.splitnport(self.url, 443)
+            self.hostname, self.port = wc.url.splitport(self.url, port=443)
             self.document = '/'
         else:
             self.scheme, self.hostname, self.port, self.document = \
@@ -311,7 +311,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                 return
         elif not self.hostname:
             host = self.headers['Host']
-            self.hostname, self.port = urllib.splitnport(host, self.port)
+            self.hostname, self.port = wc.url.splitport(host, port=self.port)
             self.url = "%s://%s:%d%s" % (self.scheme, self.hostname, self.port, self.url)
             self.request = "%s %s HTTP/1.1" % (self.method, self.url)
             # XXX should filter request again
