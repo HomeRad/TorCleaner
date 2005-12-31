@@ -99,5 +99,6 @@ class XmlRewriter (wc.filter.Filter.Filter):
         handler = xfilt(xmlrules, htmlrules, url, localhost, encoding)
         p = xml.sax.expatreader.ExpatParser(namespaceHandling=1)
         p.setContentHandler(handler)
+        p.setFeature(xml.sax.handler.feature_external_ges, 0)
         attrs['xmlrewriter_parser'] = p
         attrs['xmlrewriter_filter'] = handler
