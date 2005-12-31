@@ -20,6 +20,10 @@
     Type: bugfix
     Changed: wc/proxy/ClientServerMatchmaker.py
 
+  * Fixed URL parsing with invalid port numbers.
+    Type: bugfix
+    Changed: wc/url.py
+
 2.35 "Lord of War" (released 19.12.2005)
 
   * A missing alt="" attribute of an <img> tag is copied from the
