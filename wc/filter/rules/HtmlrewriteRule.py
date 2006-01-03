@@ -19,6 +19,7 @@ Rule rewriting html tags.
 """
 
 import re
+import urllib
 from StringIO import StringIO
 
 import wc
@@ -264,7 +265,10 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
                                 newattrs[self.replacement] = None
                     elif self.part == wc.filter.html.ATTRVAL:
                         # backreferences are replaced
-                        newattrs[attr] = mo.expand(self.replacement)
+                        val = mo.expand(self.replacement)
+                        if "url" in mo.groupdict():
+                            val = urllib.unquote(val)
+                        newattrs[attr] = val
                     elif self.part == wc.filter.html.ATTRNAME:
                         newattr = mo.expand(self.replacement)
                         newattrs[newattr] = val
