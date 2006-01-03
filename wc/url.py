@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2000-2006 Bastian Kleineidam
+# Copyright (C) 2000-2005  Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -212,18 +212,14 @@ def url_fix_host (urlparts):
             userpass += "@"
         else:
             userpass = ""
-        dport = default_ports.get(urlparts[0], 80)
-        newhost, port = splitport(host, port=dport)
-        if port is not None:
-            host = newhost
-        # remove trailing dot
-        if host.endswith("."):
-            host = host[:-1]
-        if port == dport:
-            # a default port
-            urlparts[1] = userpass+host
-        else:
-            urlparts[1] = "%s%s:%d" % (userpass, host, port)
+        if urlparts[0] in default_ports:
+            dport = default_ports[urlparts[0]]
+            host, port = splitport(host, port=dport)
+            if host.endswith("."):
+                host = host[:-1]
+            if port != dport:
+                host = "%s:%d" % (host, port)
+        urlparts[1] = userpass+host
 
 
 def url_fix_common_typos (url):
