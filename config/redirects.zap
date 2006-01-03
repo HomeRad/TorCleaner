@@ -10,7 +10,7 @@
   <title lang="de">redirect.cgi</title>
   <title lang="en">redirect.cgi</title>
   <description lang="en">location, location, location</description>
-  <attr name="href">redirect\.cgi\?.*?location=([^="&amp;]+)</attr>
+  <attr name="href">redirect\.cgi\?.*?location=(?P&lt;url&gt;[^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 
@@ -20,7 +20,7 @@
   <title lang="en">www.nist.gov</title>
   <description lang="de">Weiterleitung bei www.nist.gov</description>
   <description lang="en">redirection at www.nist.gov</description>
-  <attr name="href">www\.nist\.gov/cgi-bin/exit_nist\.cgi\?url=([^="]+)</attr>
+  <attr name="href">www\.nist\.gov/cgi-bin/exit_nist\.cgi\?url=(?P&lt;url&gt;[^="]+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 
@@ -30,7 +30,7 @@
   <title lang="en">linuxapps.com</title>
   <description lang="de">Weiterleitung bei linuxapps.com</description>
   <description lang="en">redirection at linuxapps.com</description>
-  <attr name="href">(linuxapps\.com.*|redir\.asp)\?.*?url=([^="&amp;]+)</attr>
+  <attr name="href">(linuxapps\.com.*|redir\.asp)\?.*?url=(?P&lt;url&gt;[^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 
@@ -39,7 +39,7 @@
   <title lang="de">www.fileleech.com</title>
   <title lang="en">fileleech.com</title>
   <description lang="en">redirection at fileleech.com</description>
-  <attr name="href">www\.fileleech\.com/dl/\?.*?filepath=([^="&amp;]+)</attr>
+  <attr name="href">www\.fileleech\.com/dl/\?.*?filepath=(?P&lt;url&gt;[^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 
@@ -47,7 +47,7 @@
  tag="a">
   <title lang="en">www.coolpix.de</title>
   <description lang="en">redirection at coolpix.de</description>
-  <attr name="href">www\.cool-pix\.de/cgi-bin/count/count\.pl\?zaehle,(.+)</attr>
+  <attr name="href">www\.cool-pix\.de/cgi-bin/count/count\.pl\?zaehle,(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 
@@ -64,7 +64,7 @@
   <title lang="de">Knoppix Weiterleitung</title>
   <title lang="en">Knoppix redirection</title>
   <matchurl>knopper\.net</matchurl>
-  <attr name="href">download\.php3\?link=([^="&amp;]+)</attr>
+  <attr name="href">download\.php3\?link=(?P&lt;url&gt;[^="&amp;]+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 
@@ -72,7 +72,14 @@
  tag="a">
   <title lang="en">dockapps.org</title>
   <description lang="en">dockapps</description>
-  <attr name="href">http://www\.dockapps\.org/click\.php\?send=(.+)</attr>
+  <attr name="href">http://www\.dockapps\.org/click\.php\?send=(?P&lt;url&gt;.+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.79"
+ tag="a">
+  <title lang="de">anonym.to</title>
+  <attr name="href">http://anonym\.to/\?(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 </folder>
