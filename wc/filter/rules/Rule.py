@@ -74,6 +74,12 @@ class Rule (object):
      - parent - the parent folder (if any); look at FolderRule class
     """
 
+    # Attributes that cannot be used for custom data.
+    reserved_attrnames = [
+        'sid', 'name', 'titles', 'descriptions', 'disable', 'parent',
+        'attrnames', 'intattrs', 'listattrs',
+    ]
+
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, parent=None):
         """
@@ -108,7 +114,7 @@ class Rule (object):
         assert self.sid == rule.sid, "updating %s with invalid rule %s" % \
                                      (self, rule)
         assert self.sid.startswith('wc'), "updating invalid id %s" % self.sid
-        l = [a for a in self.attrnames if a not in ['sid', 'disable']]
+        l = [a for a in self.attrnames if a not in self.reserved_attrnames]
         chg = self.update_attrs(l, rule, dryrun, log)
         chg = self.update_titledesc(rule, dryrun, log) or chg
         return chg
@@ -255,6 +261,14 @@ class Rule (object):
         Register this rule. Called when all XML parsing of rule is finished.
         """
         wc.filter.rules.register_rule(self)
+        # some internal checks
+        for name in self.intattrs:
+            assert name in self.attrnames
+        for name in self.listattrs:
+            assert name in self.attrnames
+        for name in self.attrnames:
+            if name not in ('sid', 'disable'):
+                assert name not in self.reserved_attrnames
 
     def toxml (self):
         """
