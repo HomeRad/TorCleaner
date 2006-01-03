@@ -314,6 +314,14 @@ def server_set_encoding_headers (server, filename=None):
                         'chunked encoding should not have Content-Length')
             to_remove.add("Content-Length")
         bytes_remaining = None
+    elif rewrite:
+        # To make pipelining possible, enable chunked encoding.
+        server.headers['Transfer-Encoding'] = "chunked\r"
+        if server.headers.has_key("Content-Length"):
+            to_remove.add("Content-Length")
+        chunker = wc.proxy.encoder.ChunkStream.ChunkStream(server)
+        server.encoders.append(chunker)
+
     remove_headers(server.headers, to_remove)
     # only decompress on rewrite
     if not rewrite:
