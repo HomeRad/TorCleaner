@@ -185,8 +185,8 @@ class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             for item in tagbuf[pos:]:
                 if item[0] == wc.filter.xmlfilt.DATA:
                     data = item[1]
-                    data = self.rsshtml.filter(data, url, htmlrules)
                     data = self.filter_html(data, url, htmlrules)
+                    data = self.rsshtml.filter(data, url, htmlrules)
                     item[1] = data
                     if "]]>" not in data:
                         item[0] = wc.filter.xmlfilt.CDATA
