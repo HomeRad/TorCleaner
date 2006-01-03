@@ -319,13 +319,11 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         if self.enclosed:
             s += u"\n  <enclosed>%s</enclosed>" % \
                  wc.XmlUtils.xmlquote(self.enclosed)
-        if self.part != wc.filter.html.COMPLETE or self.replacement:
-            s += u'\n  <replacement part="%s"' % num_part(self.part)
-            if self.replacement:
-                s += u">%s</replacement>" % \
-                     wc.XmlUtils.xmlquote(self.replacement)
-            else:
-                s += u"/>"
+        s += u'\n  <replacement part="%s"' % num_part(self.part)
+        if self.replacement:
+            s += u">%s</replacement>" % wc.XmlUtils.xmlquote(self.replacement)
+        else:
+            s += u"/>"
         s += u"\n</%s>" % self.name
         return s
 
