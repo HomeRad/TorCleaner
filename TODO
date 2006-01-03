@@ -1,5 +1,12 @@
 TODO
 
+- make ./check script for runit
+
+- test HTTP pipelining (esp. the order of the responses)
+
+- https://gna.org/projects/ff-bash/
+  redirects endless
+
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 
@@ -20,8 +27,7 @@ TODO
   <a b="c d="e"> ...
   
 - Use HTML parser with Unicode support, ie. rewrite this bugger in Python
-  with regexes (slow?). Look at TagSoup which claims to be streaming and
-  uses regexes.
+  with regexes (slow?).
   
 - Mac OS X and BSD support for network interface list:
   from the www.dents.org C source (GPL license):

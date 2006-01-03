@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-12-19 12:56+0100\n"
+"POT-Creation-Date: 2006-01-03 12:20+0100\n"
 "PO-Revision-Date: 2005-11-15 17:55+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -31,17 +31,17 @@ msgstr "mit einer Regel"
 msgid "with %d rules"
 msgstr "mit %d Regeln"
 
-#: ../wc/filter/rules/Rule.py:130
+#: ../wc/filter/rules/Rule.py:136
 #, python-format
 msgid "updating rule title for language %s:"
 msgstr "aktualisiere Überschrift für Regel %s:"
 
-#: ../wc/filter/rules/Rule.py:144
+#: ../wc/filter/rules/Rule.py:150
 #, python-format
 msgid "updating rule description for language %s:"
 msgstr "aktualisiere Beschreibung der Regel für die Sprache %s:"
 
-#: ../wc/filter/rules/Rule.py:161
+#: ../wc/filter/rules/Rule.py:167
 #, python-format
 msgid "updating rule %s:"
 msgstr "aktualisiere Regel %s:"
@@ -50,52 +50,52 @@ msgstr "aktualisiere Regel %s:"
 msgid "Unknown page"
 msgstr "Unbekannte Seite"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:43
+#: ../wc/filter/rules/HtmlrewriteRule.py:44
 msgid "Tag"
 msgstr "Tag"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:44
+#: ../wc/filter/rules/HtmlrewriteRule.py:45
 msgid "Tag name"
 msgstr "Tag Name"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:45
+#: ../wc/filter/rules/HtmlrewriteRule.py:46
 msgid "Attribute"
 msgstr "Attribut"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:46
+#: ../wc/filter/rules/HtmlrewriteRule.py:47
 msgid "Attribute value"
 msgstr "Attributwert"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:47
+#: ../wc/filter/rules/HtmlrewriteRule.py:48
 msgid "Attribute name"
 msgstr "Attributname"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:48
+#: ../wc/filter/rules/HtmlrewriteRule.py:49
 msgid "Complete tag"
 msgstr "Ganzes Tag"
 
-#: ../wc/filter/rules/HtmlrewriteRule.py:49
+#: ../wc/filter/rules/HtmlrewriteRule.py:50
 msgid "Enclosed block"
 msgstr "Enthaltener Text"
 
-#: ../wc/filter/rating/category.py:69
+#: ../wc/filter/rating/category.py:72
 msgid "none"
 msgstr "keine"
 
-#: ../wc/filter/rating/category.py:69
+#: ../wc/filter/rating/category.py:72
 msgid "mild"
 msgstr "etwas"
 
-#: ../wc/filter/rating/category.py:69
+#: ../wc/filter/rating/category.py:72
 msgid "heavy"
 msgstr "viel"
 
-#: ../wc/filter/rating/category.py:84
+#: ../wc/filter/rating/category.py:87
 #, python-format
 msgid "Rating %r for category %r exceeds limit %r"
 msgstr "Bewertung %r für Kategorie %r überschreitet Grenze %r"
 
-#: ../wc/filter/rating/category.py:122
+#: ../wc/filter/rating/category.py:125
 #, python-format
 msgid "Rating %r for category %r is not in range %s"
 msgstr "Bewertung %r für Kategorie %r ist nicht im Bereich %s"
@@ -152,12 +152,12 @@ msgstr ""
 "Sie müssen entweder TCPSocket oder LocalSocket in Ihrer Clamd Konfiguration "
 "aktivieren"
 
-#: ../wc/filter/html/JSFilter.py:362
+#: ../wc/filter/html/JSFilter.py:365
 #, python-format
 msgid "error fetching script from %r"
 msgstr "Fehler beim Laden von %r"
 
-#: ../wc/filter/html/JSFilter.py:365
+#: ../wc/filter/html/JSFilter.py:368
 #, python-format
 msgid "fetched script from %r"
 msgstr "Skript geladen von %r"
@@ -332,7 +332,7 @@ msgstr "Interner Fehler"
 msgid "%s error"
 msgstr "%s Fehler"
 
-#: ../wc/webgui/context/filterconfig_html.py:469
+#: ../wc/webgui/context/filterconfig_html.py:470
 msgid "No title"
 msgstr "Überschrift"
 
@@ -344,7 +344,7 @@ msgstr "Unbekannter Grund"
 msgid "Error: nothing to update."
 msgstr "Fehler: keine Aktualisierungen vorhanden."
 
-#: ../wc/proxy/Dispatcher.py:326
+#: ../wc/proxy/Dispatcher.py:320
 #, python-format
 msgid "Connect error %s."
 msgstr "Verbindungsproblem %s."
@@ -359,7 +359,7 @@ msgstr "Setze Inhaltstyp in %r von %r nach %r"
 msgid "Set content type of %r to %r"
 msgstr "Setze Content-Type von %r nach %r"
 
-#: ../wc/proxy/Headers.py:341
+#: ../wc/proxy/Headers.py:349
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr "Nicht unterstütztes Encoding: %r"
