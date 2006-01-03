@@ -41,6 +41,7 @@ import os
 import sys
 import time
 
+
 def update_func_meta (fake_func, real_func):
     """
     Set meta information (eg. __doc__) of fake function to that
@@ -111,10 +112,10 @@ def _synchronized (lock, func):
 
 
 def synchronized (lock):
-    """
-    A decorator calling a function with aqcuired lock.
-    """
-    return lambda func: _synchronized(lock, func)
+     """
+     A decorator calling a function with aqcuired lock.
+     """
+     return lambda func: _synchronized(lock, func)
 
 
 def notimplemented (func):
