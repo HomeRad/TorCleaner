@@ -28,7 +28,7 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
     """
 
     def __init__ (self, sid=None, titles=None, descriptions=None,
-                  disable=0, name="noname", value="", filterstage="request",
+                  disable=0, header="noname", value="", filterstage="request",
                   action="remove", matchurls=None, nomatchurls=None):
         """
         Init rule name and value.
@@ -36,11 +36,11 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         super(HeaderRule, self).__init__(sid=sid, titles=titles,
                                  descriptions=descriptions, disable=disable,
                                  matchurls=matchurls, nomatchurls=nomatchurls)
-        self.name = name
+        self.header = header
         self.value = value
         self.filterstage = filterstage
         self.action = action
-        self.attrnames.extend(('name', 'filterstage', 'action'))
+        self.attrnames.extend(('header', 'filterstage', 'action'))
 
     def end_data (self, name):
         """
@@ -51,6 +51,14 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
             self.value = self._data
             if self.value and self.action == "remove":
                 self.action = "replace"
+
+    def fill_attrs (self, attrs, name):
+        """
+        Set attribute values.
+        """
+        super(HeaderRule, self).fill_attrs(attrs, name)
+        if name == "header":
+            self.header = attrs["name"]
 
     def update (self, rule, dryrun=False, log=None):
         """
@@ -65,14 +73,14 @@ class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
         """
         return super(HeaderRule, self).__str__() + \
             ("name %r\nvalue %r\nstage %s" %
-             (self.name, self.value, self.filterstage))
+             (self.header, self.value, self.filterstage))
 
     def toxml (self):
         """
         Rule data as XML for storing.
         """
         s = u'%s\n name="%s"' % (super(HeaderRule, self).toxml(),
-                                wc.XmlUtils.xmlquoteattr(self.name))
+                                wc.XmlUtils.xmlquoteattr(self.header))
         s += u'\n filterstage="%s"' % self.filterstage
         s += u'\n action="%s"' % self.action
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")

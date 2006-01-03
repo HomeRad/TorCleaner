@@ -145,6 +145,7 @@ newrulenames.sort()
 # ruletype flag for tal condition
 ruletype = {}
 
+
 def _is_valid_header_filterstage (stage):
     """
     Check if stage is a valid header filter stage.
@@ -315,6 +316,7 @@ def _form_selrule (index):
         index = int(index)
         global currule
         currule = [r for r in curfolder.rules if r.oid == index][0]
+        print "XXX", currule
         # fill ruletype flags
         for rt in rulenames:
             ruletype[rt] = (currule.name == rt)
@@ -790,8 +792,8 @@ def _form_apply_header (form):
     name = _getval(form, 'rule_headername').strip()
     if not name:
         error['ruleheadername'] = True
-    elif name != currule.name:
-        currule.name = name
+    elif name != currule.header:
+        currule.header = name
         info['ruleheadername'] = True
     value = _getval(form, 'rule_headervalue').strip()
     if value != currule.value:

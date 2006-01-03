@@ -67,20 +67,20 @@ class Header (wc.filter.Filter.Filter):
         }
         for rule in self.rules:
             # filter out unwanted rules
-            if not rule.applies_to_url(url) or not rule.name:
+            if not rule.applies_to_url(url) or not rule.header:
                 continue
             if rule.action == 'remove':
                 # No value means header name should be removed.
                 # Removal can apply to many header names, so treat name as
                 # a regular expression.
-                matcher = re.compile(rule.name, re.I).match
+                matcher = re.compile(rule.header, re.I).match
                 if rule.filterstage in ('both', 'request'):
                     delete[wc.filter.STAGE_REQUEST_HEADER].append(matcher)
                 if rule.filterstage in ('both', 'response'):
                     delete[wc.filter.STAGE_RESPONSE_HEADER].append(matcher)
             else:
                 # name, value must be ASCII strings
-                name = str(rule.name)
+                name = str(rule.header)
                 val = str(rule.value)
                 if rule.action == "add":
                     d = add
