@@ -1,2 +1,5 @@
 Tag: non-standard-dir-perm
 Data: /var/log/webcleaner
+
+Tag: bad-perms-for-initd
+Data: /etc/init.d/webcleaner

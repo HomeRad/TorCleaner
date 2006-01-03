@@ -55,7 +55,6 @@ binary-post-install/webcleaner-common::
 # install service files
 	install -m 0755 service/webcleaner/run2 $(SERVICEDIR)/run
 	install -m 0755 service/webcleaner/log/run $(SERVICEDIR)/log/
-	install -m 0755 debian/webcleaner-ctl $(BASE)/usr/bin
 # overrides
 	install -m 0644 debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
 	install -m 0644 debian/webcleaner.linda debian/webcleaner/usr/share/linda/overrides/webcleaner

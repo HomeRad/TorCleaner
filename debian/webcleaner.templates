@@ -14,10 +14,3 @@ _Description: Administrator password
  .
  You have to enter a non-empty password.
 
-Template: webcleaner/control
-Type: note
-_Description: WebCleaner control script
- Since WebCleaner is using the runit daemon package, it does not have
- the usual init.d script to control its service. Instead the
- WebCleaner proxy can be manually started or stopped by the
- webcleaner-ctl script.

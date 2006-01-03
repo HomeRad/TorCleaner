@@ -54,8 +54,8 @@ install|abort-upgrade)
 esac
 
 # stop running webcleaner instance
-if [ -x /usr/bin/webcleaner-ctl ]; then
-    /usr/bin/webcleaner-ctl stop || true
+if [ -e /etc/init.d/webcleaner ]; then
+    /etc/init.d/webcleaner stop || true
 fi
 
 #DEBHELPER#

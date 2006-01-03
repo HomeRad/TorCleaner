@@ -1,6 +1,10 @@
 webcleaner (2.36-0calvin1) unstable; urgency=low
 
   * New upstream release.
+  * Updated debian/watch file format to version 3 and use sf.net redirector.
+  * Install symlink /etc/init.d/webcleaner -> /usr/bin/sv to mimic an
+    init.d script. Makes webcleaner-ctl files obsolete, remove.
+    Depend on runit (>= 1.3) for /usr/bin/sv to be present.
 
  -- Bastian Kleineidam <calvin@debian.org>  Mon, 19 Dec 2005 18:42:37 +0100
 

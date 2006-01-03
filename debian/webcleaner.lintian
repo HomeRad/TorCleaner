@@ -1,2 +1,3 @@
 webcleaner: non-standard-dir-perm var/log/webcleaner/ 0750 != 0755
 webcleaner: non-standard-file-perm etc/webcleaner/webcleaner.conf 0600 != 0644
+webcleaner: script-in-etc-init.d-not-registered-via-update-rc.d /etc/init.d/webcleaner

@@ -17,7 +17,7 @@
 case "$1" in
 remove)
     # stop and exit service(s)
-    webcleaner-ctl exit
+    /etc/init.d/webcleaner exit
     # remove service data
     if [ -h /var/service/webcleaner ]; then
         rm -f /var/service/webcleaner

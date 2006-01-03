@@ -67,6 +67,6 @@ fi
 #DEBHELPER#
 
 # (re)start webcleaner
-webcleaner-ctl start || true
+/etc/init.d/webcleaner start || true
 
 exit 0

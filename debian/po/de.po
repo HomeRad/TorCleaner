@@ -14,8 +14,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-16 10:18+0200\n"
+"Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
+"POT-Creation-Date: 2006-01-03 11:22+0100\n"
 "PO-Revision-Date: 2004-10-16 10:21+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@debian.org>\n"
 "Language-Team: de <de@li.org>\n"
@@ -26,16 +26,19 @@ msgstr ""
 #  Type: string
 #  Default
 #. Type: string
+#. Default
 #: ../webcleaner.templates:3
 msgid "8080"
 msgstr "8080"
 
 #. Type: string
+#. Description
 #: ../webcleaner.templates:4
 msgid "Default proxy port"
 msgstr "Standard Proxy port"
 
 #. Type: string
+#. Description
 #: ../webcleaner.templates:4
 msgid "This is the port number this proxy will listen on for requests."
 msgstr "Dies ist die Portnummer, unter der dieser Proxy Anfragen akzeptiert."
@@ -43,6 +46,7 @@ msgstr "Dies ist die Portnummer, unter der dieser Proxy Anfragen akzeptiert."
 #  Type: password
 #  Description
 #. Type: password
+#. Description
 #: ../webcleaner.templates:9
 msgid "Administrator password"
 msgstr "Administrator Passwort"
@@ -50,13 +54,18 @@ msgstr "Administrator Passwort"
 #  Type: password
 #  Description
 #. Type: password
+#. Description
 #: ../webcleaner.templates:9
-msgid "The administrator password protects the web configuration frontend of WebCleaner."
-msgstr "Das Administrator Passwort schützt die Webkonfiguration von WebCleaner."
+msgid ""
+"The administrator password protects the web configuration frontend of "
+"WebCleaner."
+msgstr ""
+"Das Administrator Passwort schützt die Webkonfiguration von WebCleaner."
 
 #  Type: password
 #  Description
 #. Type: password
+#. Description
 #: ../webcleaner.templates:9
 msgid "The default username is \"admin\" (without the quotes)."
 msgstr "Der Standardbenutzername ist \"admin\" (ohne die Anführungszeichen)."
@@ -64,17 +73,7 @@ msgstr "Der Standardbenutzername ist \"admin\" (ohne die Anführungszeichen)."
 #  Type: password
 #  Description
 #. Type: password
+#. Description
 #: ../webcleaner.templates:9
 msgid "You have to enter a non-empty password."
 msgstr "Sie müssen ein nicht-leeres Passwort eingeben."
-
-#. Type: note
-#: ../webcleaner.templates:19
-msgid "WebCleaner control script"
-msgstr "WebCleaner Kontrollskript"
-
-#. Type: note
-#: ../webcleaner.templates:19
-msgid "Since WebCleaner is using the runit daemon package, it does not have the usual init.d script to control its service. Instead the WebCleaner proxy can be manually started or stopped by the webcleaner-ctl script."
-msgstr "Weil WebCleaner das runit Dämonpaket nutzt, besitzt WebCleaner nicht das übliche init.d Skript zum Kontrollieren des Service. Stattdessen kann der WebCleaner Proxy manuell über das webcleaner-ctl Skript gestartet oder gestoppt werden."
-
