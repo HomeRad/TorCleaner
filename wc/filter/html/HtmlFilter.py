@@ -50,6 +50,8 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         self.security = wc.filter.html.HtmlSecurity.HtmlSecurity()
         # cache rule match_tag into {tag -> list of rules}
         self.rule_tag_cache = {}
+        assert wc.log.debug(wc.LOG_HTML,
+                            "%s with %d rules", self, len(self.rules))
 
     def new_instance (self, **opts):
         """
@@ -62,7 +64,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         Representation with recursion level and state.
         """
-        return "<HtmlFilter[%d] %s>" % (self.level, self.url)
+        return "<HtmlFilter[%d] %s)>" % (self.level, self.url)
 
     def _is_waiting (self, item):
         """
