@@ -341,29 +341,25 @@ KnownInvalidTags = {
     "quote": None, # xhtml 2.0 (draft)
 }
 
+# tags to ignore
+IgnoreTags = HtmlTags.keys() + MathTags.keys() + OldTags.keys() + \
+   KnownInvalidTags.keys()
+CheckTags = HtmlTags.keys() + OldTags.keys() + MathTags.keys()
 
 def check_spelling (tag, url):
     """
     Check if tag (must be lowercase) is a valid HTML tag and if not,
     tries to correct it to the first tag with a levenshtein distance of 1.
     """
-    if tag in HtmlTags or tag in MathTags:
-        return tag
-    if tag in OldTags:
-        #wc.log.warn(wc.LOG_FILTER, "non-HTML4 tag %r at %r", tag, url)
-        return tag
-    if tag in KnownInvalidTags:
-        #wc.log.warn(wc.LOG_FILTER, "known invalid tag %r at %r", tag, url)
-        return tag
-    if is_other_namespace(tag):
-        # ignore other namespaces
+    if tag in IgnoreTags or is_other_namespace(tag):
+        # do not check tag
         return tag
     # encode for levenshtein method
     # since tag names should be ascii anyway, ignore encoding errors
     enctag = tag.encode("ascii", "ignore")
-    for htmltag in HtmlTags.keys()+OldTags.keys()+MathTags.keys():
+    for htmltag in CheckTags:
         if wc.levenshtein.distance(enctag, htmltag) == 1:
-            wc.log.warn(wc.LOG_FILTER,
+            wc.log.info(wc.LOG_FILTER,
                       "HTML tag %r corrected to %r at %r", tag, htmltag, url)
             return htmltag
     wc.log.warn(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
