@@ -12,4 +12,10 @@
   <description lang="de">Entferne das &lt;style&gt; tag.</description>
   <description lang="en">Remove the &lt;style&gt; tag.</description>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.78"
+ tag="div">
+  <title lang="de">Entferne display:none</title>
+  <attr name="style">display:\s*none</attr>
+</htmlrewrite>
 </folder>
