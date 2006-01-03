@@ -14,7 +14,15 @@
  selector="/rss/channel/item/description"
  replacetype="rsshtml">
   <title lang="en">RSS description</title>
+  <description lang="de">Filter HTML in RSS item descriptions.</description>
   <description lang="en">Filter HTML in the content of RSS item descriptions.</description>
+</xmlrewrite>
+
+<xmlrewrite sid="wc.80"
+ selector="/rss/channel/item/content:encoded"
+ replacetype="rsshtml">
+  <title lang="de">RSS content</title>
+  <description lang="de">Filter HTML in RSS item contents.</description>
 </xmlrewrite>
 
 <replace sid="wc.46"
@@ -28,5 +36,15 @@
   <title lang="en">OSDN RSS ads</title>
   <description lang="en">Ads in RSS feeds of freshmeat and slashdot.</description>
   <attr name="href">http://rss\.(slashdot\.org|freshmeat\.net)/~[ca]/(Slashdot|freshmeat)/</attr>
+  <replacement part="complete"/>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.81"
+ tag="div">
+  <title lang="de">Remove feedburner links</title>
+  <description lang="de">At the bottom of some RSS contents there are feedburner links.</description>
+  <matchurl>ajaxian</matchurl>
+  <attr name="class">feedflare</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 </folder>
