@@ -316,7 +316,6 @@ def _form_selrule (index):
         index = int(index)
         global currule
         currule = [r for r in curfolder.rules if r.oid == index][0]
-        print "XXX", currule
         # fill ruletype flags
         for rt in rulenames:
             ruletype[rt] = (currule.name == rt)
