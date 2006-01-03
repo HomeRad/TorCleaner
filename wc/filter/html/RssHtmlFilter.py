@@ -137,7 +137,7 @@ class RssHtmlFilter (object):
                 quote = wc.HtmlParser.htmllib.quote_attrval
                 for attr in attrs:
                     if attr in rss_allowed[tag]:
-                        val = attrs[attr]
+                        val = attrs.get_true(attr, "")
                         self.outbuf.write(u' %s="%s"' % (attr, quote(val)))
             if startend:
                 self.outbuf.write(u"/>")
