@@ -24,25 +24,11 @@ import cStringIO as StringIO
 
 import wc
 import wc.configuration
+import wc.strformat
 import wc.log
 import wc.filter
 import wc.filter.Filter
 from wc.proxy.Dispatcher import create_socket
-
-def strsize (b):
-    """
-    Return human representation of bytes.
-    """
-    if b < 1024:
-        return "%d Byte" % b
-    b /= 1024.0
-    if b < 1024:
-        return "%.2f kB" % b
-    b /= 1024.0
-    if b < 1024:
-        return "%.2f MB" % b
-    b /= 1024.0
-    return "%.2f GB"
 
 
 class VirusFilter (wc.filter.Filter.Filter):
@@ -87,7 +73,7 @@ class VirusFilter (wc.filter.Filter.Filter):
         wc.log.warn(wc.LOG_FILTER, "Virus filter size exceeded.")
         raise wc.filter.FilterProxyError((406, _("Not acceptable"),
                 _("Maximum data size (%s) exceeded") % \
-                strsize(VirusFilter.MAX_FILE_BYTES)))
+                wc.strformat.strsize(VirusFilter.MAX_FILE_BYTES)))
 
     def finish (self, data, attrs):
         """
