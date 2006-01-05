@@ -74,11 +74,17 @@ def check_length (attrs, name, htmlfilter):
     """
     Check correct format of a length attribute. Allowed are
     digits, followed by 'px' or '%'.
+    Side effect: attribute value is stripped from whitespace.
     """
     value = attrs.get_true(name, u"")
     if not value:
         return
-    tvalue = value.lower().strip()
+    # Assume that if we want a specific length whitespace is not
+    # allowed in the attribute value.
+    value = value.strip()
+    attrs[name] = value
+    # check
+    tvalue = value.lower()
     if tvalue.endswith('px'):
         tvalue = tvalue[:-2]
     elif tvalue.endswith('%'):
@@ -92,6 +98,7 @@ def check_length (attrs, name, htmlfilter):
 def check_attr_size (attrs, name, htmlfilter, maxlen=4):
     """
     Sanitize too large values (usually used for length attributes).
+    Side effect: attribute value is stripped from whitespace.
     """
     if name not in attrs:
         return
