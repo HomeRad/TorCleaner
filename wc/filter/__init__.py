@@ -130,7 +130,7 @@ def GetRuleFromName (name):
     Return new rule instance for given rule name.
     """
     name = '%sRule' % name.capitalize()
-    mod = __import__("wc.filter.rules.%s"%name, {}, {}, [name])
+    mod = __import__("wc.filter.rules.%s" % name, {}, {}, [name])
     return getattr(mod, name)()
 
 

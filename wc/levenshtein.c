@@ -87,8 +87,9 @@ size_t lev_distance (size_t len1, const unsigned char* string1,
         row[i] = i;
 
     /* go through the matrix and compute the costs.  yes, this is an extremely
-     * obfuscated version, but also extremely memory-conservative and relatively
-     * fast.  */
+     * obfuscated version, but also extremely memory-conservative and
+     * relatively fast.
+     */
     if (xcost) {
         for (i = 1; i < len1; i++) {
             size_t *p = row + 1;
