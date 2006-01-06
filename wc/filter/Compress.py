@@ -61,13 +61,12 @@ def compress (data, compobj):
     @return: compressed data
     @rtype: string
     """
-    if data:
-        assert wc.log.debug(wc.LOG_FILTER, "compressing %d bytes", len(data))
-        compobj['size'] += len(data)
-        compobj['crc'] = zlib.crc32(data, compobj['crc'])
-        compressed = compobj['compressor'].compress(data)
-    else:
-        compressed = ""
+    if not data:
+        return ""
+    assert wc.log.debug(wc.LOG_FILTER, "compressing %d bytes", len(data))
+    compobj['size'] += len(data)
+    compobj['crc'] = zlib.crc32(data, compobj['crc'])
+    compressed = compobj['compressor'].compress(data)
     if compobj['header']:
         assert wc.log.debug(wc.LOG_FILTER, 'writing gzip header')
         compressed = compobj['header'] + compressed
@@ -123,7 +122,9 @@ class Compress (wc.filter.Filter.Filter):
         compobj = attrs['compressobj']
         compressed = compress(data, compobj)
         assert wc.log.debug(wc.LOG_FILTER, 'finishing compressor')
-        compressed += "%s%s%s" % (compobj['compressor'].flush(),
+        assert compobj['size'] >= 0
+        if compobj['size'] > 0:
+            compressed += "%s%s%s" % (compobj['compressor'].flush(),
                                   struct.pack('<l', compobj['crc']),
                                   struct.pack('<l', compobj['size']))
         return compressed
