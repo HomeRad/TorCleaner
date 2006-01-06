@@ -2,9 +2,6 @@ TODO
 
 - test HTTP pipelining (esp. the order of the responses)
 
-- https://gna.org/projects/ff-bash/
-  redirects endless
-
 - check the order in which client (or server) headers are mangled,
   especially hop-by-hop header removal
 
