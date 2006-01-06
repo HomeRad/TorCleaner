@@ -29,6 +29,15 @@
     Type: bugfix
     Changed: wc/filter/rules/HeaderRule.py, wc/filter/Header.py
 
+  * Updated spidermonkey JavaScript library from upstream CVS as of
+    20060105.
+    Type: feature
+    Changed: libjs/*
+
+  * Updated blacklist filters as of 20060106.
+    Type: feature
+    Changed: config/blacklist*
+
 2.35 "Lord of War" (released 19.12.2005)
 
   * A missing alt="" attribute of an <img> tag is copied from the
