@@ -1,7 +1,8 @@
 #!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 # this script has to be executed in the config parent dir
-"""Generate blacklist_XYZ folders with blocking and rewriting
+"""
+Generate blacklist_XYZ folders with blocking and rewriting
 filters for the given blacklist files.
 The XYZ folder name is the blacklist folder.
 
@@ -346,11 +347,11 @@ def download_and_merge ():
     # from Pål Baltzersen and Lars Erik Håland (Squidguard guys)
     geturl("ftp://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/", "blacklists.tar.gz", blacklist)
     # from Stefan Furtmayr
-    #geturl("http://www.bn-paf.de/filter/", "de-blacklists.tar.gz", blacklist)
+    geturl("http://www.bn-paf.de/filter/", "de-blacklists.tar.gz", blacklist)
     # from Craig Baird
     geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist, saveas="porn/domains.gz")
     # from ?????
-    #geturl("http://squidguard.mesd.k12.or.us/", "squidguard.tar.gz", blacklist)
+    geturl("http://squidguard.mesd.k12.or.us/", "blacklists.tar.gz", blacklist)
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
     # dmoz category dumps
