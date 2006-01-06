@@ -102,4 +102,6 @@ class ChunkStream (object):
         s = "0\r\n"
         s += self.get_trailer()
         s += "\r\n"
+        assert wc.log.debug(wc.LOG_NET,
+                            "flush chunked %d bytes: %r", len(s), s)
         return s
