@@ -1,7 +1,5 @@
 TODO
 
-- make ./check script for runit
-
 - test HTTP pipelining (esp. the order of the responses)
 
 - https://gna.org/projects/ff-bash/
