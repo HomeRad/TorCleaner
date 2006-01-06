@@ -329,7 +329,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         if not self.headers.has_key('Host'):
             wc.log.warn(wc.LOG_PROXY,
                  "%s HTTP/1.0 request without Host header encountered", self)
-        if self.port != 80:
+        if self.port != wc.url.default_ports[self.get_default_scheme()]:
             self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
         else:
             self.headers['Host'] = "%s\r" % self.hostname
