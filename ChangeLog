@@ -38,6 +38,12 @@
     Type: feature
     Changed: config/blacklist*
 
+  * Do not add default port numbers to the hostname in the HTTP
+    Host: header. Fixes endless loops with some https urls and
+    an activated SSL gateway.
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
 2.35 "Lord of War" (released 19.12.2005)
 
   * A missing alt="" attribute of an <img> tag is copied from the
