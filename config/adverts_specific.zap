@@ -9,7 +9,8 @@
  tag="a">
   <title lang="de">www.deja.com</title>
   <title lang="en">Deja.com adverts</title>
-  <description lang="en">Kill links with ad words in the host name.</description>
+  <description lang="en">Remove www.deja.com ads.</description>
+  <description lang="de">Entferne www.deja.com ads.</description>
   <attr name="href">www\.deja\.com/jump/</attr>
 </htmlrewrite>
 
@@ -19,29 +20,34 @@
   <title lang="en">Heise advert</title>
   <description lang="de">Heise besitzt ein advert tag :)</description>
   <description lang="en">www.heise.de has an advert tag. Nice :)</description>
-  <matchurl>^http://(www\.)heise\.de/</matchurl>
+  <matchurl>heise\.de</matchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.400"
  tag="contentbanner">
   <title lang="de">heise.de &lt;contentbanner&gt;</title>
   <title lang="en">Heise contentbanner</title>
-  <description lang="en">heise.de</description>
-  <matchurl>^http://(www\.)heise\.de/</matchurl>
+  <description lang="en">Remove heise.de advert</description>
+  <description lang="de">Entferne heise.de Werbung</description>
+  <matchurl>heise\.de</matchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.12"
  tag="skyscraper">
   <title lang="de">heise.de &lt;skyscraper&gt;</title>
   <title lang="en">Heise skyscraper</title>
-  <matchurl>^http://(www\.)heise\.de/</matchurl>
+  <description lang="en">Remove heise.de advert</description>
+  <description lang="de">Entferne heise.de Werbung</description>
+  <matchurl>heise\.de</matchurl>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.11"
  tag="table">
   <title lang="de">heise.de Onlinemarkt</title>
   <title lang="en">Heise Onlinemarkt</title>
-  <matchurl>(www\.)?heise\.de</matchurl>
+  <description lang="en">Remove heise.de advert</description>
+  <description lang="de">Entferne heise.de Werbung</description>
+  <matchurl>heise\.de</matchurl>
   <attr name="cellpadding">^2$</attr>
   <attr name="bgcolor">^#EEEEEE$</attr>
   <attr name="width">^137$</attr>
@@ -50,9 +56,10 @@
 
 <htmlrewrite sid="wc.401"
  tag="a">
-  <title lang="de">userfriendly.org</title>
+  <title lang="de">Userfriendly externe Verknüpfungen</title>
   <title lang="en">Userfriendly outbound links</title>
   <description lang="en">Links on userfriendly.org which point outbound. This is a redirector host.</description>
+  <description lang="de">Externe Verknüpfungen auf userfriendly.org. Dies ist eine Weiterleitung.</description>
   <attr name="href">https?://links\.userfriendly\.org</attr>
 </htmlrewrite>
 
@@ -63,7 +70,7 @@
   <description lang="de">jump.salon.com Verknüpfungen sind Werbung.</description>
   <description lang="en">Jump ads at Salon</description>
   <matchurl>salon\.com</matchurl>
-  <attr name="href">jump.salon.com</attr>
+  <attr name="href">jump\.salon\.com</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.405"
@@ -233,7 +240,8 @@
 <htmlrewrite sid="wc.425"
  tag="a">
   <title lang="en">Schmidtie</title>
-  <description lang="de">Harald-Schmidt-Show homepage suxxorz</description>
+  <title lang="de">Schmidtie</title>
+  <description lang="de">Harald-Schmidt-Show homepage ätzt</description>
   <description lang="en">Harald-Schmidt-Show homepage sux</description>
   <matchurl>www\.sat1\.de</matchurl>
   <attr name="href">/jump\.hbs</attr>
@@ -274,24 +282,28 @@
 
 <block sid="wc.30"
  url="\.googlesyndication\.">
-  <title lang="de">Google pageads</title>
+  <title lang="de">Google Werbung</title>
+  <title lang="en">Google pageads</title>
 </block>
 
 <htmlrewrite sid="wc.76"
  tag="a">
-  <title lang="de">Google Pageads 2</title>
+  <title lang="de">Google Werbung 2</title>
+  <title lang="en">Google Pageads 2</title>
   <attr name="href">\.googleadservices\.|ads_by_google\.html</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.50"
  tag="iframe">
-  <title lang="de">Google pageads 3</title>
+  <title lang="de">Google Werbung 3</title>
+  <title lang="en">Google Pageads 3</title>
   <attr name="src">\.googlesyndication\.</attr>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.49"
  tag="script">
-  <title lang="de">Google annoyances</title>
+  <title lang="de">Google Werbung 4</title>
+  <title lang="en">Google Pageads 4</title>
   <attr name="src">\.google(syndication|-analytics)\.</attr>
 </htmlrewrite>
 
