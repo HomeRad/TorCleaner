@@ -1,0 +1,26 @@
+#!/usr/bin/env python2.4
+# -*- coding: iso-8859-1 -*-
+import sys
+import urllib2
+import wc
+import wc.configuration
+
+def get_port_addr ():
+    config = wc.configuration.Configuration(wc.ConfigDir)
+    port = config["port"]
+    if config["bindaddress"]:
+        host = config["bindaddress"]
+    else:
+        host = "127.0.0.1"
+    return host, port
+
+def main ():
+    url = "http://%s:%d/" % get_port_addr()
+    try:
+        fp = urllib2.urlopen(url).read()
+    except:
+        return 111
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
