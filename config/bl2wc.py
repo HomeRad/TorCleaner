@@ -49,6 +49,7 @@ myfiles = ['domains', 'expressions', 'urls']
 ###################### read blacklist data #########################
 
 def read_blacklists (fname):
+    print "read", fname, "blacklists"
     if os.path.isdir(fname):
         for f in os.listdir(fname):
             read_blacklists(os.path.join(fname, f))
@@ -243,21 +244,21 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
 
 ##################### other functions ############################
 
-def blacklist (fname):
+def blacklist (fname, extract_to="extracted"):
     source = os.path.join("downloads", fname)
     # extract tar
-    if fname.endswith(".tar.gz"):
-        print "extracting archive..."
-        d = os.path.join("extracted", fname[:-7])
+    if fname.endswith(".tar.gz") or fname.endswith(".tgz"):
+        print "extracting archive", fname
         f = tarfile.TarFile.gzopen(source)
         for m in f:
             a, b = os.path.split(m.name)
             a = os.path.basename(a)
             if b in myfiles and a in mycats:
                 print m.name
-                f.extract(m, d)
+                f.extract(m, extract_to)
         f.close()
-        read_blacklists(d)
+        read_blacklists(extract_to)
+        rm_rf(extract_to)
     elif fname.endswith(".gz"):
         print "gunzip..."
         f = gzip.open(source)
@@ -308,11 +309,11 @@ def geturl (basedir, fname, fun, saveas=None):
         target = saveas
     else:
         target = fname
-    if os.path.exists(os.path.join("downloads",target)):
-        print "downloads/%s already exists"%target
+    if os.path.exists(os.path.join("downloads", target)):
+        print "downloads/%s already exists" % target
     else:
         print "downloading", basedir+fname
-        d = os.path.dirname(os.path.join("downloads",target))
+        d = os.path.dirname(os.path.join("downloads", target))
         if not os.path.isdir(d):
             os.makedirs(d)
         try:
@@ -351,7 +352,7 @@ def download_and_merge ():
     # from Craig Baird
     geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist, saveas="porn/domains.gz")
     # from ?????
-    geturl("http://squidguard.mesd.k12.or.us/", "blacklists.tar.gz", blacklist)
+    geturl("http://squidguard.mesd.k12.or.us/", "blacklists.tgz", blacklist)
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
     # dmoz category dumps
