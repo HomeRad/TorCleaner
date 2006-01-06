@@ -8,11 +8,10 @@ include /usr/share/cdbs/1/class/python-distutils.mk
 DEB_PYTHON_COMPILE_VERSION=2.4
 
 PYTHON=python$(DEB_PYTHON_COMPILE_VERSION)
-PACKAGE:=webcleaner
-BASE:=debian/$(PACKAGE)
-DOCDIR:=$(BASE)/usr/share/doc/$(PACKAGE)
-SHAREDIR:=$(BASE)/usr/share/$(PACKAGE)
-ETCDIR:=$(BASE)/etc/$(PACKAGE)
+BASE:=debian/webcleaner
+DOCDIR:=$(BASE)/usr/share/doc/webcleaner
+SHAREDIR:=$(BASE)/usr/share/webcleaner
+ETCDIR:=$(BASE)/etc/webcleaner
 SERVICEDIR:=$(ETCDIR)/service
 
 DEB_CONFIGURE_EXTRA_FLAGS+=--enable-shared
@@ -54,6 +53,7 @@ binary-post-install/webcleaner-common::
 	chmod go-rwx $(ETCDIR)/webcleaner.conf
 # install service files
 	install -m 0755 service/webcleaner/run2 $(SERVICEDIR)/run
+	install -m 0755 service/webcleaner/check $(SERVICEDIR)/
 	install -m 0755 service/webcleaner/log/run $(SERVICEDIR)/log/
 # overrides
 	install -m 0644 debian/webcleaner.lintian debian/webcleaner/usr/share/lintian/overrides/webcleaner
