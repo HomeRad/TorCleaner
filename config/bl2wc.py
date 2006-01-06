@@ -78,7 +78,8 @@ def read_data (fname, name, data):
     line = f.readline()
     while line:
         line = line.strip()
-        if line and line[0]!='#' and line_re.match(line):
+        if line and line[0]!='#' and line_re.match(line) and \
+           "thisisarandomentrythatdoesnotexist" not in line:
             categories.setdefault(cat, {})[name] = None
             if name=="expressions":
                 data.setdefault(cat, []).append(line)
