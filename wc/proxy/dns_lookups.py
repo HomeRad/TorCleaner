@@ -549,9 +549,6 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.handle_error("DNS error: invalid DNS response")
             return
         if not self.query.is_response(response):
-            wc.log.warn(wc.LOG_DNS, '%s wrong response %s to query %s',
-                        self, wc.strformat.indent(response),
-                        wc.strformat.indent(self.query))
             # Oops, this doesn't answer the right question.  This can
             # happen because we're using UDP, and UDP replies might end
             # up in the wrong place: open conn A, send question to A,

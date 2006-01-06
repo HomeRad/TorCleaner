@@ -245,9 +245,6 @@ class Message(object):
     def is_response(self, other):
         """Is other a response to self?
         @rtype: bool"""
-        if self.id != other.id:
-            wc.log.warn(wc.LOG_DNS,
-                "DNS message IDs differ\n%s\n----\n%s\n----", self, other)
         if other.flags & wc.dns.flags.QR == 0 or \
            wc.dns.opcode.from_flags(self.flags) != \
            wc.dns.opcode.from_flags(other.flags):
