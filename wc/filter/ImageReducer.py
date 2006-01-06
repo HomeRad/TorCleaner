@@ -59,7 +59,7 @@ class ImageReducer (wc.filter.Filter.Filter):
         if self.init_image_reducer:
             self.set_ctype_header(attrs)
             self.init_image_reducer = False
-        if not attrs.has_key('imgreducer_buf'):
+        if 'imgreducer_buf' not in attrs:
             return data
         attrs['imgreducer_buf'].write(data)
         return ''
@@ -71,7 +71,7 @@ class ImageReducer (wc.filter.Filter.Filter):
         if self.init_image_reducer:
             self.set_ctype_header(attrs)
             self.init_image_reducer = False
-        if not attrs.has_key('imgreducer_buf'):
+        if 'imgreducer_buf' not in attrs:
             return data
         p = attrs['imgreducer_buf']
         quality = attrs['imgreducer_quality']

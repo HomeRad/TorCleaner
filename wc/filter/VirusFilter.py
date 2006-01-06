@@ -53,7 +53,7 @@ class VirusFilter (wc.filter.Filter.Filter):
         """
         Write data to scanner and internal buffer.
         """
-        if not attrs.has_key('virus_scanner'):
+        if 'virus_scanner' not in attrs:
             return data
         scanner = attrs['virus_scanner']
         buf = attrs['virus_buf']
@@ -81,7 +81,7 @@ class VirusFilter (wc.filter.Filter.Filter):
         If scanner is clean, return buffered data, else print error
         message and return an empty string.
         """
-        if not attrs.has_key('virus_scanner'):
+        if 'virus_scanner' not in attrs:
             assert wc.log.debug(wc.LOG_FILTER, "No virus scanner found.")
             return data
         scanner = attrs['virus_scanner']

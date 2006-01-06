@@ -58,7 +58,7 @@ class GifImage (wc.filter.Filter.Filter):
         """
         Feed data to GIF image parser, return processed data.
         """
-        if not attrs.has_key('gifparser'):
+        if 'gifparser' not in attrs:
             return data
         gifparser = attrs['gifparser']
         gifparser.add_data(data)
@@ -73,7 +73,7 @@ class GifImage (wc.filter.Filter.Filter):
         """
         Feed data to GIF image parser, flush it and return processed data.
         """
-        if not attrs.has_key('gifparser'):
+        if 'gifparser' not in attrs:
             return data
         if data:
             data = self.filter(data, attrs)

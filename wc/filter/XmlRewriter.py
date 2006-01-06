@@ -47,7 +47,7 @@ class XmlRewriter (wc.filter.Filter.Filter):
         """
         Feed data to XML parser.
         """
-        if not attrs.has_key('xmlrewriter_parser'):
+        if 'xmlrewriter_parser' not in attrs:
             return data
         p = attrs['xmlrewriter_parser']
         f = attrs['xmlrewriter_filter']
@@ -63,7 +63,7 @@ class XmlRewriter (wc.filter.Filter.Filter):
         """
         Feed data to XML parser and flush buffers.
         """
-        if not attrs.has_key('xmlrewriter_parser'):
+        if 'xmlrewriter_parser' not in attrs:
             return data
         p = attrs['xmlrewriter_parser']
         f = attrs['xmlrewriter_filter']

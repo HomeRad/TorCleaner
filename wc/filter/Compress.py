@@ -104,7 +104,7 @@ class Compress (wc.filter.Filter.Filter):
         if self.init_compressor:
             self.set_encoding_header(attrs)
             self.init_compressor = False
-        if not attrs.has_key('compressobj'):
+        if 'compressobj' not in attrs:
             assert wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
             return data
         return compress(data, attrs['compressobj'])
@@ -116,7 +116,7 @@ class Compress (wc.filter.Filter.Filter):
         if self.init_compressor:
             self.set_encoding_header(attrs)
             self.init_compressor = False
-        if not attrs.has_key('compressobj'):
+        if 'compressobj' not in attrs:
             assert wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
             return data
         compobj = attrs['compressobj']

@@ -66,7 +66,7 @@ class ImageSize (wc.filter.Filter.Filter):
             or original image data
         @rtype: string
         """
-        if not attrs.has_key('imgsize_buf'):
+        if 'imgsize_buf' not in attrs:
             # do not block this image
             return data
         if attrs['imgsize_blocked']:
@@ -101,7 +101,7 @@ class ImageSize (wc.filter.Filter.Filter):
         """
         # note: if attrs['blocked'] is True, then the blockdata is
         # already sent out
-        if not attrs.has_key('imgsize_buf'):
+        if 'imgsize_buf' not in attrs:
             # do not block this image
             return data
         if attrs['imgsize_blocked']:

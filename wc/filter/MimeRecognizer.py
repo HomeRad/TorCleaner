@@ -71,8 +71,8 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         """
         Feed data to recognizer.
         """
-        if not attrs.has_key('mimerecognizer_buf') or \
-           attrs.get('mimerecognizer_ignore'):
+        if 'mimerecognizer_buf' not in attrs or \
+           'mimerecognizer_ignore' in attrs:
             return data
         buf = attrs['mimerecognizer_buf']
         if buf.closed:
@@ -86,8 +86,8 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         """
         Feed data to recognizer.
         """
-        if not attrs.has_key('mimerecognizer_buf') or \
-           attrs.get('mimerecognizer_ignore'):
+        if 'mimerecognizer_buf' not in attrs or \
+           'mimerecognizer_ignore' in attrs:
             return data
         buf = attrs['mimerecognizer_buf']
         if buf.closed:

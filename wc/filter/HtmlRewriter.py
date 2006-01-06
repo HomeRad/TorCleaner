@@ -47,7 +47,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         """
         Feed data to HTML parser.
         """
-        if not attrs.has_key('htmlrewriter_filter'):
+        if 'htmlrewriter_filter' not in attrs:
             return data
         p = attrs['htmlrewriter_filter']
         p.feed(data)
@@ -63,7 +63,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         """
         Feed data to HTML parser and flush buffers.
         """
-        if not attrs.has_key('htmlrewriter_filter'):
+        if 'htmlrewriter_filter' not in attrs:
             return data
         p = attrs['htmlrewriter_filter']
         # feed even if data is empty

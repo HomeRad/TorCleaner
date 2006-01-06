@@ -48,7 +48,7 @@ class Replacer (wc.filter.Filter.Filter):
         """
         Feed data to replacer buffer.
         """
-        if not attrs.has_key('replacer_buf'):
+        if 'replacer_buf' not in attrs:
             return data
         buf = attrs['replacer_buf']
         buf.mime = attrs['mime']
@@ -59,7 +59,7 @@ class Replacer (wc.filter.Filter.Filter):
         """
         Feed data to replacer buffer, flush and return it.
         """
-        if not attrs.has_key('replacer_buf'):
+        if 'replacer_buf' not in attrs:
             return data
         buf = attrs['replacer_buf']
         buf.mime = attrs['mime']
