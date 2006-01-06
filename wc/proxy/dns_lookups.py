@@ -581,8 +581,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
 
         if response.rcode() != wc.dns.rcode.NOERROR:
             callback, self.callback = self.callback, None
-            callback(self.hostname,
-                     DnsResponse('error', 'not found .. %s' % self))
+            msg = 'not found in response %s' % response
+            callback(self.hostname, DnsResponse('error', msg))
             self.close()
             return
         try:
@@ -596,7 +596,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             wc.log.warn(wc.LOG_DNS, "%s no answer", self)
             callback, self.callback = self.callback, None
             callback(self.hostname,
-                     DnsResponse('error', 'not found .. %s' % self))
+                     DnsResponse('error', 'not found with %s' % self))
             self.close()
             return
         ip_addrs = [rdata.address for rdata in answer
@@ -613,15 +613,16 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             #else:
             callback(self.hostname, DnsResponse('found', ip_addrs))
         else:
-            callback(self.hostname, DnsResponse('error', 'not found'))
+            msg = 'not found in answer %s' % answer
+            callback(self.hostname, DnsResponse('error', msg))
         self.close()
 
     def handle_error (self, what):
         super(DnsLookupConnection, self).handle_error(what)
         if self.callback:
             callback, self.callback = self.callback, None
-            callback(self.hostname,
-                     DnsResponse('error', 'failed lookup .. %s' % self))
+            msg = 'failed lookup in %s' % self
+            callback(self.hostname, DnsResponse('error', msg))
 
     def handle_close (self):
         # If we ever get here, we want to make sure we notify the
@@ -629,8 +630,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         super(DnsLookupConnection, self).handle_close()
         if self.callback:
             callback, self.callback = self.callback, None
-            callback(self.hostname,
-                   DnsResponse('error', 'closed with no answer .. %s' % self))
+            msg = 'closed with no answer .. %s' % self
+            callback(self.hostname, DnsResponse('error', msg))
 
 
 dnscache = DnsCache()
