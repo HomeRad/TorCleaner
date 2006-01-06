@@ -82,4 +82,11 @@
   <attr name="href">http://anonym\.to/\?(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.82"
+ tag="a">
+  <title lang="de">alexa</title>
+  <attr name="href">http://redirect\.alexa\.com/redirect\?(?P&lt;url&gt;.+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
 </folder>
