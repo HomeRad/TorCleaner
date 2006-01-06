@@ -12,33 +12,37 @@
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'ad' im Rechnernamen.</description>
   <description lang="en">Remove links with 'ad' in the host name.</description>
   <attr name="href">https?://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.344"
  tag="a">
   <title lang="de">Verknüpfungen mit 'ad'</title>
   <title lang="en">Links with 'ad'</title>
-  <description lang="en">Remove links with ad words in the path name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'ad' im Pfad.</description>
+  <description lang="en">Remove links with ad words in the path name.</description>
   <attr name="href">/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.402"
  tag="a">
   <title lang="de">Verknüpfungen mit 'adbouncer'</title>
   <title lang="en">Links with 'adbouncer'</title>
-  <description lang="en">Remove links with 'adbouncer' in the path name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'adbouncer' im Pfad.</description>
+  <description lang="en">Remove links with 'adbouncer' in the path name.</description>
   <attr name="href">/adbouncer\.phtml</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.403"
  tag="a">
   <title lang="de">Verknüpfungen mit 'easy-cash'</title>
   <title lang="en">Links with 'easy-cash'</title>
-  <description lang="en">Remove links with 'easy-cash' in the host name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'easy-cash' im Rechnernamen.</description>
+  <description lang="en">Remove links with 'easy-cash' in the host name.</description>
   <attr name="href">easy-cash|/jsads/</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.414"
@@ -58,6 +62,7 @@
   <description lang="de">Entferne Verknüpfungen mit 'ads' im Rechnernamen.</description>
   <description lang="en">Remove links with 'ads' in the host name.</description>
   <attr name="href">https?://(servedby\.)?ad(s|server(\d+)?|vertising)?\.</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.335"
@@ -67,6 +72,7 @@
   <description lang="de">Entferne Verknüpfungen mit 'trade' und weiteren im Rechnernamen.</description>
   <description lang="en">Remove links with 'trade' and others in the host name.</description>
   <attr name="href">https?://[^/]*(tradedoubler|emerchandise|ecommercetimes|ivwbox)\.</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.337"
@@ -76,6 +82,7 @@
   <description lang="de">Entferne Verknüpfungen mit 'linkexchange' und weiteren im Rechnernamen.</description>
   <description lang="en">Remove links with 'linkexchange' and others in the host name.</description>
   <attr name="href">https?://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.343"
@@ -85,6 +92,7 @@
   <description lang="de">Entferne Verknüpfungen mit 'adclick' im Pfad.</description>
   <description lang="en">Remove links with 'adlink' in the path.</description>
   <attr name="href">/adclick\.(exe|php)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.345"
@@ -94,6 +102,7 @@
   <description lang="de">Entferne Verknüpfungen mit 'banner' und weiteren im Pfad.</description>
   <description lang="en">Remove links with 'banner' and others in the path.</description>
   <attr name="href">/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick|AdServer)/</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.346"
@@ -103,6 +112,7 @@
   <description lang="de">Entferne Verknüpfungen mit 'event.ng' im Pfad.</description>
   <description lang="en">Remove links with 'event.ng' in the path.</description>
   <attr name="href">/event\.ng(\?|/)Type=click</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.347"
@@ -112,24 +122,26 @@
   <description lang="de">Lösche Verknüpfungen mit 'eu-adcenter' im Namen.</description>
   <description lang="en">Remove links with 'eu-adcenter' in the path.</description>
   <attr name="href">\.eu-adcenter\.net</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.348"
  tag="a">
   <title lang="de">Verknüpfungen mit 'click'</title>
   <title lang="en">Links mit 'click'</title>
-  <description lang="de">Lösche Verknüpfungen mit 'click' im Namen.</description>
   <description lang="de">Remove links with 'click' in the path.</description>
   <attr name="href">([\.\?]click[\?=]|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.355"
  tag="a">
   <title lang="de">Verknüpfungen mit 'werbung' u.a.</title>
   <title lang="en">Links with 'werbung' etc.</title>
-  <description lang="en">Remove links with 'werbung' and others in the path.</description>
   <description lang="de">Lösche Verknüpfungen mit 'werbung' und weiteren im Namen.</description>
+  <description lang="en">Remove links with 'werbung' and others in the path.</description>
   <attr name="href">/(publicite|werbung|rekla(ma|me|am)|annonse|maino(kset|nta|s)?)/</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.338"
@@ -139,6 +151,7 @@
   <description lang="de">Entferne Verknüpfungen zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove links to some ad servers.</description>
   <attr name="href">https?://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.342"
@@ -148,6 +161,7 @@
   <description lang="de">Entferne Verknüpfungen zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove links to some ad servers.</description>
   <attr name="href">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.359"
@@ -157,10 +171,11 @@
   <description lang="de">Entferne Verknüpfungen zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove links to some ad servers.</description>
   <attr name="href">(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <block sid="wc.340"
- url="https?://ad(s|server)?\.">
+ url="https?://(layer-)?ad(s|server)?\.">
   <title lang="de">Rechner mit 'ads'</title>
   <title lang="en">Ad servers with 'ads'</title>
   <description lang="de">Blockiert Rechner mit 'ads' im Namen.</description>
@@ -174,14 +189,15 @@
   <description lang="de">Blockiert Rechner mit 'click' im Namen.</description>
   <description lang="en">Remove links with 'click' words in the host name.</description>
   <attr name="href">https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <block sid="wc.349"
  url="https?://.*(ad.*click|click.*thr|click.*ad).*\?.+">
   <title lang="de">CGI Werbung mit 'click'</title>
   <title lang="en">CGI adverts with 'click'</title>
-  <description lang="en">Block hosts with 'ad' and 'click'  in the path.</description>
   <description lang="de">Blocke Rechner mit 'ad' und 'click' im Namen.</description>
+  <description lang="en">Block hosts with 'ad' and 'click'  in the path.</description>
 </block>
 
 <htmlrewrite sid="wc.350"
@@ -191,14 +207,15 @@
   <description lang="de">Lösche Verknüpfungen mit 'ads' im CGI Namen.</description>
   <description lang="en">Remove links with 'ads' in the CGI path.</description>
   <attr name="href">/cgi-bin/ads?(log(\.pl)?|click)?\?</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <block sid="wc.351"
  url="https?://.*/(advert|banners?|adid|profileid)/.*\?.*">
   <title lang="de">CGI Werbung mit 'banner' u.a.</title>
   <title lang="en">CGI adverts with 'banner' etc.</title>
-  <description lang="en">Block hosts with 'banner' and others in the path.</description>
   <description lang="de">Blocke Rechner mit 'banner' und weiteren im Namen.</description>
+  <description lang="en">Block hosts with 'banner' and others in the path.</description>
 </block>
 
 <htmlrewrite sid="wc.352"
@@ -208,6 +225,7 @@
   <description lang="de">Lösche Verknüpfungen mit 'clickthru' im CGI Namen.</description>
   <description lang="en">Remove links with 'clickthru' in the CGI path.</description>
   <attr name="href">clickthru.(acc|aspx)\?</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <block sid="wc.353"
@@ -225,6 +243,7 @@
   <description lang="de">Einige Werbungen sind in &lt;ilayer&gt;.</description>
   <description lang="en">Some ads come nowadays in ilayer tags.</description>
   <matchurl>dummy\.com</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.357"
@@ -234,6 +253,7 @@
   <description lang="de">Einige Layers enthalten Werbung.</description>
   <description lang="en">Some layers have ads.</description>
   <matchurl>dummy\.com</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.358"
@@ -250,53 +270,59 @@
  tag="a">
   <title lang="de">Entferne verknüpfungen mit 'doubleclick'</title>
   <title lang="en">Remove links with 'doubleclick'</title>
-  <description lang="en">Remove links with 'doubleclick' in the host name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'doubleclick' im Rechnernamen.</description>
+  <description lang="en">Remove links with 'doubleclick' in the host name.</description>
   <attr name="href">(double|fast)click\.(net|com)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.34"
  tag="a">
   <title lang="de">Entferne Verknüpfungen mit 'buy_assets'</title>
   <title lang="en">Remove links with 'buy_assets'</title>
-  <description lang="en">Remove links with 'buy_assets' in the name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'buy_assets' im Namen.</description>
+  <description lang="en">Remove links with 'buy_assets' in the name.</description>
   <attr name="href">/buy_assets/</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.35"
  tag="a">
   <title lang="de">Entferne Verknüpfungen mit 'value'</title>
   <title lang="en">Remove links with 'value'</title>
-  <description lang="en">Remove links with 'value' in the name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'value' im Namen.</description>
+  <description lang="en">Remove links with 'value' in the name.</description>
   <attr name="href">value(stream|xchange|click)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.36"
  tag="a">
   <title lang="de">Entferne Verknüpfungen mit 'banner'</title>
   <title lang="en">Remove links with 'banner'</title>
-  <description lang="en">Remove links with 'banner' in the name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'banner' im Namen.</description>
+  <description lang="en">Remove links with 'banner' in the name.</description>
   <attr name="href">(top|bottom|left|right|)?banner(s|id=|\d|_)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.37"
  tag="a">
   <title lang="de">Entferne Verknüpfungen mit 'dime'</title>
   <title lang="en">Remove links with 'dime'</title>
-  <description lang="en">Remove links with 'dime' in the name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'dime' im Namen.</description>
+  <description lang="en">Remove links with 'dime' in the name.</description>
   <attr name="href">dime(xchange|click)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.38"
  tag="a">
   <title lang="de">Entferne Verknüpfungen mit 'adlog'</title>
   <title lang="en">Remove links with 'adlog'</title>
-  <description lang="en">Remove links with 'adlog' in the name.</description>
   <description lang="de">Entferne Verknüpfungen mit 'adlog' im Namen.</description>
+  <description lang="en">Remove links with 'adlog' in the name.</description>
   <attr name="href">adlog\.com\.|survey\.questionmarket\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 </folder>

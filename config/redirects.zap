@@ -3,7 +3,6 @@
 <folder sid="wc.389" oid="10" configversion="0.10">
 <title lang="de">Weiterleitungen</title>
 <title lang="en">Redirections</title>
-<description lang="en">Rules to get rid of URL redirections.</description>
 <description lang="en">Regeln gegen Weiterleitungen.</description>
 
 <htmlrewrite sid="wc.383"
@@ -40,16 +39,16 @@
 
 <htmlrewrite sid="wc.387"
  tag="a">
-  <title lang="en">coolpix.de redirect</title>
   <title lang="de">coolpix.de Weiterleitung</title>
+  <title lang="en">coolpix.de redirect</title>
   <attr name="href">www\.cool-pix\.de/cgi-bin/count/count\.pl\?zaehle,(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.388"
  tag="a">
-  <title lang="en">Sourceforge Downloads</title>
   <title lang="de">Sourceforge Downloads</title>
+  <title lang="en">Sourceforge Downloads</title>
   <description lang="en">Use specific mirror for all SF downloads. Standard is osdn. Choose your own mirror if you dont want this. Available are: Phoenix, AZ, North America (easynews.dl...) Reston, VA, North America (telia.dl...) Chapel Hill, NC, North America (unc.dl...) Minneapolis, MN, North America (umn.dl...) Brookfield, WI, North America (twtelecom.dl...) Brussels, Belgium, Europe (belnet.dl...) Zurich, Switzerland, Europe (swiss.dl...) Prague, Czech Republic, Europe (cesnet.dl...) </description>
   <attr name="href">http://prdownloads\.sourceforge\.net(.+)\?download</attr>
   <replacement part="attrval">http://osdn.dl.sourceforge.net\1</replacement>
@@ -66,7 +65,6 @@
 
 <htmlrewrite sid="wc.4"
  tag="a">
-  <title lang="en">dockapps.org redirect</title>
   <title lang="en">dockapps.org Weiterleitung</title>
   <attr name="href">http://www\.dockapps\.org/click\.php\?send=(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
@@ -86,6 +84,13 @@
   <title lang="en">alexa redirect</title>
   <matchurl>alexa\.com</matchurl>
   <attr name="href">http://redirect\.alexa\.com/redirect\?(?P&lt;url&gt;.+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.51"
+ tag="img">
+  <title lang="de">anonymizer.com Weiterleitung</title>
+  <attr name="src">http://invis\.free\.anonymizer\.com/(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
 </folder>
