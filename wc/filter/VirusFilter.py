@@ -65,13 +65,17 @@ class VirusFilter (wc.filter.Filter.Filter):
         if size+data_length > VirusFilter.MAX_FILE_BYTES:
             self.size_error()
         attrs['virus_buf_size'][0] += data_length
-        scanner.scan(data)
+        try:
+            scanner.scan(data)
+        except socket.error:
+            msg = sys.exc_info()[1]
+            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
         buf.write(data)
         return ""
 
     def size_error (self):
         """
-        Raise an exceptionto cause a 406 HTTP return code.
+        Raise an exception to cause a 406 HTTP return code.
         """
         wc.log.warn(wc.LOG_FILTER, "Virus filter size exceeded.")
         raise wc.filter.FilterProxyError(406, _("Not acceptable"),
@@ -93,7 +97,11 @@ class VirusFilter (wc.filter.Filter.Filter):
         if data:
             if size+len(data) > VirusFilter.MAX_FILE_BYTES:
                 self.size_error()
-            scanner.scan(data)
+            try:
+                scanner.scan(data)
+            except socket.error:
+                msg = sys.exc_info()[1]
+                wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
             buf.write(data)
         scanner.close()
         for msg in scanner.errors:
