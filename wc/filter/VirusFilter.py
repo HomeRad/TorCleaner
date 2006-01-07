@@ -20,6 +20,7 @@ Search data stream for virus signatures.
 
 import socket
 import os
+import sys
 import cStringIO as StringIO
 
 import wc
