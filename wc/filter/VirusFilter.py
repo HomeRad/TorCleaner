@@ -48,6 +48,9 @@ class VirusFilter (wc.filter.Filter.Filter):
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['antivirus']
         super(VirusFilter, self).__init__(stages=stages, rulenames=rulenames)
+        if get_clamav_conf() is None:
+            wc.log.warn(wc.LOG_FILTER, "Virus filter is enabled but " \
+                        "not configured. Set the clamav configuration file.")
 
     def filter (self, data, attrs):
         """
