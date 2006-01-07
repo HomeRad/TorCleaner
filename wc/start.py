@@ -42,8 +42,8 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True,
     config = wc.configuration.init(confdir)
     if abort is not None:
         abort(False)
-    config.init_filter_modules()
     wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
+    config.init_filter_modules()
     wc.proxy.dns_lookups.init_resolver()
     if profiling and wc.HasProfile:
         _profile = "webcleaner.prof"
