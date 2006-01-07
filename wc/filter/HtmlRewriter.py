@@ -109,3 +109,4 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         # the handler is modifying parser buffers and state
         handler.htmlparser = p
         attrs['htmlrewriter_filter'] = p
+
