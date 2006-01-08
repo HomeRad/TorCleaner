@@ -16,9 +16,6 @@ include debian/po/*.pot
 include debian/po/*.in
 include debian/rules
 include debian/watch
-include debian/webcleaner-ctl
-include debian/webcleaner-ctl.1
-include debian/webcleaner-ctl.de.1
 include debian/webcleaner-common.dirs
 include debian/webcleaner-common.files
 include debian/webcleaner.config
@@ -28,7 +25,6 @@ include debian/webcleaner.examples
 include debian/webcleaner.linda
 include debian/webcleaner.links
 include debian/webcleaner.lintian
-include debian/webcleaner.manpages
 include debian/webcleaner.postinst
 include debian/webcleaner.postrm
 include debian/webcleaner.preinst
@@ -62,8 +58,11 @@ include test/*.py
 include test/*.pot
 include test/*.po
 include test/Makefile
+include test/logging.conf
 include test/pycheckrc
 include test/rating/rating.txt
+include test/filter/misc.zap
+include test/filter/filter-md5sums.txt
 include wc/magic/tests/*.py
 include wc/magic/tests/*.html
 include wc/filter/tests/*.py
