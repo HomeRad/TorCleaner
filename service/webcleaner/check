@@ -1,12 +1,12 @@
 #!/usr/bin/env python2.4
 # -*- coding: iso-8859-1 -*-
 import sys
-import urllib2
+import socket
 import wc
 import wc.configuration
 
 def get_port_addr ():
-    config = wc.configuration.Configuration(wc.ConfigDir)
+    config = wc.configuration.init()
     port = config["port"]
     if config["bindaddress"]:
         host = config["bindaddress"]
@@ -15,9 +15,10 @@ def get_port_addr ():
     return host, port
 
 def main ():
-    url = "http://%s:%d/" % get_port_addr()
     try:
-        fp = urllib2.urlopen(url).read()
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                               
+        s.connect(get_port_addr())
+        s.close()
     except:
         return 111
     return 0
