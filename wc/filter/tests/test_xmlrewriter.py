@@ -63,7 +63,7 @@ class TestXmlRewriter (tests.StandardTest):
                   """<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/">
 <item rdf:about="blubb">
-<description>bla </description>
+<description><![CDATA[bla ]]></description>
 </item>
 </rdf:RDF>""")
 
@@ -77,7 +77,7 @@ class TestXmlRewriter (tests.StandardTest):
                   """<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/">
 <item rdf:about="blubb">
-<description>bla </description>
+<description><![CDATA[bla ]]></description>
 </item>
 </rdf:RDF>""")
 
@@ -91,7 +91,7 @@ class TestXmlRewriter (tests.StandardTest):
                   """<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/">
 <item rdf:about="blubb">
-<description>bla &lt;img&gt;</description>
+<description><![CDATA[bla <img>]]></description>
 </item>
 </rdf:RDF>""")
 
