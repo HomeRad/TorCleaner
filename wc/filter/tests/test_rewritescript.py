@@ -108,17 +108,14 @@ function display() {
 <!--
 // window instance
 w = self;
-
 function finish() {
     w.defaultStatus = "";
 }
-
 function get_date() {
     var d = new Date();
     today = "" + d.getDate() +"."+ (d.getMonth()+ 1) + "." + d.getYear();
     return today;
 }
-
 function get_time() {
     var now = new Date();
     var hours = now.getHours();
@@ -129,7 +126,6 @@ function get_time() {
     timeValue += ((seconds < 10) ? ":0" : ":") + seconds;
     return timeValue;
 }
-
 function display() {
     message = "Calvin wünscht angenehmes Surfen am " + get_date() + " um " + get_time () + ".";
     w.defaultStatus = message;
