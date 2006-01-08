@@ -264,7 +264,7 @@ def blacklist (fname, extract_to="extracted"):
         print "gunzip..."
         f = gzip.open(source)
         fname = "extracted/"+fname[:-3]
-        os.makedirs(os.path.dirname(fname))
+        os.makedirs(os.path.dirname(fname), 0722)
         w = file(fname, 'wb')
         w.write(f.read())
         w.close()
@@ -316,7 +316,7 @@ def geturl (basedir, fname, fun, saveas=None):
         print "downloading", basedir+fname
         d = os.path.dirname(os.path.join("downloads", target))
         if not os.path.isdir(d):
-            os.makedirs(d)
+            os.makedirs(d, 0722)
         try:
             urldata = urllib2.urlopen(basedir+fname)
             f = file(os.path.join("downloads", target), 'w')
@@ -382,7 +382,7 @@ def open_files (directory):
             d='blacklists'
         basedir = os.path.join(directory, d, cat)
         if not os.path.isdir(basedir):
-            os.makedirs(basedir)
+            os.makedirs(basedir, 0722)
         for ftype in categories[cat].keys():
             if ftype=="expressions": continue
             fname = os.path.join(basedir, "%s.gz" % ftype)
