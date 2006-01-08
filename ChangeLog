@@ -1,4 +1,4 @@
-2.36 "The Aristocrats" (released xx.xx.xxxx)
+2.36 "The Aristocrats" (released 9.1.2006)
 
   * Improve JavaScript parsing by normalizing whitespace. Avoids some
     really long loops when searching with regular expressions.
@@ -30,7 +30,7 @@
     Changed: wc/filter/rules/HeaderRule.py, wc/filter/Header.py
 
   * Updated spidermonkey JavaScript library from upstream CVS as of
-    20060105.
+    20060108.
     Type: feature
     Changed: libjs/*
 
