@@ -9,9 +9,10 @@
  tag="a">
   <title lang="de">www.deja.com</title>
   <title lang="en">Deja.com adverts</title>
-  <description lang="en">Remove www.deja.com ads.</description>
   <description lang="de">Entferne www.deja.com ads.</description>
+  <description lang="en">Remove www.deja.com ads.</description>
   <attr name="href">www\.deja\.com/jump/</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.399"
@@ -21,46 +22,51 @@
   <description lang="de">Heise besitzt ein advert tag :)</description>
   <description lang="en">www.heise.de has an advert tag. Nice :)</description>
   <matchurl>heise\.de</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.400"
  tag="contentbanner">
   <title lang="de">heise.de &lt;contentbanner&gt;</title>
   <title lang="en">Heise contentbanner</title>
-  <description lang="en">Remove heise.de advert</description>
   <description lang="de">Entferne heise.de Werbung</description>
+  <description lang="en">Remove heise.de advert</description>
   <matchurl>heise\.de</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.12"
  tag="skyscraper">
   <title lang="de">heise.de &lt;skyscraper&gt;</title>
   <title lang="en">Heise skyscraper</title>
-  <description lang="en">Remove heise.de advert</description>
   <description lang="de">Entferne heise.de Werbung</description>
+  <description lang="en">Remove heise.de advert</description>
   <matchurl>heise\.de</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.11"
  tag="table">
   <title lang="de">heise.de Onlinemarkt</title>
   <title lang="en">Heise Onlinemarkt</title>
-  <description lang="en">Remove heise.de advert</description>
   <description lang="de">Entferne heise.de Werbung</description>
+  <description lang="en">Remove heise.de advert</description>
   <matchurl>heise\.de</matchurl>
   <attr name="cellpadding">^2$</attr>
   <attr name="bgcolor">^#EEEEEE$</attr>
   <attr name="width">^137$</attr>
   <enclosed>&lt;big&gt;O&lt;/big&gt;NLINE-&lt;big&gt;M&lt;/big&gt;</enclosed>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.401"
  tag="a">
   <title lang="de">Userfriendly externe Verknüpfungen</title>
   <title lang="en">Userfriendly outbound links</title>
-  <description lang="en">Links on userfriendly.org which point outbound. This is a redirector host.</description>
   <description lang="de">Externe Verknüpfungen auf userfriendly.org. Dies ist eine Weiterleitung.</description>
+  <description lang="en">Links on userfriendly.org which point outbound. This is a redirector host.</description>
   <attr name="href">https?://links\.userfriendly\.org</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.404"
@@ -71,6 +77,7 @@
   <description lang="en">Jump ads at Salon</description>
   <matchurl>salon\.com</matchurl>
   <attr name="href">jump\.salon\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.405"
@@ -81,6 +88,7 @@
   <description lang="en">I don't like the OSDN navigation bar.</description>
   <matchurl>^http://freshmeat\.net/</matchurl>
   <attr name="style">border-top: 1px #6f6f6f solid; border-bottom: 1px #6f6f6f solid;</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.9"
@@ -91,6 +99,7 @@
   <description lang="en">I don't like the OSDN navbar.</description>
   <matchurl>^http://slashdot\.org/</matchurl>
   <attr name="id">ostgnavbar</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.10"
@@ -101,6 +110,7 @@
   <description lang="en">Sourceforge ODSN navbar</description>
   <matchurl>^http://(sf|sourceforge)\.net/</matchurl>
   <attr name="class">ostgnavbar</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.407"
@@ -111,6 +121,7 @@
   <description lang="en">adverts are redirections</description>
   <matchurl>imdb\.</matchurl>
   <attr name="href">/tiger_redirect\?(TITLE_TOP|SUBQS_PROTAWARDS|HOT_IMAGE|HOT_DVD_\d|HOT_VHS_\d|RATINGS|HOME_DVD|GOOFS_TOP|TOPTOP|TOP_BOTTOM|BROWSE|SATURN_SEC_GALLERY|SECGAL_GRANBUT|NURLS_TOP|RTO_SUBSEARCH|MLINKS_RHS|TSEARCH|TSEARCH_RHS|[A-Z_]*AD_LOWRES|[A-Z_]*LOWRES_BUY|EGAL_[A-Z]+)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.408"
@@ -121,6 +132,7 @@
   <description lang="en">image map adverts</description>
   <matchurl>imdb\.</matchurl>
   <attr name="href">/tiger_redirect\?</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.409"
@@ -131,6 +143,7 @@
   <description lang="en">The ultimate solution</description>
   <matchurl>imdb\.</matchurl>
   <attr name="usemap">^#m_pro-</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.410"
@@ -141,6 +154,7 @@
   <description lang="en">/r/ stuff and imdb pro</description>
   <matchurl>imdb\.</matchurl>
   <attr name="href">(/r/|/register/subscribe)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.411"
@@ -151,6 +165,7 @@
   <description lang="en">Remove ad pictures</description>
   <matchurl>imdb\.</matchurl>
   <attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.412"
@@ -161,6 +176,7 @@
   <description lang="en">image tag</description>
   <matchurl>imdb\.</matchurl>
   <attr name="src">(/Icons/apix/|/apix/celeb/)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.413"
@@ -168,6 +184,7 @@
   <title lang="de">IMDB Werbung 7</title>
   <title lang="en">IMDB Advert 7</title>
   <attr name="src">ia?\.imdb\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.415"
@@ -175,6 +192,7 @@
   <title lang="de">EOnline Werbung</title>
   <title lang="en">EOnline ads</title>
   <attr name="href">/cgi-bin/acc_clickthru\?</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.416"
@@ -183,6 +201,7 @@
   <title lang="en">slashdot ad</title>
   <description lang="en">JS ad at slashdot</description>
   <attr name="src">s0b\.bluestreak\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <block sid="wc.417"
@@ -203,6 +222,7 @@
   <title lang="en">Atwola JS ad</title>
   <description lang="en">found at fortune.com</description>
   <attr name="src">ar\.atwola\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.420"
@@ -211,6 +231,7 @@
   <title lang="en">JS .au ad</title>
   <description lang="en">Fairfax advert</description>
   <attr name="src">http://campaigns\.f2\.com\.au</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.422"
@@ -220,6 +241,7 @@
   <description lang="en">Pagead at linux weekly news</description>
   <matchurl>lwn\.net</matchurl>
   <attr name="href">oasis\.lwn\.net/oasisc\.php</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.423"
@@ -229,22 +251,25 @@
   <description lang="de">OSDN Werbung bei freshmeat.net und anderen.</description>
   <description lang="en">Freshmeat ad server</description>
   <attr name="src">fmads\.osdn\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.26"
  tag="a">
   <title lang="de">OSDN Werbung 2</title>
   <attr name="href">ads\d\.osdn\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.425"
  tag="a">
-  <title lang="en">Schmidtie</title>
   <title lang="de">Schmidtie</title>
+  <title lang="en">Schmidtie</title>
   <description lang="de">Harald-Schmidt-Show homepage ätzt</description>
   <description lang="en">Harald-Schmidt-Show homepage sux</description>
   <matchurl>www\.sat1\.de</matchurl>
   <attr name="href">/jump\.hbs</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.426"
@@ -253,6 +278,7 @@
   <title lang="en">MSN ads</title>
   <description lang="en">Found at MSN</description>
   <attr name="href">g\.msn(bc)?\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.427"
@@ -262,6 +288,7 @@
   <description lang="de">Diesmal im area tag</description>
   <description lang="en">Same as MSN ads, only in area</description>
   <attr name="href">g\.msn(bc)?\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.428"
@@ -269,6 +296,7 @@
   <title lang="de">Falk AG Verknüpfungen</title>
   <title lang="en">Falk ag link</title>
   <attr name="href">as1\.falkag\.de/server/link\.asp</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.28"
@@ -278,6 +306,7 @@
   <matchurl>www\.google\.</matchurl>
   <attr name="width">^(25|100)%$</attr>
   <enclosed>&amp;ai=A</enclosed>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <block sid="wc.30"
@@ -291,6 +320,7 @@
   <title lang="de">Google Werbung 2</title>
   <title lang="en">Google Pageads 2</title>
   <attr name="href">\.googleadservices\.|ads_by_google\.html</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.50"
@@ -298,6 +328,7 @@
   <title lang="de">Google Werbung 3</title>
   <title lang="en">Google Pageads 3</title>
   <attr name="src">\.googlesyndication\.</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.49"
@@ -305,6 +336,7 @@
   <title lang="de">Google Werbung 4</title>
   <title lang="en">Google Pageads 4</title>
   <attr name="src">\.google(syndication|-analytics)\.</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.32"
@@ -312,5 +344,6 @@
   <title lang="de">Blog Werbungen</title>
   <title lang="en">Blog ads</title>
   <attr name="href">blogads\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 </folder>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
-<folder sid="wc.40" oid="15" configversion="0.10">
+<folder sid="wc.40" oid="14" configversion="0.10">
 <title lang="en">RSS Feeds</title>
 
 <xmlrewrite sid="wc.41"
