@@ -119,8 +119,8 @@ def get_js_data (attrs):
     """
     Get js_ok flag and js_lang from given attrs.
     """
-    js_lang = attrs.get('language', '').lower()
-    js_type = attrs.get('type', '').lower()
+    js_lang = attrs.get_true('language', '').lower()
+    js_type = attrs.get_true('type', '').lower()
     js_ok = js_type == 'text/javascript' or \
             js_type.startswith('javascript') or \
             js_lang.startswith('javascript') or \
