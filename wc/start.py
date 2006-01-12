@@ -29,7 +29,7 @@ import wc.filter
 import wc.filter.VirusFilter
 
 
-def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True,
+def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
                 profiling=False):
     """
     Initalize configuration, start psyco compiling and the proxy loop.
@@ -40,8 +40,6 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True,
                wc.Name, filelogs=filelogs)
     # read configuration
     config = wc.configuration.init(confdir)
-    if abort is not None:
-        abort(False)
     wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
     config.init_filter_modules()
     wc.proxy.dns_lookups.init_resolver()
@@ -62,14 +60,14 @@ def wstartfunc (handle=None, abort=None, confdir=wc.ConfigDir, filelogs=True,
             import profile
             prof = profile.Profile()
             try:
-                prof.runcall(wc.proxy.mainloop, handle=handle, abort=abort)
+                prof.runcall(wc.proxy.mainloop, handle=handle)
             except KeyboardInterrupt:
                 pass
             prof.dump_stats(_profile)
             return
     load_psyco()
     # start the proxy
-    wc.proxy.mainloop(handle=handle, abort=abort)
+    wc.proxy.mainloop(handle=handle)
 
 
 def load_psyco ():

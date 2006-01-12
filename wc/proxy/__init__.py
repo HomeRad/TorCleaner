@@ -138,7 +138,7 @@ def proxy_poll (timeout=0.0):
     return handlerCount
 
 
-def mainloop (handle=None, abort=None):
+def mainloop (handle=None):
     """
     Proxy main loop, handles requests forever.
     """
@@ -154,22 +154,24 @@ def mainloop (handle=None, abort=None):
         sslctx = wc.proxy.ssl.get_serverctx(wc.configuration.config.configdir)
         wc.proxy.Listener.Listener(host, port, wc.proxy.SslClient.SslClient,
                                    sslctx=sslctx)
-    if abort is not None:
-        # regular abort check every second
-        global MAX_TIMEOUT
-        MAX_TIMEOUT = 1
-    while True:
-        # Installing a timeout means we're in a handler, and after
-        # dealing with handlers, we come to the main loop, so we don't
-        # have to worry about being in asyncore.poll when a timer goes
-        # off.
-        proxy_poll(timeout=max(0, run_timers()))
-        if abort is not None and abort():
-            break
-        if handle is not None:
+    if handle is not None:
+        import win32event
+        class Abort (Exception):
+            pass
+        def abort_check ():
             # win32 handle signaling stop
-            import win32event
             rc = win32event.WaitForSingleObject(handle, 0)
             if rc == win32event.WAIT_OBJECT_0:
-                break
+                raise Abort()
+        # regular abort check every second
+        make_timer(1, abort_check)
+    try:
+        while True:
+            # Installing a timeout means we're in a handler, and after
+            # dealing with handlers, we come to the main loop, so we don't
+            # have to worry about being in asyncore.poll when a timer goes
+            # off.
+            proxy_poll(timeout=max(0, run_timers()))
+    except Abort:
+        pass
     wc.log.info(wc.LOG_PROXY, "%s stopped", wc.AppName)
