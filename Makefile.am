@@ -186,6 +186,7 @@ pylint: localbuild
 
 .PHONY: pyflakes
 pyflakes:
+	py-find-nocoding .
 	$(PYFLAKES) *.py webcleaner* test tests wc config | \
 	  grep -v "redefinition of unused 'wc'" | \
 	  grep -v "undefined name '_'"
@@ -213,20 +214,4 @@ update-blacklists:
 .PHONY: reindent
 reindent:
 	$(PYTHON) config/reindent.py -r -v wc
-
-# find Python files without coding line
-.PHONY: nocoding
-nocoding:
-	@for f in `find . -type f -name \*.py`; do \
-	  if ! grep -q -- "-\*- coding: .* -\*-" $$f; then \
-	    echo "No coding: $$f"; \
-	  fi; \
-	done
-	@for f in `find . -type f`; do \
-	  if head -1 $$f | egrep -q "#!.*python"; then \
- 	    if ! grep -q -- "-\*- coding: .* -\*-" $$f; then \
-	      echo "No coding: $$f"; \
-	    fi; \
-	  fi; \
-	done
 
