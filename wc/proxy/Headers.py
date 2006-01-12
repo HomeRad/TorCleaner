@@ -138,27 +138,29 @@ def check_trailer_headers (headers):
         headers.addheader('Trailer', trailer+'\r')
 
 
-def client_set_headers (headers):
+def client_set_headers (headers, url):
     """
     Modify client request headers.
     """
-    client_remove_multiple_headers(headers)
+    client_remove_multiple_headers(headers, url)
     client_remove_hop_by_hop_headers(headers)
     set_via_header(headers)
 
 
-def client_remove_multiple_headers (headers):
+def client_remove_multiple_headers (headers, url):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
         if headers.remove_multiple_headers(name):
-            wc.log.warn(wc.LOG_PROXY, "multiple %r client headers", name);
+            wc.log.warn(wc.LOG_PROXY,
+                        "%r sent multiple %r client headers", url, name)
 
 
-def server_remove_multiple_headers (headers):
+def server_remove_multiple_headers (headers, url):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
         if headers.remove_multiple_headers(name):
-            wc.log.warn(wc.LOG_PROXY, "multiple %r server headers", name);
+            wc.log.warn(wc.LOG_PROXY,
+                        "%r sent multiple %r server headers", url, name)
 
 def client_remove_hop_by_hop_headers (headers):
     """
@@ -229,11 +231,11 @@ def client_get_max_forwards (headers):
     return mf
 
 
-def server_set_headers (headers):
+def server_set_headers (headers, url):
     """
     Modify server response headers.
     """
-    server_remove_multiple_headers(headers)
+    server_remove_multiple_headers(headers, url)
     server_remove_hop_by_hop_headers(headers)
     set_via_header(headers)
     server_set_date_header(headers)

@@ -418,7 +418,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         Modify request headers.
         """
-        wc.proxy.Headers.client_set_headers(headers)
+        wc.proxy.Headers.client_set_headers(headers, self.url)
 
     def process_content (self):
         """

@@ -360,7 +360,7 @@ class HttpServer (wc.proxy.Server.Server):
         """
         Modify response headers.
         """
-        wc.proxy.Headers.server_set_headers(self.headers)
+        wc.proxy.Headers.server_set_headers(self.headers, self.url)
         self.bytes_remaining = \
               wc.proxy.Headers.server_set_encoding_headers(self)
         if self.bytes_remaining is None:
