@@ -154,10 +154,10 @@ def mainloop (handle=None):
         sslctx = wc.proxy.ssl.get_serverctx(wc.configuration.config.configdir)
         wc.proxy.Listener.Listener(host, port, wc.proxy.SslClient.SslClient,
                                    sslctx=sslctx)
+    class Abort (Exception):
+        pass
     if handle is not None:
         import win32event
-        class Abort (Exception):
-            pass
         def abort_check ():
             # win32 handle signaling stop
             rc = win32event.WaitForSingleObject(handle, 0)
