@@ -25,6 +25,7 @@ __date__    = "$Date$"[7:-2]
 import sys
 import os
 import wc
+import wc.configuration
 import wc.js
 import wc.js.jslib
 import wc.js.JSListener
