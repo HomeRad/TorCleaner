@@ -3,7 +3,7 @@ AC_PREREQ(2.58)
 AC_INIT
 AC_CONFIG_SRCDIR([webcleaner])
 AC_CONFIG_HEADERS([config.h:config.h.in])
-AM_INIT_AUTOMAKE(webcleaner, 2.36)
+AM_INIT_AUTOMAKE(webcleaner, 2.37)
 
 AC_PROG_CC
 AC_DISABLE_SHARED
