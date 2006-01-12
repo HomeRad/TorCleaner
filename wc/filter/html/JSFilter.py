@@ -264,8 +264,9 @@ class JSFilter (wc.js.JSListener.JSListener):
                 del self.htmlparser.tagbuf[-1]
                 del self.htmlparser.tagbuf[-1]
             return
-        # put correctly quoted script data into buffer
+        # clean script from cruft
         script = wc.js.clean(script, jscomments=self.jscomments)
+        # put script data into buffer
         self.htmlparser.tagbuf[-1][1] = script
         # execute script
         self.jsScript(script, ver, item)
@@ -275,7 +276,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         Check popups for onmouseout and onmouseover.
         Inline extern javascript sources.
         """
-        assert wc.log.debug(wc.LOG_JS, "%s js_start_element", self)
+        assert wc.log.debug(wc.LOG_JS, "%s js_start_element %s %s", self, tag, attrs)
         self.js_src = False
         self.js_output = 0
         self.js_popup = 0
@@ -375,8 +376,9 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.htmlparser.tagbuf.append(item)
             # norm html comments
             script = wc.js.clean(self.js_script, jscomments=self.jscomments)
-            self.htmlparser.tagbuf.append(
-                                   [wc.filter.html.DATA, script])
+            # put script into buffer
+            item = [wc.filter.html.DATA, script]
+            self.htmlparser.tagbuf.append(item)
             # Note: <script src=""> could be missing an end tag,
             # but now we need one. Look later for a duplicate </script>.
             self.htmlparser.tagbuf.append([wc.filter.html.ENDTAG, u"script"])
