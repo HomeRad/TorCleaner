@@ -32,7 +32,6 @@ Connection handling client <--> proxy.
 import time
 import cgi
 import urlparse
-import urllib
 import cStringIO as StringIO
 
 import wc
