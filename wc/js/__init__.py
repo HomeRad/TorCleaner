@@ -26,7 +26,7 @@ def clean (script, jscomments=True):
     """
     Clean script from comments and HTML.
     """
-    script = escape_js(remove_html_comments(script))
+    script = remove_html_comments(script)
     if not jscomments:
         script = remove_js_comments(script)
     return u"\n<!--\n%s\n//-->\n" % script
@@ -70,49 +70,6 @@ def remove_js_comments (script):
         if not line.lstrip().startswith('//'):
             res.append(line)
     return "\n".join(res)
-
-
-script_sub = re.compile(r"(?i)</script\s*>").sub
-def escape_js (script):
-    """
-    Escape HTML stuff in JS script.
-    """
-    lines = []
-    for line in script.splitlines():
-        line = line.rstrip()
-        lines.append(escape_js_line(line))
-    return "\n".join(lines)
-
-
-def escape_js_line (script):
-    # if we encounter "</script>" in the script, we assume that is
-    # in a quoted string. The solution is to split it into
-    # "</scr"+"ipt>" (with the proper quotes of course)
-    quote = False
-    escape = False
-    i = 0
-    while i < len(script):
-        c = script[i]
-        if c == '"' or c == "'":
-            if not escape:
-                if quote == c:
-                    quote = False
-                elif not quote:
-                    quote = c
-            escape = False
-        elif c == '\\':
-            escape = not escape
-        elif c == '<':
-            if script[i:i+9].lower() == '</script>' and quote:
-                script = script[:i]+"</scr"+quote+"+"+quote+"ipt>"+\
-                         script[(i+9):]
-            escape = False
-        else:
-            escape = False
-        i += 1
-    script = script.replace('-->', '--&#62;')
-    script = script_sub("&#60;/script&#62;", script)
-    return script
 
 
 def get_js_data (attrs):
