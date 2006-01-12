@@ -366,11 +366,13 @@ class JSFilter (wc.js.JSListener.JSListener):
                 self.js_script = u"// " + msg
             else:
                 msg = _("fetched script from %r") % url
-            self.htmlparser.tagbuf.append([wc.filter.html.COMMENT,
-                                           u" %s " % msg])
+            item = [wc.filter.html.COMMENT, u" %s " % msg]
+            self.htmlparser.tagbuf.append(item)
             self.htmlparser.tagbuf.append([wc.filter.html.DATA, u"\n"])
-            self.htmlparser.tagbuf.append([wc.filter.html.STARTTAG, u"script",
-                                          {'type': 'text/javascript'}])
+            d = wc.containers.ListDict()
+            d[u'type'] = u'text/javascript'
+            item = [wc.filter.html.STARTTAG, u"script", d]
+            self.htmlparser.tagbuf.append(item)
             # norm html comments
             script = wc.js.clean(self.js_script, jscomments=self.jscomments)
             self.htmlparser.tagbuf.append(
