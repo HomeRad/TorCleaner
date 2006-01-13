@@ -7,20 +7,21 @@
 <span tal:replace="AppName" i18n:name="appname">WebCleaner</span></title></head>
 <style type="text/css">
 <!--
-a {
-    color: #222222;
-}
-
-a:hover {
-    color: black;
-}
+a { color: #222222; }
+a:hover { color: black; }
 -->
 </style><body bgcolor="#ffffff">
-<p>
-<a i18n:translate="" href="#" target="_top"
+<div>
+<span i18n:translate="">Blocked URL</span><br>
+<a href="http://imadoofus.org.wc-nofilter/" title="http://imadoofus.org/"
+ tal:attributes="title blocked_url; href blocked_url_nofilter"
+ i18n:translate="">View</a>
+(<span tal:replace="blocked_host">imadoofus.org</span>)
+<br>
+<a href="#" target="_top"
  tal:attributes="href string:${baseurl}filterconfig.html.${lang}?selfolder=${selfolder}&selrule=${selrule}"
->Blocked by <span tal:replace="ruletitle" i18n:name="ruletitle">Advert
-rule</span>.</a>
-</p>
+ i18n:translate="">Configure</a>
+(<span tal:replace="ruletitle">Advert rule</span>)
+</div>
 </body>
 </html>
