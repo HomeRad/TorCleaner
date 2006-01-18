@@ -725,8 +725,8 @@ js_CompileFunctionBody(JSContext *cx, JSTokenStream *ts, JSFunction *fun)
          * No need to emit code here -- Statements (via FunctionBody) already
          * has.  See similar comment in js_CompileTokenStream, and bug 108257.
          */
-        fun->u.script = js_NewScriptFromCG(cx, &funcg, fun);
-        if (!fun->u.script) {
+        fun->u.i.script = js_NewScriptFromCG(cx, &funcg, fun);
+        if (!fun->u.i.script) {
             ok = JS_FALSE;
         } else {
             fun->interpreted = JS_TRUE;
@@ -850,15 +850,16 @@ FunctionDef(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
                                           js_SetLocalVariable,
                                           SPROP_INVALID_SLOT,
                                           JSPROP_PERMANENT | JSPROP_SHARED,
-                                          SPROP_HAS_SHORTID, fp->fun->nvars)) {
+                                          SPROP_HAS_SHORTID,
+                                          fp->fun->u.i.nvars)) {
                     return NULL;
                 }
-                if (fp->fun->nvars == JS_BITMASK(16)) {
+                if (fp->fun->u.i.nvars == JS_BITMASK(16)) {
                     JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                          JSMSG_TOO_MANY_FUN_VARS);
                     return NULL;
                 }
-                fp->fun->nvars++;
+                fp->fun->u.i.nvars++;
             }
         }
 #endif
@@ -1586,10 +1587,19 @@ Statement(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
             stmtInfo.type = STMT_FOR_IN_LOOP;
 
             /* Check that the left side of the 'in' is valid. */
+            while (pn1->pn_type == TOK_RP)
+                pn1 = pn1->pn_kid;
             if ((pn1->pn_type == TOK_VAR)
                 ? (pn1->pn_count > 1 || pn1->pn_op == JSOP_DEFCONST)
                 : (pn1->pn_type != TOK_NAME &&
                    pn1->pn_type != TOK_DOT &&
+#if JS_HAS_LVALUE_RETURN
+                   pn1->pn_type != TOK_LP &&
+#endif
+#if JS_HAS_XML_SUPPORT
+                   (pn1->pn_type != TOK_UNARYOP ||
+                    pn1->pn_op != JSOP_XMLNAME) &&
+#endif
                    pn1->pn_type != TOK_LB)) {
                 js_ReportCompileErrorNumber(cx, ts,
                                             JSREPORT_TS | JSREPORT_ERROR,
@@ -1607,6 +1617,14 @@ Statement(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                     pn1->pn_extra |= PNX_POPVAR;
             } else {
                 pn2 = pn1;
+#if JS_HAS_LVALUE_RETURN
+                if (pn2->pn_type == TOK_LP)
+                    pn2->pn_op = JSOP_SETCALL;
+#endif
+#if JS_HAS_XML_SUPPORT
+                if (pn2->pn_type == TOK_UNARYOP)
+                    pn2->pn_op = JSOP_BINDXMLNAME;
+#endif
             }
 
             /* Beware 'for (arguments in ...)' with or without a 'var'. */
@@ -1921,15 +1939,6 @@ Statement(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
         break;
 
       case TOK_WITH:
-        if (!js_ReportCompileErrorNumber(cx, ts,
-                                         JSREPORT_TS |
-                                         JSREPORT_WARNING |
-                                         JSREPORT_STRICT,
-                                         JSMSG_DEPRECATED_USAGE,
-                                         js_with_statement_str)) {
-            return NULL;
-        }
-
         pn = NewParseNode(cx, ts, PN_BINARY, tc);
         if (!pn)
             return NULL;
@@ -2279,7 +2288,7 @@ Variables(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                     if (clasp == &js_FunctionClass) {
                         JS_ASSERT(sprop->getter == js_GetLocalVariable);
                         JS_ASSERT((sprop->flags & SPROP_HAS_SHORTID) &&
-                                  (uint16) sprop->shortid < fun->nvars);
+                                  (uint16) sprop->shortid < fun->u.i.nvars);
                     } else if (clasp == &js_CallClass) {
                         if (sprop->getter == js_GetCallVariable) {
                             /*
@@ -2288,7 +2297,7 @@ Variables(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                              * that the slot number we have is in range.
                              */
                             JS_ASSERT((sprop->flags & SPROP_HAS_SHORTID) &&
-                                      (uint16) sprop->shortid < fun->nvars);
+                                      (uint16) sprop->shortid < fun->u.i.nvars);
                         } else {
                             /*
                              * A variable introduced through another eval:
@@ -2336,15 +2345,15 @@ Variables(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                                           currentGetter, currentSetter,
                                           SPROP_INVALID_SLOT,
                                           pn2->pn_attrs | JSPROP_SHARED,
-                                          SPROP_HAS_SHORTID, fun->nvars)) {
+                                          SPROP_HAS_SHORTID, fun->u.i.nvars)) {
                     return NULL;
                 }
-                if (fun->nvars == JS_BITMASK(16)) {
+                if (fun->u.i.nvars == JS_BITMASK(16)) {
                     JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                          JSMSG_TOO_MANY_FUN_VARS);
                     return NULL;
                 }
-                fun->nvars++;
+                fun->u.i.nvars++;
             }
         }
 

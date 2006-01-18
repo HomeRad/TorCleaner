@@ -2892,7 +2892,7 @@ XMLToXMLString(JSContext *cx, JSXML *xml, const JSXMLArray *ancestorNSes,
     str = js_NewString(cx, sb.base, STRING_BUFFER_OFFSET(&sb), 0);
 out:
     JS_LeaveLocalRootScope(cx);
-    if (!str)
+    if (!str && STRING_BUFFER_OK(&sb))
         js_FinishStringBuffer(&sb);
     XMLArrayFinish(cx, &decls);
     if (ancdecls.capacity != 0)
@@ -3056,7 +3056,7 @@ construct:
 out:
     qn = (JSXMLQName *) JS_GetPrivate(cx, obj);
     atom = cx->runtime->atomState.lazy.functionNamespaceURIAtom;
-    if (atom &&
+    if (qn->uri && atom &&
         (qn->uri == ATOM_TO_STRING(atom) ||
          !js_CompareStrings(qn->uri, ATOM_TO_STRING(atom)))) {
         if (!JS_ValueToId(cx, STRING_TO_JSVAL(qn->localName), funidp))
@@ -3881,8 +3881,8 @@ GetFunction(JSContext *cx, JSObject *obj, JSXML *xml, jsid id, jsval *vp)
         if (JSVAL_IS_FUNCTION(cx, fval)) {
             if (xml && OBJECT_IS_XML(cx, obj)) {
                 fun = (JSFunction *) JS_GetPrivate(cx, JSVAL_TO_OBJECT(fval));
-                if (fun->spare &&
-                    (fun->spare & CLASS_TO_MASK(xml->xml_class)) == 0) {
+                if (!fun->interpreted && fun->u.n.spare &&
+                    (fun->u.n.spare & CLASS_TO_MASK(xml->xml_class)) == 0) {
                     /* XML method called on XMLList or vice versa. */
                     fval = JSVAL_VOID;
                 }
@@ -7479,8 +7479,8 @@ js_InitXMLClass(JSContext *cx, JSObject *obj)
                                 fs->flags);
         if (!fun)
             return NULL;
-        fun->extra = 0;
-        fun->spare = fs->extra;
+        fun->u.n.extra = 0;
+        fun->u.n.spare = fs->extra;
     }
 
     xml = js_NewXML(cx, JSXML_CLASS_TEXT);
