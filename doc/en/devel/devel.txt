@@ -26,7 +26,7 @@ some suggestions that might be helpful.
   repository page.
   After checking out the CVS tree, run ``./autogen.sh`` to generate
   all the Makefiles. Then run ``make localbuild`` to compile a
-  local version. To start the proxy run ``test/startdev.sh config``.
+  local version. To start the proxy run ``scripts/startdev.sh config``.
 
 - When you want to send me patches, try to make them against
   the latest released version or the CVS tree.
