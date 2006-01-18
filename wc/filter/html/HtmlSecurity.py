@@ -311,7 +311,9 @@ class HtmlSecurity (object):
                 # content can be "1;url=http://;url=javascript:alert('boo')"
                 # so be sure to check all urls
                 for url in url.split(";url="):
-                    if not url.startswith('http://') and ":" in url:
+                    url_ok = url.startswith("http://") or \
+                             url.startswith("https://")
+                    if not url_ok and ":" in url:
                         msg = "%s %r\n Detected invalid redirection."
                         wc.log.warn(wc.LOG_HTML, msg, htmlfilter,
                                     attrs['content'])
