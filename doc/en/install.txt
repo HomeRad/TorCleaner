@@ -172,11 +172,36 @@ Setup for Windows - compiling from source:
 
 1. Install check
    
-   Be sure to have installed all required windows software listed above.
-
-2. Compile the JavaScript library
+   Be sure to have installed all required windows software listed
+   above.
+   Note that a 'c:\\>' prompt describes a command shell launched
+   via cmd.exe, a '% ' prompt describes a MSYS shell.
    
-   Copy the webcleaner-X.Y.tar.gz into your MSYS home directory,
+   If you do not want to recompile the PyOpenSSL installer yourself,
+   skip to step 3. Otherwise read ahead.
+
+2. Compile and install PyOpenSSL
+   
+   Change to the directory where you installed the Win32OpenSSL
+   software into (for example c:\\OpenSSL).
+   Now fix the library names for the mingw compiler:
+   ``c:\OpenSSL> cd lib\MinGW && move ssleay32.a libssleay32.a &&
+   move ssleay32.def libssleay32.def``
+   
+   Extract pyOpenSSL-0.6.tar.gz and change into the generated
+   directory (for example c:\\pyOpenSSL-0.6).
+   Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
+   Then run:
+   ``c:\pyOpenSSL-0.6> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
+   -L c:\OpenSSL\lib\MinGW bdist_wininst``
+   
+   This generates a binary installer
+   ``dist\pyOpenSSL-0.6.win32-py2.4.exe`` which you just have to
+   execute.
+
+3. Compile the JavaScript library
+   
+   Copy webcleaner-X.Y.tar.gz into your MSYS home directory,
    which is usually under c:\\msys\\1.0\\home\\user\\.
    Launch MSYS and extract the tarball with
    ``% tar xzvf webcleaner-X.Y.tar.gz``.
@@ -185,30 +210,16 @@ Setup for Windows - compiling from source:
    library:
    ``% ./configure --enable-shared && make -C libjs``.
 
-3. Install OpenSSL and compile PyOpenSSL
-   
-   Change to the directory where you installed OpenSSL (for example
-   ``c:> cd c:\OpenSSL\``).
-   Fix the library names for the mingw compiler:
-   ``c:> cd lib\MinGW; move ssleay32.a libssleay32.a; move ssleay32.def
-   libssleay32.def``
-   Change to the directory where you extracted PyOpenSSL (for
-   example ``c:> cd c:\pyOpenSSL-0.5.1``).
-   Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
-   Then run:
-   ``c:> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
-   -L c:\OpenSSL\lib\MinGW build install``
-
 4. Generate the WebCleaner installer
    
    Change to the webcleaner-X.Y directory and run
    ``c:> python setup.py sdist --manifest-only`` and
    ``c:> python setup.py build -c mingw32 bdist_wininst``.
-
+   
    This generates a binary installer
    ``dist\webcleaner-X.Y.win32-py2.4.exe`` which you just have to
    execute.
-
+   
    If you installed Psyco please read the `psyco installation docs`_.
    
    .. _psyco installation docs:
