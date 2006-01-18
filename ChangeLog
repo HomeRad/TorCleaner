@@ -1,6 +1,8 @@
-2.37 "" (released xx.xx.xxxx)
+2.37 "" (released xx.xx.2006)
 
-  * 
+  * In addition to http:// allow also https:// redirects.
+    Type: bugfix
+    Changed: wc/filter/html/HtmlSecurity.py
 
 2.36 "The Aristocrats" (released 9.1.2006)
 
