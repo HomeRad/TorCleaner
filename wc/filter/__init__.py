@@ -139,6 +139,9 @@ def applyfilter (filterstage, data, fun, attrs):
     Apply all filters which are registered in the given filter stage.
     For different filter stages we have different data objects.
     Look at the filter examples.
+    One can prevent all filtering with the 'nofilter' attribute,
+    or deactivate single filter modules with 'nofilter-<name>',
+    for example 'nofilter-blocker'.
     """
     attrs['filterstage'] = filterstage
     assert wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
@@ -148,7 +151,8 @@ def applyfilter (filterstage, data, fun, attrs):
         return data
     for f in wc.configuration.config['filterlist'][filterstage]:
         assert wc.log.debug(wc.LOG_FILTER, "..filter with %s" % f)
-        if f.applies_to_mime(attrs['mime']):
+        if f.applies_to_mime(attrs['mime']) and \
+           not "nofilter-%s" % str(f).lower() in attrs:
             assert wc.log.debug(wc.LOG_FILTER, "..applying")
             data = getattr(f, fun)(data, attrs)
         else:
