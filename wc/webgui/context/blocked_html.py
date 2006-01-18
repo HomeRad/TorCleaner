@@ -50,5 +50,5 @@ def _handle_blockurl (url):
     blocked_url = url
     parts = list(_url_split(url))
     blocked_host = "%s:%d" % (parts[1], parts[2])
-    parts[1] += ".wc-nofilter"
+    parts[1] += ".wc-nofilter-blocker"
     blocked_url_nofilter = _url_unsplit(parts)
