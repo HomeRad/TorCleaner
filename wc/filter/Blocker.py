@@ -238,9 +238,13 @@ class Blocker (wc.filter.Filter.Filter):
                 doc = self.block_url
                 attrs['mime'] = 'text/html'
                 rule = [r for r in self.rules if r.sid == sid][0]
-                query = urllib.urlencode({"ruletitle": rule.titles['en'],
-                                          "selfolder": "%d"%rule.parent.oid,
-                                          "selrule": "%d"%rule.oid})
+                form = {
+                    "ruletitle": rule.titles['en'],
+                    "selfolder": "%d" % rule.parent.oid,
+                    "selrule": "%d" % rule.oid,
+                    "blockurl": url,
+                }
+                query = urllib.urlencode(form)
                 doc += "?%s" % query
             port = wc.configuration.config['port']
             # XXX activate when https can be served locally
