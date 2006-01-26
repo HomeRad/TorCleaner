@@ -28,6 +28,7 @@ import wc.filter
 import wc.filter.html.HtmlParser
 import wc.url
 import wc.proxy
+import wc.proxy.timer
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.HttpProxyClient
 import wc.proxy.Headers
@@ -179,7 +180,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                                     "%s JS subprocessor is waiting", self)
                 self.htmlparser.state = ('wait', 'recursive script')
                 self.htmlparser.waited = 1
-                wc.proxy.make_timer(1, lambda: self.js_end_script(item))
+                wc.proxy.timer.make_timer(1, lambda: self.js_end_script(item))
                 return
             self.js_htmlparser.debugbuf(cat=wc.LOG_JS)
             assert not self.js_htmlparser.inbuf.getvalue()

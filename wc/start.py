@@ -24,6 +24,7 @@ import wc.configuration
 import wc.url
 import wc.log
 import wc.proxy
+import wc.proxy.mainloop
 import wc.proxy.dns_lookups
 import wc.filter
 import wc.filter.VirusFilter
@@ -60,14 +61,14 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
             import profile
             prof = profile.Profile()
             try:
-                prof.runcall(wc.proxy.mainloop, handle=handle)
+                prof.runcall(wc.proxy.mainloop.mainloop, handle=handle)
             except KeyboardInterrupt:
                 pass
             prof.dump_stats(_profile)
             return
     load_psyco()
     # start the proxy
-    wc.proxy.mainloop(handle=handle)
+    wc.proxy.mainloop.mainloop(handle=handle)
 
 
 def load_psyco ():
