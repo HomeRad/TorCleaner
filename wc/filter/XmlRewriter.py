@@ -35,7 +35,7 @@ class XmlRewriter (wc.filter.Filter.Filter):
 
     def __init__ (self):
         """
-        Init stages and mimes.
+        Init XML stages and mimes.
         """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['xmlrewrite', 'htmlrewrite']

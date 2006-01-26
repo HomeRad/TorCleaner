@@ -35,7 +35,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
 
     def __init__ (self):
         """
-        Init stages and mimes.
+        Init HTML stages and mimes.
         """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['htmlrewrite', 'nocomments', 'javascript', 'rating']

@@ -44,7 +44,7 @@ class VirusFilter (wc.filter.Filter.Filter):
 
     def __init__ (self):
         """
-        Init stages and mimes.
+        Init antivirus stages and mimes, read clamav config.
         """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['antivirus']
