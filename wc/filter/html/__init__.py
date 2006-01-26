@@ -339,6 +339,13 @@ KnownInvalidTags = {
     "htmlpromo" : None, # www.pcworld.com
     "noindex": None, # atomz.com software
     "quote": None, # xhtml 2.0 (draft)
+    "csscriptdict": None, # GoLive
+    "csactiondict": None, # GoLive
+    "csobj": None, # GoLive
+    "x-claris-window": None, # Claris
+    "x-claris-tagview": None, # Claris
+    "x-sas-window": None, # Claris
+    "NYT_COPYRIGHT": None, # Times
 }
 
 # tags to ignore
