@@ -8,3 +8,6 @@ Makefile.in
 jscpucfg
 jscpucfg.exe
 jsautocfg.h
+jskwgen
+jskwgen.exe
+jsautokw.h

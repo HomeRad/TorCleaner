@@ -1670,22 +1670,23 @@ static JSFunctionSpec function_methods[] = {
 JSBool
 js_IsIdentifier(JSString *str)
 {
-    size_t n;
-    jschar *s, c;
+    size_t length;
+    jschar c, *chars, *end, *s;
 
-    n = JSSTRING_LENGTH(str);
-    if (n == 0)
+    length = JSSTRING_LENGTH(str);
+    if (length == 0)
         return JS_FALSE;
-    s = JSSTRING_CHARS(str);
-    c = *s;
+    chars = JSSTRING_CHARS(str);
+    c = *chars;
     if (!JS_ISIDSTART(c))
         return JS_FALSE;
-    for (n--; n != 0; n--) {
-        c = *++s;
+    end = chars + length;
+    for (s = chars + 1; s != end; ++s) {
+        c = *s;
         if (!JS_ISIDENT(c))
             return JS_FALSE;
     }
-    return JS_TRUE;
+    return !js_IsKeyword(chars, length);
 }
 
 static JSBool
@@ -1765,8 +1766,10 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     }
 
     /* Belt-and-braces: check that the caller has access to parent. */
-    if (!js_CheckPrincipalsAccess(cx, parent, principals, "Function"))
+    if (!js_CheckPrincipalsAccess(cx, parent, principals,
+                                  cx->runtime->atomState.FunctionAtom)) {
         return JS_FALSE;
+    }
 
     n = argc ? argc - 1 : 0;
     if (n > 0) {
@@ -2126,6 +2129,7 @@ js_ValueToFunctionObject(JSContext *cx, jsval *vp, uintN flags)
     JSFunction *fun;
     JSObject *funobj;
     JSStackFrame *caller;
+    JSPrincipals *principals;
 
     if (JSVAL_IS_FUNCTION(cx, *vp))
         return JSVAL_TO_OBJECT(*vp);
@@ -2137,10 +2141,17 @@ js_ValueToFunctionObject(JSContext *cx, jsval *vp, uintN flags)
     *vp = OBJECT_TO_JSVAL(funobj);
 
     caller = JS_GetScriptedCaller(cx, cx->fp);
-    if (caller &&
-        !js_CheckPrincipalsAccess(cx, funobj,
-                                  caller->script->principals,
-                                  JS_GetFunctionName(fun))) {
+    if (caller) {
+        principals = caller->script->principals;
+    } else {
+        /* No scripted caller, don't allow access. */
+        principals = NULL;
+    }
+
+    if (!js_CheckPrincipalsAccess(cx, funobj, principals,
+                                  fun->atom
+                                  ? fun->atom
+                                  : cx->runtime->atomState.anonymousAtom)) {
         return NULL;
     }
     return funobj;

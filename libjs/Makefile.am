@@ -1,9 +1,9 @@
 SUBDIRS			= fdlibm
 
 INCLUDES		= -I$(top_srcdir) -I$(top_builddir)
-EXTRA_DIST		= js.msg jsopcode.tbl README
+EXTRA_DIST		= js.msg jskeyword.tbl jsopcode.tbl README
 
-BUILT_SOURCES		= jsautocfg.h
+BUILT_SOURCES		= jsautocfg.h jsautokw.h
 
 AM_CFLAGS = @JSDEFS@
 
@@ -55,20 +55,28 @@ libjs_la_SOURCES	= jsapi.c jsapi.h \
 			jstypes.h \
 			$(CONFIG_HEADER)
 
+jsopcode.h jsinterp.h: jsopcode.tbl
+
 libjs_la_LIBADD		= ./fdlibm/libfdm.la
 
 if CROSS_COMPILE_LINUX
-CLEANFILES = jscpucfg jsautocfg.h
+CLEANFILES = jscpucfg jskwgen $(BUILT_SOURCES)
 jscpucfg: jscpucfg.c jscpucfg.h prtypes.h protypes.h prcpucfg.h
 	gcc $(DEFAULT_INCLUDES) @JSDEFS@ $(CFLAGS) jscpucfg.c -o jscpucfg
+jskwgen: jskwgen.c jsstddef.h jsconfig.h
+	gcc $(DEFAULT_INCLUDES) @JSDEFS@ $(CFLAGS) jskwgen.c -o jskwgen
 else
-CLEANFILES = jscpucfg@EXEEXT@ jsautocfg.h
-noinst_PROGRAMS = jscpucfg
+CLEANFILES = jscpucfg@EXEEXT@ jskwgen@EXEEXT@ $(BUILT_SOURCES)
+noinst_PROGRAMS = jscpucfg jskwgen
 jscpucfg_SOURCES = jscpucfg.c jscpucfg.h prtypes.h protypes.h prcpucfg.h
+jskwgen_SOURCES = jskwgen.c jsstddef.h jsconfig.h
 endif
 
 jsautocfg.h: jscpucfg
-	./jscpucfg > jsautocfg.h
+	./jscpucfg > $@
+
+jsautokw.h: jskwgen jskeyword.tbl
+	./jskwgen $@
 
 ORIGSRCDIR := /home/calvin/src/mozilla/js/src
 origdiff:
