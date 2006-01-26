@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Test block filter.
+"""
 
 import sys
 import os
@@ -23,7 +26,7 @@ import wc.http.header
 
 def _main ():
     """
-    USAGE: test/run.sh test/block.py <configdir> <url>
+    USAGE: scripts/run.sh test/block.py <configdir> <url>
     """
     if len(sys.argv) != 3:
         print _main.__doc__.strip()
@@ -36,11 +39,11 @@ def _main ():
     wc.configuration.config = wc.configuration.init(confdir=confdir)
     wc.configuration.config.init_filter_modules()
     wc.proxy.dns_lookups.init_resolver()
-    from wc.filter import applyfilter, get_filterattrs, FILTER_REQUEST
+    from wc.filter import applyfilter, get_filterattrs, STAGE_REQUEST
     headers = wc.http.header.WcMessage()
     headers['Content-Type'] = "text/html"
-    attrs = get_filterattrs(url, [FILTER_REQUEST], headers=headers)
-    print applyfilter(FILTER_REQUEST, data, 'finish', attrs)
+    attrs = get_filterattrs(url, [STAGE_REQUEST], headers=headers)
+    print applyfilter(STAGE_REQUEST, data, 'finish', attrs)
 
 
 if __name__ == '__main__':

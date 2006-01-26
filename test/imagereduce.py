@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+"""
+Test image reduction filter.
+"""
 
 import sys
 import os
@@ -49,9 +52,9 @@ def _main ():
     headers = wc.http.header.WcMessage(StringIO(''))
     headers['Content-Type'] = mimetypes.guess_type(f)[0]
     headers['Content-Size'] = os.stat(f)[stat.ST_SIZE]
-    from wc.filter import applyfilter, get_filterattrs, FILTER_RESPONSE_MODIFY
-    attrs = get_filterattrs(f, [FILTER_RESPONSE_MODIFY], headers=headers)
-    filtered = applyfilter(FILTER_RESPONSE_MODIFY, data, 'finish', attrs)
+    from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
+    attrs = get_filterattrs(f, [STAGE_RESPONSE_MODIFY], headers=headers)
+    filtered = applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', attrs)
     print filtered,
 
 

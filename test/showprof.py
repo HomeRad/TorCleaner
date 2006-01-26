@@ -30,10 +30,10 @@ def _main (filename):
     Print profiling data and exit.
     """
     if not wc.HasPstats:
-        print >>sys.stderr, "The `pstats' Python module is not installed."
+        print >> sys.stderr, "The `pstats' Python module is not installed."
         sys.exit(1)
     if not os.path.isfile(filename):
-        print >>sys.stderr, "Could not find regular file %r." % filename
+        print >> sys.stderr, "Could not find regular file %r." % filename
         sys.exit(1)
     import pstats
     stats = pstats.Stats(filename)

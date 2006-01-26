@@ -25,6 +25,8 @@ import wc
 import wc.configuration
 import wc.filter
 import wc.proxy
+import wc.proxy.mainloop
+import wc.proxy.timer
 import wc.proxy.dns_lookups
 import wc.http.header
 
@@ -113,7 +115,7 @@ def _filter (f, attrs):
             break
         except wc.filter.FilterException, msg:
             print >> sys.stderr, "Test: finish: exception:", msg
-            wc.proxy.proxy_poll(timeout=max(0, wc.proxy.run_timers()))
+            wc.proxy.mainloop.proxy_poll(timeout=max(0, wc.proxy.timer.run_timers()))
         i += 1
         if i == 200:
             # background downloading if javascript is too slow
