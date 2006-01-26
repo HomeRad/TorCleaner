@@ -270,7 +270,7 @@ def encode_digest (digest):
     return ''.join(hexrep)
 
 
-from wc.proxy import make_timer
+from wc.proxy.timer import make_timer
 def init ():
     """
     Check for timed out nonces every 5 minutes.

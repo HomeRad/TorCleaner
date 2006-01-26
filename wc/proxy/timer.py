@@ -25,30 +25,39 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
-"""
-Fourth incarnation of Amit's web proxy
 
-Used and modified by Bastian Kleineidam for WebCleaner
-"""
-
-import select
+import time
+import wc.log
 
 
-def readable_socket (sock, timeout=0.5):
+TIMERS = [] # list of (time, function)
+
+def make_timer (delay, callback):
     """
-    Check if socket is readable.
-    @param sock: the socket to check
-    @type sock: socket object of file descriptor suitable for select() call
-    @param timeout: how long to wait for readable data; if timeout is None
-      or negative the function blocks; a zero timeout only polls for data
-    @type timeout: number or None
-    @return: True if data can be read from socket
-    @rtype: bool
+    After DELAY seconds, run the CALLBACK function.
     """
-    try:
-        if timeout is None or timeout < 0.0:
-            return select.select([sock], [], [])[0]
-        return select.select([sock], [], [], timeout)[0]
-    except select.error:
-        return False
+    assert wc.log.debug(wc.LOG_PROXY,
+                        "Adding %s to %d timers", callback, len(TIMERS))
+    TIMERS.append( (time.time()+delay, callback) )
+    TIMERS.sort()
+
+
+MAX_TIMEOUT = 60
+def run_timers ():
+    """
+    Run all timers ready to be run, and return seconds to the next timer.
+    """
+    # Note that we will run timers that are scheduled to be run within
+    # 10 ms.  This is because the select() statement doesn't have
+    # infinite precision and may end up returning slightly earlier.
+    # We're willing to run the event a few millisecond earlier.
+    while TIMERS and TIMERS[0][0] <= time.time() + 0.01:
+        # This timeout handler should be called
+        callback = TIMERS[0][1]
+        del TIMERS[0]
+        callback()
+    if TIMERS:
+        return min(TIMERS[0][0] - time.time(), MAX_TIMEOUT)
+    else:
+        return MAX_TIMEOUT
 

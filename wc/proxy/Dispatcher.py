@@ -265,7 +265,7 @@ class Dispatcher (object):
             # Connection is in progress, check the connect condition later.
             def recheck ():
                 self.check_connect(addr)
-            wc.proxy.make_timer(0.2, recheck)
+            wc.proxy.timer.make_timer(0.2, recheck)
         elif err in (0, errno.EISCONN):
             # Connected!
             self.addr = addr
@@ -297,12 +297,12 @@ class Dispatcher (object):
             # not yet ready
             assert wc.log.debug(wc.LOG_PROXY,
                          '%s connect not ready %s', self, str(why))
-            wc.proxy.make_timer(0.2, recheck)
+            wc.proxy.timer.make_timer(0.2, recheck)
             return
         if self.fileno() not in w:
             # not yet ready
             assert wc.log.debug(wc.LOG_PROXY, '%s not writable', self)
-            wc.proxy.make_timer(0.2, recheck)
+            wc.proxy.timer.make_timer(0.2, recheck)
             return
         err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
         if err == 0:
@@ -313,7 +313,7 @@ class Dispatcher (object):
         elif err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             assert wc.log.debug(wc.LOG_PROXY,
                          '%s connect status in progress/would block', self)
-            wc.proxy.make_timer(0.2, recheck)
+            wc.proxy.timer.make_timer(0.2, recheck)
         else:
             strerr = os.strerror(err)
             wc.log.info(wc.LOG_PROXY, '%s connect error %s', self, strerr)

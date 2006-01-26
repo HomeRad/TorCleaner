@@ -642,7 +642,7 @@ def create_nt_hashed_password (passwd):
     return nt_hpw
 
 
-from wc.proxy import make_timer
+from wc.proxy.timer import make_timer
 def init ():
     """
     Check for timed out nonces every 5 minutes.

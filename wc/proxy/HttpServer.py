@@ -44,7 +44,7 @@ import wc.magic
 import wc.filter
 import wc.filter.rating
 import wc.http
-import wc.proxy
+import wc.proxy.timer
 import wc.proxy.Server
 import wc.proxy.auth
 import wc.proxy.Headers
@@ -576,7 +576,7 @@ class HttpServer (wc.proxy.Server.Server):
         assert wc.log.debug(wc.LOG_PROXY,
                             "%s HttpServer.set_unreadable", self)
         oldstate, self.state = self.state, 'unreadable'
-        wc.proxy.make_timer(secs, lambda: self.set_readable(oldstate))
+        wc.proxy.timer.make_timer(secs, lambda: self.set_readable(oldstate))
 
     def set_readable (self, state):
         """
@@ -662,24 +662,6 @@ class HttpServer (wc.proxy.Server.Server):
         self.persistent = False
         super(HttpServer, self).handle_close()
 
-    def reconnect (self):
-        """
-        Reconnect to server.
-        """
-        assert wc.log.debug(wc.LOG_PROXY, "%s HttpServer.reconnect", self)
-        # we still must have the client connection
-        if not self.client:
-            wc.log.error(wc.LOG_PROXY, "%s lost client on reconnect", self)
-            return
-        from wc.proxy.ClientServerMatchmaker import ClientServerMatchmaker
-        # note: self.client still the matchmaker object
-        client = self.client.client
-        client.state = 'request'
-        self.client = None
-        ClientServerMatchmaker(client, client.request,
-                               self.clientheaders, # with new auth
-                               client.content, mime_types=self.mime_types)
-
 
 def speedcheck_print_status ():
     """
@@ -693,4 +675,4 @@ def speedcheck_print_status ():
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
-    wc.proxy.make_timer(5, speedcheck_print_status)
+    wc.proxy.timer.make_timer(5, speedcheck_print_status)
