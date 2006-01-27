@@ -86,6 +86,7 @@ def mainloop (handle=None):
     """
     Proxy main loop, handles requests forever.
     """
+    # XXX why do I have to import wc again - python bug?
     import wc
     host = str(wc.configuration.config['bindaddress'])
     port = wc.configuration.config['port']
