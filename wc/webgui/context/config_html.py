@@ -29,6 +29,7 @@ from wc.webgui.context import getlist as _getlist
 from wc.ip import hosts2map as _hosts2map
 from wc.proxy.dns_lookups import resolver as _resolver
 from wc.strformat import is_ascii as _is_ascii
+from wc.filter.VirusFilter import canonical_clamav_conf as _canonical_clamav_conf
 import wc.filter
 
 # config vars
@@ -91,13 +92,7 @@ for _i in _resolver.interfaces:
     ifvalues[_i] = _i == config['newbindaddress']
 
 
-# default clamav configs for various platforms
-if os.name == 'posix':
-    clamavconf = "/etc/clamav/clamd.conf"
-elif os.name == 'nt':
-    clamavconf = r"c:\clamav-devel\etc\clamd.conf"
-else:
-    clamavconf = "clamd.conf"
+clamavconf = _canonical_clamav_conf()
 
 
 def _form_reset ():
