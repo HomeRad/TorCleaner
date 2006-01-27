@@ -1,6 +1,6 @@
 TODO
 
-- filter virus data in chunks with overlap, not complete.
+- script src: http://sm7.sitemeter.com
 
 - test HTTP pipelining (esp. the order of the responses)
 
