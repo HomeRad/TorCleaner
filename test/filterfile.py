@@ -54,9 +54,9 @@ def get_content_type (filename, fp):
 
 def _main ():
     """
-    USAGE: test/run.sh test/filterfile.py <config dir> <filename>
+    USAGE: test/run.sh test/filterfile.py <config dir> <filename> [url]
     """
-    if len(sys.argv) != 3:
+    if len(sys.argv) < 3:
         print _main.__doc__.strip()
         sys.exit(1)
     confdir = sys.argv[1]
@@ -65,6 +65,10 @@ def _main ():
         f = sys.stdin
     else:
         f = file(fname)
+    if len(sys.argv) >= 4:
+        url = sys.argv[3]
+    else:
+        url = fname
     try:
         logfile = os.path.join(confdir, "logging.conf")
         wc.initlog(logfile, wc.Name, filelogs=False)
@@ -74,7 +78,7 @@ def _main ():
         headers = wc.http.header.WcMessage()
         content_type = get_content_type(fname, f)
         headers['Content-Type'] = content_type
-        attrs = wc.filter.get_filterattrs(fname, "127.0.0.1",
+        attrs = wc.filter.get_filterattrs(url, "127.0.0.1",
                                       [wc.filter.STAGE_RESPONSE_MODIFY],
                                       headers=headers, serverheaders=headers)
         if profiling:
