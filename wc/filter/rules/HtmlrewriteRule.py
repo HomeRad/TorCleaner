@@ -225,7 +225,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         # put buf items together for matching
         items = tagbuf[pos:]
         data = wc.filter.html.tagbuf2data(items, StringIO()).getvalue()
-        return self.enclosed_ro.match(data)
+        return self.enclosed_ro.search(data)
 
     def filter_tag (self, tag, attrs, starttype):
         """
