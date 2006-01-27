@@ -22,7 +22,8 @@ import unittest
 import tests
 import wc
 import wc.configuration
-from wc.proxy import proxy_poll, run_timers
+from wc.proxy.mainloop import proxy_poll
+from wc.proxy.timer import run_timers
 from wc.http.header import WcMessage
 from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
