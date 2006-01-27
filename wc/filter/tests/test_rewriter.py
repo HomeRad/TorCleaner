@@ -293,6 +293,11 @@ class TestRewriter (tests.StandardTest):
         self.filt("""<frameset><frame src="aaa"><embed name="sp" style><applet hspace="file:\\\\">""",
                   """<frameset><frame src="aaa"><embed name="sp" style><applet>""")
 
+    def testEnclosing (self):
+        self.filt("""<table width="25%"><a href="/pagead/iclk?sa=l&ai=B"></table>""",
+                  "", url="www.google.com")
+
+
 def test_suite ():
     return unittest.makeSuite(TestRewriter)
 
