@@ -19,6 +19,7 @@ Replace expressions in a data stream. Use this for highlighting and
 removing/replacing certain strings.
 """
 
+import wc.fileutil
 import wc.filter
 import wc.filter.Filter
 
@@ -53,7 +54,7 @@ class Replacer (wc.filter.Filter.Filter):
         buf = attrs['replacer_buf']
         buf.mime = attrs['mime']
         charset = attrs.get('charset', DefaultCharset)
-        return self.replace(data, charset, buf)
+        return self.replace(data, charset, buf.filter)
 
     def finish (self, data, attrs):
         """
@@ -64,16 +65,14 @@ class Replacer (wc.filter.Filter.Filter):
         buf = attrs['replacer_buf']
         buf.mime = attrs['mime']
         charset = attrs.get('charset', DefaultCharset)
-        if data:
-            data = self.replace(data, charset, buf)
-        return data+buf.flush().encode(charset, 'ignore')
+        return self.replace(data, charset, buf.finish)
 
-    def replace (self, data, charset, buf):
+    def replace (self, data, charset, func):
         """
         Decode data, replace contents of buffer and encode again.
         """
         udata = data.decode(charset, 'ignore')
-        udata = buf.replace(udata)
+        udata = func(udata)
         return udata.encode(charset, 'ignore')
 
     def update_attrs (self, attrs, url, localhost, stages, headers):
@@ -91,7 +90,11 @@ class Replacer (wc.filter.Filter.Filter):
         attrs['replacer_buf'] = Buf(rules)
 
 
-class Buf (object):
+# 2kB chunk, 256 Byte overlap
+CHUNK_SIZE = 1024L*2L
+CHUNK_OVERLAP = 256L
+
+class Buf (wc.fileutil.Buffer):
     """
     Holds buffer data ready for replacing, with overlapping scans.
     Strings must be unicode.
@@ -101,35 +104,29 @@ class Buf (object):
         """
         Store rules and initialize buffer.
         """
+        super(Buf, self).__init__(empty=u"")
         self.rules = rules
-        self.buf = u""
         self.mime = None
 
-    def replace (self, data):
+    def filter (self, data):
         """
         Fill up buffer with given data, and scan for replacements.
         """
-        self.buf += data
-        if len(self.buf) > 512:
-            self._replace()
-            if len(self.buf) > 256:
-                data = self.buf
-                self.buf = self.buf[-256:]
-                return data[:-256]
+        self.write(data)
+        if len(self) > CHUNK_SIZE:
+            return self._replace(self.flush(overlap=CHUNK_OVERLAP))
         return u""
 
-    def _replace (self):
+    def finish (self, data):
+        self.write(data)
+        return self._replace(self.flush())
+
+    def _replace (self, data):
         """
         Scan for replacements.
         """
         for rule in self.rules:
             if rule.search and rule.applies_to_mime(self.mime):
-                self.buf = rule.search_ro.sub(rule.replacement, self.buf)
-
-    def flush (self):
-        """
-        Flush buffered data and return it.
-        """
-        self._replace()
-        self.buf, data = u"", self.buf
+                data = rule.search_ro.sub(rule.replacement, data)
         return data
+
