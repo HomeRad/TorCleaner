@@ -30,6 +30,7 @@ Connection handling client <--> proxy.
 """
 
 import time
+import re
 import cgi
 import urlparse
 import cStringIO as StringIO
@@ -62,6 +63,8 @@ FilterStages = [
     wc.filter.STAGE_REQUEST_MODIFY,
     wc.filter.STAGE_REQUEST_ENCODE,
 ]
+
+hostattr = re.compile(r"^(?i)([-a-z0-9\.]+)\.wc-([-a-z0-9]+)$")
 
 class HttpClient (wc.proxy.CodingConnection.CodingConnection):
     """
@@ -175,7 +178,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         # still strip() it from whitespace
         request = self.read(i).strip()
         method, url, version = wc.http.parse_http_request(request)
-        # check request; sets self.method, self.url, self.version
+        # check request
+        # sets self.method, self.url, self.version
         if not self.check_request(method, url, version):
             # error has been sent
             return
@@ -186,6 +190,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         stage = wc.filter.STAGE_REQUEST
         self.attrs = wc.filter.get_filterattrs(self.url,
                                                self.localhost, [stage])
+        request = self.check_host_attrs(request)
         request = wc.filter.applyfilter(stage, request, "finish", self.attrs)
         self.request = request
         # final request checking
@@ -264,6 +269,19 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         Get default URL scheme.
         """
         return "http"
+
+    def check_host_attrs (self, request):
+        """
+        Check if host name defines some config attributes to honor.
+        """
+        parts = list(wc.url.url_split(self.url))
+        attrmatch = hostattr.search(parts[1] or "")
+        if attrmatch:
+            parts[1] = self.hostname = attrmatch.group(1)
+            self.url = wc.url.url_unsplit(parts)
+            request = "%s %s HTTP/1.1" % (self.method, self.url)
+            self.attrs[attrmatch.group(2)] = True
+        return request
 
     def process_headers (self):
         """
