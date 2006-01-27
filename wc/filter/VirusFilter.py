@@ -25,6 +25,7 @@ import cStringIO as StringIO
 
 import wc
 import wc.configuration
+import wc.fileutil
 import wc.strformat
 import wc.log
 import wc.filter
@@ -57,31 +58,9 @@ class VirusFilter (wc.filter.Filter.Filter):
         """
         Write data to scanner and internal buffer.
         """
-        if 'virus_scanner' not in attrs:
+        if 'virus_buf' not in attrs:
             return data
-        scanner = attrs['virus_scanner']
-        buf = attrs['virus_buf']
-        size = attrs['virus_buf_size'][0]
-        data_length = len(data)
-        if size+data_length > VirusFilter.MAX_FILE_BYTES:
-            self.size_error()
-        attrs['virus_buf_size'][0] += data_length
-        try:
-            scanner.scan(data)
-        except socket.error:
-            msg = sys.exc_info()[1]
-            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
-        buf.write(data)
-        return ""
-
-    def size_error (self):
-        """
-        Raise an exception to cause a 406 HTTP return code.
-        """
-        wc.log.warn(wc.LOG_FILTER, "Virus filter size exceeded.")
-        raise wc.filter.FilterProxyError(406, _("Not acceptable"),
-                _("Maximum data size (%s) exceeded") % \
-                wc.strformat.strsize(VirusFilter.MAX_FILE_BYTES))
+        return attrs['virus_buf'].filter(data)
 
     def finish (self, data, attrs):
         """
@@ -89,33 +68,9 @@ class VirusFilter (wc.filter.Filter.Filter):
         If scanner is clean, return buffered data, else print error
         message and return an empty string.
         """
-        if 'virus_scanner' not in attrs:
-            assert wc.log.debug(wc.LOG_FILTER, "No virus scanner found.")
+        if 'virus_buf' not in attrs:
             return data
-        scanner = attrs['virus_scanner']
-        buf = attrs['virus_buf']
-        size = attrs['virus_buf_size'][0]
-        if data:
-            if size+len(data) > VirusFilter.MAX_FILE_BYTES:
-                self.size_error()
-            try:
-                scanner.scan(data)
-            except socket.error:
-                msg = sys.exc_info()[1]
-                wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
-            buf.write(data)
-        scanner.close()
-        for msg in scanner.errors:
-            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
-        if scanner.infected:
-            data = ""
-            for msg in scanner.infected:
-                wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r",
-                            msg, attrs['url'])
-        else:
-            data = buf.getvalue()
-        buf.close()
-        return data
+        return attrs['virus_buf'].finish(data)
 
     def update_attrs (self, attrs, url, localhost, stages, headers):
         """
@@ -131,9 +86,60 @@ class VirusFilter (wc.filter.Filter.Filter):
             return
         conf = get_clamav_conf()
         if conf is not None:
-            attrs['virus_scanner'] = ClamdScanner(conf)
-            attrs['virus_buf'] = StringIO.StringIO()
-            attrs['virus_buf_size'] = [0]
+            attrs['virus_buf'] = Buf(conf)
+
+
+# 200kB chunk size, 50kB overlap
+CHUNK_SIZE = 1024L*200L
+CHUNK_OVERLAP = 1024L*50L
+
+class Buf (wc.fileutil.Buffer):
+    """
+    Holds buffer data ready for replacing, with overlapping scans.
+    Strings must be unicode.
+    """
+
+    def __init__ (self, conf):
+        """
+        Store rules and initialize buffer.
+        """
+        super(Buf, self).__init__()
+        self.conf = conf
+
+    def filter (self, data):
+        """
+        Fill up buffer with given data, and scan for replacements.
+        """
+        self.write(data)
+        if len(self) > CHUNK_SIZE:
+            return self.scan(self.flush(overlap=CHUNK_OVERLAP))
+        return ""
+
+    def finish (self, data):
+        self.write(data)
+        return self.scan(self.flush())
+
+    def scan (self, data):
+        """
+        Scan for virus
+        """
+        scanner = ClamdScanner(self.conf)
+        try:
+            scanner.scan(data)
+        except socket.error:
+            msg = sys.exc_info()[1]
+            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
+        scanner.close()
+        for msg in scanner.errors:
+            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
+        if scanner.infected:
+            # XXX
+            data = ""
+            for msg in scanner.infected:
+                wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r",
+                            msg, attrs['url'])
+        return data
+
 
 
 class ClamdScanner (object):
@@ -199,6 +205,19 @@ class ClamdScanner (object):
                 self.errors.append(data)
             data = self.sock.recv(self.sock_rcvbuf)
         self.sock.close()
+
+
+def canonical_clamav_conf ():
+    """
+    default clamav configs for various platforms
+    """
+    if os.name == 'posix':
+        clamavconf = "/etc/clamav/clamd.conf"
+    elif os.name == 'nt':
+        clamavconf = r"c:\clamav-devel\etc\clamd.conf"
+    else:
+        clamavconf = "clamd.conf"
+    return clamavconf
 
 
 _clamav_conf = None
