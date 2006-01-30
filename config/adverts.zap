@@ -392,7 +392,7 @@
   <title lang="en">Links with 'trade' etc.</title>
   <description lang="de">Entferne frames/scripts mit 'trade' und weiteren im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'trade' and others in the host name.</description>
-  <attr name="src">https?://[^/]*(tradedoubler|emerchandise|ecommercetimes|ivwbox)\.</attr>
+  <attr name="src">https?://[^/]*(tradedoubler|emerchandise|ecommercetimes|ivwbox|sitemeter)\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
