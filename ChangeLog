@@ -4,6 +4,25 @@
     Type: bugfix
     Changed: wc/filter/html/HtmlSecurity.py
 
+  * Fix rule matching for enclosed text.
+    Type: bugfix
+    Changed: wc/filter/rules/HtmlrewriteRule.py
+
+  * Allow hostname to carry suffixes that control WebCleaner
+    behaviour, particularly disable certain filter modules.
+    Type: feature
+    Changed: wc/proxy/HttpClient.py, wc/filter/__init__.py
+
+  * Make use of wc-nofilter host suffix to allow viewing of blocked
+    sites.
+    Type: feature
+    Changed: templates/classic/blocked.html
+
+  * Allow floating point values for width/height HTML attributes,
+    but convert them to integers.
+    Type: feature
+    Changed: wc/filter/html/HtmlSecurity.py
+
 2.36 "The Aristocrats" (released 9.1.2006)
 
   * Improve JavaScript parsing by normalizing whitespace. Avoids some
@@ -13,7 +32,7 @@
 
   * Improved XML MIME type detection and namespace parsing.
     And make sure the XML encoding does not differ from the one
-    advertised in the HTML headers.
+    advertised in the HTTP headers.
     Type: feature
     Changed: wc/filter/XmlRewriter.py, wc/filter/xmlfilt/XmlFilter.py
 

@@ -69,11 +69,14 @@ def check_javascript_url (attrs, name, htmlfilter):
         wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
         del attrs[name]
 
+isfloat = re.compile(r"^[1-9][0-9]*\.[0-9]+$").search
 
-def check_length (attrs, name, htmlfilter):
+def check_length (attrs, name, htmlfilter, maxlen=4):
     """
     Check correct format of a length attribute. Allowed are
     digits, followed by 'px' or '%'.
+    Floating point numbers are converted to integers.
+    Too long and invalid values will be removed.
     Side effect: attribute value is stripped from whitespace.
     """
     value = attrs.get_true(name, u"")
@@ -89,7 +92,12 @@ def check_length (attrs, name, htmlfilter):
         tvalue = tvalue[:-2]
     elif tvalue.endswith('%'):
         tvalue = tvalue[:-1]
-    if not tvalue.isdigit():
+    if isfloat(tvalue):
+        try:
+            tvalue = str(int(float(tvalue)))
+        except:
+            pass
+    if not tvalue.isdigit() or len(tvalue) > maxlen:
         msg = "%s\n Detected invalid length format %r"
         wc.log.warn(wc.LOG_HTML, msg, htmlfilter, value)
         del attrs[name]
@@ -105,13 +113,7 @@ def check_attr_size (attrs, name, htmlfilter, maxlen=4):
     # Note that a maxlen of 4 is recommended to also allow
     # percentages like '100%'.
     val = attrs.get_true(name, u"").lower()
-    l = len(val)
-    # subtract common units
-    if val.endswith("%"):
-        l -= 1
-    elif val.endswith("pt") or val.endswith("px"):
-        l -= 2
-    if l > maxlen:
+    if len(val) > maxlen:
         msg = "%s %r\n Detected a too large %s attribute value"
         msg += " (length %d > %d)" % (len(val), maxlen)
         wc.log.warn(wc.LOG_HTML, msg, htmlfilter, val, name)
@@ -256,8 +258,6 @@ class HtmlSecurity (object):
         """
         check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
         check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
-        check_attr_size(attrs, 'width', htmlfilter, maxlen=5)
-        check_attr_size(attrs, 'height', htmlfilter, maxlen=6)
         check_url(attrs, 'src', htmlfilter)
 
     def img_start (self, attrs, htmlfilter):
@@ -269,9 +269,6 @@ class HtmlSecurity (object):
         check_javascript_url(attrs, 'src', htmlfilter)
         check_url(attrs, 'lowsrc', htmlfilter)
         check_javascript_url(attrs, 'lowsrc', htmlfilter)
-        # sanitize width/height values
-        check_attr_size(attrs, 'width', htmlfilter)
-        check_attr_size(attrs, 'height', htmlfilter)
 
     def input_start (self, attrs, htmlfilter):
         """
@@ -289,12 +286,6 @@ class HtmlSecurity (object):
         if attrs.has_key('rel') and attrs.has_key('href'):
             if attrs['rel'].strip().lower() == 'icon':
                 check_javascript_url(attrs, 'href', htmlfilter)
-
-    def marquee_start (self, attrs, htmlfilter):
-        """
-        Check <marquee> start tag.
-        """
-        check_attr_size(attrs, 'height', htmlfilter)
 
     def meta_start (self, attrs, htmlfilter):
         """
