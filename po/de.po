@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-01-08 18:18+0100\n"
+"POT-Creation-Date: 2006-01-27 23:22+0100\n"
 "PO-Revision-Date: 2005-11-15 17:55+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -120,31 +120,22 @@ msgstr "ungültige Änderungszeit %r"
 msgid "generic url %r doesn't match %r"
 msgstr "Allgemeine URL %r passt nicht zu %r"
 
-#: ../wc/filter/VirusFilter.py:82
-msgid "Not acceptable"
-msgstr "Ungültig"
-
-#: ../wc/filter/VirusFilter.py:83
-#, python-format
-msgid "Maximum data size (%s) exceeded"
-msgstr "Maximale Datengröße (%s) überschritten"
-
-#: ../wc/filter/VirusFilter.py:173
+#: ../wc/filter/VirusFilter.py:179
 msgid "Clamd is not ready for stream scanning"
 msgstr "Clamd ist nicht bereit zum Prüfen eines Datenstroms"
 
-#: ../wc/filter/VirusFilter.py:247
+#: ../wc/filter/VirusFilter.py:266
 msgid "You have to disable ScannerDaemonOutputFormat"
 msgstr "Sie müssen ScannerDaemonOutputFormat deaktivieren"
 
-#: ../wc/filter/VirusFilter.py:249
+#: ../wc/filter/VirusFilter.py:268
 msgid ""
 "Clamd is not configured properly: both TCPSocket and LocalSocket are enabled."
 msgstr ""
 "Clamd ist nicht richtig konfiguriert: sowohl TCPSocket als auch LocalSocket "
 "sind aktiviert."
 
-#: ../wc/filter/VirusFilter.py:282
+#: ../wc/filter/VirusFilter.py:301
 msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd "
 "configuration"
@@ -152,12 +143,12 @@ msgstr ""
 "Sie müssen entweder TCPSocket oder LocalSocket in Ihrer Clamd Konfiguration "
 "aktivieren"
 
-#: ../wc/filter/html/JSFilter.py:365
+#: ../wc/filter/html/JSFilter.py:367
 #, python-format
 msgid "error fetching script from %r"
 msgstr "Fehler beim Laden von %r"
 
-#: ../wc/filter/html/JSFilter.py:368
+#: ../wc/filter/html/JSFilter.py:370
 #, python-format
 msgid "fetched script from %r"
 msgstr "Skript geladen von %r"
@@ -302,7 +293,7 @@ msgstr "füge %s ein"
 msgid "unknown tag name %r"
 msgstr "Unbekannter Tagname %r"
 
-#: ../wc/start.py:88
+#: ../wc/start.py:87
 msgid ""
 "Psyco is installed but not used since the version is too old.\n"
 "Psyco >= 1.4 is needed."
@@ -314,8 +305,8 @@ msgstr ""
 msgid "Ok"
 msgstr "Ok"
 
-#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:625
-#: ../wc/proxy/HttpClient.py:630 ../wc/proxy/HttpClient.py:641
+#: ../wc/webgui/webconfig.py:65 ../wc/proxy/HttpClient.py:642
+#: ../wc/proxy/HttpClient.py:647 ../wc/proxy/HttpClient.py:658
 msgid "Authentication Required"
 msgstr "Autorisierung benötigt"
 
@@ -349,17 +340,17 @@ msgstr "Fehler: keine Aktualisierungen vorhanden."
 msgid "Connect error %s."
 msgstr "Verbindungsproblem %s."
 
-#: ../wc/proxy/Headers.py:284
+#: ../wc/proxy/Headers.py:286
 #, python-format
 msgid "Change content type of %r from %r to %r"
 msgstr "Setze Inhaltstyp in %r von %r nach %r"
 
-#: ../wc/proxy/Headers.py:287
+#: ../wc/proxy/Headers.py:289
 #, python-format
 msgid "Set content type of %r to %r"
 msgstr "Setze Content-Type von %r nach %r"
 
-#: ../wc/proxy/Headers.py:349
+#: ../wc/proxy/Headers.py:351
 #, python-format
 msgid "unsupported encoding: %r"
 msgstr "Nicht unterstütztes Encoding: %r"
@@ -416,50 +407,50 @@ msgstr "Keine Antwort vom Server"
 msgid "Server did not respond"
 msgstr "Server hat nicht geantwortet"
 
-#: ../wc/proxy/HttpClient.py:123
+#: ../wc/proxy/HttpClient.py:125
 #, python-format
 msgid "Proxy Error %d %s"
 msgstr "Proxy Fehler %d %s"
 
-#: ../wc/proxy/HttpClient.py:203
+#: ../wc/proxy/HttpClient.py:207
 msgid "Method not allowed"
 msgstr "Anfrage nicht erlaubt"
 
-#: ../wc/proxy/HttpClient.py:209
+#: ../wc/proxy/HttpClient.py:213
 msgid "Empty URL"
 msgstr "Leere URL"
 
-#: ../wc/proxy/HttpClient.py:212
+#: ../wc/proxy/HttpClient.py:216
 msgid "HTTP version not supported"
 msgstr "HTTP Version wird nicht unterstützt"
 
-#: ../wc/proxy/HttpClient.py:229
+#: ../wc/proxy/HttpClient.py:233
 msgid "URL too long"
 msgstr "URL zu lang"
 
-#: ../wc/proxy/HttpClient.py:230
+#: ../wc/proxy/HttpClient.py:234
 #, python-format
 msgid "URL length limit is %d bytes."
 msgstr "URL Längenbegrenzung ist %d Byte."
 
-#: ../wc/proxy/HttpClient.py:258
+#: ../wc/proxy/HttpClient.py:262
 msgid "Forbidden"
 msgstr "Verboten"
 
-#: ../wc/proxy/HttpClient.py:310 ../wc/proxy/HttpClient.py:320
+#: ../wc/proxy/HttpClient.py:327 ../wc/proxy/HttpClient.py:337
 msgid "Bad Request"
 msgstr "Schlechte Anfrage"
 
-#: ../wc/proxy/HttpClient.py:340 ../wc/proxy/HttpClient.py:351
-#: ../wc/proxy/HttpClient.py:362
+#: ../wc/proxy/HttpClient.py:357 ../wc/proxy/HttpClient.py:368
+#: ../wc/proxy/HttpClient.py:379
 msgid "Proxy Authentication Required"
 msgstr "Proxy Autorisierung benötigt"
 
-#: ../wc/proxy/HttpClient.py:487 ../wc/proxy/HttpServer.py:403
+#: ../wc/proxy/HttpClient.py:504 ../wc/proxy/HttpServer.py:403
 msgid "Moved Temporarily"
 msgstr "Vorübergehend verschoben"
 
-#: ../wc/proxy/HttpClient.py:617
+#: ../wc/proxy/HttpClient.py:634
 msgid "Invalid Method"
 msgstr "Ungültige Anfrage"
 
@@ -1013,9 +1004,10 @@ msgstr ""
 "zutrifft wird der Rechnername und der Pfad dekodiert, um Verschleierungs-"
 "Attacken zu vermeiden."
 
-#: ../templates/classic/blocked.html:22
-msgid "Blocked by ${ruletitle}."
-msgstr "Blockiert von ${ruletitle}."
+#: ../templates/classic/blocked.html:15
+#, fuzzy
+msgid "Blocked URL"
+msgstr "Blockierte Bild URL"
 
 #: ../templates/classic/macros/rules.html:363
 msgid "Blocked image URL"
@@ -1059,6 +1051,11 @@ msgstr ""
 
 #: ../templates/classic/help.html:97 ../templates/classic/help.html:184
 msgid "Configuration rules"
+msgstr "Konfigurationsregeln"
+
+#: ../templates/classic/blocked.html:21
+#, fuzzy
+msgid "Configure"
 msgstr "Konfigurationsregeln"
 
 #: ../templates/classic/config.html:115
@@ -2538,6 +2535,10 @@ msgstr "Benutzername zur Proxy Authentifizierung"
 msgid "Value"
 msgstr "Wert"
 
+#: ../templates/classic/blocked.html:16
+msgid "View"
+msgstr ""
+
 #: ../templates/classic/macros/standard.html:114
 msgid "WebCleaner feedback information"
 msgstr "WebCleaner Feedback Information"
@@ -2766,6 +2767,15 @@ msgstr "siehe Fußnote 6"
 #: ../templates/classic/rated.html:21
 msgid "supply a different rating for this page"
 msgstr "ändern Sie die Bewertung dieser Seite"
+
+#~ msgid "Not acceptable"
+#~ msgstr "Ungültig"
+
+#~ msgid "Maximum data size (%s) exceeded"
+#~ msgstr "Maximale Datengröße (%s) überschritten"
+
+#~ msgid "Blocked by ${ruletitle}."
+#~ msgstr "Blockiert von ${ruletitle}."
 
 #~ msgid "Search in ${site}"
 #~ msgstr "Suche in ${site}"
