@@ -20,6 +20,7 @@
   <title lang="de">Entferne &lt;noframes&gt;</title>
   <title lang="en">Remove &lt;noframes&gt;</title>
   <description lang="en">Most of the browsers have frames so they dont need the &lt;noframes&gt; content.</description>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <nocomments sid="wc.371">
@@ -144,7 +145,9 @@
   <title lang="en">Remove &lt;iframe&gt;</title>
   <description lang="de">&lt;iframe&gt; Inhalte sind fast immer Werbungen.</description>
   <description lang="en">&lt;iframe&gt; content is almost always advertising.</description>
-  <matchurl>imdb.com</matchurl>
+  <matchurl>digg\.com</matchurl>
+  <matchurl>imdb\.com</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.77"
