@@ -1,7 +1,5 @@
 TODO
 
-- script src: http://sm7.sitemeter.com
-
 - test HTTP pipelining (esp. the order of the responses)
 
 - check the order in which client (or server) headers are mangled,
