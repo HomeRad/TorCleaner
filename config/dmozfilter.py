@@ -7,10 +7,9 @@ zcat content.rdf.u8.gz | dmozfilter.py | gzip --best > dmoz.rdf.stripped.gz
 Note: the dmoz content license is not GPL compatible, so you may not
 distribute it with WebCleaner!
 """
-import sys
-line = sys.stdin.readline()
+import fileinput
 topic = None
-while line:
+for line in fileinput.input()
     line = line.strip()
     if line.startswith("<Topic r:id="):
         _topic = line[13:line.rindex('"')]
@@ -20,4 +19,3 @@ while line:
         topic = None
     if topic=='kids_and_teens':
         print line
-    line = sys.stdin.readline()
