@@ -302,6 +302,7 @@ class HtmlSecurity (object):
                 # content can be "1;url=http://;url=javascript:alert('boo')"
                 # so be sure to check all urls
                 for url in url.split(";url="):
+                    url = wc.strformat.unquote(url, matching=True)
                     url_ok = url.startswith("http://") or \
                              url.startswith("https://")
                     if not url_ok and ":" in url:
