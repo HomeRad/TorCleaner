@@ -1,6 +1,7 @@
 2.37 "" (released xx.xx.2006)
 
-  * In addition to http:// allow also https:// redirects.
+  * Improve redirection test by stripping optional quotes from
+    the redirection URL and also allow https:// redirects.
     Type: bugfix
     Changed: wc/filter/html/HtmlSecurity.py
 
