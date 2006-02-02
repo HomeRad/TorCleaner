@@ -1266,10 +1266,9 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
      */
     ok = js_CheckPrincipalsAccess(cx, scopeobj, principals,
                                   cx->runtime->atomState.evalAtom);
-    if (!ok)
-        goto out;
+    if (ok)
+        ok = js_Execute(cx, scopeobj, script, caller, JSFRAME_EVAL, rval);
 
-    ok = js_Execute(cx, scopeobj, script, caller, JSFRAME_EVAL, rval);
     JS_DestroyScript(cx, script);
 
 out:
@@ -2269,7 +2268,7 @@ js_FreeSlot(JSContext *cx, JSObject *obj, uint32 slot)
 #if JS_BUG_EMPTY_INDEX_ZERO
 #define CHECK_FOR_EMPTY_INDEX(id)                                             \
     JS_BEGIN_MACRO                                                            \
-        if (JSSTRING_LENGTH(_str) == 0)                                       \
+        if (JSSTRING_LENGTH(str_) == 0)                                       \
             id = JSVAL_ZERO;                                                  \
     JS_END_MACRO
 #else
@@ -2905,6 +2904,7 @@ js_GetProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
         return JS_FALSE;
     if (!prop) {
         jsval default_val;
+        jsbytecode *pc;
 
 #if JS_BUG_NULL_INDEX_PROPS
         /* Indexed properties defaulted to null in old versions. */
@@ -2923,27 +2923,34 @@ js_GetProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
          * Give a strict warning if foo.bar is evaluated by a script for an
          * object foo with no property named 'bar'.
          */
-        if (JS_HAS_STRICT_OPTION(cx) &&
-            *vp == default_val &&
-            cx->fp && cx->fp->pc &&
-            (*cx->fp->pc == JSOP_GETPROP || *cx->fp->pc == JSOP_GETELEM))
-        {
-            jsbytecode *pc;
+        if (*vp == default_val && cx->fp && (pc = cx->fp->pc)) {
+            JSOp op;
+            uintN flags;
             JSString *str;
 
-            /* Kludge to allow (typeof foo == "undefined") tests. */
-            JS_ASSERT(cx->fp->script);
-            pc = cx->fp->pc;
-            pc += js_CodeSpec[*pc].length;
-            if (Detecting(cx, pc))
-                return JS_TRUE;
+            op = *pc;
+            if (op == JSOP_GETXPROP || op == JSOP_GETXELEM) {
+                flags = JSREPORT_ERROR;
+            } else {
+                if (!JS_HAS_STRICT_OPTION(cx) ||
+                    (op != JSOP_GETPROP && op != JSOP_GETELEM)) {
+                    return JS_TRUE;
+                }
+
+                /* Kludge to allow (typeof foo == "undefined") tests. */
+                JS_ASSERT(cx->fp->script);
+                pc += js_CodeSpec[op].length;
+                if (Detecting(cx, pc))
+                    return JS_TRUE;
+
+                flags = JSREPORT_WARNING | JSREPORT_STRICT;
+            }
 
             /* Ok, bad undefined property reference: whine about it. */
             str = js_DecompileValueGenerator(cx, JSDVG_IGNORE_STACK,
                                              ID_TO_VALUE(id), NULL);
             if (!str ||
-                !JS_ReportErrorFlagsAndNumber(cx,
-                                              JSREPORT_WARNING|JSREPORT_STRICT,
+                !JS_ReportErrorFlagsAndNumber(cx, flags,
                                               js_GetErrorMessage, NULL,
                                               JSMSG_UNDEFINED_PROP,
                                               JS_GetStringBytes(str))) {
