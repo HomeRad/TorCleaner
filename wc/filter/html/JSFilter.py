@@ -112,7 +112,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         Check if attrs[name] javascript opens a popup window.
         """
         assert wc.log.debug(wc.LOG_JS, "%s jsPopup %r", self, attrs[name])
-        val = wc.HtmlParser.resolve_html_entities(attrs[name])
+        val = wc.HtmlParser.resolve_entities(attrs[name])
         if not val:
             return
         self.js_env.listeners.append(self)
@@ -296,7 +296,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             if url:
                 # sanitize script src url
                 url = _replace_ws(u'', url)
-                url = wc.HtmlParser.resolve_html_entities(url)
+                url = wc.HtmlParser.resolve_entities(url)
                 # some urls are relative, need to make absolut
                 if self.base_url:
                     url = urlparse.urljoin(self.base_url, url)
