@@ -147,6 +147,7 @@
   <description lang="en">&lt;iframe&gt; content is almost always advertising.</description>
   <matchurl>digg\.com</matchurl>
   <matchurl>imdb\.com</matchurl>
+  <matchurl>diveintogreasemonkey\.org</matchurl>
   <replacement part="complete"/>
 </htmlrewrite>
 
