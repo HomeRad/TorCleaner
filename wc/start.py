@@ -25,6 +25,7 @@ import wc.url
 import wc.log
 import wc.proxy
 import wc.proxy.mainloop
+import wc.proxy.timer
 import wc.proxy.dns_lookups
 import wc.filter
 import wc.filter.VirusFilter
@@ -37,8 +38,13 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
     This function does not return until Ctrl-C is pressed.
     """
     # init logging
-    wc.initlog(os.path.join(confdir, "logging.conf"),
-               wc.Name, filelogs=filelogs)
+    logconf = os.path.join(confdir, "logging.conf")
+    def checklog ():
+        if wc.fileutil.has_changed(logconf):
+            wc.initlog(logconf, wc.Name, filelogs=filelogs)
+        # check regularly for a changed logging configuration
+        wc.proxy.timer.make_timer(60, checklog)
+    checklog()
     # read configuration
     config = wc.configuration.init(confdir)
     wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
