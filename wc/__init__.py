@@ -24,6 +24,7 @@ if not hasattr(sys, "version_info"):
 if sys.version_info < (2, 4, 0, 'final', 0):
     raise SystemExit("This program requires Python 2.4 or later.")
 import os
+import ConfigParser
 import logging.config
 
 import _webcleaner2_configdata as configdata
@@ -164,7 +165,10 @@ def initlog (filename, appname, filelogs=True):
     """
     Initialize logfiles and configuration.
     """
-    logging.config.fileConfig(filename)
+    try:
+        logging.config.fileConfig(filename)
+    except ConfigParser.ParsingError, msg:
+        print >>sys.stderr, "Error parsing logging configuration:", msg
     if filelogs:
         trydirs = []
         if os.name == "nt":
