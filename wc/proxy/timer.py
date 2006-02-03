@@ -27,19 +27,19 @@
 # SUCH DAMAGE.
 
 import time
+import heapq
 import wc.log
 
 
-TIMERS = [] # list of (time, function)
+timers = [] # list of (time, function)
 
 def make_timer (delay, callback):
     """
     After DELAY seconds, run the CALLBACK function.
     """
     assert wc.log.debug(wc.LOG_PROXY,
-                        "Adding %s to %d timers", callback, len(TIMERS))
-    TIMERS.append( (time.time()+delay, callback) )
-    TIMERS.sort()
+                        "Adding %s to %d timers", callback, len(timers))
+    heapq.heappush(timers, (time.time()+delay, callback))
 
 
 MAX_TIMEOUT = 60
@@ -48,16 +48,14 @@ def run_timers ():
     Run all timers ready to be run, and return seconds to the next timer.
     """
     # Note that we will run timers that are scheduled to be run within
-    # 10 ms.  This is because the select() statement doesn't have
+    # 10 ms. This is because the select() statement doesn't have
     # infinite precision and may end up returning slightly earlier.
     # We're willing to run the event a few millisecond earlier.
-    while TIMERS and TIMERS[0][0] <= time.time() + 0.01:
+    while timers and timers[0][0] <= time.time() + 0.01:
         # This timeout handler should be called
-        callback = TIMERS[0][1]
-        del TIMERS[0]
-        callback()
-    if TIMERS:
-        return min(TIMERS[0][0] - time.time(), MAX_TIMEOUT)
+        heapq.heappop(timers)[1]()
+    if timers:
+        return min(timers[0][0] - time.time(), MAX_TIMEOUT)
     else:
         return MAX_TIMEOUT
 
