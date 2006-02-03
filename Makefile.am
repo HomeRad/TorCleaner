@@ -17,8 +17,6 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
-PYCHECKER := env PYTHONVER=$(PYVER) pychecker
-PYCHECKEROPTS := -F test/pycheckrc
 PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint.$(PYTHON)
 PYLINTOPTS :=
 PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
@@ -177,17 +175,12 @@ homepage-zapper: md5sums
 	  cp config/blacklists/$$d/*.gz $(HTMLDIR)/htdocs/filter/blacklists/$$d/; \
 	done
 
-.PHONY: pycheck
-pycheck: localbuild
-	$(PYCHECKER) $(PYCHECKEROPTS) $(PYFILES) $(TESTFILES)
-
 .PHONY: pylint
 pylint: localbuild
 	$(PYLINT) $(PYLINTOPTS) $(PYLINTFILES) $(TESTFILES)
 
 .PHONY: pyflakes
 pyflakes:
-	py-find-nocoding .
 	$(PYFLAKES) $(CHECKFILES) | \
 	  grep -v "redefinition of unused 'wc'" | \
 	  grep -v "undefined name '_'"
@@ -219,6 +212,6 @@ reindent:
 # various python check scripts
 .PHONY: various
 various:
-	$(PYTHON) $$HOME/src/python-svn/Tools/scripts/checkappend.py $(CHECKFILES)
-	$(PYTHON) $$HOME/src/python-svn/Tools/scripts/cleanfuture.py -r $(CHECKFILES)
-	$(PYTHON) $$HOME/src/python-svn/Tools/scripts/findnocoding.py $(CHECKFILES)
+	py-check-append $(CHECKFILES)
+	py-clean-future -r $(CHECKFILES)
+	py-find-nocoding $(CHECKFILES)
