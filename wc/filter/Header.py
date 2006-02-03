@@ -113,23 +113,21 @@ class Header (wc.filter.Filter.Filter):
                     break
         wc.proxy.Headers.remove_headers(data, delete)
         for name, val in attrs['header_add'][stage]:
-            assert wc.log.debug(wc.LOG_FILTER,
-                         "%s adding header %r: %r", self, name, val)
             if "$" in val:
                 # substitute template
                 d = {"host": attrs['headers']['client'].get('Host', '')}
-                t = string.Template(val)
-                val = t.safe_substitute(d)
+                val = string.Template(val).safe_substitute(d)
+            assert wc.log.debug(wc.LOG_FILTER,
+                         "%s adding header %r: %r", self, name, val)
             data[name] = val+"\r"
         for name, val in attrs['header_replace'][stage]:
-            assert wc.log.debug(wc.LOG_FILTER,
-                         "%s replacing header %r: %r", self, name, val)
             if name not in data:
                 continue
             if "$" in val:
                 # substitute template
                 d = {"host": attrs['headers']['client'].get('Host', '')}
-                t = string.Template(val)
-                val = t.safe_substitute(d)
+                val = string.Template(val).safe_substitute(d)
+            assert wc.log.debug(wc.LOG_FILTER,
+                         "%s replacing header %r: %r", self, name, val)
             data[name] = val+"\r"
         return data
