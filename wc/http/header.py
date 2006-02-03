@@ -65,3 +65,18 @@ class WcMessage (rfc822.Message, object):
         Copy these headers into a new WcHeaders object.
         """
         return WcMessage(fp=StringIO.StringIO("".join(self.headers)))
+
+    def iterkeys (self):
+        """Get all of a message's header field names."""
+        return self.dict.iterkeys()
+
+    def itervalues (self):
+        """Get all of a message's header field values."""
+        return self.dict.itervalues()
+
+    def iteritems (self):
+        """Get all of a message's headers.
+
+        Returns a list of name, value tuples.
+        """
+        return self.dict.iteritems()

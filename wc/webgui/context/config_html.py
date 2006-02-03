@@ -445,7 +445,7 @@ def _form_filtermodules (form):
     Form handling for filter module list changes.
     """
     newfilters = []
-    for key in form.keys():
+    for key in form.iterkeys():
         if key.startswith('filter'):
             newfilters.append(key[6:])
     enabled = []

@@ -63,7 +63,7 @@ class ServerPool (object):
         """
         How many busy server objects connect to this address?
         """
-        states = self.smap.get(addr, {}).values()
+        states = self.smap.get(addr, {}).itervalues()
         return len([x for x in states if x[0] == 'busy'])
 
     def reserve_server (self, addr):
@@ -150,8 +150,8 @@ class ServerPool (object):
         assert wc.log.debug(wc.LOG_PROXY, "pool expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
-        for addr, dataset in self.smap.items():
-            for server, status in dataset.items():
+        for addr, dataset in self.smap.iteritems():
+            for server, status in dataset.iteritems():
                 if status[0] == 'available' and status[1] < expire_time:
                     # It's old .. let's get rid of it
                     to_expire.append((addr, server))

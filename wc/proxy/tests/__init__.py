@@ -730,7 +730,7 @@ def make_suite (prefix, namespace):
     @return: test suite
     @rtype: unittest.TestSuite
     """
-    classes = [value for key, value in namespace.items() \
+    classes = [value for key, value in namespace.iteritems() \
                if key.startswith(prefix) and issubclass(value, ProxyTest)]
     loader = unittest.defaultTestLoader
     tests = [loader.loadTestsFromTestCase(clazz) for clazz in classes]

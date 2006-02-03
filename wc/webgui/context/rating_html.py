@@ -212,7 +212,7 @@ def _form_apply ():
     """
     rating = _Rating(url, generic)
     rating.remove_categories()
-    for catname, value in values.items():
+    for catname, value in values.iteritems():
         category = _get_category(catname)
         if category.iterable:
             value = [x for x in value if value[x]][0]
@@ -251,7 +251,7 @@ def _form_load ():
     if url in rating_store:
         rating = rating_store[url]
         generic = rating.generic
-        for catname, value in rating.category_values.items():
+        for catname, value in rating.category_values.iteritems():
             category = _get_category(catname)
             if category.iterable:
                 for x in category.values:

@@ -183,7 +183,7 @@ def create_cert_request (pkey, digest="md5", **name):
     req = crypto.X509Req()
     subj = req.get_subject()
 
-    for (key, value) in name.items():
+    for key, value in name.iteritems():
         # Note: the CN name should be a multiple of 4 since the pyopenssl
         # wrapper has a bug treating some strings as UniversalString.
         # Workaround here is to fill the value up with spaces.

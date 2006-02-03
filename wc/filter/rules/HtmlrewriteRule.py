@@ -137,7 +137,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             self.match_tag = self._match_tag
         else:
             self.match_tag = self._match_tag_ro
-        for attr, val in self.attrs.items():
+        for attr, val in self.attrs.iteritems():
             self.attrs_ro[attr] = re.compile(val)
         if self.enclosed:
             for tag in NO_CLOSE_TAGS:
@@ -198,7 +198,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         Return True iff this rule matches given attributes.
         """
         occurred = []
-        for attr, val in attrs.items():
+        for attr, val in attrs.iteritems():
             # attr or val could be None
             if attr is None:
                 attr = ''
@@ -247,7 +247,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
             return [starttype, tag, attrs]
         newattrs = {}
         # look for matching tag attributes
-        for attr, val in attrs.items():
+        for attr, val in attrs.iteritems():
             ro = self.attrs_ro.get(attr)
             if ro:
                 mo = ro.search(val)
@@ -310,7 +310,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
-        for key, val in self.attrs.items():
+        for key, val in self.attrs.iteritems():
             s += u'\n  <attr name="%s"' % wc.XmlUtils.xmlquoteattr(key)
             if val:
                 s += u">%s</attr>" % wc.XmlUtils.xmlquote(val)
@@ -333,7 +333,7 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         """
         s = super(HtmlrewriteRule, self).__str__()
         s += "tag %s\n" % self.tag.encode("iso-8859-1")
-        for key, val in self.attrs.items():
+        for key, val in self.attrs.iteritems():
             s += "attr: %s, %r\n" % (key.encode("iso-8859-1"),
                                      val.encode("iso-8859-1"))
         s += "enclosed %r\n" % self.enclosed.encode("iso-8859-1")

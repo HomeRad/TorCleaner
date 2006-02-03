@@ -52,7 +52,7 @@ def get_header_challenges (headers, key):
     auths = {}
     for auth in headers.getheaders(key):
         assert wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
-        for key, data in parse_challenges(auth).items():
+        for key, data in parse_challenges(auth).iteritems():
             auths.setdefault(key, []).extend(data)
     assert wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
     return auths
@@ -104,7 +104,7 @@ def get_header_credentials (headers, key):
     creds = {}
     for cred in headers.getheaders(key):
         assert wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
-        for key, data in parse_credentials(cred).items():
+        for key, data in parse_credentials(cred).iteritems():
             creds.setdefault(key, []).extend(data)
     assert wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
     return creds

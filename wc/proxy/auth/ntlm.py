@@ -174,7 +174,7 @@ def check_nonces ():
     Deprecate old nonces.
     """
     todelete = []
-    for nonce, value in nonces.items():
+    for nonce, value in nonces.iteritems():
         noncetime = time.time() - value
         if noncetime > max_noncesecs:
             todelete.append(nonce)

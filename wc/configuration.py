@@ -354,7 +354,7 @@ class Configuration (dict):
                         instance.addrule(rule)
             for stage in instance.stages:
                 self['filterlist'][stage].append(instance)
-        for filters in self['filterlist'].values():
+        for filters in self['filterlist'].itervalues():
             # see Filter.__cmp__ on how sorting is done
             filters.sort()
 
@@ -592,7 +592,7 @@ class WConfigParser (BaseParser):
         if self.error:
             return
         if name == 'webcleaner':
-            for key, val in attrs.items():
+            for key, val in attrs.iteritems():
                 self.config[key] = val
             for key in ('port', 'sslport', 'parentproxyport', 'timeout',
                         'auth_ntlm', 'colorize', 'development', 'try_google',

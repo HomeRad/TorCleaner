@@ -272,7 +272,7 @@ def rating_export (rating):
     """
     Return string representation of given rating data.
     """
-    return "\n".join([ "%s %s"%item for item in rating.items() ])
+    return "\n".join([ "%s %s"%item for item in rating.iteritems() ])
     # XXX
 
 

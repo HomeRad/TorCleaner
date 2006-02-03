@@ -72,7 +72,7 @@ class Rating (object):
         lines.append("url %s" % self.url)
         lines.append("generic %s" % str(self.generic))
         lines.append("modified %d" % self.modified)
-        for name, value in self.category_values.items():
+        for name, value in self.category_values.iteritems():
             category = wc.filter.rating.get_category(name)
             if not category.iterable:
                 value = wc.filter.rating.category.string_from_intrange(value)

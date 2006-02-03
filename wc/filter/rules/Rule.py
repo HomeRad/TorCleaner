@@ -124,10 +124,10 @@ class Rule (object):
         Update rule title and description with given rule data.
         """
         chg = False
-        for key, value in rule.titles.items():
+        for key, value in rule.titles.iteritems():
             if not self.titles.has_key(key):
                 oldvalue = ""
-            elif self.titles[key]!=value:
+            elif self.titles[key] != value:
                 oldvalue = self.titles[key]
             else:
                 oldvalue = None
@@ -138,10 +138,10 @@ class Rule (object):
                 print >> log, " ", repr(oldvalue), "==>", repr(value)
                 if not dryrun:
                     self.titles[key] = value
-        for key, value in rule.descriptions.items():
+        for key, value in rule.descriptions.iteritems():
             if not self.descriptions.has_key(key):
                 oldvalue = ""
-            elif self.descriptions[key]!=value:
+            elif self.descriptions[key] != value:
                 oldvalue = self.descriptions[key]
             else:
                 oldvalue = None

@@ -471,7 +471,7 @@ class TALGenerator (object):
                 del repldict[key]
             newlist.append(item)
         # Add dynamic-only attributes
-        for key, (expr, xlat, msgid) in repldict.items():
+        for key, (expr, xlat, msgid) in repldict.iteritems():
             newlist.append((key, None, "insert", expr, xlat, msgid))
         return newlist
 
@@ -486,20 +486,20 @@ class TALGenerator (object):
             return
 
         self.position = position
-        for key, value in taldict.items():
+        for key, value in taldict.iteritems():
             if key not in TALDefs.KNOWN_TAL_ATTRIBUTES:
                 raise TALError, ("bad TAL attribute: " + repr(key), position)
             if not (value or key == 'omit-tag'):
                 raise TALError, ("missing value for TAL attribute: " +
                                  repr(key), position)
-        for key, value in metaldict.items():
+        for key, value in metaldict.iteritems():
             if key not in TALDefs.KNOWN_METAL_ATTRIBUTES:
                 raise METALError, ("bad METAL attribute: " + repr(key),
                                    position)
             if not value:
                 raise TALError, ("missing value for METAL attribute: " +
                                  repr(key), position)
-        for key, value in i18ndict.items():
+        for key, value in i18ndict.iteritems():
             if key not in TALDefs.KNOWN_I18N_ATTRIBUTES:
                 raise I18NError, ("bad i18n attribute: "+repr(key), position)
             if not value and key in ("attributes", "data", "id"):

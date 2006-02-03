@@ -85,7 +85,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         {string -> string -> bool}
         """
         self.values = {}
-        for name, value in self.ratings.items():
+        for name, value in self.ratings.iteritems():
             category = wc.filter.rating.get_category(name)
             if category.iterable:
                 self.values[name] = {}
@@ -110,7 +110,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         """
         Return None if allowed, else a reason of why not.
         """
-        for catname, value in rating.category_values.items():
+        for catname, value in rating.category_values.iteritems():
             if catname not in self.ratings:
                 wc.log.warn(wc.LOG_FILTER,
                             "Unknown rating category %r specified", catname)
@@ -139,7 +139,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.url:
             s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
-        for category, value in self.ratings.items():
+        for category, value in self.ratings.iteritems():
             if value is not None:
                 s += u"\n  <category name=\"%s\">%s</category>" % \
                       (wc.XmlUtils.xmlquoteattr(category),

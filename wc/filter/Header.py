@@ -103,7 +103,7 @@ class Header (wc.filter.Filter.Filter):
         delete = sets.Set()
         # stage is STAGE_REQUEST_HEADER or STAGE_RESPONSE_HEADER
         stage = attrs['filterstage']
-        for h in data.keys():
+        for h in data.iterkeys():
             for name_match in attrs['header_delete'][stage]:
                 if name_match(h):
                     assert wc.log.debug(wc.LOG_FILTER,

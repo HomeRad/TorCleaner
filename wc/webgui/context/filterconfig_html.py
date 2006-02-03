@@ -41,7 +41,7 @@ from wc.filter.rating import get_category as _get_category
 from wc.filter.rating.category import intrange_from_string as \
      _intrange_from_string
 
-xmlreplacetypenames = sorted(replacetypenums.keys())
+xmlreplacetypenames = sorted(replacetypenums.iterkeys())
 
 # config vars
 info = {
@@ -329,7 +329,7 @@ def _form_selrule (index):
         elif currule.name == u"xmlrewrite":
             global curreplacetypes
             curreplacetypes = {}
-            for name, num in replacetypenums.items():
+            for name, num in replacetypenums.iteritems():
                 curreplacetypes[name] = (currule.replacetypenum == num)
         elif currule.name == u"header":
             global curfilterstage, curheaderaction

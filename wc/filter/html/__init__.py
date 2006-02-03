@@ -46,7 +46,7 @@ def _startout (out, item, start=u"<", end=u">"):
     """
     out.write(start)
     out.write(item[1])
-    for name, val in item[2].items():
+    for name, val in item[2].iteritems():
         out.write(u' %s' % name)
         if val:
             out.write(u'="%s"' % wc.HtmlParser.htmllib.quote_attrval(val))

@@ -41,7 +41,7 @@ def _startout (out, item, start=u"<", end=u">"):
     quoteattr = wc.XmlUtils.xmlquoteattr
     out.write(start)
     out.write(quote(item[1]))
-    for name, val in item[2].items():
+    for name, val in item[2].iteritems():
         out.write(u' %s="%s"' % (quote(name), quoteattr(val)))
     out.write(end)
 

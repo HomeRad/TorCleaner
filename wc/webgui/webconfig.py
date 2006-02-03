@@ -184,7 +184,7 @@ def get_context (dirs, form, localcontext, hostname, lang):
         context_add(context, attr, getattr(template_context, attr))
     # add local context
     if localcontext is not None:
-        for key, value in localcontext.items():
+        for key, value in localcontext.iteritems():
             context_add(context, key, value)
     return context, status
 

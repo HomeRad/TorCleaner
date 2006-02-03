@@ -81,7 +81,7 @@ def decode (page):
         # remove content-encoding header
         headers = {}
         ceheader = re.compile(r"(?i)content-encoding:")
-        for h in page.info().keys():
+        for h in page.info().iterkeys():
             if not ceheader.match(h):
                 headers[h] = page.info()[h]
         newpage = urllib.addinfourl(fp, headers, page.geturl())

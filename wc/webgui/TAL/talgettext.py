@@ -286,7 +286,7 @@ def main ():
         outfile = file(outfile, update_mode and "a" or "w")
 
     catalog = {}
-    for domain in engine.catalog.keys():
+    for domain in engine.catalog.iterkeys():
         catalog.update(engine.catalog[domain])
 
     messages = catalog.copy()
