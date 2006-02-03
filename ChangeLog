@@ -24,6 +24,12 @@
     Type: feature
     Changed: wc/filter/html/HtmlSecurity.py
 
+  * The list of pending events is now stored in a heap instead of
+    a manually sorted list. This is slightly faster (if the _heapq
+    C module is available that is).
+    Type: Optimization
+    Changed: wc/proxy/timer.py
+
 2.36 "The Aristocrats" (released 9.1.2006)
 
   * Improve JavaScript parsing by normalizing whitespace. Avoids some
