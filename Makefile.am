@@ -28,6 +28,7 @@ PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
 PYLINTIGNORE = wc/win32start.py
 PYLINTFILES = $(filter-out $(PYLINTIGNORE),$(PYFILES))
 PYFLAKES:=pyflakes
+CHECKFILES = *.py webcleaner* test tests wc config
 # test files
 TESTFILES := test/*.py
 # "runit" service directory
@@ -187,7 +188,7 @@ pylint: localbuild
 .PHONY: pyflakes
 pyflakes:
 	py-find-nocoding .
-	$(PYFLAKES) *.py webcleaner* test tests wc config | \
+	$(PYFLAKES) $(CHECKFILES) | \
 	  grep -v "redefinition of unused 'wc'" | \
 	  grep -v "undefined name '_'"
 
@@ -215,3 +216,9 @@ update-blacklists:
 reindent:
 	$(PYTHON) config/reindent.py -r -v wc
 
+# various python check scripts
+.PHONY: various
+various:
+	$(PYTHON) $$HOME/src/python-svn/Tools/scripts/checkappend.py $(CHECKFILES)
+	$(PYTHON) $$HOME/src/python-svn/Tools/scripts/cleanfuture.py -r $(CHECKFILES)
+	$(PYTHON) $$HOME/src/python-svn/Tools/scripts/findnocoding.py $(CHECKFILES)
