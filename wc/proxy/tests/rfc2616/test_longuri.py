@@ -18,7 +18,8 @@
 Test long URIs.
 """
 
-from wc.proxy.tests import ProxyTest, make_suite
+from tests import make_suite
+from wc.proxy.tests import ProxyTest
 
 
 class LonguriTest (ProxyTest):

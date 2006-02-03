@@ -721,17 +721,3 @@ class ProxyTest (tests.StandardTest):
             self.check_response(response)
         finally:
             self.server.server_close()
-
-
-def make_suite (prefix, namespace):
-    """
-    Add all ProxyTest classes starting with given prefix to a test suite.
-
-    @return: test suite
-    @rtype: unittest.TestSuite
-    """
-    classes = [value for key, value in namespace.iteritems() \
-               if key.startswith(prefix) and issubclass(value, ProxyTest)]
-    loader = unittest.defaultTestLoader
-    tests = [loader.loadTestsFromTestCase(clazz) for clazz in classes]
-    return unittest.TestSuite(tests)
