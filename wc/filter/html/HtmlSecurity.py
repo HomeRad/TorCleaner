@@ -85,6 +85,9 @@ def check_length (attrs, name, htmlfilter, maxlen=4):
     # Assume that if we want a specific length whitespace is not
     # allowed in the attribute value.
     value = value.strip()
+    # some sites have a double percent
+    if value.endswith('%%'):
+        value = value[:-1]
     attrs[name] = value
     # check
     tvalue = value.lower()
