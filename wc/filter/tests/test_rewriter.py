@@ -297,6 +297,12 @@ class TestRewriter (tests.StandardTest):
         self.filt("""<table width="25%"><a href="/pagead/iclk?sa=l&ai=B"></table>""",
                   "", url="www.google.com")
 
+    def test_script (self):
+        self.filt("""<script src="https://localhost/1.js" type="text/javascript"></script>""",
+                  """<script src="https://localhost/1.js" type="text/javascript"></script>""")
+        self.filt("""<script type="text/javascript"></script>""",
+                  """""")
+
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)

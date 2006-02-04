@@ -247,6 +247,8 @@ class JSFilter (wc.js.JSListener.JSListener):
            self.htmlparser.tagbuf[-2][0] != wc.filter.html.STARTTAG or \
            self.htmlparser.tagbuf[-2][1] != 'script':
             # syntax error, ignore
+            assert wc.log.debug(wc.LOG_JS,
+                    "JS syntax error, self.tagbuf %r", self.htmlparser.tagbuf)
             return
         js_ok, js_lang = wc.js.get_js_data(self.htmlparser.tagbuf[-2][2])
         if not js_ok:
@@ -264,6 +266,8 @@ class JSFilter (wc.js.JSListener.JSListener):
             if not attrs.get("src"):
                 del self.htmlparser.tagbuf[-1]
                 del self.htmlparser.tagbuf[-1]
+            else:
+                self.htmlparser.tagbuf.append(item)
             return
         # clean script from cruft
         script = wc.js.clean(script, jscomments=self.jscomments)
