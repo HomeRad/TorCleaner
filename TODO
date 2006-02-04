@@ -2,8 +2,8 @@ TODO
 
 - test HTTP pipelining (esp. the order of the responses)
 
-- check the order in which client (or server) headers are mangled,
-  especially hop-by-hop header removal
+- Check the order in which client (or server) headers are mangled,
+  especially hop-by-hop header removal. Simplify the header mangling.
 
 - Add more HTTP RFC2616 unit tests.
 
