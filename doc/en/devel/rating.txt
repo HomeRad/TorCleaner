@@ -2,26 +2,84 @@
   :navigation.name: Ratings
   :navigation.visible: 0
 
-============================
-Specification of rating data
-============================
+====================================
+Specification of content rating data
+====================================
 
-A rating database consists of
+Rating
+======
+A rating is a dictionary filled with key/value items.
+Each key/value item is an instance of a defined rating format.
 
-- a set of single ratings with unique URLs
+Rating format
+=============
+A rating format defines a unique, case insensitive name, and a range
+of valid values along with their interpretation.
 
-A single rating consists of
+URL rating
+==========
+A URL rating relates a rating to one or more URLs. It consists of
+a rating, an URL and an optional generic flag specifying that all
+URLs with the given URL as base path apply to the rating.
 
-- a normed http: URL, satisfying the _safe* patterns in wc/url.py
-- the rating service name this rating applies to
-- a boolean flag specifying if the URL is generic or not
-- a set of categories with unique names
+Rating service
+==============
+A complete rating service defines a unique name and the used
+rating format. The service name should be an URL with human-viewable
+information about the service.
 
-A single category consists of
+Furthermore the service delivers ratings of given URLs.
 
-- a name
-- a value
-- an indicator about the value vadility which is either
+WebCleaner service
+==================
+As you might have guessed by now, the WebCleaner software delivers
+both a full featured rating service, and means to deploy and
+enforce it on your computer. You can even submit your own ratings
+to the service. Below you will find a short description of the
+service. For more information, visit the
+WebCleaner rating service page (XXX todo).
 
-  + a set of allowed values
-  + a range specification
+Rating formats
+~~~~~~~~~~~~~~
+Several rating formats are defined by WebCleaner:
+
+::
+
+ Name: WC-Agerange
+ Values: integer ranges of the format INT "-" INT?
+ Interpretion: Content is only suited for people of an age in the
+ given range. If the second range value is missing, it is considered
+ infinite.
+ 
+ Name: WC-Violence, WC-Sex or WC-Language
+ Values: none, mild, heavy
+ Interpretation: Content contains violence, sex or foul language in
+ the given degree: either none, some or a lot of it.
+
+URL ratings
+~~~~~~~~~~~
+XXX todo
+
+Service delivery
+~~~~~~~~~~~~~~~~
+XXX todo
+
+HTTP Header
+-----------
+XXX todo
+::
+
+ X-Rating: <service URL>
+ X-Rating-WC-Agerange: 10-
+
+HTML meta data
+--------------
+XXX todo
+
+CGI interface
+-------------
+XXX todo
+
+Examples
+~~~~~~~~
+XXX todo
