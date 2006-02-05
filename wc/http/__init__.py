@@ -21,7 +21,9 @@ HTTP related utility functions.
 import re
 import wc
 import wc.log
+import BaseHTTPServer
 
+responses = BaseHTTPServer.BaseHTTPRequestHandler.responses
 
 def parse_http_request (request):
     """
@@ -51,7 +53,6 @@ def parse_http_response (response, url):
     """
     parts = response.split(None, 2)
     if len(parts) == 2:
-        wc.log.warn(wc.LOG_PROXY, "empty response message from %r", url)
         parts += ['Bummer']
     elif len(parts) != 3:
         wc.log.warn(wc.LOG_PROXY, "invalid response %r from %r",
@@ -62,6 +63,9 @@ def parse_http_response (response, url):
                     parts[1], url)
         parts[1] = "200"
     parts[1] = int(parts[1])
+    if parts[1] in responses:
+        # use canonical response message
+        parts[2] = responses[parts[1]][0]
     version = parts[0].upper()
     parts[0] = parse_http_version(version)
     return parts
