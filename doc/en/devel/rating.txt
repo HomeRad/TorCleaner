@@ -41,45 +41,65 @@ WebCleaner rating service page (XXX todo).
 
 Rating formats
 ~~~~~~~~~~~~~~
-Several rating formats are defined by WebCleaner:
+The following rating formats are defined by WebCleaner:
 
 ::
 
- Name: WC-Agerange
- Values: integer ranges of the format INT "-" INT?
- Interpretion: Content is only suited for people of an age in the
- given range. If the second range value is missing, it is considered
- infinite.
- 
- Name: WC-Violence, WC-Sex or WC-Language
- Values: none, mild, heavy
- Interpretation: Content contains violence, sex or foul language in
- the given degree: either none, some or a lot of it.
+  +--------------+--------------+---------------------------------------+
+  | Name         |    Values    |  Interpretation                       |
+  +--------------+--------------+---------------------------------------+
+  | WC-Agerange  | INT "-" INT? | Content is only suited for people of  |
+  |              |              | an age in the given range.            |
+  |              |              | If the second range value is missing, |
+  |              |              | it is considered infinite.            |
+  +--------------+--------------+---------------------------------------+
+  | WC-Violence  | "none" or    | Content contains violence, sex or     |
+  | WC-Sex       | "mild" or    | foul language in the given degree:    |
+  | WC-Language  | "heavy"      | either none, some or a lot of it.     |
+  +--------------+--------------+---------------------------------------+
+
 
 URL ratings
 ~~~~~~~~~~~
-XXX todo
+WebCleaner stores URLs normalized and absolute.
 
 Service delivery
 ~~~~~~~~~~~~~~~~
-XXX todo
+Several different rating delivery methods are supported by
+WebCleaner. They allow content providers flexibility when providing
+rating data.
 
 HTTP Header
 -----------
-XXX todo
+When answering a HTTP request rating data can be submitted as
+HTTP headers. All headers start with "X-Rating" and are defined
+as follows:
+
+- X-Rating: <service URL>
+  submits the service this rating applies to
+- X-Rating-<key>: <value>
+  submits one key/value item of the rating dictionary
+
+Example:
 ::
 
- X-Rating: <service URL>
+ X-Rating: http://imadoofus.org/service/
  X-Rating-WC-Agerange: 10-
 
 HTML meta data
 --------------
-XXX todo
+A HTML file can be rated by supplying data in a meta tag.
+The format is basically the same as the HTTP header format,
+using "X-Rating" in the name attribute and the value in the
+content attribute.
+
+Example:
+::
+
+  <meta name="X-Rating" content="http://imadoofus.org/service/">
+  <meta name="X-Rating-WC-Agerange" content="10-">
 
 CGI interface
 -------------
 XXX todo
 
-Examples
-~~~~~~~~
-XXX todo
