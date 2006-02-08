@@ -30,6 +30,11 @@
     Type: Optimization
     Changed: wc/proxy/timer.py
 
+  * Updated spidermonkey JavaScript library from upstream CVS as of
+    20060208.
+    Type: feature
+    Changed: libjs/*
+
 2.36 "The Aristocrats" (released 9.1.2006)
 
   * Improve JavaScript parsing by normalizing whitespace. Avoids some
