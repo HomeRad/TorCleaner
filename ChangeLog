@@ -1,4 +1,4 @@
-2.37 "" (released xx.xx.2006)
+2.37 "Mystic River" (released 9.2.2006)
 
   * Improve redirection test by stripping optional quotes from
     the redirection URL and also allow https:// redirects.
@@ -31,7 +31,7 @@
     Changed: wc/proxy/timer.py
 
   * Updated spidermonkey JavaScript library from upstream CVS as of
-    20060208.
+    20060209.
     Type: feature
     Changed: libjs/*
 
