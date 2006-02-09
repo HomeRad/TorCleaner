@@ -481,7 +481,7 @@
   <title lang="en">Links to ad servers 2</title>
   <description lang="de">Entferne frames/scripts zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove frames/scripts to some ad servers.</description>
-  <attr name="src">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
+  <attr name="src">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com|\.adbrite\.com|\.adengage\.com)</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
