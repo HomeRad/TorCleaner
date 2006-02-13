@@ -215,3 +215,6 @@ various:
 	py-check-append $(CHECKFILES)
 	py-clean-future -r $(CHECKFILES)
 	py-find-nocoding $(CHECKFILES)
+
+.PHONY: test
+test:	check
