@@ -17,7 +17,7 @@ SHAREDIR=$(top_srcdir)/share/locale
 LANGUAGES=de
 POFILES=$(patsubst %, %.po, $(LANGUAGES) )
 
-all: $(POFILES)
+all:
 
 # The %.mo target is not used, but here for completeness. The setup.py
 # build command will generate the needed .mo files with wc/msgfmt.py.
