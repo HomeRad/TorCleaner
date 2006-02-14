@@ -38,12 +38,12 @@ def nt_quote_args (args):
     """
     for i in range(len(args)):
         if " " in args[i]:
-	    args[i] = '"%s"' % args[i]
+            args[i] = '"%s"' % args[i]
 
 
 def execute (args):
     """
-    Execute given script.
+    Execute command with arguments.
     """
     executable = args[0]
     nt_quote_args(args)
