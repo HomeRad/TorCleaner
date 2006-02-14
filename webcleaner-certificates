@@ -52,7 +52,7 @@ def print_usage (msg):
 def install_ssl_certs (configdir):
     """create SSL certificates if not already done"""
     if wc.proxy.ssl.exist_certificates(configdir):
-        print _("%s SSL certificates already exist, doing nothing")%\
+        print _("%s SSL certificates already exist, doing nothing") % \
           wc.AppName
     else:
         wc.proxy.ssl.create_certificates(configdir)
@@ -83,9 +83,9 @@ def parse_options (sysargs):
     except getopt.error:
         print_usage(sys.exc_info()[1])
     for opt, arg in options:
-        if opt=="-h" or opt=="--help":
+        if opt == "-h" or opt == "--help":
             print_usage("")
-        elif opt=="--configdir" or opt=="-d":
+        elif opt == "--configdir" or opt == "-d":
             configdir = arg
         else:
             print_usage(_("Unknown option %(option)r")%{'option': opt})
@@ -103,7 +103,7 @@ def main (sysargs):
     elif command=='remove':
         remove_ssl_certs(configdir)
     else:
-        print_usage(_("Invalid command %r.")%command)
+        print_usage(_("Invalid command %r.") % command)
 
 
 if __name__=='__main__':
