@@ -31,18 +31,25 @@ import pywintypes
 _ = lambda s: s
 
 
-def execute (pythonw, script, args):
+# copied from distutils
+def nt_quote_args (args):
+    """
+    Quote arguments for windows
+    """
+    for i in range(len(args)):
+        if " " in args[i]:
+	    args[i] = '"%s"' % args[i]
+
+
+def execute (args):
     """
     Execute given script.
     """
-    cargs = " ".join(args)
-    _in, _out = os.popen4("%s %s %s" % (pythonw, script, cargs))
-    line = _out.readline()
-    while line:
-        print line
-        line = _out.readline()
-    _in.close()
-    _out.close()
+    executable = args[0]
+    nt_quote_args(args)
+    rc = os.spawnv(os.P_WAIT, executable, args)
+    if rc != 0:
+        print "Command %s failed with status %d" % (args, rc)
 
 
 def fix_configdata ():
@@ -62,6 +69,7 @@ def fix_configdata ():
     f = file(conffile, "w")
     f.write("".join(lines))
     f.close()
+
 
 # windows install scheme for python >= 2.3
 # snatched from PC/bdist_wininst/install.c
@@ -150,7 +158,7 @@ def install_shortcuts ():
     # create uninstall shortcut
     target = os.path.join(sys.prefix, "RemoveWebCleaner.exe")
     path = os.path.join(dest_dir, "Uninstall WebCleaner.lnk")
-    arguments = "-u " + os.path.join(sys.prefix, "WebCleaner-wininst.log")
+    arguments = '-u "%s"' % os.path.join(sys.prefix, "WebCleaner-wininst.log")
     create_shortcut(target, _("Uninstall WebCleaner"), path, arguments)
     file_created(path)
 
@@ -162,7 +170,7 @@ def install_certificates ():
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     import wc
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
-    execute(pythonw, script, ["install"])
+    execute([pythonw, script, "install"])
 
 
 def state_nt_service (name):
@@ -290,7 +298,7 @@ def remove_certificates ():
     import wc
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
-    execute(pythonw, script, ["remove"])
+    execute([pythonw, script, "remove"])
 
 
 def remove_tempfiles ():
