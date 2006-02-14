@@ -1,6 +1,8 @@
 3.0 "" (released xx.xx.xxxx)
 
-  *
+  * Quote command line arguments when installing under Windows.
+    Type: bugfix
+    Changed: install-webcleaner.py
 
 2.37 "Mystic River" (released 9.2.2006)
 
