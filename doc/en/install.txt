@@ -164,7 +164,14 @@ Setup for Windows - the binary .exe installer:
    
    Be sure to have installed all required windows software listed above.
 
-2. Execute the ``webcleaner-x.xx.win32-py2.4.exe`` file and follow
+2. Register the Python service control.
+   
+   Change to the directory where PythonService.exe is located,
+   which is usually c:\\python24\\Lib\\site-packages\\win32,
+   and execute ``c:> PythonService.exe /register``. This has to be
+   done only once after installing the Python for Windows Extensions.
+
+3. Execute the ``webcleaner-x.xx.win32-py2.4.exe`` file and follow
    the instructions.
 
 Setup for Windows - compiling from source:
