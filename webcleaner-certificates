@@ -41,18 +41,20 @@ install - generate and install %(app)s SSL certificates if not already there
 remove  - remove %(app)s SSL certificates
 """) % {'app': wc.AppName, 'name': wc.Name}
 
+log = sys.stdout
+#log = open("debug.log")
 
 def print_usage (msg):
     """print short usage info and exit"""
-    print msg
-    print usage
+    print >> log, msg
+    print >> log, usage
     sys.exit(1)
 
 
 def install_ssl_certs (configdir):
     """create SSL certificates if not already done"""
     if wc.proxy.ssl.exist_certificates(configdir):
-        print _("%s SSL certificates already exist, doing nothing") % \
+        print >> log, _("%s SSL certificates already exist, doing nothing") %\
           wc.AppName
     else:
         wc.proxy.ssl.create_certificates(configdir)
@@ -66,7 +68,7 @@ def remove_ssl_certs (configdir):
                 try:
                     os.remove(fname)
                 except IOError, msg:
-                    print _("Could not remove %r: %s") % \
+                    print >> log, _("Could not remove %r: %s") % \
                           (fname, str(msg))
 
 
