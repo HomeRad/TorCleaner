@@ -17,7 +17,7 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
-PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint.$(PYTHON)
+PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc pylint
 PYLINTOPTS :=
 PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
         wc/filter/rating/*.py wc/js/*.py wc/proxy/*.py wc/proxy/decoder/*.py \
