@@ -64,8 +64,8 @@ Screenshots
 
    +----------------------------+----------------------------+
    | .. image:: shot1_thumb.jpg | .. image:: shot2_thumb.jpg |
-   |      :align: center        |      :align: center        |
-   |      :target: shot1.png    |      :target: shot2.png    |
+   |    :align: center          |    :align: center          |
+   |    :target: shot1.png      |    :target: shot2.png      |
    +----------------------------+----------------------------+
    | Proxy configuration        | Filter configuration       |
    +----------------------------+----------------------------+
@@ -167,7 +167,6 @@ mailing list at the `subscription page`_ or read the `list archives`_.
 
 .. _list archives:
    http://sourceforge.net/mailarchive/forum.php?forum=webcleaner-users
-
 
 .. image:: http://sourceforge.net/sflogo.php?group_id=7692&type=1
    :align: right
