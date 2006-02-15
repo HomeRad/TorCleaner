@@ -44,12 +44,16 @@ def nt_quote_args (args):
 def execute (args):
     """
     Execute command with arguments.
+    @return: return code of executed command
+    @rtype: int
     """
+    # If both the executable and arguments contain spaces, ie. need to
+    # be quoted, the only option is to use os.spawnv(). But then
+    # the command output is not printable. Bummer. At least we have
+    # the return code.
     executable = args[0]
     nt_quote_args(args)
-    rc = os.spawnv(os.P_WAIT, executable, args)
-    if rc != 0:
-        print "Command %s failed with status %d" % (args, rc)
+    return os.spawnv(os.P_WAIT, executable, args)
 
 
 def fix_configdata ():
@@ -170,7 +174,11 @@ def install_certificates ():
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     import wc
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
-    execute([pythonw, script, "install"])
+    if execute([pythonw, script, "install"]) != 0:
+        print _("""Could not install SSL certificates.
+Perhaps PyOpenSSL is not installed?
+You have to install the SSL certificates manually with
+'webcleaner-certificates install'.""")
 
 
 def state_nt_service (name):
@@ -298,7 +306,10 @@ def remove_certificates ():
     import wc
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
-    execute([pythonw, script, "remove"])
+    if execute([pythonw, script, "remove"]) != 0:
+        print _("""Could not remove SSL certificates.
+Perhaps PyOpenSSL is not installed?
+You have to remove the SSL certificates manually.""")
 
 
 def remove_tempfiles ():
