@@ -5,7 +5,7 @@ MSGFMT:=msgfmt
 MSGMERGE:=msgmerge
 TALGETTEXT=$(PYTHON) ../wc/webgui/TAL/talgettext.py
 POSOURCES=$(shell find ../wc -name \*.py) \
-	../webcleaner ../webcleaner-certificates
+	../webcleaner ../webcleaner-certificates ../install-webcleaner.py
 TEMPLATES=$(shell find ../templates -name \*.html)
 PACKAGE=webcleaner
 TEMPLATE=$(PACKAGE).pot

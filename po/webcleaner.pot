@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-02-09 09:40+0100\n"
+"POT-Creation-Date: 2006-02-15 19:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -539,7 +539,7 @@ msgstr ""
 msgid "%(appname)s Proxy"
 msgstr ""
 
-#: ../webcleaner:147 ../webcleaner-certificates:91
+#: ../webcleaner:147 ../webcleaner-certificates:93
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr ""
@@ -549,7 +549,7 @@ msgstr ""
 msgid "Unknown command %r"
 msgstr ""
 
-#: ../webcleaner:169 ../webcleaner-certificates:98
+#: ../webcleaner:169 ../webcleaner-certificates:100
 msgid "No command given."
 msgstr ""
 
@@ -572,19 +572,72 @@ msgid ""
 "remove  - remove %(app)s SSL certificates\n"
 msgstr ""
 
-#: ../webcleaner-certificates:55
+#: ../webcleaner-certificates:57
 #, python-format
 msgid "%s SSL certificates already exist, doing nothing"
 msgstr ""
 
-#: ../webcleaner-certificates:69
+#: ../webcleaner-certificates:71 ../install-webcleaner.py:334
 #, python-format
 msgid "Could not remove %r: %s"
 msgstr ""
 
-#: ../webcleaner-certificates:106
+#: ../webcleaner-certificates:108
 #, python-format
 msgid "Invalid command %r."
+msgstr ""
+
+#: ../install-webcleaner.py:146
+#, python-format
+msgid "Cannot install shortcuts: %s"
+msgstr ""
+
+#: ../install-webcleaner.py:166
+msgid "Uninstall WebCleaner"
+msgstr ""
+
+#: ../install-webcleaner.py:178
+msgid ""
+"Could not install SSL certificates.\n"
+"Perhaps PyOpenSSL is not installed?\n"
+"You have to install the SSL certificates manually with\n"
+"'webcleaner-certificates install'."
+msgstr ""
+
+#: ../install-webcleaner.py:191
+#, python-format
+msgid "Service status error: %s"
+msgstr ""
+
+#: ../install-webcleaner.py:202
+#, python-format
+msgid "Installing %s service..."
+msgstr ""
+
+#: ../install-webcleaner.py:212
+#, python-format
+msgid "Removing %s service..."
+msgstr ""
+
+#: ../install-webcleaner.py:232
+#, python-format
+msgid "Stopping %s proxy..."
+msgstr ""
+
+#: ../install-webcleaner.py:254
+#, python-format
+msgid "Starting %s proxy..."
+msgstr ""
+
+#: ../install-webcleaner.py:277
+msgid "Opening proxy configuration interface..."
+msgstr ""
+
+#: ../install-webcleaner.py:310
+msgid ""
+"Could not remove SSL certificates.\n"
+"Perhaps PyOpenSSL is not installed?\n"
+"You have to remove the SSL certificates manually."
 msgstr ""
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91

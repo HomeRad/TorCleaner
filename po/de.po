@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-02-04 17:39+0100\n"
-"PO-Revision-Date: 2006-02-08 19:08+0100\n"
+"POT-Creation-Date: 2006-02-15 19:19+0100\n"
+"PO-Revision-Date: 2006-02-15 19:23+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -614,7 +614,7 @@ msgid "%(appname)s Proxy"
 msgstr "%(appname)s Proxy"
 
 #: ../webcleaner:147
-#: ../webcleaner-certificates:91
+#: ../webcleaner-certificates:93
 #, python-format
 msgid "Unknown option %(option)r"
 msgstr "Unbekannte Option %(option)r"
@@ -626,7 +626,7 @@ msgid "Unknown command %r"
 msgstr "Unbekannter Befehl %r"
 
 #: ../webcleaner:169
-#: ../webcleaner-certificates:98
+#: ../webcleaner-certificates:100
 msgid "No command given."
 msgstr "Kein Befehl angegeben."
 
@@ -659,20 +659,81 @@ msgstr ""
 "install - generiere und installiere %(app)s SSL Zertifikate falls noch nicht vorhanden\n"
 "remove - lösche %(app)s SSL Zertifikate\n"
 
-#: ../webcleaner-certificates:55
+#: ../webcleaner-certificates:57
 #, python-format
 msgid "%s SSL certificates already exist, doing nothing"
 msgstr "%s SSL Zertifikat existiert bereits, tue nichts"
 
-#: ../webcleaner-certificates:69
+#: ../webcleaner-certificates:71
+#: ../install-webcleaner.py:334
 #, python-format
 msgid "Could not remove %r: %s"
 msgstr "Konnte %r nicht löschen: %s"
 
-#: ../webcleaner-certificates:106
+#: ../webcleaner-certificates:108
 #, python-format
 msgid "Invalid command %r."
 msgstr "Unbekannter Befehl %r."
+
+#: ../install-webcleaner.py:146
+#, python-format
+msgid "Cannot install shortcuts: %s"
+msgstr "Konnte Verknüpfungen nicht installieren: %s"
+
+#: ../install-webcleaner.py:166
+msgid "Uninstall WebCleaner"
+msgstr "Deinstalliere WebCleaner"
+
+#: ../install-webcleaner.py:178
+msgid ""
+"Could not install SSL certificates.\n"
+"Perhaps PyOpenSSL is not installed?\n"
+"You have to install the SSL certificates manually with\n"
+"'webcleaner-certificates install'."
+msgstr ""
+"Konnte SSL Zertifikate nicht installieren.\n"
+"Vielleicht ist PyOpenSSL nicht installiert?\n"
+"Sie müssen die SSL Zertifikate manuell installieren mit\n"
+"'webcleaner-certificates install'."
+
+#: ../install-webcleaner.py:191
+#, python-format
+msgid "Service status error: %s"
+msgstr "Dienst Statusfehler: %s"
+
+#: ../install-webcleaner.py:202
+#, python-format
+msgid "Installing %s service..."
+msgstr "Installiere %s Dienst..."
+
+#: ../install-webcleaner.py:212
+#, python-format
+msgid "Removing %s service..."
+msgstr "Entferne %s Dienst..."
+
+#: ../install-webcleaner.py:232
+#, python-format
+msgid "Stopping %s proxy..."
+msgstr "Stoppe %s Proxy..."
+
+#: ../install-webcleaner.py:254
+#, python-format
+msgid "Starting %s proxy..."
+msgstr "%s Proxy Neustart..."
+
+#: ../install-webcleaner.py:277
+msgid "Opening proxy configuration interface..."
+msgstr "Öffne Proxykonfiguration..."
+
+#: ../install-webcleaner.py:310
+msgid ""
+"Could not remove SSL certificates.\n"
+"Perhaps PyOpenSSL is not installed?\n"
+"You have to remove the SSL certificates manually."
+msgstr ""
+"Konnte SSL Zertifikate nicht entfernen.\n"
+"Vielleicht ist PyOpenSSL nicht installiert?\n"
+"Sie müssen die SSL Zertifikate manuell entfernen."
 
 #: ../templates/classic/google.html:5
 #: ../templates/classic/google.html:91
