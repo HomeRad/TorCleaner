@@ -71,7 +71,7 @@ class ProxyService (service_klass):
            servicemanager.PYS_SERVICE_STARTED,
            (self._svc_name_, ''))
         wc.start.wstartfunc(handle=self.hWaitStop, confdir=self.configdir,
-                      filelogs=self.filelogs)
+                            filelogs=self.filelogs)
         # Now log a "service stopped" message
         servicemanager.LogMsg(
            servicemanager.EVENTLOG_INFORMATION_TYPE,
@@ -117,5 +117,5 @@ def status ():
     """
     Return message with current status of WebCleaner service.
     """
-    return _service_status(win32serviceutil.QueryServiceStatus(
-                                                     wc.AppName))
+    winstatus = win32serviceutil.QueryServiceStatus(wc.AppName)
+    return _service_status(winstatus)
