@@ -20,8 +20,12 @@ $(wildcard *.jpg)
 nav: all
 	python $(DOCDIR)/bfknav.py
 
-homepage: nav
+homepage: nav test
 	cp *.html *.css *.jpg *.png *.ico $(HTMLDIR)/htdocs
 	cp devel/*.html $(HTMLDIR)/htdocs/devel
 	cp misc/*.html $(HTMLDIR)/htdocs/misc
 
+
+.PHONY: test
+test:
+	xmllint --valid --noout *.html
