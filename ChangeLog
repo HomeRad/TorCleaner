@@ -4,6 +4,11 @@
     Type: bugfix
     Changed: install-webcleaner.py
 
+  * Regularly check for service stop on Windows, fixes the stalled
+    service shutdown bug.
+    Type: bugfix
+    Changed: wc/proxy/mainloop.py
+
 2.37 "Mystic River" (released 9.2.2006)
 
   * Improve redirection test by stripping optional quotes from
