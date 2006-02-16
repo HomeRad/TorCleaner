@@ -107,9 +107,10 @@ def mainloop (handle=None):
             rc = win32event.WaitForSingleObject(handle, 0)
             if rc == win32event.WAIT_OBJECT_0:
                 raise Abort()
-        # regular abort check every second
-        wc.proxy.timer.make_timer(1, abort_check)
+            # regularly check for abort
+            wc.proxy.timer.make_timer(5, abort_check)
     try:
+        abort_check()
         while True:
             # Installing a timeout means we're in a handler, and after
             # dealing with handlers, we come to the main loop, so we don't
@@ -119,3 +120,4 @@ def mainloop (handle=None):
     except Abort:
         pass
     wc.log.info(wc.LOG_PROXY, "%s stopped", wc.AppName)
+
