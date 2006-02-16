@@ -305,7 +305,7 @@
   <title lang="en">Google search ads</title>
   <matchurl>www\.google\.</matchurl>
   <attr name="width">^(25|100)%$</attr>
-  <enclosed>ai=</enclosed>
+  <enclosed>(ai=|Sponsored Links)</enclosed>
   <replacement part="complete"/>
 </htmlrewrite>
 
