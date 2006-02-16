@@ -25,7 +25,6 @@ homepage: nav test
 	cp devel/*.html $(HTMLDIR)/htdocs/devel
 	cp misc/*.html $(HTMLDIR)/htdocs/misc
 
-
 .PHONY: test
 test:
 	xmllint --valid --noout *.html
