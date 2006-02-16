@@ -100,17 +100,17 @@ def mainloop (handle=None):
                                    sslctx=sslctx)
     class Abort (Exception):
         pass
-    if handle is not None:
-        import win32event
-        def abort_check ():
-            # win32 handle signaling stop
-            rc = win32event.WaitForSingleObject(handle, 0)
-            if rc == win32event.WAIT_OBJECT_0:
-                raise Abort()
-            # regularly check for abort
-            wc.proxy.timer.make_timer(5, abort_check)
     try:
-        abort_check()
+        if handle is not None:
+            import win32event
+            def abort_check ():
+                # win32 handle signaling stop
+                rc = win32event.WaitForSingleObject(handle, 0)
+                if rc == win32event.WAIT_OBJECT_0:
+                    raise Abort()
+                # regularly check for abort
+                wc.proxy.timer.make_timer(5, abort_check)
+            abort_check()
         while True:
             # Installing a timeout means we're in a handler, and after
             # dealing with handlers, we come to the main loop, so we don't
