@@ -16,7 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Windows specific helper functions.
-Needs Python with win32 extensions or Active Python installed.
+Needs Python with win32 extensions (or Active Python) installed.
 """
 
 try:
@@ -25,8 +25,12 @@ try:
     import win32event
     service_klass = win32serviceutil.ServiceFramework
 except ImportError:
-    # assume non-windows platform
+    import sys
+    if not sys.platform.startswith('win'):
+        raise RuntimeError("Python for Windows Extensions not installed")
+    # Ignore the error on non-windows platforms.
     service_klass = object
+
 import wc
 import wc.start
 
