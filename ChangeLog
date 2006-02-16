@@ -1,4 +1,4 @@
-3.0 "" (released xx.xx.xxxx)
+2.38 "" (released xx.xx.2006)
 
   * Quote command line arguments when installing under Windows.
     Type: bugfix
