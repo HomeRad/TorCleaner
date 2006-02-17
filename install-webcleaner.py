@@ -31,16 +31,6 @@ import pywintypes
 _ = lambda s: s
 
 
-# copied from distutils
-def nt_quote_args (args):
-    """
-    Quote arguments for windows
-    """
-    for i in range(len(args)):
-        if " " in args[i]:
-            args[i] = '"%s"' % args[i]
-
-
 def execute (args):
     """
     Execute command with arguments.
@@ -52,7 +42,8 @@ def execute (args):
     # the command output is not printable. Bummer. At least we have
     # the return code.
     executable = args[0]
-    nt_quote_args(args)
+    import wc.win32start
+    wc.win32start.nt_quote_args(args)
     return os.spawnv(os.P_WAIT, executable, args)
 
 

@@ -35,6 +35,16 @@ import wc
 import wc.start
 
 
+# copied from distutils
+def nt_quote_args (args):
+    """
+    Quote arguments for windows
+    """
+    for i in range(len(args)):
+        if " " in args[i]:
+            args[i] = '"%s"' % args[i]
+
+
 class ProxyService (service_klass):
     """
     NT service class for the WebCleaner proxy.
