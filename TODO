@@ -1,5 +1,7 @@
 TODO
 
+- complete specification and implementation of the rating system
+
 - test HTTP pipelining (esp. the order of the responses)
 
 - Check the order in which client (or server) headers are mangled,
