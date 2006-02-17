@@ -238,5 +238,10 @@ def restart ():
     else:
         py_exe = sys.executable
     script = os.path.join(wc.ScriptDir, "webcleaner")
-    wc.log.info(LOG_PROXY, "Restarting with: %s %s restart", py_exe, script)
-    os.spawnl(os.P_NOWAIT, py_exe, py_exe, script, "restart")
+    args = [py_exe, script, "restart"]
+    if os.name == 'nt':
+        import wc.win32start
+        wc.win32start.nt_quote_args(args)
+    wc.log.info(LOG_PROXY, "Restarting with: %s", args)
+    os.spawnv(os.P_NOWAIT, py_exe, args)
+
