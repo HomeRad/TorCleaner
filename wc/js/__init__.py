@@ -26,19 +26,8 @@ def clean (script, jscomments=True):
     """
     Clean script from comments and HTML.
     """
-    script = escape_js(remove_html_comments(script))
-    if not jscomments:
-        script = remove_js_comments(script)
+    script = escape_js(remove_html_comments(script, jscomments=jscomments))
     return u"\n<!--\n%s\n//-->\n" % script
-
-
-def remove_whitespace (script):
-    lines = []
-    for line in script.splitlines():
-        line = line.rstrip()
-        if line:
-            lines.append(line)
-    return "\n".join(lines)
 
 
 script_sub = re.compile(r"(?i)</script\s*>").sub
@@ -72,9 +61,12 @@ def escape_js_line (script):
         elif c == '\\':
             escape = not escape
         elif c == '<':
-            if script[i:i+9].lower() == '</script>' and quote:
-                script = script[:i]+"</scr"+quote+"+"+quote+"ipt>"+\
-                         script[(i+9):]
+            if script[i:i+9].lower() == '</script>':
+                if quote:
+                    script = script[:i] + "</scr" + quote + "+" + \
+                             quote + "ipt>" + script[(i+9):]
+                else:
+                    script = script[:i] + script[(i+9):]
             escape = False
         else:
             escape = False
@@ -86,11 +78,17 @@ def escape_js_line (script):
 
 _start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
 _end_js_comment = re.compile(r"\s*(?P<comment>//)?[^/\r\n]*-->[ \t]*$").search
-def remove_html_comments (script):
+def remove_html_comments (script, jscomments=True):
     """
     Remove leading and trailing HTML comments from the script text.
+    And remove JS comments if flag is not set.
     """
-    script = remove_whitespace(script)
+    lines = []
+    for line in script.splitlines():
+        line = line.rstrip()
+        if line and (jscomments or not line.lstrip().startswith('//')):
+            lines.append(line)
+    script = "\n".join(lines)
     mo = _start_js_comment(script)
     if mo:
         script = script[mo.end():]
