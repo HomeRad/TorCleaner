@@ -237,7 +237,7 @@ def restart ():
         py_exe = os.path.join(sys.prefix, "pythonw.exe")
     else:
         py_exe = sys.executable
-    script = os.path.join(wc.ScriptDir, "webcleaner")
+    script = os.path.join(ScriptDir, "webcleaner")
     args = [py_exe, script, "restart"]
     if os.name == 'nt':
         import wc.win32start
