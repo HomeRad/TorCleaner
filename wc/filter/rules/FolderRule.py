@@ -129,13 +129,16 @@ class FolderRule (wc.filter.rules.Rule.Rule):
             s += u"\n%s\n" % r.toxml()
         return s+u"</folder>\n"
 
-    def write (self):
+    def write (self, fd=None):
         """
         Write xml data into filename.
         @raise: OSError if file could not be written.
         """
         s = self.toxml().encode("iso-8859-1", "replace")
-        wc.fileutil.write_file(self.filename, s)
+        if fd is None:
+            wc.fileutil.write_file(self.filename, s)
+        else:
+            fd.write(s)
 
     def tiptext (self):
         """
