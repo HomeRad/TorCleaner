@@ -386,6 +386,8 @@ def _form_newfolder (foldername, lang):
         return
     fd, filename = tempfile.mkstemp(u".zap", u"local_", config.configdir,
                                     text=True)
+    # make file object
+    fd = os.fdopen(fd, "wb")
     # create and select the new folder
     global curfolder
     curfolder = _FolderRule(titles={lang:foldername}, filename=filename)
@@ -396,7 +398,8 @@ def _form_newfolder (foldername, lang):
         curfolder.oid = 0
     else:
         curfolder.oid = config['folderrules'][-1].oid+1
-    curfolder.write()
+    curfolder.write(fd=fd)
+    fd.close()
     set_indexstr(curfolder)
     config['folderrules'].append(curfolder)
     _recalc_up_down(config['folderrules'])
