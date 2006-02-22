@@ -4618,6 +4618,7 @@ PutProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 
         /* 12. */
         k = n = xml->xml_kids.length;
+        kid2 = NULL;
         while (k != 0) {
             --k;
             kid = XMLARRAY_MEMBER(&xml->xml_kids, k, JSXML);
@@ -4630,7 +4631,30 @@ PutProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
                 ok = IndexToIdVal(cx, k, &id);
                 if (!ok)
                     goto out;
+                kid2 = kid;
             }
+        }
+
+        /*
+         * Erratum: ECMA-357 specified child insertion inconsistently:
+         * insertChildBefore and insertChildAfter insert an arbitrary XML
+         * instance, and therefore can create cycles, but appendChild as
+         * specified by the "Overview" of 13.4.4.3 calls [[DeepCopy]] on
+         * its argument.  But the "Semantics" in 13.4.4.3 do not include
+         * any [[DeepCopy]] call.
+         *
+         * Fixing this (https://bugzilla.mozilla.org/show_bug.cgi?id=312692)
+         * required adding cycle detection, and allowing duplicate kids to
+         * be created (see comment 6 in the bug).  Allowing duplicate kid
+         * references means the loop above will delete all but the lowest
+         * indexed reference, and each [[DeleteByIndex]] nulls the kid's
+         * parent.  Thus the need to restore parent here.  This is covered
+         * by https://bugzilla.mozilla.org/show_bug.cgi?id=327564.
+         */
+        if (kid2) {
+            JS_ASSERT(kid2->parent == xml || !kid2->parent);
+            if (!kid2->parent)
+                kid2->parent = xml;
         }
 
         /* 13. */
@@ -4719,6 +4743,7 @@ ResolveValue(JSContext *cx, JSXML *list, JSXML **result)
 {
     JSXML *target, *base;
     JSXMLQName *targetprop;
+    JSObject *targetpropobj;
     jsval id, tv;
 
     /* Our caller must be protecting newborn objects. */
@@ -4733,10 +4758,15 @@ ResolveValue(JSContext *cx, JSXML *list, JSXML **result)
 
     target = list->xml_target;
     targetprop = list->xml_targetprop;
-    if (!target ||
-        !targetprop ||
-        OBJ_GET_CLASS(cx, targetprop->object) == &js_AttributeNameClass ||
-        IS_STAR(targetprop->localName)) {
+    if (!target || !targetprop || IS_STAR(targetprop->localName)) {
+        *result = NULL;
+        return JS_TRUE;
+    }
+
+    targetpropobj = js_GetXMLQNameObject(cx, targetprop);
+    if (!targetpropobj)
+        return JS_FALSE;
+    if (OBJ_GET_CLASS(cx, targetpropobj) == &js_AttributeNameClass) {
         *result = NULL;
         return JS_TRUE;
     }
@@ -4750,7 +4780,7 @@ ResolveValue(JSContext *cx, JSXML *list, JSXML **result)
     if (!js_GetXMLObject(cx, base))
         return JS_FALSE;
 
-    id = OBJECT_TO_JSVAL(targetprop->object);
+    id = OBJECT_TO_JSVAL(targetpropobj);
     if (!GetProperty(cx, base->object, id, &tv))
         return JS_FALSE;
     target = (JSXML *) JS_GetPrivate(cx, JSVAL_TO_OBJECT(tv));
@@ -7214,9 +7244,9 @@ xml_mark_tail(JSContext *cx, JSXML *xml, void *arg)
 
     if (xml->xml_class == JSXML_CLASS_LIST) {
         if (xml->xml_target)
-            js_MarkXML(cx, xml->xml_target, arg);
+            JS_MarkGCThing(cx, xml->xml_target, "target", arg);
         if (xml->xml_targetprop)
-            js_MarkXMLQName(cx, xml->xml_targetprop, arg);
+            JS_MarkGCThing(cx, xml->xml_targetprop, "targetprop", arg);
     } else {
         namespace_mark_vector(cx,
                               (JSXMLNamespace **) xml->xml_namespaces.vector,

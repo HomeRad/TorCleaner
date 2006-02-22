@@ -188,6 +188,13 @@ struct JSGCArena {
  */
 #define PAGE_THING_GAP(n) (((n) & ((n) - 1)) ? (GC_PAGE_SIZE % (n)) : (n))
 
+JS_STATIC_ASSERT(sizeof(JSGCThing) == sizeof(JSGCPageInfo));
+JS_STATIC_ASSERT(sizeof(JSGCThing) >= sizeof(JSObject));
+JS_STATIC_ASSERT(sizeof(JSGCThing) >= sizeof(JSString));
+JS_STATIC_ASSERT(sizeof(JSGCThing) >= sizeof(jsdouble));
+JS_STATIC_ASSERT(GC_FLAGS_SIZE >= GC_PAGE_SIZE);
+JS_STATIC_ASSERT(sizeof(JSStackHeader) >= 2 * sizeof(jsval));
+
 #ifdef JS_GCMETER
 # define METER(x) x
 #else
@@ -363,13 +370,6 @@ js_InitGC(JSRuntime *rt, uint32 maxbytes)
 {
     uintN i;
 
-    JS_ASSERT(sizeof(JSGCThing) == sizeof(JSGCPageInfo));
-    JS_ASSERT(sizeof(JSGCThing) >= sizeof(JSObject));
-    JS_ASSERT(sizeof(JSGCThing) >= sizeof(JSString));
-    JS_ASSERT(sizeof(JSGCThing) >= sizeof(jsdouble));
-    JS_ASSERT(GC_FLAGS_SIZE >= GC_PAGE_SIZE);
-    JS_ASSERT(sizeof(JSStackHeader) >= 2 * sizeof(jsval));
-
     for (i = 0; i < GC_NUM_FREELISTS; i++)
         InitGCArenaList(&rt->gcArenaList[i]);
     if (!JS_DHashTableInit(&rt->gcRootsHash, JS_DHashGetStubOps(), NULL,
@@ -378,7 +378,12 @@ js_InitGC(JSRuntime *rt, uint32 maxbytes)
         return JS_FALSE;
     }
     rt->gcLocksHash = NULL;     /* create lazily */
-    rt->gcMaxBytes = maxbytes;
+
+    /*
+     * Separate gcMaxMallocBytes from gcMaxBytes but initialize to maxbytes
+     * for default backward API compatibility.
+     */
+    rt->gcMaxBytes = rt->gcMaxMallocBytes = maxbytes;
     return JS_TRUE;
 }
 
@@ -649,7 +654,7 @@ js_NewGCThing(JSContext *cx, uintN flags, size_t nbytes)
          * arenaList.
          */
         if (rt->gcBytes < rt->gcMaxBytes &&
-            (tried_gc || rt->gcMallocBytes < rt->gcMaxBytes)) {
+            (tried_gc || rt->gcMallocBytes < rt->gcMaxMallocBytes)) {
             if (!arenaList->last || arenaList->lastLimit == GC_THINGS_SIZE) {
                 /*
                  * The last arena (and the whole arenaList) is full, time

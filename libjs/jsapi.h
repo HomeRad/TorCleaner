@@ -814,6 +814,14 @@ JS_SetGCCallbackRT(JSRuntime *rt, JSGCCallback cb);
 extern JS_PUBLIC_API(JSBool)
 JS_IsAboutToBeFinalized(JSContext *cx, void *thing);
 
+typedef enum JSGCParamKey {
+    JSGC_MAX_BYTES        = 0,  /* maximum nominal heap before last ditch GC */
+    JSGC_MAX_MALLOC_BYTES = 1   /* # of JS_malloc bytes before last ditch GC */
+} JSGCParamKey;
+
+extern JS_PUBLIC_API(void)
+JS_SetGCParameter(JSRuntime *rt, JSGCParamKey key, uint32 value);
+
 /*
  * Add a finalizer for external strings created by JS_NewExternalString (see
  * below) using a type-code returned from this function, and that understands
@@ -1827,7 +1835,7 @@ JS_MakeStringImmutable(JSContext *cx, JSString *str);
 
 /*
  * Return JS_TRUE if C (char []) strings passed via the API and internally
- * are UTF-8. The source must be compiled with JS_STRINGS_ARE_UTF8 defined
+ * are UTF-8. The source must be compiled with JS_C_STRINGS_ARE_UTF8 defined
  * to get UTF-8 support.
  */
 JS_PUBLIC_API(JSBool)
@@ -1849,7 +1857,7 @@ JS_CStringsAreUTF8();
  * NB: Neither function stores an additional zero byte or jschar after the
  * transcoded string.
  *
- * If the source has been compiled with the #define JS_STRINGS_ARE_UTF8 to
+ * If the source has been compiled with the #define JS_C_STRINGS_ARE_UTF8 to
  * enable UTF-8 interpretation of C char[] strings, then JS_EncodeCharacters
  * encodes to UTF-8, and JS_DecodeBytes decodes from UTF-8, which may create
  * addititional errors if the character sequence is malformed.  If UTF-8

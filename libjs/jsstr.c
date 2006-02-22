@@ -2908,7 +2908,7 @@ js_SkipWhiteSpace(const jschar *s)
     return s;
 }
 
-#ifdef JS_STRINGS_ARE_UTF8
+#ifdef JS_C_STRINGS_ARE_UTF8
 
 jschar *
 js_InflateString(JSContext *cx, const char *bytes, size_t *length)
@@ -2965,7 +2965,7 @@ js_DeflateStringToBuffer(JSContext *cx, const jschar *src, size_t srclen,
         if (c < 0xD800 || c > 0xDBFF) {
             v = c;
         } else {
-            if (srclen < 2)
+            if (srclen < 1)
                 goto bufferTooSmall;
             c2 = *src++;
             srclen--;
