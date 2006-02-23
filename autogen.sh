@@ -34,4 +34,4 @@ if [ $RES != 0 ]; then
     echo "Autogeneration failed (exit code $RES)"
     exit $RES
 fi
-echo 'run "./configure; make"'
+echo 'run "./configure && make localbuild"'
