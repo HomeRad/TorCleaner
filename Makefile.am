@@ -52,6 +52,7 @@ clean-local: clean-log
 	rm -f _webcleaner2_configdata.py
 	rm -f crossbuild.log
 	rm -rf coverage
+	rm -rf *.prof
 # delete possible aborted dist build
 	rm -rf webcleaner-$(VERSION)
 
