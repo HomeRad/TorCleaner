@@ -10,7 +10,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 31
+#define YY_FLEX_SUBMINOR_VERSION 33
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -48,7 +48,15 @@
 
 /* C99 systems have <inttypes.h>. Non-C99 systems may or may not. */
 
-#if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
+#if __STDC_VERSION__ >= 199901L
+
+/* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
+ * if you want the limit (max/min) macros for int types. 
+ */
+#ifndef __STDC_LIMIT_MACROS
+#define __STDC_LIMIT_MACROS 1
+#endif
+
 #include <inttypes.h>
 typedef int8_t flex_int8_t;
 typedef uint8_t flex_uint8_t;
@@ -187,6 +195,10 @@ int yylex_init (yyscan_t* scanner);
 #ifndef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
 #endif
+
+/* The state buf must be large enough to hold one state per character in the main buffer.
+ */
+#define YY_STATE_BUF_SIZE   ((YY_BUF_SIZE + 2) * sizeof(yy_state_type))
 
 #ifndef YY_TYPEDEF_YY_BUFFER_STATE
 #define YY_TYPEDEF_YY_BUFFER_STATE
@@ -10025,7 +10037,7 @@ void yyfree (void* ptr, void* yyscanner) {
 
 
 /* regular expression definitions used below */
-#line 10028 "htmllex.c"
+#line 10040 "htmllex.c"
 
 #define INITIAL 0
 #define S_PI 1
@@ -10109,6 +10121,12 @@ struct yyguts_t
     YYSTYPE * yylval_r;
 
     }; /* end struct yyguts_t */
+
+/* %if-c-only */
+
+static int yy_init_globals (yyscan_t yyscanner );
+
+/* %endif */
 
 /* %if-reentrant */
 
@@ -10282,9 +10300,11 @@ static int input (yyscan_t yyscanner );
 #define YY_DECL_IS_OURS 1
 /* %if-c-only Standard (non-C++) definition */
 
-extern int yylex (YYSTYPE * yylval_param ,yyscan_t yyscanner);
+extern int yylex \
+               (YYSTYPE * yylval_param ,yyscan_t yyscanner);
 
-#define YY_DECL int yylex (YYSTYPE * yylval_param , yyscan_t yyscanner)
+#define YY_DECL int yylex \
+               (YYSTYPE * yylval_param , yyscan_t yyscanner)
 /* %endif */
 /* %if-c++-only C++ definition */
 /* %endif */
@@ -10322,13 +10342,13 @@ YY_DECL
 
 
   /*********************** EOF ************************/
-#line 10325 "htmllex.c"
+#line 10345 "htmllex.c"
 
     yylval = yylval_param;
 
-	if ( yyg->yy_init )
+	if ( !yyg->yy_init )
 		{
-		yyg->yy_init = 0;
+		yyg->yy_init = 1;
 
 #ifdef YY_USER_INIT
 		YY_USER_INIT;
@@ -11828,7 +11848,7 @@ YY_RULE_SETUP
 #line 1061 "htmllex.l"
 ECHO;
 	YY_BREAK
-#line 11831 "htmllex.c"
+#line 11851 "htmllex.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -12026,7 +12046,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 	else
 		{
-			size_t num_to_read =
+			int num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
@@ -12152,7 +12172,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 /* %endif */
 {
 	register int yy_is_jam;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner; /* This var may be unused depending upon options. */
 /* %% [17.0] code to find the next state, and perhaps do backing up, goes here */
 	register char *yy_cp = yyg->yy_c_buf_p;
 
@@ -12624,16 +12644,16 @@ YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscann
 /* %if-c-only */
 /** Setup the input buffer state to scan a string. The next call to yylex() will
  * scan from a @e copy of @a str.
- * @param yy_str a NUL-terminated string to scan
+ * @param yystr a NUL-terminated string to scan
  * @param yyscanner The scanner object.
  * @return the newly allocated buffer state object.
  * @note If you want to scan bytes that may contain NUL values, then use
  *       yy_scan_bytes() instead.
  */
-YY_BUFFER_STATE yy_scan_string (yyconst char * yy_str , yyscan_t yyscanner)
+YY_BUFFER_STATE yy_scan_string (yyconst char * yystr , yyscan_t yyscanner)
 {
     
-	return yy_scan_bytes(yy_str,strlen(yy_str) ,yyscanner);
+	return yy_scan_bytes(yystr,strlen(yystr) ,yyscanner);
 }
 /* %endif */
 
@@ -12645,7 +12665,7 @@ YY_BUFFER_STATE yy_scan_string (yyconst char * yy_str , yyscan_t yyscanner)
  * @param yyscanner The scanner object.
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  (yyconst char * bytes, int  len , yyscan_t yyscanner)
+YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len , yyscan_t yyscanner)
 {
 	YY_BUFFER_STATE b;
 	char *buf;
@@ -12653,15 +12673,15 @@ YY_BUFFER_STATE yy_scan_bytes  (yyconst char * bytes, int  len , yyscan_t yyscan
 	int i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
-	n = len + 2;
+	n = _yybytes_len + 2;
 	buf = (char *) yyalloc(n ,yyscanner );
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 
-	for ( i = 0; i < len; ++i )
-		buf[i] = bytes[i];
+	for ( i = 0; i < _yybytes_len; ++i )
+		buf[i] = yybytes[i];
 
-	buf[len] = buf[len+1] = YY_END_OF_BUFFER_CHAR;
+	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
 
 	b = yy_scan_buffer(buf,n ,yyscanner);
 	if ( ! b )
@@ -12881,37 +12901,6 @@ void yyset_lval (YYSTYPE *  yylval_param , yyscan_t yyscanner)
 
 /* %endif */
 
-static int yy_init_globals (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-    /* Initialization is the same as for the non-reentrant scanner.
-       This function is called once per scanner lifetime. */
-
-    yyg->yy_buffer_stack = 0;
-    yyg->yy_buffer_stack_top = 0;
-    yyg->yy_buffer_stack_max = 0;
-    yyg->yy_c_buf_p = (char *) 0;
-    yyg->yy_init = 1;
-    yyg->yy_start = 0;
-    yyg->yy_start_stack_ptr = 0;
-    yyg->yy_start_stack_depth = 0;
-    yyg->yy_start_stack = (int *) 0;
-
-/* Defined in main.c */
-#ifdef YY_STDINIT
-    yyin = stdin;
-    yyout = stdout;
-#else
-    yyin = (FILE *) 0;
-    yyout = (FILE *) 0;
-#endif
-
-    /* For future reference: Set errno on error, since we are called by
-     * yylex_init()
-     */
-    return 0;
-}
-
 /* User-visible API */
 
 /* yylex_init is special because it creates the scanner itself, so it is
@@ -12934,16 +12923,56 @@ int yylex_init(yyscan_t* ptr_yy_globals)
         return 1;
     }
 
-    memset(*ptr_yy_globals,0,sizeof(struct yyguts_t));
+    /* By setting to 0xAA, we expose bugs in yy_init_globals. Leave at 0x00 for releases. */
+    memset(*ptr_yy_globals,0x00,sizeof(struct yyguts_t));
 
     return yy_init_globals ( *ptr_yy_globals );
 }
 
 /* %endif */
 
-/* %if-c-only SNIP! this currently causes conflicts with the c++ scanner */
+/* %if-c-only */
+static int yy_init_globals (yyscan_t yyscanner)
+{
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    /* Initialization is the same as for the non-reentrant scanner.
+     * This function is called from yylex_destroy(), so don't allocate here.
+     */
+
+    yyg->yy_buffer_stack = 0;
+    yyg->yy_buffer_stack_top = 0;
+    yyg->yy_buffer_stack_max = 0;
+    yyg->yy_c_buf_p = (char *) 0;
+    yyg->yy_init = 0;
+    yyg->yy_start = 0;
+
+    yyg->yy_start_stack_ptr = 0;
+    yyg->yy_start_stack_depth = 0;
+    yyg->yy_start_stack =  NULL;
+
+/* Defined in main.c */
+#ifdef YY_STDINIT
+    yyin = stdin;
+    yyout = stdout;
+#else
+    yyin = (FILE *) 0;
+    yyout = (FILE *) 0;
+#endif
+
+    /* For future reference: Set errno on error, since we are called by
+     * yylex_init()
+     */
+    return 0;
+}
+/* %endif */
+
+/* %if-c-or-c++ */
+/* %if-c-only */
 /* yylex_destroy is for both reentrant and non-reentrant scanners. */
 int yylex_destroy  (yyscan_t yyscanner)
+/* %endif */
+/* %if-c++-only */
+/* %endif */
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
@@ -12962,11 +12991,22 @@ int yylex_destroy  (yyscan_t yyscanner)
         yyfree(yyg->yy_start_stack ,yyscanner );
         yyg->yy_start_stack = NULL;
 
+/* %if-c++-only */
+/* %endif */
+
+/* %if-c-only */
+
+    /* Reset the globals. This is important in a non-reentrant scanner so the next time
+     * yylex() is called, initialization will occur. */
+    yy_init_globals( yyscanner);
+
 /* %if-reentrant */
     /* Destroy the main struct (reentrant only). */
     yyfree ( yyscanner , yyscanner );
+    yyscanner = NULL;
 /* %endif */
     return 0;
+/* %endif */
 }
 /* %endif */
 
@@ -12978,7 +13018,6 @@ int yylex_destroy  (yyscan_t yyscanner)
 static void yy_flex_strncpy (char* s1, yyconst char * s2, int n , yyscan_t yyscanner)
 {
 	register int i;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 	for ( i = 0; i < n; ++i )
 		s1[i] = s2[i];
 }
@@ -12988,7 +13027,6 @@ static void yy_flex_strncpy (char* s1, yyconst char * s2, int n , yyscan_t yysca
 static int yy_flex_strlen (yyconst char * s , yyscan_t yyscanner)
 {
 	register int n;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 	for ( n = 0; s[n]; ++n )
 		;
 
@@ -13003,18 +13041,6 @@ static int yy_flex_strlen (yyconst char * s , yyscan_t yyscanner)
 
 /* %ok-for-header */
 
-#undef YY_NEW_FILE
-#undef YY_FLUSH_BUFFER
-#undef yy_set_bol
-#undef yy_new_buffer
-#undef yy_set_interactive
-#undef yytext_ptr
-#undef YY_DO_BEFORE_ACTION
-
-#ifdef YY_DECL_IS_OURS
-#undef YY_DECL_IS_OURS
-#undef YY_DECL
-#endif
 #line 1061 "htmllex.l"
 
 
