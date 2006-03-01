@@ -9,9 +9,14 @@
     Changed: wc/webgui/context/filterconfig_html.py,
       wc/filter/rules/FolderRule.py
 
-  * Dont use unsupported iterkeys() on form object.
+  * Don't use unsupported iterkeys() on form object.
     Type: bugfix
     Changed: wc/webgui/context/config_html.py
+
+  * Make sure all methods in the HTML security filter honor that
+    attribute values can be None.
+    Type: bugfix
+    Changed: wc/filter/html/HtmlSecurity.py
 
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 

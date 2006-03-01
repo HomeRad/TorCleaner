@@ -195,13 +195,14 @@ class HtmlSecurity (object):
         """
         Check <body> start tag.
         """
-        if attrs.has_key('onload'):
-            val = attrs['onload'].lower()
-            pattern = r"window\s*\(\s*\)"
-            if re.compile(pattern).search(val):
-                del attrs['onload']
-                msg = "%s\n Detected and prevented IE window() crash bug"
-                wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
+	onload = attrs.get_true(u"onload", u"")
+	if not onload:
+	    return
+        pattern = r"window\s*\(\s*\)"
+        if re.compile(pattern).search(onload):
+            del attrs['onload']
+            msg = "%s\n Detected and prevented IE window() crash bug"
+            wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
 
     def embed_start (self, attrs, htmlfilter):
         """
@@ -209,31 +210,31 @@ class HtmlSecurity (object):
         """
         check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
         check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
-        if attrs.has_key('src'):
-            src = attrs['src']
-            if '?' in src:
-                i = src.rfind('?')
-                src = src[:i]
-            if "." in src:
-                # prevent CVE-2002-0022
-                i = src.rfind('.')
-                if len(src[i:]) > 10:
-                    msg = "%s %r\n Detected and prevented IE " \
-                          "filename overflow crash"
-                    wc.log.warn(wc.LOG_HTML, msg, htmlfilter, src)
-                    del attrs['src']
+	src = attrs.get_true(u"src", u"")
+	if not src:
+	    return
+        if '?' in src:
+            i = src.rfind('?')
+            src = src[:i]
+        if "." in src:
+            # prevent CVE-2002-0022
+            i = src.rfind('.')
+            if len(src[i:]) > 10:
+                msg = "%s %r\n Detected and prevented IE " \
+                      "filename overflow crash"
+                wc.log.warn(wc.LOG_HTML, msg, htmlfilter, src)
+                del attrs['src']
 
     def fieldset_start (self, attrs, htmlfilter):
         """
         Check <fieldset> start tag.
         """
-        if attrs.has_key('style'):
-            # prevent Mozilla crash bug on fieldsets
-            if "position" in attrs['style']:
-                msg = "%s\n Detected and prevented Mozilla "\
-                      "<fieldset style> crash bug"
-                wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
-                del attrs['style']
+        # prevent Mozilla crash bug on fieldsets
+        if "position" in attrs.get_true("style", u""):
+            msg = "%s\n Detected and prevented Mozilla "\
+                  "<fieldset style> crash bug"
+            wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
+            del attrs['style']
 
     def font_start (self, attrs, htmlfilter):
         """
@@ -277,17 +278,16 @@ class HtmlSecurity (object):
         """
         Check <input> start tag.
         """
-        if attrs.has_key('type'):
+        if attrs.has_key('type') and not attrs['type']:
             # prevent IE crash bug on empty type attribute
-            if not attrs['type']:
-                msg = "%s\n Detected and prevented IE <input type> crash bug"
-                wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
-                del attrs['type']
+            msg = "%s\n Detected and prevented IE <input type> crash bug"
+            wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
+            del attrs['type']
 
     def link_start (self, attrs, htmlfilter):
         # CAN-2005-1155 and others
         if attrs.has_key('rel') and attrs.has_key('href'):
-            if attrs['rel'].strip().lower() == 'icon':
+            if attrs.get_true('rel', u"").strip().lower() == 'icon':
                 check_javascript_url(attrs, 'href', htmlfilter)
 
     def meta_start (self, attrs, htmlfilter):
@@ -296,11 +296,11 @@ class HtmlSecurity (object):
         """
         if attrs.has_key('content'):
             # prevent redirect to non-http file
-            refresh = attrs.get_true('http-equiv',
-                                     attrs.get_true('name', u''))
+	    refresh = attrs.get_true('name', u"")
+            refresh = attrs.get_true('http-equiv', refresh)
             if refresh.lower() == 'refresh':
                 # lowercase and strip all whitespace
-                url = attrs['content'].lower()
+                url = attrs.get_true('content', u"").lower()
                 url = wc.strformat.stripall(url)
                 # content can be "1;url=http://;url=javascript:alert('boo')"
                 # so be sure to check all urls
@@ -321,7 +321,7 @@ class HtmlSecurity (object):
         """
         if attrs.has_key('type'):
             # prevent CAN-2003-0344, only one / (slash) allowed
-            t = attrs['type']
+            t = attrs.get_true('type', u"")
             c = t.count("/")
             if c > 1:
                 msg = "%s\n Detected and prevented IE <object type> bug"
@@ -329,10 +329,10 @@ class HtmlSecurity (object):
                 t = t.replace("/", "", c-1)
                 attrs['type'] = t
         if attrs.has_key('codebase'):
-            self.in_winhelp = attrs['codebase'].lower().startswith('hhctrl.ocx')
+            self.in_winhelp = attrs.get_true('codebase', u"").lower().startswith('hhctrl.ocx')
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
         if attrs.has_key('data'):
-            url = wc.url.url_norm(attrs['data'])[0]
+            url = wc.url.url_norm(attrs.get_true('data', u""))[0]
             url = urllib.unquote(url)
             if url.startswith('its:') or \
                url.startswith('mk:') or \
@@ -347,7 +347,7 @@ class HtmlSecurity (object):
                     wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
                     attrs['data'] = url[:i]
         if attrs.has_key('classid'):
-            classid = attrs['classid'].upper()
+            classid = attrs.get_true('classid', u"").upper()
             if 'EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F' in classid:
                 msg = "Detected IE msdds.dll overflow attack."
                 wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
@@ -366,7 +366,7 @@ class HtmlSecurity (object):
         """
         if attrs.has_key('value') and self.in_winhelp:
             # prevent CVE-2002-0823
-            if len(attrs['value']) > 50:
+            if len(attrs.get_true('value', u"")) > 50:
                 msg = "%s\n Detected and prevented WinHlp overflow bug"
                 wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
                 del attrs['value']
@@ -381,3 +381,4 @@ class HtmlSecurity (object):
                 msg = "%s\n Detected and prevented ICQ table width crash bug"
                 wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
                 del attrs['width']
+
