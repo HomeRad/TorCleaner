@@ -8,8 +8,8 @@ Specification of content rating data
 
 Rating
 ======
-A rating is a dictionary filled with key/value items.
-Each key/value item is an instance of a defined rating format.
+A rating is a dictionary filled with name/value items.
+Each name/value item is an instance of a defined rating format.
 
 Rating format
 =============
@@ -30,17 +30,45 @@ information about the service.
 
 Furthermore the service delivers ratings of given URLs.
 
+Service delivery
+================
+Several different rating delivery methods are defined.
+They allow content providers flexibility when providing
+rating data.
+
+HTTP Header
+-----------
+When answering a HTTP request, rating data can be submitted as
+HTTP headers. All headers start with "X-Rating" and are defined
+as follows:
+
+- X-Rating: <service URL>
+  submits the service this rating applies to
+- X-Rating-<name>: <value>
+  submits one name/value item of the rating dictionary
+
+HTTP header names are defined case insensitive. This is the reason
+why rating names, which are used as part of HTTP header names, are
+also defined case insensitive.
+
+HTML meta data
+--------------
+A HTML file can be rated by supplying data in a meta tag.
+The format is basically the same as the HTTP header format,
+using "X-Rating" in the name attribute and the value in the
+content attribute.
+
 WebCleaner service
 ==================
 As you might have guessed by now, the WebCleaner software delivers
-both a full featured rating service, and means to deploy and
+both a full featured rating service, and supports to deploy and
 enforce it on your computer. You can even submit your own ratings
 to the service. Below you will find a short description of the
 service. For more information, visit the
 WebCleaner rating service page (XXX todo).
 
 Rating formats
-~~~~~~~~~~~~~~
+--------------
 The following rating formats are defined by WebCleaner:
 
 ::
@@ -58,48 +86,33 @@ The following rating formats are defined by WebCleaner:
   | WC-Language  | "heavy"      | either none, some or a lot of it.     |
   +--------------+--------------+---------------------------------------+
 
-
 URL ratings
-~~~~~~~~~~~
+-----------
 WebCleaner stores URLs normalized and absolute.
 
 Service delivery
-~~~~~~~~~~~~~~~~
-Several different rating delivery methods are supported by
-WebCleaner. They allow content providers flexibility when providing
-rating data.
+----------------
+WebCleaner supports both HTTP header and HTML meta data ratings.
 
-HTTP Header
------------
-When answering a HTTP request rating data can be submitted as
-HTTP headers. All headers start with "X-Rating" and are defined
-as follows:
-
-- X-Rating: <service URL>
-  submits the service this rating applies to
-- X-Rating-<key>: <value>
-  submits one key/value item of the rating dictionary
-
-Example:
+HTTP header example:
 ::
 
  X-Rating: http://imadoofus.org/service/
  X-Rating-WC-Agerange: 10-
 
-HTML meta data
---------------
-A HTML file can be rated by supplying data in a meta tag.
-The format is basically the same as the HTTP header format,
-using "X-Rating" in the name attribute and the value in the
-content attribute.
-
-Example:
+HTML meta data example:
 ::
 
   <meta name="X-Rating" content="http://imadoofus.org/service/">
   <meta name="X-Rating-WC-Agerange" content="10-">
 
-CGI interface
+Web interface
 -------------
-XXX todo
+The WebCleaner rating web interface allows to query and send ratings
+for specific URLs. Sent ratings will undergo a review process
+before being admitted into the official rating database.
+
+The WebCleaner proxy web interface will allow to send local ratings
+for review to the rating service URL. It will also be possible to
+update the local rating database with the official rating database.
 
