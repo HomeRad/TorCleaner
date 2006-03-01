@@ -1,7 +1,5 @@
 TODO
 
-- 127.0.0.1 to Network address list
-
 - complete specification and implementation of the rating system
 
 - test HTTP pipelining (esp. the order of the responses)

@@ -18,6 +18,10 @@
     Type: bugfix
     Changed: wc/filter/html/HtmlSecurity.py
 
+  * Always add localhost to the interface address list.
+    Type: bugfix
+    Changed: wc/dns/resolver.py
+
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 
   * Quote command line arguments when installing under Windows.
