@@ -34,75 +34,109 @@ import wc.webgui.TAL
 
 class WebConfig (object):
     """
-    Class for web configuration templates.
+    Load and send template files. This is a class rather than
+    separate functions to store all config data in a single place,
+    and to be able to use it as a (fake) server object.
     """
 
     def __init__ (self, client, url, form, protocol, clientheaders,
                  status=200, msg=_('Ok'), localcontext=None,
                  auth_challenges=None):
         """
-        Load a web configuration template and return response.
+        Store template configuration data in the object.
         """
         assert wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
         if isinstance(msg, unicode):
             msg = msg.encode("iso8859-1", "ignore")
         self.client = client
-        # we pretend to be the server
+        self.url = url
+        self.form = form
+        self.protocol = protocol
+        self.clientheaders = clientheaders
+        self.status = status
+        self.msg = msg
+        self.localcontext = localcontext
+        self.auth_challenges = auth_challenges
+        # Flag ensuring load() is called before send().
+        self._loaded = False
+        # We pretend to be the server.
         self.connected = True
-        headers = get_headers(url, status, auth_challenges, clientheaders)
-        path = ""
-        newstatus = None
+
+    def load (self):
+        """
+        Load the data of the template into self.data. Errors are
+        catched and redirected to the appropriate internal error
+        template.
+        """
         try:
-            lang = wc.i18n.get_headers_lang(clientheaders)
-            # get the template filename
-            path, dirs, lang = wc.webgui.get_template_url(url, lang)
-            if path.endswith('.html'):
-                # get TAL context
-                hostname = client.socket.getsockname()[0]
-                context, newstatus = \
-                     get_context(dirs, form, localcontext, hostname, lang)
-                if newstatus == 401 and status != newstatus:
-                    client.error(401, _("Authentication Required"),
-                               auth_challenges=wc.proxy.auth.get_challenges())
-                    return
-                # get (compiled) template
-                template = wc.webgui.templatecache.templates[path]
-                # expand template
-                data = expand_template(template, context)
-                # note: data is already encoded
-            else:
-                fp = file(path, 'rb')
-                data = fp.read()
-                fp.close()
+            self._load()
         except IOError:
-            wc.log.exception(wc.LOG_GUI, "Wrong path %r:", url)
-            # XXX this can actually lead to a maximum recursion
-            # error when client.error caused the exception
-            client.error(404, _("Not Found"))
-            return
+            wc.log.exception(wc.LOG_GUI, "Wrong path %r:", self.url)
+            if self.status == 404:
+                raise
+            self.status = 404
+            self.msg = _("Not Found")
+            self.url = "/internal_404.html"
+            self.load()
         except StandardError:
             # catch standard exceptions and report internal error
-            wc.log.exception(wc.LOG_GUI, "Template error: %r", path)
-            client.error(500, _("Internal Error"))
-            return
+            wc.log.exception(wc.LOG_GUI, "Template error: %r", self.url)
+            if self.status == 500:
+                raise
+            self.status = 500
+            self.msg = _("Internal Error")
+            self.url = "/internal_500.html"
+            self.load()
         # not catched builtin exceptions are:
         # SystemExit, StopIteration and all warnings
 
-        # write response to client
-        self.put_response(data, protocol, status, msg, headers)
-        # restart?
-        if newstatus == "restart":
-            wc.restart()
-
-
-    def put_response (self, data, protocol, status, msg, headers):
+    def _load (self):
         """
-        Write response to client.
+        Helper method to handle the raw template data retrieval,
+        without catching errors.
         """
-        response = "%s %d %s" % (protocol, status, msg)
-        self.client.server_response(self, response, status, headers)
-        self.client.server_content(data)
+        lang = wc.i18n.get_headers_lang(self.clientheaders)
+        hostname = self.client.socket.getsockname()[0]
+        # get the template filename
+        path, dirs, lang = wc.webgui.get_template_url(self.url, lang)
+        self.newstatus = None
+        if path.endswith('.html'):
+            # get TAL context
+            context, self.newstatus = get_context(dirs, self.form,
+                                           self.localcontext, hostname, lang)
+            if self.newstatus == 401 and self.status != 401:
+                self.status = 401
+                self.msg = _("Authentication Required")
+                self.url = "/internal_401.html"
+                self.auth_challenges = wc.proxy.auth.get_challenges()
+                self.load()
+                return
+            # get (compiled) template
+            template = wc.webgui.templatecache.templates[path]
+            # expand template
+            self.data = expand_template(template, context)
+            # note: data is already encoded
+        else:
+            fp = file(path, 'rb')
+            self.data = fp.read()
+            fp.close()
+        self._loaded = True
+
+    def send (self):
+        """
+        Send response to client.
+        """
+        if not self._loaded:
+            self.load()
+        response = "%s %d %s" % (self.protocol, self.status, self.msg)
+        headers = get_headers(self.url, self.status, self.auth_challenges,
+                              self.clientheaders)
+        self.client.server_response(self, response, self.status, headers)
+        self.client.server_content(self.data)
         self.client.server_close(self)
+        # Check for restart.
+        if self.newstatus == "restart":
+            wc.restart()
 
     def client_abort (self):
         """

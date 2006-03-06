@@ -60,7 +60,8 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
         form = None
         self.url = "/blocked.html"
         self.headers['Host'] = '%s\r' % self.socket.getsockname()[0]
-        wc.webgui.WebConfig(self, self.url, form, self.protocol, self.headers)
+        wc.webgui.WebConfig(self, self.url, form,
+                            self.protocol, self.headers).send()
 
     def mangle_request_headers (self, headers):
         # nothing to do

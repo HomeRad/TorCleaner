@@ -131,7 +131,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             wc.webgui.webconfig.WebConfig(self, '/error.html', form, protocol,
                       self.headers, localcontext={'error': err,},
                       status=status, msg=msg,
-                      auth_challenges=auth_challenges)
+                      auth_challenges=auth_challenges).send()
 
     def __repr__ (self):
         """
@@ -568,8 +568,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         form = None
         protocol = "HTTP/%d.%d" % self.version
         wc.webgui.webconfig.WebConfig(self, '/google.html', form, protocol,
-                     self.headers,
-                     localcontext=wc.google.get_google_context(url, response))
+              self.headers,
+              localcontext=wc.google.get_google_context(url, response)).send()
 
     def server_content (self, data):
         """
@@ -663,7 +663,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         # this object will call server_connected at some point
         protocol = "HTTP/%d.%d" % self.version
         wc.webgui.webconfig.WebConfig(self, self.url, form, protocol,
-                                      self.headers)
+                                      self.headers).send()
 
     def get_form_data (self):
         """
