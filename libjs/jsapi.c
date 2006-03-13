@@ -789,7 +789,7 @@ JS_BeginRequest(JSContext *cx)
 {
     JSRuntime *rt;
 
-    JS_ASSERT(cx->thread);
+    JS_ASSERT(cx->thread == js_CurrentThreadId());
     if (!cx->requestDepth) {
         /* Wait until the GC is finished. */
         rt = cx->runtime;
@@ -1855,7 +1855,7 @@ JS_MaybeGC(JSContext *cx)
     bytes = rt->gcBytes;
     lastBytes = rt->gcLastBytes;
     if ((bytes > 8192 && bytes > lastBytes + lastBytes / 2) ||
-        rt->gcMallocBytes > rt->gcMaxBytes) {
+        rt->gcMallocBytes > rt->gcMaxMallocBytes) {
         /*
          * Run the GC if we have half again as many bytes of GC-things as
          * the last time we GC'd, or if we have malloc'd more bytes through
@@ -2307,7 +2307,7 @@ JS_SealObject(JSContext *cx, JSObject *obj, JSBool deep)
     scope = js_GetMutableScope(cx, obj);
     if (scope)
         SCOPE_SET_SEALED(scope);
-    JS_UNLOCK_SCOPE(cx, scope);
+    JS_UNLOCK_OBJ(cx, obj);
     if (!scope)
         return JS_FALSE;
 
@@ -4694,8 +4694,21 @@ JS_PUBLIC_API(JSBool)
 JS_ReportPendingException(JSContext *cx)
 {
 #if JS_HAS_EXCEPTIONS
+    JSBool save, ok;
+
     CHECK_REQUEST(cx);
-    return js_ReportUncaughtException(cx);
+
+    /*
+     * Set cx->creatingException to suppress the standard error-to-exception
+     * conversion done by all {js,JS}_Report* functions except for OOM.  The
+     * cx->creatingException flag was added to suppress recursive divergence
+     * under js_ErrorToException, but it serves for our purposes here too.
+     */
+    save = cx->creatingException;
+    cx->creatingException = JS_TRUE;
+    ok = js_ReportUncaughtException(cx);
+    cx->creatingException = save;
+    return ok;
 #else
     return JS_TRUE;
 #endif

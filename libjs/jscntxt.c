@@ -702,7 +702,8 @@ ReportError(JSContext *cx, const char *message, JSErrorReport *reportp)
      * exception is thrown, then the JSREPORT_EXCEPTION flag will be set
      * on the error report, and exception-aware hosts should ignore it.
      */
-    if (reportp && reportp->errorNumber == JSMSG_UNCAUGHT_EXCEPTION)
+    JS_ASSERT(reportp); 
+    if (reportp->errorNumber == JSMSG_UNCAUGHT_EXCEPTION)
         reportp->flags |= JSREPORT_EXCEPTION;
 
 #if JS_HAS_ERROR_EXCEPTIONS
@@ -877,24 +878,15 @@ js_ExpandErrorArguments(JSContext *cx, JSErrorCallback callback,
             for (i = 0; i < argCount; i++) {
                 if (charArgs) {
                     char *charArg = va_arg(ap, char *);
-                    argLengths[i] = strlen(charArg);
+                    size_t charArgLength = strlen(charArg);
                     reportp->messageArgs[i]
-                        = js_InflateString(cx, charArg, &argLengths[i]);
+                        = js_InflateString(cx, charArg, &charArgLength);
                     if (!reportp->messageArgs[i])
                         goto error;
                 } else {
-                    jschar *jscharArg = va_arg(ap, jschar *);
-                    jschar *copiedArg;
-                    argLengths[i] = js_strlen(jscharArg);
-                    copiedArg = (jschar*)
-                        JS_malloc(cx, (argLengths[i] + 1) * sizeof(jschar));
-                    if (!copiedArg)
-                        goto error;
-                    memcpy(copiedArg, 
-                           jscharArg, 
-                           (argLengths[i] + 1) * sizeof(jschar));
-                    reportp->messageArgs[i] = copiedArg;
+                    reportp->messageArgs[i] = va_arg(ap, jschar *);
                 }
+                argLengths[i] = js_strlen(reportp->messageArgs[i]);
                 totalArgsLength += argLengths[i];
             }
             /* NULL-terminate for easy copying. */
