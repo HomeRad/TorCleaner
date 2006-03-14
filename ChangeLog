@@ -22,6 +22,16 @@
     Type: bugfix
     Changed: wc/dns/resolver.py
 
+  * Parse <!> empty SGML comments in HTML data. And build the HTML
+    parser with equivalence class compression which makes it a lot
+    smaller and only a little tad slower.
+    Type: feature
+    Changed: wc/HtmlParser/htmllex.[lc], wc/tests/test_parser.py
+
+  * Avoid false positives in IE filename overflow detection.
+    Type: bugfix
+    Changed: wc/filter/html/HtmlSecurity.py
+  
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 
   * Quote command line arguments when installing under Windows.

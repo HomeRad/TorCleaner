@@ -213,13 +213,15 @@ class HtmlSecurity (object):
 	src = attrs.get_true(u"src", u"")
 	if not src:
 	    return
-        if '?' in src:
-            i = src.rfind('?')
+        i = src.find('?')
+        if i != -1:
             src = src[:i]
-        if "." in src:
+        i = src.rfind('.')
+        if i != -1:
             # prevent CVE-2002-0022
-            i = src.rfind('.')
-            if len(src[i:]) > 10:
+	    j = src.rfind('/')
+	    l = len(src)
+            if i > j and len(src[i:]) > 10:
                 msg = "%s %r\n Detected and prevented IE " \
                       "filename overflow crash"
                 wc.log.warn(wc.LOG_HTML, msg, htmlfilter, src)
