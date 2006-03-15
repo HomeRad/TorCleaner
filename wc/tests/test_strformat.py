@@ -92,13 +92,16 @@ class TestStrFormat (tests.StandardTest):
         Test byte size strings.
         """
         self.assertRaises(ValueError, wc.strformat.strsize, -1)
-        self.assertEquals(wc.strformat.strsize(0), "0 Bytes")
-        self.assertEquals(wc.strformat.strsize(1), "1 Byte")
-        self.assertEquals(wc.strformat.strsize(2), "2 Bytes")
-        self.assertEquals(wc.strformat.strsize(1023), "1023 Bytes")
-        self.assertEquals(wc.strformat.strsize(1024), "1.00 kB")
-        self.assertEquals(wc.strformat.strsize(1024*1024), "1.00 MB")
-        self.assertEquals(wc.strformat.strsize(1024*1024*1024), "1.00 GB")
+        self.assertEquals(wc.strformat.strsize(0), "0B")
+        self.assertEquals(wc.strformat.strsize(1), "1B")
+        self.assertEquals(wc.strformat.strsize(2), "2B")
+        self.assertEquals(wc.strformat.strsize(1023), "1023B")
+        self.assertEquals(wc.strformat.strsize(1024), "1KB")
+        self.assertEquals(wc.strformat.strsize(1024*25), "25.00KB")
+        self.assertEquals(wc.strformat.strsize(1024*1024), "1.00MB")
+        self.assertEquals(wc.strformat.strsize(1024*1024*11), "11.0MB")
+        self.assertEquals(wc.strformat.strsize(1024*1024*1024), "1.00GB")
+        self.assertEquals(wc.strformat.strsize(1024*1024*1024*14), "14.0GB")
 
     def test_is_ascii (self):
         self.assert_(wc.strformat.is_ascii("abcd./"))
