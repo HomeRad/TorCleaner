@@ -319,22 +319,14 @@
  tag="a">
   <title lang="de">Google Werbung 2</title>
   <title lang="en">Google Pageads 2</title>
-  <attr name="href">\.googleadservices\.|ads_by_google\.html</attr>
-  <replacement part="complete"/>
-</htmlrewrite>
-
-<htmlrewrite sid="wc.50"
- tag="iframe">
-  <title lang="de">Google Werbung 3</title>
-  <title lang="en">Google Pageads 3</title>
-  <attr name="src">\.googlesyndication\.</attr>
+  <attr name="href">\.google(adservices|syndication)\.|ads_by_google\.html</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.49"
- tag="script">
-  <title lang="de">Google Werbung 4</title>
-  <title lang="en">Google Pageads 4</title>
+ tag="script|iframe">
+  <title lang="de">Google Werbung 3</title>
+  <title lang="en">Google Pageads 3</title>
   <attr name="src">\.google(syndication|-analytics)\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>

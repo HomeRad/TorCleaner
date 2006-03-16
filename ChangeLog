@@ -39,6 +39,10 @@
     Type: bugfix
     Changed: wc/filter/html/JSFilter.py
 
+  * Updated advertising filter rules.
+    Type: feature
+    Changed: config/*.zap
+
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 
   * Quote command line arguments when installing under Windows.

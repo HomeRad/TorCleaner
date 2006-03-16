@@ -188,7 +188,7 @@
   <title lang="en">Ad servers 10</title>
   <description lang="de">Blockiert Rechner mit 'click' im Namen.</description>
   <description lang="en">Remove links with 'click' words in the host name.</description>
-  <attr name="href">https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
+  <attr name="href">https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups|s\.totemcash))\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
@@ -571,7 +571,7 @@
   <title lang="en">Remove frames/scripts with 'dime'</title>
   <description lang="de">Entferne frames/scripts mit 'dime' im Namen.</description>
   <description lang="en">Remove frames/scripts with 'dime' in the name.</description>
-  <attr name="src">dime(xchange|click)</attr>
+  <attr name="src">dime(xchange|click)|bidvertiser\.com</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 

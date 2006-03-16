@@ -188,6 +188,7 @@
   <nomatchurl>www\.mvhs\.de</nomatchurl>
   <nomatchurl>map\.search\.ch</nomatchurl>
   <nomatchurl>www\.litek(-gmbh)?\.de</nomatchurl>
+  <nomatchurl>www\.m-audio\.com</nomatchurl>
 </javascript>
 
 <htmlrewrite sid="wc.307"
