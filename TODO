@@ -1,6 +1,17 @@
 TODO
 
-- complete specification and implementation of the rating system
+- create friendlier error pages of web gui (especially 404 error)
+  http://www.alistapart.com/articles/perfect404
+  Also print exception in 500 Internal error pages
+  File: wc/webgui/webconfig.py
+
+- complete implementation of the rating system
+
+- 503 temporarily overloaded -> automatically try coral cache
+  Question: do something with the (optional) Retry-After header?
+  Perhaps print it in the error page (now that we have custom error pages)
+  This would require access to the HTTP header values that the server
+  sent inside the webconfig framework.
 
 - test HTTP pipelining (esp. the order of the responses)
 
