@@ -292,7 +292,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                 del attrs[name]
         if tag == 'form':
             name = attrs.get_true('name', attrs.get_true('id', u""))
-            self.jsForm(name, attrs.get('action', u''),
+            self.jsForm(name, attrs.get_true('action', u''),
                         attrs.get_true('target', u''))
         elif tag == 'script':
             js_ok, js_lang = wc.js.get_js_data(attrs)
