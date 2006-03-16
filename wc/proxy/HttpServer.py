@@ -370,7 +370,7 @@ class HttpServer (wc.proxy.Server.Server):
             # was cached
             return
         wc.proxy.Headers.server_set_content_headers(
-                                     self.headers, self.mime_types, self.url)
+                    self.statuscode, self.headers, self.mime_types, self.url)
 
     def set_persistent (self, headers, http_ver):
         """

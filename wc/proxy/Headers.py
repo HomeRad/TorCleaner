@@ -266,7 +266,7 @@ def server_set_date_header (headers):
         headers['Date'] = "%s\r" % wc.http.date.get_date_rfc1123(now)
 
 
-def server_set_content_headers (headers, mime_types, url):
+def server_set_content_headers (status, headers, mime_types, url):
     """
     Add missing content-type headers.
     """
@@ -282,7 +282,8 @@ def server_set_content_headers (headers, mime_types, url):
     # we have a mime type override, pick the first one out of the list
     mime = mime_types[0]
     if origmime:
-        wc.log.info(wc.LOG_PROXY,
+        if 200 <= status < 300:
+            wc.log.info(wc.LOG_PROXY,
             _("Change content type of %r from %r to %r"), url, origmime, mime)
     else:
         wc.log.info(wc.LOG_PROXY,

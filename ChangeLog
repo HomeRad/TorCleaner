@@ -43,6 +43,12 @@
     Type: feature
     Changed: config/*.zap
 
+  * Only force changing of content types when the HTTP status code is 2xx,
+    since errors are likely to be HTML (or at least another content-type
+    than expected).
+    Type: feature
+    Changed: wc/proxy/{Headers,HttpServer,SslServer}.py
+
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 
   * Quote command line arguments when installing under Windows.

@@ -70,7 +70,7 @@ class SslServer (wc.proxy.HttpServer.HttpServer,
             # was cached
             return
         wc.proxy.Headers.server_set_content_headers(
-                                     self.headers, self.mime_types, self.url)
+                    self.statuscode, self.headers, self.mime_types, self.url)
 
     def process_recycle (self):
         """
