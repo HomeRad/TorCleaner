@@ -1172,6 +1172,8 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                         str = js_GetPrinterOutput(jp2);
                         if (str)
                             js_printf(jp, "%s\n", JS_GetStringBytes(str));
+                        else
+                            ok = JS_FALSE;
                     }
                     js_DestroyPrinter(jp2);
                     if (!ok)
@@ -2983,8 +2985,13 @@ js_DecompileValueGenerator(JSContext *cx, intN spindex, jsval v,
          *
          * In the script or scripted function case, the same reasoning
          * applies to fp rather than to fp->down.
+         *
+         * We search from limit to base to find the most recently calculated
+         * value matching v under assumption that it is it that caused
+         * exception, see bug 328664.
          */
-        for (sp = base; sp < limit; sp++) {
+        for (sp = limit; sp > base; ) {
+            --sp;
             if (*sp == v) {
                 depth = (intN)script->depth;
                 pc = (jsbytecode *) sp[-depth];
@@ -3120,8 +3127,8 @@ js_DecompileValueGenerator(JSContext *cx, intN spindex, jsval v,
         }
         if (js_DecompileCode(jp, script, begin, len))
             name = js_GetPrinterOutput(jp);
+        js_DestroyPrinter(jp);
     }
-    js_DestroyPrinter(jp);
     if (tmp)
         JS_free(cx, tmp);
     return name;
