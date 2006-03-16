@@ -55,7 +55,10 @@ class WebConfig (object):
         self.clientheaders = clientheaders
         self.status = status
         self.msg = msg
-        self.localcontext = localcontext
+        if localcontext is None:
+            self.localcontext = {}
+        else:
+            self.localcontext = localcontext
         self.auth_challenges = auth_challenges
         # Flag ensuring load() is called before send().
         self._loaded = False
@@ -76,9 +79,10 @@ class WebConfig (object):
                 raise
             self.status = 404
             self.msg = _("Not Found")
+            self.localcontext["error"] = self.url
             self.url = "/internal_404.html"
             self.load()
-        except StandardError:
+        except StandardError, msg:
             # catch standard exceptions and report internal error
             wc.log.exception(wc.LOG_GUI, "Template error: %r", self.url)
             if self.status == 500:
@@ -86,6 +90,7 @@ class WebConfig (object):
             self.status = 500
             self.msg = _("Internal Error")
             self.url = "/internal_500.html"
+            self.localcontext["error"] = str(msg)
             self.load()
         # not catched builtin exceptions are:
         # SystemExit, StopIteration and all warnings
@@ -217,9 +222,8 @@ def get_context (dirs, form, localcontext, hostname, lang):
     for attr in attrs:
         context_add(context, attr, getattr(template_context, attr))
     # add local context
-    if localcontext is not None:
-        for key, value in localcontext.iteritems():
-            context_add(context, key, value)
+    for key, value in localcontext.iteritems():
+        context_add(context, key, value)
     return context, status
 
 
@@ -245,6 +249,11 @@ def add_default_context (context, filename, hostname, lang):
     newport = wc.configuration.config.get('newport', port)
     context_add(context, "newbaseurl", "http://%s:%d/" % (hostname, newport))
     add_i18n_context(context, lang)
+    # XXX TODO referrer variables
+    context_add(context, "referrer", "XXX")
+    context_add(context, "no_referrer", True)
+    context_add(context, "self_referrer", False)
+    context_add(context, "unknown_referrer", False)
 
 
 nav_filenames = [
