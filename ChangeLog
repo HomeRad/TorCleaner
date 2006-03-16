@@ -31,7 +31,12 @@
   * Avoid false positives in IE filename overflow detection.
     Type: bugfix
     Changed: wc/filter/html/HtmlSecurity.py
-  
+
+  * Ignore encoding errors when recursively filtering JavaScript
+    content.
+    Type: bugfix
+    Changed: wc/filter/html/JSFilter.py
+
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 
   * Quote command line arguments when installing under Windows.

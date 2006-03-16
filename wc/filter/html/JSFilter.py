@@ -116,7 +116,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         if not val:
             return
         self.js_env.listeners.append(self)
-        val = val.encode(self.htmlparser.encoding)
+        val = val.encode(self.htmlparser.encoding, "ignore")
         try:
             self.js_env.executeScriptAsFunction(val, 0.0)
         except wc.js.jslib.error:
