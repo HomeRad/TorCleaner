@@ -49,6 +49,8 @@ def has_dashes_in_hostname (url):
     i = url.find(":")
     if i == -1:
         return False
+    if url[:i].lower() in ("javascript",):
+        return False
     host = url[i+1:].lstrip("/")
     i = host.find("/")
     if i != -1:

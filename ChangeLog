@@ -28,7 +28,8 @@
     Type: feature
     Changed: wc/HtmlParser/htmllex.[lc], wc/tests/test_parser.py
 
-  * Avoid false positives in IE filename overflow detection.
+  * Avoid false positives in IE filename overflow and the
+    dashes-in-hostname detection.
     Type: bugfix
     Changed: wc/filter/html/HtmlSecurity.py
 
