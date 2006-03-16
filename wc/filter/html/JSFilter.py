@@ -155,7 +155,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_htmlparser = wc.filter.html.HtmlParser.HtmlParser(handler)
         handler.htmlparser = self.js_htmlparser
         # encode for JS engine
-        script = script.encode(self.htmlparser.encoding)
+        script = script.encode(self.htmlparser.encoding, "ignore")
         # execute
         self.js_env.executeScript(script, ver)
         self.js_env.listeners.remove(self)
@@ -321,9 +321,9 @@ class JSFilter (wc.js.JSListener.JSListener):
             return
         assert wc.log.debug(wc.LOG_JS, "%s jsForm %r action %r %r",
                      self, name, action, target)
-        name = name.encode(self.htmlparser.encoding)
-        action = action.encode(self.htmlparser.encoding)
-        target = target.encode(self.htmlparser.encoding)
+        name = name.encode(self.htmlparser.encoding, "ignore")
+        action = action.encode(self.htmlparser.encoding, "ignore")
+        target = target.encode(self.htmlparser.encoding, "ignore")
         self.js_env.addForm(name, action, target)
 
     def jsScriptSrc (self, url, language):
