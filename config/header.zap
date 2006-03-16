@@ -98,5 +98,6 @@ Diese Daten können private Informationen enthalten (z.B.wenn Sie bestimmte Sprac
   <title lang="en">Remove cookies</title>
   <description lang="de">Entferne Alle 'Set-Cookie' Kopfdaten. Einige Seiten funktionieren ohne Cookies nicht. Diese Regel ist standardmäßig deaktiviert.</description>
   <description lang="en">Remove all set-cookie headers. Some sites may not work with this option because they require cookies. This rule is disabled per default.</description>
+  <nomatchurl>t-com\.de</nomatchurl>
 </header>
 </folder>

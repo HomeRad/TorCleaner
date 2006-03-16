@@ -189,6 +189,7 @@
   <nomatchurl>map\.search\.ch</nomatchurl>
   <nomatchurl>www\.litek(-gmbh)?\.de</nomatchurl>
   <nomatchurl>www\.m-audio\.com</nomatchurl>
+  <nomatchurl>t-com\.de</nomatchurl>
 </javascript>
 
 <htmlrewrite sid="wc.307"
