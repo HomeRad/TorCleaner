@@ -5,7 +5,6 @@
 ===================================
 WebCleaner - a filtering HTTP proxy
 ===================================
-
 The latest version of this document is available at
 http://webcleaner.sourceforge.net/.
 
@@ -39,18 +38,19 @@ The `article`_ is downloadable as PDF.
 
 Download
 ========
-
-Download the latest packages from `WebCleaner download section`_.
+WebCleaner is available for Windows and Unix systems from the
+`WebCleaner download section`_.
 
 .. _WebCleaner download section:
    http://sourceforge.net/project/showfiles.php?group_id=7692
 
-Requirements and installation instructions are located at the
+Software requirements and installation instructions are located at the
 `install documentation`_. To see what has changed between releases
-look at the ChangeLog_.
+(and what will be in the next release), look at the ChangeLog_.
 
 .. _install documentation: install.html
-.. _ChangeLog: http://cvs.sourceforge.net/viewcvs.py/webcleaner/webcleaner2/ChangeLog?view=markup
+.. _ChangeLog:
+   http://svn.sourceforge.net/viewcvs.cgi/webcleaner/trunk/webcleaner2/ChangeLog?view=markup
 
 I also suggest using the `SwitchProxy`_ Mozilla/Firefox extension.
 It allows easy switching between different proxy settings.
