@@ -135,13 +135,16 @@ class TestUrl (tests.StandardTest):
         nurl = "http://example.com/#a%20b"
         self.urlnormtest(url, nurl)
         url = "http://example.com/?u=http://example2.com?b=c "
-        nurl ="http://example.com/?u=http://example2.com?b=c%20"
+        nurl ="http://example.com/?u=http://example2.com?b=c+"
         self.urlnormtest(url, nurl)
         url = "http://example.com/?u=http://example2.com?b="
         nurl ="http://example.com/?u=http://example2.com?b="
         self.urlnormtest(url, nurl)
         url = "http://localhost:8001/?quoted=ü"
         nurl = "http://localhost:8001/?quoted=%FC"
+        self.urlnormtest(url, nurl)
+        url = "http://host/?a=b/c+d="
+        nurl = "http://host/?a=b/c+d%3D"
         self.urlnormtest(url, nurl)
 
     def test_norm_case_sensitivity (self):
