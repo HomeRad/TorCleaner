@@ -33,7 +33,8 @@
     Changed: wc/filter/html/HtmlSecurity.py
 
   * Ignore encoding errors when recursively filtering JavaScript
-    content.
+    content. And make sure that the JavaScript form action attribute
+    is not None.
     Type: bugfix
     Changed: wc/filter/html/JSFilter.py
 
