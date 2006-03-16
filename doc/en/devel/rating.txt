@@ -6,6 +6,12 @@
 Specification of content rating data
 ====================================
 
+This document defines the data and mechanisms used to
+rate internet pages. This can be used to enable surfing
+sessions that are limited to specified contents, and is
+especially useful for allowing children to experience the
+web in a safe manner.
+
 Rating
 ======
 A rating is a dictionary filled with name/value items.
