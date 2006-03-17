@@ -125,6 +125,20 @@ def check_attr_size (attrs, name, htmlfilter, maxlen=4):
         del attrs[name]
 
 
+def check_attr_number (attrs, htmlfilter, maxnum=200):
+    """
+    Restrict the number of attributes a start tag can have. Too much attributes
+    are known to crash some browsers.
+    """
+    l = len(attrs)
+    if l > maxnum:
+        msg = "%s\n  Too much attributes (%d > %d) in tag"
+        wc.log.warn(wc.LOG_HTML, msg, htmlfilter, l, maxnum)
+        attrs.popitem()
+        while len(attrs) > maxnum:
+            attrs.popitem()
+
+
 def check_url (attrs, name, htmlfilter):
     """
     Check if url has suspicious patterns.
@@ -163,6 +177,7 @@ class HtmlSecurity (object):
         Delegate to individual start tag handlers.
         """
         assert wc.strformat.is_ascii(tag)
+        check_attr_number(attrs, htmlfilter)
         fun = "%s_start" % tag
         if hasattr(self, fun):
             getattr(self, fun)(attrs, htmlfilter)
