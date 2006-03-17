@@ -303,6 +303,12 @@ class TestRewriter (tests.StandardTest):
         self.filt("""<script type="text/javascript"></script>""",
                   """""")
 
+    def test_ie_jshandler_crash (self):
+        # multiple attributes with same name should be merged
+        bork = ' onclick="bork"'
+        html = '<html><body><img src="foo.jpg"><foo%s><p>Hello'
+        self.filt(html % (bork * 1500), html % bork)
+
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)
