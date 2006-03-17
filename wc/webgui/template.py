@@ -18,6 +18,8 @@
 TAL template class for WebCleaner.
 """
 
+import os.path
+
 import wc.webgui.PageTemplates.PageTemplate
 import wc.webgui.PageTemplates.Expressions
 import wc.webgui.TAL.TALInterpreter
@@ -35,8 +37,10 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
         self.mtime = mtime
         self.pt_edit(open(path), 'text/html')
         if self._v_errors:
+            msg = ", ".join(self._v_errors)
+            name = os.path.basename(path)
             raise wc.webgui.PageTemplates.PageTemplate.PTRuntimeError(
-                                    'Page Template %s has errors.' % self.id)
+                                         'Template /%s:\n%s' % (name, msg))
 
     def html (self):
         """
