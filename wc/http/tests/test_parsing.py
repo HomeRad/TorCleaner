@@ -45,13 +45,13 @@ class TestBasic (tests.StandardTest):
     def test_response (self):
         response = "HTTP/1.1 200 foo"
         url = "unknown"
-        parsed = [(1, 1), 200, "foo"]
+        parsed = [(1, 1), 200, "OK"]
         self.assertEquals(wc.http.parse_http_response(response, url), parsed)
         response = "HTTP/1.1 -200 foo"
-        parsed = [(1, 1), 200, "foo"]
+        parsed = [(1, 1), 200, "OK"]
         self.assertEquals(wc.http.parse_http_response(response, url), parsed)
         response = "HTTP/1.1 999 glork bla"
-        parsed = [(1, 1), 200, "glork bla"]
+        parsed = [(1, 1), 200, "OK"]
         self.assertEquals(wc.http.parse_http_response(response, url), parsed)
 
     def test_quoted_string (self):
