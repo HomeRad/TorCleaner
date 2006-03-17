@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" tal:attributes="lang lang">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="copyright" content="(C) 2006 Bastian Kleineidam">
+<link href="wc.css" type="text/css" rel="Stylesheet">
+<title i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+missing page</title>
+</head>
+<body bgcolor="#ffffff">
+<div class="content" id="main">
+<h1 i18n:translate=""><span tal:replace="AppName" i18n:name="appname">WebCleaner</span>
+missing page</h1>
+<span tal:condition="no_referrer">
+<div>
+The requested page
+"<code tal:content="error">imadoofus</code>"
+does not exist.
+This might be an old bookmark, or an old search engine entry, or
+a mis-typed adress.
+</div>
+<div>
+To find the page you are looking for, you can go to the
+<a href="/index.html"
+ tal:attributes="href string:/index.html.${lang}">main page overview</a>.
+</div>
+</span>
+
+<span tal:condition="self_referrer">
+<div>
+This error is the fault of WebCleaner. It rendered a broken link into
+its page $page. Please file a bug report about this to $email.
+You can return to the <a href="$referrer">previous page</a>.
+</div>
+</span>
+
+<span tal:condition="unknown_referrer">
+<div>
+You were referred to a non-existing page $page by
+<a href="$referrer">$referrer</a>.
+This might be an old bookmark, or an old search engine entry, or
+a mis-typed adress.
+</div>
+<div>
+To find the page you are looking for, you can go to the
+<a href="/index.html.$lang">main page overview</a>.
+</div>
+</span>
+</div>
+</body>
+</html>
