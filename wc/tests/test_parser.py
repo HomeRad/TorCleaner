@@ -54,6 +54,10 @@ parsetests = [
     ("""<aä>""", """<a>"""),
     ("""<a aä="b">""", """<a a="b">"""),
     ("""<a a="bä">""", """<a a="b&#228;">"""),
+    # multiple attribute names should be ignored...
+    ("""<a b="c" b="c" >""", """<a b="c">"""),
+    # ... but which one wins - in our implementation the last one
+    ("""<a b="c" b="d" >""", """<a b="d">"""),
     # reduce test
     ("""<a  b="c"><""", """<a b="c"><"""),
     ("""d>""", """d>"""),
