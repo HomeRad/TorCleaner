@@ -964,7 +964,6 @@ array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     jsuint len, newlen, i, undefs;
     JSStackFrame *fp;
     jsid id;
-    size_t nbytes;
     JSBool ok;
 
     /*
@@ -1002,24 +1001,31 @@ array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         JS_ReportOutOfMemory(cx);
         return JS_FALSE;
     }
-    nbytes = ((size_t) len) * sizeof(jsval);
 
-    vec = (jsval *) JS_malloc(cx, nbytes);
+    vec = (jsval *) JS_malloc(cx, ((size_t) len) * sizeof(jsval));
     if (!vec)
         return JS_FALSE;
 
-    /* Root vec, clearing it first in case a GC nests while we're filling it. */
-    memset(vec, 0, nbytes);
+    /*
+     * Initialize vec as a root. We will clear elements of vec one by
+     * one while increasing fp->nvars when we know that the property at
+     * the corresponding index exists and its value must be rooted.
+     *
+     * In this way when sorting a huge mostly spare array we will not
+     * access the tail of vec corresponding to properties that do not
+     * exist allowing OS to avoiding committing RAM for it. See bug 330812.
+     */
     fp = cx->fp;
     fp->vars = vec;
-    fp->nvars = len;
+    fp->nvars = 0;
 
     /*
-     * By ECMA 262, 15.4.4.11, an undefined property (which we call a "hole")
-     * always bigger than an existing property with value undefined and that
-     * is always bigger then any other property. Thus to sort holes and
-     * undefs we simply count them, sort the rest of elements, append undefs
-     * after them and then make holes after undefs.
+     * By ECMA 262, 15.4.4.11, a property that does not exist (which we
+     * call a "hole") is always greater than an existing property with
+     * value undefined and that is always greater than any other property.
+     * Thus to sort holes and undefs we simply count them, sort the rest
+     * of elements, append undefs after them and then make holes after
+     * undefs.
      */
     undefs = 0;
     newlen = 0;
@@ -1031,6 +1037,9 @@ array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         if (id == JSID_HOLE)
             continue;
 
+        /* Clear vec[newlen] before including it in the rooted set. */
+        vec[newlen] = JSVAL_NULL;
+        fp->nvars = newlen + 1;
         ok = OBJ_GET_PROPERTY(cx, obj, id, &vec[newlen]);
         if (!ok)
             goto out;
@@ -1052,7 +1061,7 @@ array_sort(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     ca.fval = fval;
     ca.localroot = argv + argc;       /* local GC root for temporary string */
     pivotroot    = argv + argc + 1;   /* local GC root for pivot val */
-    ok = js_HeapSort(vec, (size_t) len, pivotroot, sizeof(jsval),
+    ok = js_HeapSort(vec, (size_t) newlen, pivotroot, sizeof(jsval),
                      all_strings ? sort_compare_strings : sort_compare,
                      &ca);
 
