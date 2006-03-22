@@ -14,7 +14,7 @@
 import sys
 if not sys.platform.startswith('win'):
     # not for us
-    sys.exit()
+    sys.exit(1)
 if not hasattr(sys, "version_info"):
     raise SystemExit, "This program requires Python 2.4 or later."
 if sys.version_info < (2, 4, 0, 'final', 0):
@@ -98,6 +98,8 @@ def fix_install_path (line):
             val = os.path.normpath(val)
     return "%s = %r%s" % (key, val, os.linesep)
 
+
+#################### installation ####################
 
 def do_install ():
     """
@@ -277,6 +279,8 @@ def open_browser (url):
         pass
 
 
+#################### removal ####################
+
 def do_remove ():
     """
     Stop and remove the installed NT service.
@@ -288,6 +292,7 @@ def do_remove ():
     remove_service()
     remove_certificates()
     remove_tempfiles()
+    purge_tempfiles()
 
 
 def remove_certificates ():
@@ -305,12 +310,29 @@ You have to remove the SSL certificates manually.""")
 
 def remove_tempfiles ():
     """
-    Remove log files and magic(1) cache file.
+    Remove log, custom config files and magic(1) cache file.
     """
     import wc
     remove_file(os.path.join(wc.ConfigDir, "magic.mime.mgc"))
     for pat in ("webcleaner.log*", "webcleaner-access.log*"):
         for fname in glob.glob(os.path.join(wc.ConfigDir, pat)):
+            remove_file(fname)
+
+
+def purge_tempfiles ():
+    """
+    Ask if user wants to purge local config files.
+    """
+    files = glob.glob(os.path.join(wc.ConfigDir, "local_*.zap"))
+    if not files:
+        return
+    from Tkinter import tkMessageBox
+    answer = tkMessageBox.askyesno(_("Purge local config"),
+         _("""Do you want to remove your local filter rules?
+They can be re-used in other installations of %s, but
+are useless otherwise."""))
+    if answer:
+        for fname in files:
             remove_file(fname)
 
 
@@ -325,6 +347,7 @@ def remove_file (fname):
             print _("Could not remove %r: %s") % (fname, str(msg))
 
 
+#################### main ####################
 if __name__ == '__main__':
     if "-install" == sys.argv[1]:
         do_install()
