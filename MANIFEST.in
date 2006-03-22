@@ -62,7 +62,6 @@ include test/logging.conf
 include test/pycheckrc
 include test/rating/rating.txt
 include test/filter/misc.zap
-include test/filter/filter-md5sums.txt
 include scripts/*.sh
 include tests/*.py
 include wc/magic/tests/*.py
