@@ -1,17 +1,14 @@
 TODO
 
-- create friendlier error pages of web gui (especially 404 error)
-  http://www.alistapart.com/articles/perfect404
-  Also print exception in 500 Internal error pages
-  File: wc/webgui/webconfig.py
+- eek, ads http://groups.google.com/group/comp.lang.python/browse_frm/thread/2ad8fae9cc32e333/b4dc3a17d7502391
+
+- Ajax interface:
+  + no delete confirmation
+    http://www.d3eministry.net/wordpress/2006/03/23/147/
+  + inline editing
+    http://24ways.org/advent/edit-in-place-with-ajax
 
 - complete implementation of the rating system
-
-- 503 temporarily overloaded -> automatically try coral cache
-  Question: do something with the (optional) Retry-After header?
-  Perhaps print it in the error page (now that we have custom error pages)
-  This would require access to the HTTP header values that the server
-  sent inside the webconfig framework.
 
 - test HTTP pipelining (esp. the order of the responses)
 
@@ -27,12 +24,13 @@ TODO
 - HTML parser should recognize a missing ending quote of attribute values.
   Right now the parser parses all subsequent stuff as TEXT.
   A solution:
-  If end-of-line is encountered assume a missing end quote.
+  If end-of-line is encountered during attribute value scanning, assume
+  a missing end quote.
   Now roll back the scanner to the first white-space or '>' character
   after the beginning quote, and assume the missing end quote at this
   position.
-  Does catch stuff like <a b="c> ... but not stuff like
-  <a b="c d="e"> ...
+  Does catch stuff like <a b="c>, and even <a b="c d="e">. Does not catch
+  things like <a b="Mr. Smith href="foo">, but that would be ok for now.
   
 - Use HTML parser with Unicode support, ie. rewrite this bugger in Python
   with regexes (slow?).
