@@ -12,7 +12,8 @@ html_DATA = $(HTMLFILES)
 EXTRA_DIST = $(RESTFILES) \
 $(wildcard *.css) \
 $(wildcard *.png) \
-$(wildcard *.jpg)
+$(wildcard *.jpg) \
+$(wildcard *.ico)
 
 %.html: %.txt ../htmlnav.py ../bfknav.py
 	$(DOCDIR)/rest2htmlnav --stylesheet-path=wc.css --time $< $@
