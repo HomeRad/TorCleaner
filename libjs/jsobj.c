@@ -188,6 +188,17 @@ obj_setSlot(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
     if (!JSVAL_IS_OBJECT(*vp))
         return JS_TRUE;
     pobj = JSVAL_TO_OBJECT(*vp);
+
+    if (pobj) {
+        /*
+         * Innerize pobj here to avoid sticking unwanted properties on the outer
+         * object. This ensures that any with statements only grant access to the
+         * inner object.
+         */
+        OBJ_TO_INNER_OBJECT(cx, pobj);
+        if (!pobj)
+            return JS_FALSE;
+    }
     slot = (uint32) JSVAL_TO_INT(id);
     if (JS_HAS_STRICT_OPTION(cx) && !ReportStrictSlot(cx, slot))
         return JS_FALSE;
@@ -1176,6 +1187,9 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         /* If obj.eval(str), emulate 'with (obj) eval(str)' in the caller. */
         if (indirectCall) {
             callerScopeChain = caller->scopeChain;
+            OBJ_TO_INNER_OBJECT(cx, obj);
+            if (!obj)
+                return JS_FALSE;
             if (obj != callerScopeChain) {
                 if (!js_CheckPrincipalsAccess(cx, obj,
                                               caller->script->principals,
@@ -4260,9 +4274,9 @@ js_Mark(JSContext *cx, JSObject *obj, void *arg)
             continue;
         MARK_SCOPE_PROPERTY(sprop);
         if (JSID_IS_ATOM(sprop->id))
-            GC_MARK_ATOM(cx, JSID_TO_ATOM(sprop->id), arg);
+            GC_MARK_ATOM(cx, JSID_TO_ATOM(sprop->id));
         else if (JSID_IS_OBJECT(sprop->id))
-            GC_MARK(cx, JSID_TO_OBJECT(sprop->id), "id", arg);
+            GC_MARK(cx, JSID_TO_OBJECT(sprop->id), "id");
 
 #if JS_HAS_GETTER_SETTER
         if (sprop->attrs & (JSPROP_GETTER | JSPROP_SETTER)) {
@@ -4279,20 +4293,14 @@ js_Mark(JSContext *cx, JSObject *obj, void *arg)
                 JS_snprintf(buf, sizeof buf, "%s %s",
                             id, js_getter_str);
 #endif
-                GC_MARK(cx,
-                        JSVAL_TO_GCTHING((jsval) sprop->getter),
-                        buf,
-                        arg);
+                GC_MARK(cx, JSVAL_TO_GCTHING((jsval) sprop->getter), buf);
             }
             if (sprop->attrs & JSPROP_SETTER) {
 #ifdef GC_MARK_DEBUG
                 JS_snprintf(buf, sizeof buf, "%s %s",
                             id, js_setter_str);
 #endif
-                GC_MARK(cx,
-                        JSVAL_TO_GCTHING((jsval) sprop->setter),
-                        buf,
-                        arg);
+                GC_MARK(cx, JSVAL_TO_GCTHING((jsval) sprop->setter), buf);
             }
         }
 #endif /* JS_HAS_GETTER_SETTER */
@@ -4301,7 +4309,7 @@ js_Mark(JSContext *cx, JSObject *obj, void *arg)
     /* No one runs while the GC is running, so we can use LOCKED_... here. */
     clasp = LOCKED_OBJ_GET_CLASS(obj);
     if (clasp->mark)
-        (void) clasp->mark(cx, obj, arg);
+        (void) clasp->mark(cx, obj, NULL);
 
     if (scope->object != obj) {
         /*

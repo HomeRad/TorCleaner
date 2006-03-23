@@ -153,45 +153,30 @@ extern JSBool
 js_IsAboutToBeFinalized(JSContext *cx, void *thing);
 
 extern void
-js_MarkAtom(JSContext *cx, JSAtom *atom, void *arg);
+js_MarkAtom(JSContext *cx, JSAtom *atom);
 
 /* We avoid a large number of unnecessary calls by doing the flag check first */
-#define GC_MARK_ATOM(cx, atom, arg)                                           \
+#define GC_MARK_ATOM(cx, atom)                                                \
     JS_BEGIN_MACRO                                                            \
         if (!((atom)->flags & ATOM_MARK))                                     \
-            js_MarkAtom(cx, atom, arg);                                       \
+            js_MarkAtom(cx, atom);                                            \
     JS_END_MACRO
 
 extern void
-js_MarkGCThing(JSContext *cx, void *thing, void *arg);
+js_MarkGCThing(JSContext *cx, void *thing);
 
 #ifdef GC_MARK_DEBUG
 
-typedef struct GCMarkNode GCMarkNode;
+# define GC_MARK(cx, thing, name) js_MarkNamedGCThing(cx, thing, name)
 
-struct GCMarkNode {
-    void        *thing;
-    const char  *name;
-    GCMarkNode  *next;
-    GCMarkNode  *prev;
-};
+extern void
+js_MarkNamedGCThing(JSContext *cx, void *thing, const char *name);
 
-#define GC_MARK(cx_, thing_, name_, prev_)                                    \
-    JS_BEGIN_MACRO                                                            \
-        GCMarkNode node_;                                                     \
-        node_.thing = thing_;                                                 \
-        node_.name  = name_;                                                  \
-        node_.next  = NULL;                                                   \
-        node_.prev  = prev_;                                                  \
-        if (prev_) ((GCMarkNode *)(prev_))->next = &node_;                    \
-        js_MarkGCThing(cx_, thing_, &node_);                                  \
-    JS_END_MACRO
+#else
 
-#else  /* !GC_MARK_DEBUG */
+# define GC_MARK(cx, thing, name) js_MarkGCThing(cx, thing)
 
-#define GC_MARK(cx, thing, name, prev)   js_MarkGCThing(cx, thing, NULL)
-
-#endif /* !GC_MARK_DEBUG */
+#endif
 
 /*
  * Flags to modify how a GC marks and sweeps:
@@ -234,11 +219,11 @@ typedef struct JSGCStats {
     uint32  maxdepth;   /* maximum mark tail recursion depth */
     uint32  cdepth;     /* mark recursion depth of C functions */
     uint32  maxcdepth;  /* maximum mark recursion depth of C functions */
-    uint32  dswmark;    /* mark C stack overflows => Deutsch-Schorr-Waite */
-    uint32  dswdepth;   /* DSW mark depth */
-    uint32  maxdswdepth;/* maximum DSW mark depth */
-    uint32  dswup;      /* DSW moves up the mark spanning tree */
-    uint32  dswupstep;  /* steps in obj->slots to find DSW-reversed pointer */
+    uint32  unscanned;  /* mark C stack overflows or number of times
+                           GC things were put in unscanned bag */
+#ifdef DEBUG
+    uint32  maxunscanned;       /* maximum size of unscanned bag */
+#endif
     uint32  maxlevel;   /* maximum GC nesting (indirect recursion) level */
     uint32  poke;       /* number of potentially useful GC calls */
     uint32  nopoke;     /* useless GC calls where js_PokeGC was not set */
@@ -269,9 +254,11 @@ struct JSGCArenaStats {
 #endif
 
 struct JSGCArenaList {
-    JSGCArena   *last;      /* last allocated GC arena */
-    size_t      lastLimit;  /* end offset of allocated so far things in last */
-    JSGCThing   *freeList;
+    JSGCArena   *last;          /* last allocated GC arena */
+    uint16      lastLimit;      /* end offset of allocated so far things in
+                                   the last arena */
+    uint16      thingSize;      /* size of things to allocate on this list */
+    JSGCThing   *freeList;      /* list of free GC things */
 #ifdef JS_GCMETER
     JSGCArenaStats stats;
 #endif
