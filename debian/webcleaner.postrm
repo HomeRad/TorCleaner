@@ -9,8 +9,8 @@ purge)
     rm -f /etc/webcleaner/magic.mime.mgc
     # remove log files
     rm -rf /var/log/webcleaner || true
-    # remove local configuration dirs
-    rm -rf /etc/webcleaner/blacklists || true
+    # remove local configuration files
+    rm -f /etc/webcleaner/local_*.zap || true
     ;;
 remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
