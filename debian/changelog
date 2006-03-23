@@ -1,8 +1,9 @@
 webcleaner (2.38-0calvin1) unstable; urgency=low
 
   * New upstream release
+  * Add lintian overrides for the source package.
 
- -- Bastian Kleineidam <calvin@debian.org>  Thu,  9 Feb 2006 20:54:02 +0100
+ -- Bastian Kleineidam <calvin@debian.org>  Thu, 23 Mar 2006 15:03:49 +0100
 
 webcleaner (2.37-0calvin1) unstable; urgency=low
 
