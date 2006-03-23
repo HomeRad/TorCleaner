@@ -54,6 +54,16 @@
     Type: feature
     Changed: wc/filter/html/HtmlSecurity.py
 
+  * The Windows uninstaller now detects the presence of local filter config
+    files, and asks the user wether they should be removed or left as is.
+    Type: feature
+    Changed: install-webcleaner.py
+
+  * The Windows installer asks for the administrator password during install,
+    so the user does not have to enter it manually anymore.
+    Type: feature
+    Changed: install-webcleaner.py
+
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 
   * Quote command line arguments when installing under Windows.

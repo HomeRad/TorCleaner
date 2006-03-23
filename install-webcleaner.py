@@ -31,6 +31,21 @@ import pywintypes
 _ = lambda s: s
 
 
+#################### utility functions ####################
+
+def init_tk ():
+    """
+    Initialize Tk: create a root window and hide it, since only simple
+    modal dialogs are used.
+    @return: root window
+    @rtype: Tkinter.Tk
+    """
+    import Tkinter as tk
+    root = tk.Tk()
+    root.withdraw()
+    return root
+
+
 def execute (args):
     """
     Execute command with arguments.
@@ -45,6 +60,109 @@ def execute (args):
     import wc.win32start
     wc.win32start.nt_quote_args(args)
     return os.spawnv(os.P_WAIT, executable, args)
+
+
+def state_nt_service (name):
+    """
+    Return status of NT service.
+    """
+    try:
+        return win32serviceutil.QueryServiceStatus(name)[1]
+    except pywintypes.error, msg:
+        print _("Service status error: %s") % str(msg)
+    return None
+
+
+def install_service ():
+    """
+    Install WebCleaner NT service.
+    """
+    import wc
+    import wc.win32start
+    oldargs = sys.argv
+    print _("Installing %s service...") % wc.AppName
+    sys.argv = ['webcleaner', 'install']
+    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
+    sys.argv = oldargs
+
+
+def remove_service ():
+    """
+    Remove WebCleaner NT service.
+    """
+    import wc
+    import wc.win32start
+    oldargs = sys.argv
+    print _("Removing %s service...") % wc.AppName
+    sys.argv  = ['webcleaner', 'remove']
+    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
+    sys.argv = oldargs
+
+
+def start_service ():
+    """
+    Start WebCleaner NT service.
+    """
+    import wc
+    import wc.win32start
+    print _("Starting %s proxy...") % wc.AppName
+    oldargs = sys.argv
+    sys.argv = ['webcleaner', 'start']
+    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
+    sys.argv = oldargs
+
+
+def stop_service ():
+    """
+    Stop WebCleaner NT service (if it is running).
+    """
+    import wc
+    import wc.win32start
+    print _("Stopping %s proxy...") % wc.AppName
+    oldargs = sys.argv
+    state = state_nt_service(wc.AppName)
+    while state==win32service.SERVICE_START_PENDING:
+        time.sleep(1)
+        state = state_nt_service(wc.AppName)
+    if state==win32service.SERVICE_RUNNING:
+        sys.argv = ['webcleaner', 'stop']
+        win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
+    state = state_nt_service(wc.AppName)
+    while state==win32service.SERVICE_STOP_PENDING:
+        time.sleep(1)
+        state = state_nt_service(wc.AppName)
+    sys.argv = oldargs
+
+
+_wc_config = None
+def get_wc_config ():
+    """
+    Get WebCleaner configuration object.
+    """
+    global _wc_config
+    if _wc_config is None:
+        import wc
+        _wc_config = wc.configuration.init()
+    return _wc_config
+
+
+#################### installation ####################
+
+def do_install ():
+    """
+    Install shortcuts and NT service.
+    """
+    fix_configdata()
+    import wc
+    # initialize i18n
+    wc.init_i18n()
+    install_shortcuts()
+    install_certificates()
+    install_service()
+    stop_service()
+    install_adminpassword()
+    start_service()
+    open_browser_config()
 
 
 def fix_configdata ():
@@ -97,23 +215,6 @@ def fix_install_path (line):
             val = os.path.join(sys.prefix, val)
             val = os.path.normpath(val)
     return "%s = %r%s" % (key, val, os.linesep)
-
-
-#################### installation ####################
-
-def do_install ():
-    """
-    Install shortcuts and NT service.
-    """
-    fix_configdata()
-    import wc
-    # initialize i18n
-    wc.init_i18n()
-    install_shortcuts()
-    install_certificates()
-    install_service()
-    restart_service()
-    open_browser_config()
 
 
 def install_shortcuts ():
@@ -174,91 +275,84 @@ You have to install the SSL certificates manually with
 'webcleaner-certificates install'.""")
 
 
-def state_nt_service (name):
+def install_adminpassword ():
     """
-    Return status of NT service.
+    Ask for admin password if not already set.
     """
-    try:
-        return win32serviceutil.QueryServiceStatus(name)[1]
-    except pywintypes.error, msg:
-        print _("Service status error: %s") % str(msg)
-    return None
-
-
-def install_service ():
-    """
-    Install WebCleaner as NT service.
-    """
+    if has_adminpassword():
+        # already got one (from wherever that may be)
+        return
     import wc
-    import wc.win32start
-    oldargs = sys.argv
-    print _("Installing %s service...") % wc.AppName
-    sys.argv = ['webcleaner', 'install']
-    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
-    sys.argv = oldargs
+    import Tkinter as tk
+    root = init_tk()
+    import tkSimpleDialog
+
+    class PasswordDialog (tkSimpleDialog.Dialog):
+        """
+        Admin password dialog.
+        """
+
+        def body(self, master):
+            d = {"appname": wc.AppName}
+            msg = _("""The administrator password protects the web
+configuration frontend of %s.
+The default username is "admin" (without the quotes).
+You have to enter a non-empty password. If you press cancel,
+the administrator password has to be entered manually (don't
+worry, the web interface will tell you how to do that).""")
+            label = Label(master, text=msg % d, anchor=tk.W, justify=tk.LEFT)
+            label.grid(row=0, columnspan=2, sticky=tk.W)
+            label = Label(master, text=_("Password:"))
+            label.grid(row=1, sticky=tk.W)
+            self.pass_entry = Entry(master)
+            self.pass_entry.grid(row=1, column=1)
+            return self.pass_entry # initial focus
+
+        def apply(self):
+            password = self.pass_entry.get()
+            if password:
+                save_adminpassword(password)
+            else:
+                print _("Not saving empty password.")
+
+        title = _("%s administrator password") % wc.AppName
+        PasswordDialog(root, title=title)
 
 
-def remove_service ():
-    import wc
-    import wc.win32start
-    oldargs = sys.argv
-    print _("Removing %s service...") % wc.AppName
-    sys.argv  = ['webcleaner', 'remove']
-    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
-    sys.argv = oldargs
-
-
-def restart_service ():
+def has_adminpassword ():
     """
-    Restart WebCleaner NT service.
+    Check if admin password is already set.
     """
-    stop_service()
-    start_service()
+    return get_wc_config()["adminpass"]
 
 
-def stop_service ():
+def save_adminpassword (password):
     """
-    Stop WebCleaner NT service (if it is running).
+    Save new admin password to WebCleaner configuration.
+    Also checks for invalid password format.
     """
-    import wc
-    import wc.win32start
-    print _("Stopping %s proxy...") % wc.AppName
-    oldargs = sys.argv
-    state = state_nt_service(wc.AppName)
-    while state==win32service.SERVICE_START_PENDING:
-        time.sleep(1)
-        state = state_nt_service(wc.AppName)
-    if state==win32service.SERVICE_RUNNING:
-        sys.argv = ['webcleaner', 'stop']
-        win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
-    state = state_nt_service(wc.AppName)
-    while state==win32service.SERVICE_STOP_PENDING:
-        time.sleep(1)
-        state = state_nt_service(wc.AppName)
-    sys.argv = oldargs
-
-
-def start_service ():
-    """
-    Start WebCleaner NT service.
-    """
-    import wc
-    import wc.win32start
-    print _("Starting %s proxy...") % wc.AppName
-    oldargs = sys.argv
-    sys.argv = ['webcleaner', 'start']
-    win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
-    sys.argv = oldargs
+    import base64
+    import wc.strformat
+    password = base64.b64encode(password)
+    if not password or not wc.strformat.is_ascii(password):
+        print _("Not saving binary password.")
+        return
+    config = get_wc_config()
+    config["password"] = password
+    config.write_proxyconf()
 
 
 def open_browser_config ():
-    # sleep a while to let the proxy start...
+    """
+    Open the WebCleaner administration web interface.
+    """
     import wc
     import wc.configuration
     state = state_nt_service(wc.AppName)
     while state==win32service.SERVICE_START_PENDING:
         time.sleep(1)
         state = state_nt_service(wc.AppName)
+    # sleep a while to let the proxy start...
     time.sleep(3)
     # open configuration
     config = wc.configuration.init()
@@ -267,6 +361,9 @@ def open_browser_config ():
 
 
 def open_browser (url):
+    """
+    Open a URL in the default browser.
+    """
     print _("Opening proxy configuration interface...")
     # The windows webbrowser.open function raises an exception for http://
     # urls, but works nevertheless. Just ignore the error.
@@ -293,6 +390,8 @@ def do_remove ():
     remove_certificates()
     remove_tempfiles()
     purge_tempfiles()
+    # make sure empty directories are removed
+    remove_empty_directories(wc.ConfigDir)
 
 
 def remove_certificates ():
@@ -323,14 +422,16 @@ def purge_tempfiles ():
     """
     Ask if user wants to purge local config files.
     """
+    import wc
     files = glob.glob(os.path.join(wc.ConfigDir, "local_*.zap"))
     if not files:
         return
-    from Tkinter import tkMessageBox
-    answer = tkMessageBox.askyesno(_("Purge local config"),
-         _("""Do you want to remove your local filter rules?
-They can be re-used in other installations of %s, but
-are useless otherwise."""))
+    init_tk()
+    import tkMessageBox
+    answer = tkMessageBox.askyesno(_("%s config purge") % wc.AppName,
+         _("""There are local filter rules in the configuration directory.
+Do you want to remove them? They can be re-used in other
+installations of %s, but are useless otherwise.""") % wc.AppName)
     if answer:
         for fname in files:
             remove_file(fname)
@@ -344,7 +445,26 @@ def remove_file (fname):
         try:
             os.remove(fname)
         except OSError, msg:
-            print _("Could not remove %r: %s") % (fname, str(msg))
+            print _("Could not remove file %r: %s") % (fname, str(msg))
+
+
+def is_empty_dir (name):
+    """
+    Check if given name is a non-empty directory.
+    """
+    return os.path.isdir(name) and not os.listdir(name)
+
+
+def remove_empty_directories (dname):
+    """
+    Remove empty directory structure.
+    """
+    try:
+        if is_empty_dir(dname):
+            os.rmdir(dname)
+            remove_empty_directories(os.path.dirname(dname))
+    except OSError, msg:
+        print _("Could not remove directory %r: %s") % (dname, str(msg))
 
 
 #################### main ####################
