@@ -30,11 +30,13 @@ URLs with the given URL as base path apply to the rating.
 
 Rating service
 ==============
-A complete rating service defines a unique name and the used
-rating format. The service name should be an URL with human-viewable
+A complete rating service defines a unique name and a set of used
+rating formats. The service name should be an URL with human-viewable
 information about the service.
 
-Furthermore the service delivers ratings of given URLs.
+Furthermore the service should store and/or deliver URL ratings.
+Several recommended storage and delivery methods are explained below,
+however they are not mandatory.
 
 Service delivery
 ================
@@ -45,24 +47,45 @@ rating data.
 HTTP Header
 -----------
 When answering a HTTP request, rating data can be submitted as
-HTTP headers. All headers start with "X-Rating" and are defined
+HTTP headers. All headers start with ``X-Rating`` and are defined
 as follows:
 
 - X-Rating: <service URL>
-  submits the service this rating applies to
+   submits the service this rating applies to
 - X-Rating-<name>: <value>
-  submits one name/value item of the rating dictionary
+   submits one name/value item of the rating dictionary
 
 HTTP header names are defined case insensitive. This is the reason
 why rating names, which are used as part of HTTP header names, are
 also defined case insensitive.
 
+The order in which headers are sent does not matter. No duplicate
+``X-Rating`` headers are allowed, but a ``X-Rating-XYZ`` header
+can occur multiple times, in which case it is service dependent on
+how to interpret the multiple values.
+
 HTML meta data
 --------------
 A HTML file can be rated by supplying data in a meta tag.
 The format is basically the same as the HTTP header format,
-using "X-Rating" in the name attribute and the value in the
+using ``X-Rating`` in the name attribute and the value in the
 content attribute.
+
+Service storage
+===============
+There are several things to consider when storing URL ratings for
+a service.
+
+Platform independence
+---------------------
+Rating data will be stored and processed on lots of different computers
+and platforms. All algorithms should be platform independent.
+
+Readable format
+---------------
+The storage format should be easily readable by humans. A readable
+format is automatically editable with a text editor, which also guarantees
+platform independence for editing operations.
 
 WebCleaner service
 ==================
@@ -77,20 +100,18 @@ Rating formats
 --------------
 The following rating formats are defined by WebCleaner:
 
-::
-
-  +--------------+--------------+---------------------------------------+
-  | Name         |    Values    |  Interpretation                       |
-  +--------------+--------------+---------------------------------------+
-  | WC-Agerange  | INT "-" INT? | Content is only suited for people of  |
-  |              |              | an age in the given range.            |
-  |              |              | If the second range value is missing, |
-  |              |              | it is considered infinite.            |
-  +--------------+--------------+---------------------------------------+
-  | WC-Violence  | "none" or    | Content contains violence, sex or     |
-  | WC-Sex       | "mild" or    | foul language in the given degree:    |
-  | WC-Language  | "heavy"      | either none, some or a lot of it.     |
-  +--------------+--------------+---------------------------------------+
++--------------+--------------+---------------------------------------+
+| Name         |    Values    |  Interpretation                       |
++--------------+--------------+---------------------------------------+
+| WC-Agerange  | INT "-" INT? | Content is only suited for people of  |
+|              |              | an age in the given range.            |
+|              |              | If the second range value is missing, |
+|              |              | it is considered infinite.            |
++--------------+--------------+---------------------------------------+
+| WC-Violence  | "none" or    | Content contains violence, sex or     |
+| WC-Sex       | "mild" or    | foul language in the given degree:    |
+| WC-Language  | "heavy"      | either none, some or a lot of it.     |
++--------------+--------------+---------------------------------------+
 
 URL ratings
 -----------
@@ -122,3 +143,6 @@ The WebCleaner proxy web interface will allow to send local ratings
 for review to the rating service URL. It will also be possible to
 update the local rating database with the official rating database.
 
+Storage format
+--------------
+XXX to define
