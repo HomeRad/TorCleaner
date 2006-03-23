@@ -35,8 +35,8 @@ SERVICEDIR := /etc/webcleaner/service
 TESTS = scripts/test.sh
 # GPG key for .deb package
 GPGKEY:=2DE589F5
-# for cvs-buildpackage
-CVSBUILD:=/home/calvin/projects/cvs-build
+# build dir for svn-buildpackage
+SVNBUILD:=/home/calvin/src/build-area
 
 MANIFEST: MANIFEST.in setup.py
 	rm -f share
@@ -55,10 +55,6 @@ clean-local: clean-log
 	rm -rf *.prof
 # delete possible aborted dist build
 	rm -rf webcleaner-$(VERSION)
-
-.PHONY: cvsclean
-cvsclean:
-	find . -name \.\#\* -exec rm -f {} \;
 
 .PHONY: clean-log
 clean-log:
@@ -95,35 +91,32 @@ distclean-local:
 	rm -f share
 	rm -f webcleaner-$(VERSION).tar.gz
 	rm -f webcleaner-$(VERSION).tar.gz.asc
-	rm -f MANIFEST _*_configdata.*
+	rm -f MANIFEST _*_configdata.* dist-stamp
 
-# add upstream release tag
-.PHONY: tag_upstream
-tag_upstream:
-	cvs tag upstream_version_$(subst .,_,$(VERSION))
+dist-stamp: dist
+	touch $@
 
-# add debian release tag
-.PHONY: tag_debian
-tag_debian:
-	cvs tag debian_version_$(subst .,_,$(shell dpkg-parsechangelog | grep -e "^Version:" | cut -f2 -d" "))
+.PHONY: deb_orig
+deb_orig: dist-stamp
+	cp webcleaner-$(VERSION).tar.gz ../build-area/webcleaner_$(VERSION).orig.tar.gz
 
 # ready for upload, signed with my GPG key
 .PHONY: deb_signed
 deb_signed: clean
-	(env -u LANG CVSROOT=:ext:calvin@cvs.sourceforge.net:/cvsroot/webcleaner \
-	 cvs-buildpackage -W$(CVSBUILD) -Mwebcleaner2 \
-	  -sgpg -pgpg -k$(GPGKEY) -r"fakeroot --" \
-	  -I.cvsignore -Idebian 2>&1) | \
-	tee $(CVSBUILD)/webcleaner-$(VERSION).build
+	(env -u LANG svn-buildpackage --svn-dont-clean --svn-verbose --svn-ignore \
+	  --svn-prebuild="$(MAKE) deb_orig" --svn-lintian --svn-linda \
+	  -sgpg -pgpg -k$(GPGKEY) -r"fakeroot --" 2>&1) | \
+	tee $(SVNBUILD)/webcleaner-$(VERSION).build
 
 # add setup.py generated files to $(distdir)
 # note: debian/rules install generates broken links, so delete debian
 # package dirs before running sdist
 dist-hook: MANIFEST
 	rm -rf debian/webcleaner debian/webcleanertools
-	$(PYTHON) setup.py sdist --keep-temp --dist-dir=$(distdir) --formats=gztar
+	$(PYTHON) setup.py sdist --prune --keep-temp --dist-dir=$(distdir) --formats=gztar
 	rm -f $(distdir)/webcleaner-$(VERSION).tar.gz
 	rm -f $(distdir)/_webcleaner2_configdata.py
+	find $(distdir) -depth -name .svn -exec rm -rf {} \;
 
 .PHONY: md5sums
 md5sums:
