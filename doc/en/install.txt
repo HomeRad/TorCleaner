@@ -98,7 +98,7 @@ Direct download links are in brackets.
    Be sure to install in the given order:
    
    a) MingGW (this installer downloads additional packages)
-      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-5.0.0.exe]
+      [http://osdn.dl.sourceforge.net/sourceforge/mingw/MinGW-5.0.2.exe]
    b) MSYS
       [http://osdn.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe]
 
