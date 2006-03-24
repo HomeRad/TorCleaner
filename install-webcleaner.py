@@ -300,11 +300,11 @@ The default username is "admin" (without the quotes).
 You have to enter a non-empty password. If you press cancel,
 the administrator password has to be entered manually (don't
 worry, the web interface will tell you how to do that).""")
-            label = Label(master, text=msg % d, anchor=tk.W, justify=tk.LEFT)
+            label = tk.Label(master, text=msg % d, anchor=tk.W, justify=tk.LEFT)
             label.grid(row=0, columnspan=2, sticky=tk.W)
-            label = Label(master, text=_("Password:"))
+            label = tk.Label(master, text=_("Password:"))
             label.grid(row=1, sticky=tk.W)
-            self.pass_entry = Entry(master)
+            self.pass_entry = tk.Entry(master)
             self.pass_entry.grid(row=1, column=1)
             return self.pass_entry # initial focus
 
@@ -315,8 +315,8 @@ worry, the web interface will tell you how to do that).""")
             else:
                 print _("Not saving empty password.")
 
-        title = _("%s administrator password") % wc.AppName
-        PasswordDialog(root, title=title)
+    title = _("%s administrator password") % wc.AppName
+    PasswordDialog(root, title=title)
 
 
 def has_adminpassword ():
