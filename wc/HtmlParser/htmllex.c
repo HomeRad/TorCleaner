@@ -5942,7 +5942,7 @@ static int yy_flex_strlen (yyconst char * s , yyscan_t yyscanner)
 /* initialize the scanner */
 int htmllexInit (void** scanner, UserData* data) {
     int res;
-    res = yylex_init(scanner));
+    res = yylex_init(scanner);
     if (res) {
         return res;
     }

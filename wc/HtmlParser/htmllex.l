@@ -1071,7 +1071,7 @@ RX_DATA  [-a-zA-Z0-9_:]+
 /* initialize the scanner */
 int htmllexInit (void** scanner, UserData* data) {
     int res;
-    res = yylex_init(scanner));
+    res = yylex_init(scanner);
     if (res) {
         return res;
     }
