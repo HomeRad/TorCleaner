@@ -1070,7 +1070,11 @@ RX_DATA  [-a-zA-Z0-9_:]+
 
 /* initialize the scanner */
 int htmllexInit (void** scanner, UserData* data) {
-    yylex_init(scanner);
+    int res;
+    res = yylex_init(scanner));
+    if (res) {
+        return res;
+    }
     yyset_extra(data, *scanner);
     return 0;
 }
@@ -1137,6 +1141,5 @@ int htmllexStop (void* scanner, UserData* data) {
 
 /* destroy scanner when not needed any more */
 int htmllexDestroy (void* scanner) {
-    yylex_destroy(scanner);
-    return 0;
+    return yylex_destroy(scanner);
 }
