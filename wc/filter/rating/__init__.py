@@ -15,127 +15,79 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-Rating related data types and routines.
+Basic data types and routines for rating support.
 """
 
-import urlparse
+import wc.decorators
 
-import wc
-import wc.configuration
-import wc.containers
-import wc.log
-import wc.url
-
-
-class RatingParseError (Exception):
+class Rating (dict):
     """
-    Raised on parsing errors.
+    A rating is a dictionary filled with name/value items.
+    Each name/value item is an instance of a defined rating format.
     """
     pass
 
 
-def make_safe_url (url):
+class RatingFormat (object):
     """
-    Remove unsafe parts of url for rating cache check.
+    A rating format defines a unique, case insensitive name, and a range
+    of valid values along with their interpretation.
     """
-    parts = wc.filter.rating.split_url(url)
-    pathparts = [make_safe_part(x) for x in parts[2:]]
-    pathparts[0:2] = parts[0:2]
-    return "".join(pathparts)
+
+    def __init__ (self, name, values):
+        self.name = name
+        self.values = values
+
+    @wc.decorators.notimplemented
+    def valid_value (self, value):
+        """
+        True if value is valid according to this format.
+        """
+        pass
+
+    @wc.decorators.notimplemented
+    def allowance (self, value, limit):
+        """
+        Check if value exceeds limit according to this format.
+        """
+        pass
+
+    def __str__ (self):
+        args = (self.__class__.__name__, self.name, str(self.values))
+        return "%s %r: %s" % args
 
 
-def make_safe_part (part):
+class UrlRating (object):
     """
-    Remove unsafe chars of url.
+    A URL rating relates a rating to one or more URLs. It consists of
+    a rating, an URL and an optional generic flag specifying that all
+    URLs with the given URL as base path apply to the rating.
     """
-    if part == '/':
-        return part
-    return filter(wc.url.is_safe_char, part)
+
+    def __init__ (self, url, rating, generic=False):
+        self.url = url
+        self.rating = rating
+        self.generic = generic
 
 
-def split_url (url):
+class RatingService (object):
     """
-    Split an url into parts suitable for longest prefix match
+    A rating service defines a unique name and the (sub-)set of supported
+    rating formats. The service name should be an URL with human-viewable
+    information about the service.
 
-    @return: parts so that "".join(parts) == url
-    @rtype: list
+    The service should store and/or deliver URL ratings of the formats it
+    defines.
     """
-    # split into [scheme, host, path, query, fragment]
-    parts = list(urlparse.urlsplit(url))
-    if not (parts[0] and parts[1]):
-        wc.log.warn(wc.LOG_FILTER, "invalid url for rating split: %r", url)
-        return []
-    # fix scheme
-    parts[0] += ":"
-    if parts[0] != 'mailto':
-        parts[0] += "//"
-    # remove query and fragment
-    del parts[3:5]
-    # further split path in components
-    parts[2:] = split_path(parts[2])
-    return parts
 
+    def __init__ (self, name):
+        self.name = name
 
-def split_path (path):
-    """
-    Split a path into parts suitable for longest prefix match
+    @wc.decorators.notimplemented
+    def get_url_rating (self, url):
+        pass
 
-    @return: parts so that "".join(parts) == path
-    @rtype: list
-    """
-    parts = [ p for p in path.split("/") if p ]
-    if not parts:
-        return ['/']
-    ret = []
-    for p in parts:
-        ret.extend(['/', p])
-    return ret
+    @wc.decorators.notimplemented
+    def set_url_rating (self, url, rating, generic):
+        pass
 
-
-services = wc.containers.SetList()
-def register_service (service):
-    """
-    Register the given service in the services list.
-    """
-    services.append(service)
-    for category in service.categories:
-        register_category(category)
-
-
-categories = wc.containers.SetList()
-def register_category (category):
-    """
-    Register the given category in the categories list.
-    """
-    categories.append(category)
-
-
-def get_service (service_name):
-    """
-    Get service instance for given name or None if not found.
-    """
-    for service in services:
-        if service.name == service_name:
-            return service
-    # not found
-    return None
-
-
-def get_category (category_name):
-    """
-    Get category instance for given name or None if not found.
-    """
-    for category in categories:
-        if category.name == category_name:
-            return category
-    # not found
-    return None
-
-
-_ratings = None
-def get_ratings ():
-    global _ratings
-    if _ratings is None:
-        import wc.filter.rating.storage
-        _ratings = wc.filter.rating.storage.PickleStorage()
-    return _ratings
