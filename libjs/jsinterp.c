@@ -2481,7 +2481,7 @@ interrupt:
                  * Now that we've resolved the object, use the PARENT slot to
                  * store the object that we're iterating over.
                  */
-                propobj->slots[JSSLOT_PARENT] = obj;
+                propobj->slots[JSSLOT_PARENT] = OBJECT_TO_JSVAL(obj);
                 propobj->slots[JSSLOT_ITER_STATE] = JSVAL_NULL;
 
                 /*
@@ -4160,6 +4160,15 @@ interrupt:
                 obj2 = fp->scopeChain;
                 while ((parent = OBJ_GET_PARENT(cx, obj2)) != NULL)
                     obj2 = parent;
+
+                /*
+                 * We must home sp here, because either js_CloneRegExpObject
+                 * or JS_SetReservedSlot could nest a last-ditch GC.  We home
+                 * pc as well, in case js_CloneRegExpObject has to lookup the
+                 * "RegExp" class in the global object, which could entail a
+                 * JSNewResolveOp call.
+                 */
+                SAVE_SP_AND_PC(fp);
 
                 /*
                  * If obj's parent is not obj2, we must clone obj so that it
