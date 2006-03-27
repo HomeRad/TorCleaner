@@ -20,7 +20,7 @@ SPLINTOPTS := +posixlib \
 PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc $(PYTHON) /usr/bin/pylint
 PYLINTOPTS :=
 PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
-        wc/filter/rating/*.py wc/js/*.py wc/proxy/*.py wc/proxy/decoder/*.py \
+        wc/rating/*.py wc/js/*.py wc/proxy/*.py wc/proxy/decoder/*.py \
 	wc/proxy/auth/*.py wc/webgui/*.py wc/dns/*.py wc/http/*.py \
 	wc/webgui/context/*.py wc/magic/*.py)
 PYLINTIGNORE = wc/win32start.py

@@ -163,7 +163,7 @@ class MyDistribution (distutils.dist.Distribution, object):
         """
         cwd = os.getcwd()
         data = []
-	data.append('config_dir = %r' % os.path.join(cwd, "config"))
+        data.append('config_dir = %r' % os.path.join(cwd, "config"))
         data.append('template_dir = %r' % os.path.join(cwd, "templates"))
         data.append("install_data = %r" % cwd)
         data.append("install_scripts = %r" % cwd)
@@ -193,12 +193,12 @@ class MyDistribution (distutils.dist.Distribution, object):
                      "keywords", "platforms", "fullname", "contact",
                      "contact_email", "fullname")
         for name in metanames:
-              method = "get_" + name
-              val = getattr(self.metadata, method)()
-              if isinstance(val, str):
-                  val = unicode(val)
-              cmd = "%s = %r" % (name, val)
-              data.append(cmd)
+            method = "get_" + name
+            val = getattr(self.metadata, method)()
+            if isinstance(val, str):
+                val = unicode(val)
+            cmd = "%s = %r" % (name, val)
+            data.append(cmd)
         data.append('appname = "WebCleaner"')
         # write the config file
         distutils.util.execute(write_file, (filename, data),
@@ -631,7 +631,7 @@ setup (name = "webcleaner",
        download_url = \
                "http://sourceforge.net/project/showfiles.php?group_id=7692",
        license = "GPL",
-       packages = ['wc', 'wc.filter', 'wc.filter.rating', 'wc.filter.rules',
+       packages = ['wc', 'wc.filter', 'wc.rating', 'wc.filter.rules',
            'wc.filter.html', 'wc.filter.xmlfilt',
            'wc.js', 'wc.magic', 'wc.dns', 'wc.dns.rdtypes', 'wc.http',
            'wc.dns.rdtypes.IN', 'wc.dns.rdtypes.ANY', 'wc.HtmlParser',
