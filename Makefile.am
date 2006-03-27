@@ -2,6 +2,7 @@ SUBDIRS = libjs service po
 DIST_SUBDIRS = $(SUBDIRS) doc
 EXTRA_DIST = tests scripts \
 	wc/tests \
+	wc/http/tests \
 	wc/dns/tests \
 	wc/filter/tests \
 	wc/proxy/tests \
@@ -19,16 +20,19 @@ SPLINTOPTS := +posixlib \
 	      -nestcomment -ifempty
 PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc $(PYTHON) /usr/bin/pylint
 PYLINTOPTS :=
-PYFILES = $(wildcard wc/*.py wc/filter/*.py wc/filter/rules/*.py \
-        wc/rating/*.py wc/js/*.py wc/proxy/*.py wc/proxy/decoder/*.py \
-	wc/proxy/auth/*.py wc/webgui/*.py wc/dns/*.py wc/http/*.py \
-	wc/webgui/context/*.py wc/magic/*.py)
+# all Python files in the source
+PYFILES = $(wildcard webcleaner webcleaner-certificates *.py wc/*.py \
+	wc/filter/*.py wc/filter/rules/*.py wc/rating/*.py wc/js/*.py \
+	wc/proxy/*.py wc/proxy/decoder/*.py wc/proxy/auth/*.py \
+	wc/webgui/*.py wc/dns/*.py \
+	wc/http/*.py wc/webgui/context/*.py wc/magic/*.py \
+	wc/http/tests/*.py wc/magic/tests/*.py wc/proxy/auth/tests/*.py \
+	wc/proxy/tests/*.py wc/dns/tests/*.py wc/filter/tests/*.py \
+	wc/tests/*.py \
+	test/*.py tests/*.py config/*.py)
 PYLINTIGNORE = wc/win32start.py
-PYLINTFILES = $(filter-out $(PYLINTIGNORE),$(PYFILES))
 PYFLAKES:=pyflakes
-CHECKFILES = *.py webcleaner* test tests wc config
-# test files
-TESTFILES := test/*.py
+CHECKFILES = *.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
 SERVICEDIR := /etc/webcleaner/service
 # run unittests on check
@@ -171,7 +175,7 @@ homepage-zapper: md5sums
 
 .PHONY: pylint
 pylint: localbuild
-	$(PYLINT) $(PYLINTOPTS) $(PYLINTFILES) $(TESTFILES)
+	$(PYLINT) $(PYLINTOPTS) $(filter-out $(PYLINTIGNORE),$(PYFILES))
 
 .PHONY: pyflakes
 pyflakes:
