@@ -18,4 +18,3 @@
 Parameters for internal_404.html page.
 """
 from wc import AppName, Version
-

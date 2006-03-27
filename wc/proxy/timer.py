@@ -58,4 +58,3 @@ def run_timers ():
         return min(timers[0][0] - time.time(), MAX_TIMEOUT)
     else:
         return MAX_TIMEOUT
-

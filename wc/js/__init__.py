@@ -153,4 +153,3 @@ def is_safe_js_url (source_url, target_url):
        target[1] in localhosts:
         return False
     return True
-

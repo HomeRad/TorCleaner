@@ -120,4 +120,3 @@ def mainloop (handle=None):
     except Abort:
         pass
     wc.log.info(wc.LOG_PROXY, "%s stopped", wc.AppName)
-

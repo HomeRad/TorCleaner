@@ -75,4 +75,3 @@ def _updaterating ():
     except:
         updatelog = log.getvalue()
         updatelog += _traceback.format_exc()
-

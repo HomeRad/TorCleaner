@@ -51,4 +51,3 @@ def readable_socket (sock, timeout=0.5):
         return select.select([sock], [], [], timeout)[0]
     except select.error:
         return False
-

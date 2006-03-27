@@ -212,9 +212,9 @@ class HtmlSecurity (object):
         """
         Check <body> start tag.
         """
-	onload = attrs.get_true(u"onload", u"")
-	if not onload:
-	    return
+        onload = attrs.get_true(u"onload", u"")
+        if not onload:
+            return
         pattern = r"window\s*\(\s*\)"
         if re.compile(pattern).search(onload):
             del attrs['onload']
@@ -227,17 +227,17 @@ class HtmlSecurity (object):
         """
         check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
         check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
-	src = attrs.get_true(u"src", u"")
-	if not src:
-	    return
+        src = attrs.get_true(u"src", u"")
+        if not src:
+            return
         i = src.find('?')
         if i != -1:
             src = src[:i]
         i = src.rfind('.')
         if i != -1:
             # prevent CVE-2002-0022
-	    j = src.rfind('/')
-	    l = len(src)
+            j = src.rfind('/')
+            l = len(src)
             if i > j and len(src[i:]) > 10:
                 msg = "%s %r\n Detected and prevented IE " \
                       "filename overflow crash"
@@ -315,7 +315,7 @@ class HtmlSecurity (object):
         """
         if attrs.has_key('content'):
             # prevent redirect to non-http file
-	    refresh = attrs.get_true('name', u"")
+            refresh = attrs.get_true('name', u"")
             refresh = attrs.get_true('http-equiv', refresh)
             if refresh.lower() == 'refresh':
                 # lowercase and strip all whitespace
@@ -400,4 +400,3 @@ class HtmlSecurity (object):
                 msg = "%s\n Detected and prevented ICQ table width crash bug"
                 wc.log.warn(wc.LOG_HTML, msg, htmlfilter)
                 del attrs['width']
-

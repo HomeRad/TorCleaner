@@ -129,4 +129,3 @@ class Buf (wc.fileutil.Buffer):
             if rule.search and rule.applies_to_mime(self.mime):
                 data = rule.search_ro.sub(rule.replacement, data)
         return data
-

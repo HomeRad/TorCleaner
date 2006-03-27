@@ -18,4 +18,3 @@
 Parameters for internal_500.html page.
 """
 from wc import AppName, Version
-

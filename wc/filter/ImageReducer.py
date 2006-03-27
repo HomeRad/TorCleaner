@@ -143,4 +143,3 @@ class ImageReducer (wc.filter.Filter.Filter):
         # remember original content type in case of error
         ctype = headers['server'].get('Content-Type')
         attrs['imgreducer_ctype'] = ctype
-

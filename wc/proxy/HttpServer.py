@@ -42,7 +42,6 @@ import wc.configuration
 import wc.url
 import wc.magic
 import wc.filter
-import wc.filter.rating
 import wc.http
 import wc.proxy.timer
 import wc.proxy.Server

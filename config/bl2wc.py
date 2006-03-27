@@ -119,8 +119,8 @@ def write_filters ():
         if os.path.exists(filename):
             read_ids(filename, ids)
             os.remove(filename)
-	f = file(filename, 'wb')
-	write_folder(cat, ftype, data, ids, f)
+        f = file(filename, 'wb')
+        write_folder(cat, ftype, data, ids, f)
         f.close()
 
 

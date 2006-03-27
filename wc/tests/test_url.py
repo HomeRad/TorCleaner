@@ -507,10 +507,10 @@ class TestUrl (tests.StandardTest):
         """
         Test host matching.
         """
-	match_host = wc.url.match_host
-	match_url = wc.url.match_url
-	self.assert_(not match_host("", []))
-	self.assert_(not match_host("", [".localhost"]))
+        match_host = wc.url.match_host
+        match_url = wc.url.match_url
+        self.assert_(not match_host("", []))
+        self.assert_(not match_host("", [".localhost"]))
         self.assert_(not match_host("localhost", []))
         self.assert_(not match_host("localhost", [".localhost"]))
         self.assert_(match_host("a.localhost", [".localhost"]))
