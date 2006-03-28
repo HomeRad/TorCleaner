@@ -202,7 +202,7 @@ def has_colors (fp):
     return False
 
 
-def _write_color_nt (text, color):
+def _write_color_nt (fp, text, color):
     """
     Assumes WConio has been imported at module level.
     """
