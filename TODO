@@ -1,14 +1,23 @@
 TODO
 
-- eek, ads http://groups.google.com/group/comp.lang.python/browse_frm/thread/2ad8fae9cc32e333/b4dc3a17d7502391
+- test redirect rule
 
-- Ajax interface:
+- complete implementation of the rating system
+
+- Ajax-enabled web gui theme:
+  Since we require JavaScript for this theme, lots of goodies can be realized.
+  Some are even doable without JS (or fall back nicely), but I am too lazy to
+  also apply them to the classic theme.
   + no delete confirmation
     http://www.d3eministry.net/wordpress/2006/03/23/147/
   + inline editing
     http://24ways.org/advent/edit-in-place-with-ajax
+  + rounded corners
+    http://www.spiffycorners.com/
 
-- complete implementation of the rating system
+- web gui authentication improvements:
+  see http://www.berenddeboer.net/rest/authentication.html
+  This will have to be tested for proxy-authentication.
 
 - test HTTP pipelining (esp. the order of the responses)
 
