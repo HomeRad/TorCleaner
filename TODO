@@ -1,17 +1,15 @@
 TODO
 
-- test redirect rule
-
 - complete implementation of the rating system
 
 - Ajax-enabled web gui theme:
   Since we require JavaScript for this theme, lots of goodies can be realized.
-  Some are even doable without JS (or fall back nicely), but I am too lazy to
-  also apply them to the classic theme.
   + no delete confirmation
     http://www.d3eministry.net/wordpress/2006/03/23/147/
   + inline editing
     http://24ways.org/advent/edit-in-place-with-ajax
+
+- Design improvments:
   + rounded corners
     http://www.spiffycorners.com/
 
