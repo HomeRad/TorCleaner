@@ -25,6 +25,8 @@
   * Parse <!> empty SGML comments in HTML data. And build the HTML
     parser with equivalence class compression which makes it a lot
     smaller and only a little tad slower.
+    Also, literal </script> is not allowed anymore in single-line
+    JavaScript comments int HTML data.
     Type: feature
     Changed: wc/HtmlParser/htmllex.[lc], wc/tests/test_parser.py
 
