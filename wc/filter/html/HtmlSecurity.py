@@ -314,7 +314,7 @@ class HtmlSecurity (object):
         Check <meta> start tag.
         """
         if attrs.has_key('content'):
-            # prevent redirect to non-http file
+            # prevent redirect to non-http/ftp file
             refresh = attrs.get_true('name', u"")
             refresh = attrs.get_true('http-equiv', refresh)
             if refresh.lower() == 'refresh':
@@ -326,7 +326,8 @@ class HtmlSecurity (object):
                 for url in url.split(";url="):
                     url = wc.strformat.unquote(url, matching=True)
                     url_ok = url.startswith("http://") or \
-                             url.startswith("https://")
+                             url.startswith("https://") or \
+			     url.startswith("ftp://")
                     if not url_ok and ":" in url:
                         msg = "%s %r\n Detected invalid redirection."
                         wc.log.warn(wc.LOG_HTML, msg, htmlfilter,
