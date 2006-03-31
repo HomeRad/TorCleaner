@@ -70,6 +70,11 @@
     Type: feature
     Changed: wc/filter/html/HtmlSecurity.py
 
+  * Store new header entry names in lowercase. Add test case for that.
+    Type: bugfix
+    Changed: wc/http/header.py
+    Added: wc/http/tests/test_header.py
+
 2.37.1 "True Romance" (released 17.2.2006, windows-only fixes)
 
   * Quote command line arguments when installing under Windows.

@@ -52,7 +52,7 @@ class WcMessage (rfc822.Message, object):
         lines = text.split('\n')
         for line in lines:
             self.headers.append(line + "\n")
-        self.dict[name] = value
+        self.dict[name.lower()] = value
 
     def __str__ (self):
         """
