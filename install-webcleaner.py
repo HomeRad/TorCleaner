@@ -292,7 +292,7 @@ def install_adminpassword ():
         Admin password dialog.
         """
 
-        def body(self, master):
+        def body (self, master):
             d = {"appname": wc.AppName}
             msg = _("""The administrator password protects the web
 configuration frontend of %s.
@@ -308,7 +308,7 @@ worry, the web interface will tell you how to do that).""")
             self.pass_entry.grid(row=1, column=1)
             return self.pass_entry # initial focus
 
-        def apply(self):
+        def apply (self):
             password = self.pass_entry.get()
             if password:
                 save_adminpassword(password)
