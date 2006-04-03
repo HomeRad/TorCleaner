@@ -141,7 +141,7 @@ def get_wc_config ():
     """
     global _wc_config
     if _wc_config is None:
-        import wc
+        import wc.configuration
         _wc_config = wc.configuration.init()
     return _wc_config
 
