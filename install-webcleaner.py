@@ -319,6 +319,7 @@ worry, the web interface will tell you how to do that).""")
                 print _("Error, passwords differ.")
             else:
                 save_adminpassword(password)
+                print _("Password saved.")
 
     title = _("%s administrator password") % wc.AppName
     root.deiconify()
