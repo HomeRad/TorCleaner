@@ -304,19 +304,26 @@ worry, the web interface will tell you how to do that).""")
             label.grid(row=0, columnspan=2, sticky=tk.W)
             label = tk.Label(master, text=_("Password:"))
             label.grid(row=1, sticky=tk.W)
-            self.pass_entry = tk.Entry(master)
+            self.pass_entry = tk.Entry(master, show="*")
             self.pass_entry.grid(row=1, column=1)
+            label = tk.Label(master, text=_("Reenter password:"))
+            label.grid(row=2, sticky=tk.W)
+            self.pass2_entry = tk.Entry(master, show="*")
+            self.pass2_entry.grid(row=2, column=1)
             return self.pass_entry # initial focus
 
         def apply (self):
             password = self.pass_entry.get()
-            if password:
-                save_adminpassword(password)
+            password2 = self.pass2_entry.get()
+            if password != password2:
+                print _("Error, passwords differ.")
             else:
-                print _("Not saving empty password.")
+                save_adminpassword(password)
 
     title = _("%s administrator password") % wc.AppName
+    root.deiconify()
     PasswordDialog(root, title=title)
+    root.withdraw()
 
 
 def has_adminpassword ():
@@ -332,10 +339,13 @@ def save_adminpassword (password):
     Also checks for invalid password format.
     """
     import base64
-    import wc.strformat
     password = base64.b64encode(password)
-    if not password or not wc.strformat.is_ascii(password):
-        print _("Not saving binary password.")
+    if not password:
+        print _("Error, password is empty.")
+        return
+    import wc.strformat
+    if not wc.strformat.is_ascii(password):
+        print _("Error, password has binary characters.")
         return
     config = get_wc_config()
     config["password"] = password
