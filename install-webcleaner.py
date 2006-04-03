@@ -203,7 +203,7 @@ def fix_install_path (line):
     Replace placeholders written by bdist_wininst with those specified
     in win_path_scheme.
     """
-    key, eq, val = line.split()
+    key, eq, val = line.split(None, 2)
     # unescape string (do not use eval())
     val = val[1:-1].replace("\\\\", "\\")
     for d in win_path_scheme.keys():
