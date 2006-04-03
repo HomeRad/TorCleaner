@@ -37,6 +37,7 @@ include doc/de/webcleaner.1
 include doc/de/webcleaner.conf.5
 include doc/de/webcleaner-certificates.1
 include config/proxy.pac
+include config/Makefile
 include config/*.txt
 include config/*.zap
 include config/*.conf
@@ -79,4 +80,5 @@ include wc/HtmlParser/*.h
 include wc/HtmlParser/htmllex.l
 include wc/HtmlParser/htmlparse.y
 include wc/HtmlParser/Makefile
+include wc/HtmlParser/fixincludes.awk
 include tacho.bmp
