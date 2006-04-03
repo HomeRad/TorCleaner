@@ -19,9 +19,6 @@
 Filter JavaScript.
 """
 
-__version__ = "$Revision$"[11:-2]
-__date__    = "$Date$"[7:-2]
-
 import sys
 import os
 import wc
