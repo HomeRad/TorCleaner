@@ -1,6 +1,6 @@
 SUBDIRS = en de
 
-EXTRA_DIST = rest2htmlnav $(wildcard *.py)
+EXTRA_DIST = rest2htmlnav $(wildcard *.py) po4a.conf webcleaner.doc.pot
 
 .PHONY: apidocs
 apidocs:
