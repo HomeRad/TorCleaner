@@ -20,7 +20,7 @@ Parse and filter ratings.
 
 import wc.filter
 import wc.filter.Filter
-import wc.filter.rating
+import wc.rating
 import wc.log
 
 
@@ -50,13 +50,13 @@ class RatingHeader (wc.filter.Filter.Filter):
         url = attrs['url']
         headers = attrs['headers']['server']
         if headers.has_key('Content-Rating'):
-            cached_rating = wc.filter.rating.rating_cache_get(url)
+            cached_rating = wc.rating.rating_cache_get(url)
             if cached_rating is None:
                 rating = headers['Content-Rating']
                 try:
-                    url, rating = wc.filter.rating.rating_import(url, rating)
-                    wc.filter.rating.rating_add(url, rating)
-                except wc.filter.rating.RatingParseError, msg:
+                    url, rating = wc.rating.rating_import(url, rating)
+                    wc.rating.rating_add(url, rating)
+                except wc.rating.RatingParseError, msg:
                     wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
         rules = attrs['rating_rules']
         for rule in rules:

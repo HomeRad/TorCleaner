@@ -76,7 +76,7 @@ HasPstats = wc.fileutil.has_module("pstats")
 LOG_WC = "wc"
 LOG_FILTER = "wc.filter"
 LOG_JS = "wc.filter.js"
-LOG_RATING = "wc.filter.rating"
+LOG_RATING = "wc.rating"
 LOG_HTML = "wc.filter.html"
 LOG_XML = "wc.filter.xml"
 LOG_NET = "wc.net"
@@ -244,4 +244,3 @@ def restart ():
         wc.win32start.nt_quote_args(args)
     wc.log.info(LOG_PROXY, "Restarting with: %s", args)
     os.spawnv(os.P_NOWAIT, py_exe, args)
-

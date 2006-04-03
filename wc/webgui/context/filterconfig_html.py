@@ -36,9 +36,9 @@ from wc.filter.rules.FolderRule import recalc_up_down as _recalc_up_down
 from wc.filter.rules import register_rule as _register_rule
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
-from wc.filter.rating import categories
-from wc.filter.rating import get_category as _get_category
-from wc.filter.rating.category import intrange_from_string as \
+from wc.rating import categories
+from wc.rating import get_category as _get_category
+from wc.rating.category import intrange_from_string as \
      _intrange_from_string
 
 xmlreplacetypenames = sorted(replacetypenums.iterkeys())

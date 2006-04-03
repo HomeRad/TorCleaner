@@ -32,6 +32,7 @@ import wc.ip
 import wc.decorators
 import wc.strformat
 import wc.fileutil
+import wc.rating.service
 
 ConfigCharset = "iso-8859-1"
 
@@ -45,10 +46,6 @@ def init (confdir=wc.ConfigDir):
     Initialize and load the configuration.
     """
     global config
-    from wc.filter.rating import register_service
-    from wc.filter.rating.service import WebCleanerService
-    register_service(WebCleanerService())
-    #XXXwc.filter.rating.rating_cache_load()
     config = Configuration(confdir)
     return config
 
@@ -213,6 +210,7 @@ class Configuration (dict):
         self['development'] = int(os.environ.get("WC_DEVELOPMENT", "0"))
         self['baseurl'] = wc.Url
         self['try_google'] = 0
+        self['rating_service'] = wc.rating.service.WebCleanerService()
         # delete all registered sids
         from wc.filter.rules import delete_registered_sids
         delete_registered_sids()

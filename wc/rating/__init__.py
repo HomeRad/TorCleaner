@@ -80,8 +80,9 @@ class RatingService (object):
     defines.
     """
 
-    def __init__ (self, name):
-        self.name = name
+    def __init__ (self, url, rating_formats):
+        self.url = url
+        self.rating_formats = rating_formats
 
     @wc.decorators.notimplemented
     def get_url_rating (self, url):
@@ -90,4 +91,3 @@ class RatingService (object):
     @wc.decorators.notimplemented
     def set_url_rating (self, url, rating, generic):
         pass
-

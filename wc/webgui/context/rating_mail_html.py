@@ -25,8 +25,8 @@ from wc.url import is_safe_url as _is_safe_url
 from wc.mail import valid_mail as _valid_mail
 from wc.mail import send_mail as _send_mail
 from wc.mail import mail_date as _mail_date
-from wc.filter.rating.storage import get_rating_store as _get_rating_store
-from wc.filter.rating.storage.pickle import PickleStorage as _PickleStorage
+from wc.rating.storage import get_rating_store as _get_rating_store
+from wc.rating.storage.pickle import PickleStorage as _PickleStorage
 
 info = {
     'send': False,

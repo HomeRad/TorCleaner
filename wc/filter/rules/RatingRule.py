@@ -22,8 +22,8 @@ import wc
 import wc.log
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
-import wc.filter.rating
-import wc.filter.rating.storage
+import wc.rating
+#import wc.rating.storage
 
 
 MISSING = _("Unknown page")
@@ -31,44 +31,35 @@ MISSING = _("Unknown page")
 
 class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     """
-    Holds configured rating data.
+    Holds a rating to match against when checking for allowance of
+    the rating system.
     """
 
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
                   matchurls=None, nomatchurls=None):
         """
-        Call super.__init__(), store ratings in a mapping, initialize url.
-        Rating mapping has the form {category name -> limit}.
+        Initialize rating data.
         """
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
-        self.ratings = {}
-        for category in wc.filter.rating.categories:
-            if category.iterable:
-                self.ratings[category.name] = 'none'
-            else:
-                self.ratings[category.name] = ""
-        self.url = ""
+        self.rating = wc.rating.Rating()
 
     def fill_attrs (self, attrs, name):
         """
         Init rating and url attrs.
         """
         super(RatingRule, self).fill_attrs(attrs, name)
-        if name == 'category':
-            self._category = attrs.get('name')
+        if name == 'limit':
+            self._name = attrs.get('name')
 
     def end_data (self, name):
         """
         Store category or url data.
         """
         super(RatingRule, self).end_data(name)
-        if name == 'category':
-            assert self.ratings.has_key(self._category), repr(self._category)
-            self.ratings[self._category] = self._data
-        elif name == 'url':
-            self.url = self._data
+        if name == 'limit':
+            self.rating[self._name] = self._data
 
     def compile_data (self):
         """
@@ -85,23 +76,24 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         {string -> string -> bool}
         """
         self.values = {}
-        for name, value in self.ratings.iteritems():
-            category = wc.filter.rating.get_category(name)
-            if category.iterable:
-                self.values[name] = {}
-                for v in category.values:
-                    self.values[name][v] = (v == value)
-            else:
-                self.values[name] = value
+        # XXX
+        #for name, value in self.ratings.iteritems():
+        #    category = wc.rating.get_category(name)
+        #    if category.iterable:
+        #        self.values[name] = {}
+        #        for v in category.values:
+        #            self.values[name][v] = (v == value)
+        #    else:
+        #        self.values[name] = value
 
     def rating_allow (self, url):
         """
         Asks cache if the rule allows the rating data for given url
         Looks up cache to find rating data, if not returns a MISSING message.
         """
-        rating_store = wc.filter.rating.get_ratings()
+        rating_store = wc.rating.get_ratings()
         # sanitize url
-        url = wc.filter.rating.make_safe_url(url)
+        url = wc.rating.make_safe_url(url)
         if url in rating_store:
             return self.check_against(rating_store[url])
         return MISSING
@@ -122,7 +114,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
             if not limit:
                 # no limit is set for this category
                 continue
-            category = wc.filter.rating.get_category(catname)
+            category = wc.rating.get_category(catname)
             reason = category.allowance(value, limit)
             if reason:
                 return reason
@@ -137,12 +129,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
-        if self.url:
-            s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
-        for category, value in self.ratings.iteritems():
-            if value is not None:
-                s += u"\n  <category name=\"%s\">%s</category>" % \
-                      (wc.XmlUtils.xmlquoteattr(category),
-                       wc.XmlUtils.xmlquote(value))
+        for name, value in self.rating.iteritems():
+            s += u"\n  <limit name=\"%s\">%s</limit>" % \
+              (wc.XmlUtils.xmlquoteattr(name), wc.XmlUtils.xmlquote(value))
         s += u"\n</%s>" % self.name
         return s

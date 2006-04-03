@@ -111,7 +111,8 @@ class Header (wc.filter.Filter.Filter):
                     delete.add(h.lower())
                     # go to next header name
                     break
-        wc.proxy.Headers.remove_headers(data, delete)
+        if delete:
+            wc.proxy.Headers.remove_headers(data, delete)
         for name, val in attrs['header_add'][stage]:
             if "$" in val:
                 # substitute template

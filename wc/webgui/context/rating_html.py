@@ -24,13 +24,13 @@ from wc.webgui.context import getval as _getval
 from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.url import is_safe_url as _is_safe_url
 from wc.strformat import strtime as _strtime
-from wc.filter.rating import services, categories
-from wc.filter.rating import get_category as _get_category
-from wc.filter.rating import get_ratings as _get_ratings
-from wc.filter.rating.rating import Rating as _Rating
-from wc.filter.rating.category import intrange_from_string as \
+from wc.rating import services, categories
+from wc.rating import get_category as _get_category
+from wc.rating import get_ratings as _get_ratings
+from wc.rating.rating import Rating as _Rating
+from wc.rating.category import intrange_from_string as \
      _intrange_from_string
-from wc.filter.rating.category import string_from_intrange as \
+from wc.rating.category import string_from_intrange as \
      _string_from_intrange
 
 _entries_per_page = 50

@@ -20,8 +20,7 @@ Test rating routines.
 
 import unittest
 import tests
-import wc.filter.rating
-import wc.filter.rating.category
+import wc.rating
 
 
 class TestRating (tests.StandardTest):
@@ -43,13 +42,13 @@ class TestRating (tests.StandardTest):
             ('http://imadoofus.com/forum/', ['http://', 'imadoofus.com', '/', 'forum']),
         )
         for url, res in urls:
-            self.assertEqual(wc.filter.rating.split_url(url), res)
+            self.assertEqual(wc.rating.split_url(url), res)
 
     def test_range_range (self):
         """
         Test range in range.
         """
-        in_range = wc.filter.rating.category.range_in_range
+        in_range = wc.rating.category.range_in_range
         # in_range(vrange, prange)
         self.assert_(in_range((1, 1), (None, None)))
         self.assert_(in_range((None, None), (1, 1)))
@@ -66,7 +65,7 @@ class TestRating (tests.StandardTest):
         """
         Test value in range.
         """
-        in_range = wc.filter.rating.category.value_in_range
+        in_range = wc.rating.category.value_in_range
         # in_range(value, prange)
         self.assert_(in_range(1, (None, None)))
         self.assert_(in_range(None, (1, 1)))
@@ -85,7 +84,7 @@ class TestRating (tests.StandardTest):
         Test range parsing.
         """
         # rating_range (range)
-        rating_range = wc.filter.rating.category.intrange_from_string
+        rating_range = wc.rating.category.intrange_from_string
         self.assertEqual(rating_range(""), (None, None))
         self.assertEqual(rating_range("-"), (None, None))
         self.assertEqual(rating_range("1"), (1, None))

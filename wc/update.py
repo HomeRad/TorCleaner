@@ -336,7 +336,7 @@ def update_ratings (wconfig, dryrun=False, log=None):
         print >> log, "...", _("done")
         return chg
     # Merge new ratings.
-    new_ratings = wc.filter.rating.storage.rating_parse(page)
-    chg = wc.filter.rating.ratings.merge(new_ratings, dryrun=dryrun, log=log)
+    new_ratings = wc.rating.storage.rating_parse(page)
+    chg = wc.rating.ratings.merge(new_ratings, dryrun=dryrun, log=log)
     print >> log, "...", _("done")
     return chg
