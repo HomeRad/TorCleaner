@@ -1,9 +1,0 @@
-tmp
-patched
-webcleaner
-webcleaner-common
-files
-*substvars
-*.debhelper
-*.ex
-stamp-*
