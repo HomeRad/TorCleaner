@@ -339,7 +339,7 @@ def save_adminpassword (password):
         print _("Error, password has binary characters.")
         return
     config = get_wc_config()
-    config["password"] = password
+    config["adminpass"] = password
     config.write_proxyconf()
     print _("Password saved.")
 
