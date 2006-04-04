@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-04-04 20:32+0200\n"
-"PO-Revision-Date: 2006-04-04 20:41+0100\n"
+"POT-Creation-Date: 2006-04-04 21:12+0200\n"
+"PO-Revision-Date: 2006-04-04 21:13+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -725,12 +725,10 @@ msgid "Reenter password:"
 msgstr "Nochmaliges Passwort:"
 
 #: ../install-webcleaner.py:309
-#: ../install-webcleaner.py:452
 msgid "OK"
 msgstr "Ok"
 
 #: ../install-webcleaner.py:311
-#: ../install-webcleaner.py:454
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -776,6 +774,14 @@ msgstr ""
 "Wollen Sie diese löschen? Die Regeln können in weiteren\n"
 "Installationen von %(appname)s wiederverwendet werden, sind aber\n"
 "ansonsten unnütz."
+
+#: ../install-webcleaner.py:452
+msgid "Yes"
+msgstr "Ja"
+
+#: ../install-webcleaner.py:454
+msgid "No"
+msgstr "Nein"
 
 #: ../install-webcleaner.py:470
 #, python-format
