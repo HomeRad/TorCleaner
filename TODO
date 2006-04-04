@@ -1,5 +1,8 @@
 TODO
 
+- Disabling network on Windows causes DNS lookup to ignore the
+  first error, and subsequent lookups time out indefinitely.
+
 - complete implementation of the rating system
 
 - Ajax-enabled web gui theme:
