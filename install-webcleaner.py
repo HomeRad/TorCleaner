@@ -467,6 +467,7 @@ def remove_file (fname):
     if os.path.exists(fname):
         try:
             os.remove(fname)
+            print _("File %r removed.") % fname
         except OSError, msg:
             print _("Could not remove file %r: %s") % (fname, str(msg))
 
