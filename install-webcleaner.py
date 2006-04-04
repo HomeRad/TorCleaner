@@ -439,10 +439,12 @@ def purge_tempfiles ():
         return
     init_tk()
     import tkMessageBox
+    root.deiconify()
     answer = tkMessageBox.askyesno(_("%s config purge") % wc.AppName,
          _("""There are local filter rules in the configuration directory.
 Do you want to remove them? They can be re-used in other
 installations of %s, but are useless otherwise.""") % wc.AppName)
+    root.withdraw()
     if answer:
         for fname in files:
             remove_file(fname)
