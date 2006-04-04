@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-04-04 00:14+0200\n"
-"PO-Revision-Date: 2006-04-04 00:40+0100\n"
+"POT-Creation-Date: 2006-04-04 20:32+0200\n"
+"PO-Revision-Date: 2006-04-04 20:41+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -644,41 +644,41 @@ msgstr "Konnte %r nicht löschen: %s"
 msgid "Invalid command %r."
 msgstr "Unbekannter Befehl %r."
 
-#: ../install-webcleaner.py:72
+#: ../install-webcleaner.py:59
 #, python-format
 msgid "Service status error: %s"
 msgstr "Dienst Statusfehler: %s"
 
-#: ../install-webcleaner.py:83
+#: ../install-webcleaner.py:70
 #, python-format
 msgid "Installing %s service..."
 msgstr "Installiere %s Dienst..."
 
-#: ../install-webcleaner.py:96
+#: ../install-webcleaner.py:83
 #, python-format
 msgid "Removing %s service..."
 msgstr "Entferne %s Dienst..."
 
-#: ../install-webcleaner.py:108
+#: ../install-webcleaner.py:95
 #, python-format
 msgid "Starting %s proxy..."
 msgstr "%s Proxy Neustart..."
 
-#: ../install-webcleaner.py:121
+#: ../install-webcleaner.py:108
 #, python-format
 msgid "Stopping %s proxy..."
 msgstr "Stoppe %s Proxy..."
 
-#: ../install-webcleaner.py:240
+#: ../install-webcleaner.py:227
 #, python-format
 msgid "Cannot install shortcuts: %s"
 msgstr "Konnte Verknüpfungen nicht installieren: %s"
 
-#: ../install-webcleaner.py:260
+#: ../install-webcleaner.py:247
 msgid "Uninstall WebCleaner"
 msgstr "Deinstalliere WebCleaner"
 
-#: ../install-webcleaner.py:272
+#: ../install-webcleaner.py:259
 msgid ""
 "Could not install SSL certificates.\n"
 "Perhaps PyOpenSSL is not installed?\n"
@@ -690,57 +690,67 @@ msgstr ""
 "Sie müssen die SSL Zertifikate manuell installieren mit\n"
 "'webcleaner-certificates install'."
 
-#: ../install-webcleaner.py:297
+#: ../install-webcleaner.py:281
+msgid "Error, passwords differ."
+msgstr "Fehler, Passwörter sind verschieden."
+
+#: ../install-webcleaner.py:289
+#, python-format
+msgid "%s administrator password"
+msgstr "%s Administrator Passwort"
+
+#: ../install-webcleaner.py:292
 #, python-format
 msgid ""
 "The administrator password protects the web\n"
-"configuration frontend of %s.\n"
+"configuration frontend of %(appname)s.\n"
 "The default username is \"admin\" (without the quotes).\n"
 "You have to enter a non-empty password. If you press cancel,\n"
 "the administrator password has to be entered manually (don't\n"
 "worry, the web interface will tell you how to do that)."
 msgstr ""
 "Das Administrator Passwort schützt die Webkonfiguration von\n"
-"%s.\n"
+"%(appname)s.\n"
 "Der Standard Benutzername ist \"admin\" (ohne die Anführungszeichen).\n"
 "Sie müssen ein nicht-leeres Passwort eingeben. Falls Sie Abbrechen\n"
 "drücken, muss das Administrator Passwort manuell eingegeben werden\n"
 "(keine Sorge, die Webkonfiguration sagt Ihnen, wie das funktioniert)."
 
-#: ../install-webcleaner.py:305
+#: ../install-webcleaner.py:300
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../install-webcleaner.py:309
+#: ../install-webcleaner.py:305
 msgid "Reenter password:"
 msgstr "Nochmaliges Passwort:"
 
-#: ../install-webcleaner.py:319
-msgid "Error, passwords differ."
-msgstr "Fehler, Passwörter sind verschieden."
+#: ../install-webcleaner.py:309
+#: ../install-webcleaner.py:452
+msgid "OK"
+msgstr "Ok"
 
-#: ../install-webcleaner.py:322
-msgid "Password saved."
-msgstr "Passwort gespeichert."
+#: ../install-webcleaner.py:311
+#: ../install-webcleaner.py:454
+msgid "Cancel"
+msgstr "Abbrechen"
 
-#: ../install-webcleaner.py:324
-#, python-format
-msgid "%s administrator password"
-msgstr "%s Administrator Passwort"
-
-#: ../install-webcleaner.py:345
+#: ../install-webcleaner.py:335
 msgid "Error, password is empty."
 msgstr "Fehler, Passwort ist leer."
 
-#: ../install-webcleaner.py:349
+#: ../install-webcleaner.py:339
 msgid "Error, password has binary characters."
 msgstr "Fehler, Passwort beinhaltet binäre Zeichen."
 
-#: ../install-webcleaner.py:378
+#: ../install-webcleaner.py:344
+msgid "Password saved."
+msgstr "Passwort gespeichert."
+
+#: ../install-webcleaner.py:369
 msgid "Opening proxy configuration interface..."
 msgstr "Öffne Proxykonfiguration..."
 
-#: ../install-webcleaner.py:416
+#: ../install-webcleaner.py:407
 msgid ""
 "Could not remove SSL certificates.\n"
 "Perhaps PyOpenSSL is not installed?\n"
@@ -750,29 +760,39 @@ msgstr ""
 "Vielleicht ist PyOpenSSL nicht installiert?\n"
 "Sie müssen die SSL Zertifikate manuell entfernen."
 
-#: ../install-webcleaner.py:442
+#: ../install-webcleaner.py:444
 #, python-format
 msgid "%s config purge"
 msgstr "%s Konfiguration Löschen"
 
-#: ../install-webcleaner.py:443
+#: ../install-webcleaner.py:447
 #, python-format
 msgid ""
 "There are local filter rules in the configuration directory.\n"
 "Do you want to remove them? They can be re-used in other\n"
-"installations of %s, but are useless otherwise."
+"installations of %(appname)s, but are useless otherwise."
 msgstr ""
 "Es befinden sich lokale Filterregeln im Konfigurationsverzeichnis.\n"
 "Wollen Sie diese löschen? Die Regeln können in weiteren\n"
-"Installationen von %s wiederverwendet werden, sind aber\n"
+"Installationen von %(appname)s wiederverwendet werden, sind aber\n"
 "ansonsten unnütz."
 
-#: ../install-webcleaner.py:459
+#: ../install-webcleaner.py:470
+#, python-format
+msgid "File %r removed."
+msgstr "Datei %r entfernt."
+
+#: ../install-webcleaner.py:472
 #, python-format
 msgid "Could not remove file %r: %s"
 msgstr "Konnte Datei %r nicht löschen: %s"
 
-#: ../install-webcleaner.py:478
+#: ../install-webcleaner.py:489
+#, python-format
+msgid "Directory %r removed."
+msgstr "Verzeichnis %r entfernt."
+
+#: ../install-webcleaner.py:492
 #, python-format
 msgid "Could not remove directory %r: %s"
 msgstr "Konnte Verzeichnis %r nicht löschen: %s"
