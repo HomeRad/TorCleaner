@@ -486,6 +486,7 @@ def remove_empty_directories (dname):
     try:
         if is_empty_dir(dname):
             os.rmdir(dname)
+            print _("Directory %r removed.") % dname
             remove_empty_directories(os.path.dirname(dname))
     except OSError, msg:
         print _("Could not remove directory %r: %s") % (dname, str(msg))
