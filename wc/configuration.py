@@ -107,7 +107,7 @@ filtermodules = [
     "XmlRewriter",
     "Replacer",
     "Compress",
-    "RatingHeader",
+# XXX to be implemented    "RatingHeader",
     "VirusFilter",
     "MimeRecognizer",
 ]
@@ -390,7 +390,7 @@ rulenames = (
   u'nojscomments',
   u'javascript',
   u'replace',
-  u'rating',
+# XXX to be implemented  u'rating',
   u'antivirus',
   u'htmlrewrite',
   u'xmlrewrite',
