@@ -148,7 +148,7 @@ upload:
 	@read
 
 .PHONY: release
-release: releasecheck clean dist sign_distfiles homepage upload
+release: releasecheck clean dist-stamp sign_distfiles homepage upload
 	@echo "Uploading new WebCleaner Homepage..."
 	$(MAKE) -C ~/public_html/webcleaner.sf.net upload
 	@echo "Register at Python Package Index..."
