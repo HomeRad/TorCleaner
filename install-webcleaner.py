@@ -163,7 +163,7 @@ def fix_configdata ():
         if line.startswith("install_") or \
            line.startswith("config_") or \
            line.startswith("template_"):
-            lines.append(fix_install_path(line))
+            lines.append(fix_install_path(line.rstrip()))
         else:
             lines.append(line)
     f = file(conffile, "w")
@@ -287,7 +287,7 @@ def install_adminpassword ():
         root.destroy()
 
     root.title(_("%s administrator password") % wc.AppName)
-    frame = tk.Frame(top)
+    frame = tk.Frame(root)
     d = {"appname": wc.AppName}
     msg = _("""The administrator password protects the web
 configuration frontend of %(appname)s.
@@ -428,14 +428,36 @@ def purge_tempfiles ():
     files = glob.glob(os.path.join(wc.ConfigDir, "local_*.zap"))
     if not files:
         return
-    import tkMessageBox
-    answer = tkMessageBox.askyesno(_("%s config purge") % wc.AppName,
-         _("""There are local filter rules in the configuration directory.
-Do you want to remove them? They can be re-used in other
-installations of %s, but are useless otherwise.""") % wc.AppName)
-    if answer:
+
+    import Tkinter as tk
+    root = tk.Tk()
+
+    # handler methods
+    def do_ok (event=None):
         for fname in files:
             remove_file(fname)
+        do_quit()
+
+    def do_quit (event=None):
+        root.destroy()
+
+    root.title(_("%s config purge") % wc.AppName)
+    frame = tk.Frame(root)
+    d = {"appname": wc.AppName}
+    msg = _("""There are local filter rules in the configuration directory.
+Do you want to remove them? They can be re-used in other
+installations of %(appname)s, but are useless otherwise.""")
+    w = tk.Label(frame, text=msg % d, anchor=tk.W, justify=tk.LEFT)
+    w.grid(row=0, columnspan=2, sticky=tk.W)
+    w = tk.Button(frame, text=_("OK"), width=10, command=do_ok, default=tk.ACTIVE)
+    w.grid(row=1)
+    w = tk.Button(frame, text=_("Cancel"), width=10, command=do_quit)
+    w.grid(row=1, column=1)
+    frame.pack(padx=5, pady=5)
+    root.bind("<Return>", do_ok)
+    root.bind("<Escape>", do_quit)
+    root.protocol("WM_DELETE_WINDOW", do_quit)
+    root.mainloop()
 
 
 def remove_file (fname):
