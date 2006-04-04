@@ -26,7 +26,7 @@
     parser with equivalence class compression which makes it a lot
     smaller and only a little tad slower.
     Also, literal </script> is not allowed anymore in single-line
-    JavaScript comments int HTML data.
+    JavaScript comments in HTML data.
     Type: feature
     Changed: wc/HtmlParser/htmllex.[lc], wc/tests/test_parser.py
 
