@@ -33,19 +33,6 @@ _ = lambda s: s
 
 #################### utility functions ####################
 
-def init_tk ():
-    """
-    Initialize Tk: create a root window and hide it, since only simple
-    modal dialogs are used.
-    @return: root window
-    @rtype: Tkinter.Tk
-    """
-    import Tkinter as tk
-    root = tk.Tk()
-    root.withdraw()
-    return root
-
-
 def execute (args):
     """
     Execute command with arguments.
@@ -284,47 +271,50 @@ def install_adminpassword ():
         return
     import wc
     import Tkinter as tk
-    root = init_tk()
-    import tkSimpleDialog
+    root = tk.Tk()
 
-    class PasswordDialog (tkSimpleDialog.Dialog):
-        """
-        Admin password dialog.
-        """
+    # handler methods
+    def do_ok (event=None):
+        password = pass_entry.get()
+        password2 = pass2_entry.get()
+        if password != password2:
+            print _("Error, passwords differ.")
+        else:
+            save_adminpassword(password)
+        do_quit()
 
-        def body (self, master):
-            d = {"appname": wc.AppName}
-            msg = _("""The administrator password protects the web
-configuration frontend of %s.
+    def do_quit (event=None):
+        root.destroy()
+
+    root.title(_("%s administrator password") % wc.AppName)
+    frame = tk.Frame(top)
+    d = {"appname": wc.AppName}
+    msg = _("""The administrator password protects the web
+configuration frontend of %(appname)s.
 The default username is "admin" (without the quotes).
 You have to enter a non-empty password. If you press cancel,
 the administrator password has to be entered manually (don't
 worry, the web interface will tell you how to do that).""")
-            label = tk.Label(master, text=msg % d, anchor=tk.W, justify=tk.LEFT)
-            label.grid(row=0, columnspan=2, sticky=tk.W)
-            label = tk.Label(master, text=_("Password:"))
-            label.grid(row=1, sticky=tk.W)
-            self.pass_entry = tk.Entry(master, show="*")
-            self.pass_entry.grid(row=1, column=1)
-            label = tk.Label(master, text=_("Reenter password:"))
-            label.grid(row=2, sticky=tk.W)
-            self.pass2_entry = tk.Entry(master, show="*")
-            self.pass2_entry.grid(row=2, column=1)
-            return self.pass_entry # initial focus
-
-        def apply (self):
-            password = self.pass_entry.get()
-            password2 = self.pass2_entry.get()
-            if password != password2:
-                print _("Error, passwords differ.")
-            else:
-                save_adminpassword(password)
-                print _("Password saved.")
-
-    title = _("%s administrator password") % wc.AppName
-    root.deiconify()
-    PasswordDialog(root, title=title)
-    root.withdraw()
+    w = tk.Label(frame, text=msg % d, anchor=tk.W, justify=tk.LEFT)
+    w.grid(row=0, columnspan=2, sticky=tk.W)
+    w = tk.Label(frame, text=_("Password:"))
+    w.grid(row=1, sticky=tk.W)
+    pass_entry = tk.Entry(frame, show="*")
+    pass_entry.grid(row=1, column=1)
+    pass_entry.focus_set()
+    w = tk.Label(frame, text=_("Reenter password:"))
+    w.grid(row=2, sticky=tk.W)
+    pass2_entry = tk.Entry(frame, show="*")
+    pass2_entry.grid(row=2, column=1)
+    w = tk.Button(frame, text=_("OK"), width=10, command=do_ok, default=tk.ACTIVE)
+    w.grid(row=3)
+    w = tk.Button(frame, text=_("Cancel"), width=10, command=do_quit)
+    w.grid(row=3, column=1)
+    frame.pack(padx=5, pady=5)
+    root.bind("<Return>", do_ok)
+    root.bind("<Escape>", do_quit)
+    root.protocol("WM_DELETE_WINDOW", do_quit)
+    root.mainloop()
 
 
 def has_adminpassword ():
@@ -351,6 +341,7 @@ def save_adminpassword (password):
     config = get_wc_config()
     config["password"] = password
     config.write_proxyconf()
+    print _("Password saved.")
 
 
 def open_browser_config ():
@@ -437,14 +428,11 @@ def purge_tempfiles ():
     files = glob.glob(os.path.join(wc.ConfigDir, "local_*.zap"))
     if not files:
         return
-    init_tk()
     import tkMessageBox
-    root.deiconify()
     answer = tkMessageBox.askyesno(_("%s config purge") % wc.AppName,
          _("""There are local filter rules in the configuration directory.
 Do you want to remove them? They can be re-used in other
 installations of %s, but are useless otherwise.""") % wc.AppName)
-    root.withdraw()
     if answer:
         for fname in files:
             remove_file(fname)
