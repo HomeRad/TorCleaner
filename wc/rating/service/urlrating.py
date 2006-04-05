@@ -5,7 +5,7 @@ class WcUrlRating (wc.rating.UrlRating):
         self.comment = comment
 
     def __str__ (self):
-        if self.generic
+        if self.generic:
             extra = " (generic)"
         else:
             extra = ""
