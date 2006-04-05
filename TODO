@@ -1,5 +1,9 @@
 TODO
 
+- test language enablement of webcleaner installer
+
+- svn pre-commit hook for python syntax check
+
 - Disabling network on Windows causes DNS lookup to ignore the
   first error, and subsequent lookups time out indefinitely.
 
