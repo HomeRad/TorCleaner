@@ -41,6 +41,7 @@ TESTS = scripts/test.sh
 GPGKEY:=2DE589F5
 # build dir for svn-buildpackage
 SVNBUILD:=/home/calvin/src/build-area
+DEB_ORIG_TARGET:=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
 
 MANIFEST: MANIFEST.in setup.py
 	rm -f share
@@ -101,8 +102,10 @@ dist-stamp: dist
 	touch $@
 
 .PHONY: deb_orig
-deb_orig: dist-stamp
-	cp webcleaner-$(VERSION).tar.gz ../build-area/webcleaner_$(VERSION).orig.tar.gz
+deb_orig:
+	if [ ! -e $(DEB_ORIG_TARGET) ]; then \
+	  $(MAKE) dist-stamp && cp webcleaner-$(VERSION).tar.gz $(DEB_ORIG_TARGET); \
+	fi
 
 # ready for upload, signed with my GPG key
 .PHONY: deb_signed
