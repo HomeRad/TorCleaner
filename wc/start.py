@@ -60,8 +60,8 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
                 raw_input(question)
             except KeyboardInterrupt:
                 import sys
-                print >>sys.stderr
-                print >>sys.stderr, "Canceled."
+                print >> sys.stderr
+                print >> sys.stderr, "Canceled."
                 run = False
         if run:
             import profile

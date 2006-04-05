@@ -114,7 +114,7 @@ def paginate (text, lines=22):
 def print_help ():
     """Print long usage info and exit."""
     d = {'appname': wc.AppName}
-    if os.name=='nt':
+    if os.name == 'nt':
         d["service"] = _("%(appname)s Proxy") % d
         paginate(nt_usage % d)
     else:
@@ -137,11 +137,11 @@ def parse_options (sysargs):
     except getopt.error:
         print_usage(sys.exc_info()[1])
     for opt, arg in options:
-        if opt=="-h" or opt=="--help":
+        if opt == "-h" or opt == "--help":
             print_help()
-        elif opt=="--configdir" or opt=="-d":
+        elif opt == "--configdir" or opt == "-d":
             configdir = arg
-        elif opt=="--no-file-logs":
+        elif opt == "--no-file-logs":
             filelogs = False
         else:
             print_usage(_("Unknown option %(option)r") % {'option': opt})

@@ -100,13 +100,13 @@ def main (sysargs):
         print_usage(_("No command given."))
     else:
         command = args[0]
-    if command=='install':
+    if command == 'install':
         install_ssl_certs(configdir)
-    elif command=='remove':
+    elif command == 'remove':
         remove_ssl_certs(configdir)
     else:
         print_usage(_("Invalid command %r.") % command)
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main(sys.argv[1:])

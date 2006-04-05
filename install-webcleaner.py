@@ -108,14 +108,14 @@ def stop_service ():
     print _("Stopping %s proxy...") % wc.AppName
     oldargs = sys.argv
     state = state_nt_service(wc.AppName)
-    while state==win32service.SERVICE_START_PENDING:
+    while state == win32service.SERVICE_START_PENDING:
         time.sleep(1)
         state = state_nt_service(wc.AppName)
-    if state==win32service.SERVICE_RUNNING:
+    if state == win32service.SERVICE_RUNNING:
         sys.argv = ['webcleaner', 'stop']
         win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     state = state_nt_service(wc.AppName)
-    while state==win32service.SERVICE_STOP_PENDING:
+    while state == win32service.SERVICE_STOP_PENDING:
         time.sleep(1)
         state = state_nt_service(wc.AppName)
     sys.argv = oldargs
@@ -351,7 +351,7 @@ def open_browser_config ():
     import wc
     import wc.configuration
     state = state_nt_service(wc.AppName)
-    while state==win32service.SERVICE_START_PENDING:
+    while state == win32service.SERVICE_START_PENDING:
         time.sleep(1)
         state = state_nt_service(wc.AppName)
     # sleep a while to let the proxy start...

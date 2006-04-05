@@ -168,7 +168,7 @@ def initlog (filename, appname, filelogs=True):
     try:
         logging.config.fileConfig(filename)
     except ConfigParser.ParsingError, msg:
-        print >>sys.stderr, "Error parsing logging configuration:", msg
+        print >> sys.stderr, "Error parsing logging configuration:", msg
     if filelogs:
         trydirs = []
         if os.name == "nt":
