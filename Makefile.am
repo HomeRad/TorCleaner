@@ -30,7 +30,7 @@ PYFILES = $(wildcard webcleaner webcleaner-certificates *.py wc/*.py \
 	wc/proxy/tests/*.py wc/dns/tests/*.py wc/filter/tests/*.py \
 	wc/tests/*.py \
 	test/*.py tests/*.py config/*.py)
-PYLINTIGNORE = wc/win32start.py
+PYLINTIGNORE = wc/win32start.py wc/webgui/context/filterconfig_html.py
 PYFLAKES:=pyflakes
 CHECKFILES = *.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
