@@ -19,6 +19,8 @@ profile=no
 # Add <file or directory> to the black list. It should be a base name, not a
 # path. You may set this option multiple times.
 ignore=.svn
+ignore=win32start.py
+ignore=filterconfig_html.py
 
 # Pickle collected data for later comparisons.
 persistent=yes
