@@ -64,7 +64,8 @@ def sighup_reload_config (signum, frame):
     global pending_reload
     if not pending_reload:
         pending_reload = True
-        wc.proxy.make_timer(1, reload_config)
+        import wc.proxy.timer
+        wc.proxy.timer.make_timer(1, reload_config)
 
 
 def reload_config ():
