@@ -19,18 +19,10 @@ SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc $(PYTHON) /usr/bin/pylint
-PYLINTOPTS := --disable-msg-cat=C,R
+PYLINTOPTS := --disable-msg-cat=C,R,W
 # all Python files in the source
-PYFILES = $(wildcard webcleaner webcleaner-certificates *.py wc/*.py \
-	wc/filter/*.py wc/filter/rules/*.py wc/rating/*.py wc/js/*.py \
-	wc/proxy/*.py wc/proxy/decoder/*.py wc/proxy/auth/*.py \
-	wc/webgui/*.py wc/dns/*.py \
-	wc/http/*.py wc/webgui/context/*.py wc/magic/*.py \
-	wc/http/tests/*.py wc/magic/tests/*.py wc/proxy/auth/tests/*.py \
-	wc/proxy/tests/*.py wc/dns/tests/*.py wc/filter/tests/*.py \
-	wc/tests/*.py \
-	test/*.py tests/*.py config/*.py)
-PYLINTIGNORE = wc/win32start.py wc/webgui/context/filterconfig_html.py
+PYFILES = $(wildcard webcleaner webcleaner-certificates *.py \
+	    test/*.py config/*.py) wc tests
 PYFLAKES:=pyflakes
 CHECKFILES = *.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
@@ -178,7 +170,7 @@ homepage-zapper: md5sums
 
 .PHONY: pylint
 pylint: localbuild
-	$(PYLINT) $(PYLINTOPTS) $(filter-out $(PYLINTIGNORE),$(PYFILES))
+	$(PYLINT) $(PYLINTOPTS) $(PYFILES) | grep -v win32start | uniq
 
 .PHONY: pyflakes
 pyflakes:
