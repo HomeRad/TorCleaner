@@ -9,7 +9,7 @@ distribute it with WebCleaner!
 """
 import fileinput
 topic = None
-for line in fileinput.input()
+for line in fileinput.input():
     line = line.strip()
     if line.startswith("<Topic r:id="):
         _topic = line[13:line.rindex('"')]
