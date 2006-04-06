@@ -19,7 +19,7 @@ SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc $(PYTHON) /usr/bin/pylint
-PYLINTOPTS :=
+PYLINTOPTS := --disable-msg-cat=C,R
 # all Python files in the source
 PYFILES = $(wildcard webcleaner webcleaner-certificates *.py wc/*.py \
 	wc/filter/*.py wc/filter/rules/*.py wc/rating/*.py wc/js/*.py \
