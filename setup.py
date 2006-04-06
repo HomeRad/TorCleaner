@@ -376,13 +376,13 @@ def list_message_files (package, suffix=".po"):
 
 def check_manifest ():
     """
-    Snatched from roundup.sf.net.
+    Snatched from roundup.sourceforge.net.
     Check that the files listed in the MANIFEST are present when the
     source is unpacked.
     """
     try:
         f = open('MANIFEST')
-    except:
+    except (IOError, OSError):
         print '\n*** SOURCE WARNING: The MANIFEST file is missing!'
         return
     try:
