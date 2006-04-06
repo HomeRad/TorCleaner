@@ -24,8 +24,8 @@ class TestHeader (tests.StandardTest):
 
     def test_add (self):
         d = wc.http.header.WcMessage()
-	d['Via'] = 'foo\r'
-	self.assert_('via' in d)
+        d['Via'] = 'foo\r'
+        self.assert_('via' in d)
 
 
 def test_suite ():
