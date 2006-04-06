@@ -159,7 +159,7 @@ def esc_ansicolor (color):
     control = ''
     if ";" in color:
         control, color = color.split(";", 1)
-        control = AnsiControl.get(ctype, '')+";"
+        control = AnsiControl.get(control, '')+";"
     cnum = AnsiColor.get(color, '0')
     return AnsiEsc % (control+cnum)
 
