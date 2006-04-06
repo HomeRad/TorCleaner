@@ -367,14 +367,15 @@ def open_browser (url):
     Open a URL in the default browser.
     """
     print _("Opening proxy configuration interface...")
-    # The windows webbrowser.open function raises an exception for http://
-    # urls, but works nevertheless. Just ignore the error.
-    # This is a known bug with browsers not setting up the correct file type
-    # associations (ie. FireFox).
-    # See also http://mail.python.org/pipermail/python-list/2004-July/228312.html
     try:
         webbrowser.open(url)
     except WindowsError, msg:
+        # The windows webbrowser.open function raises an exception for http://
+        # urls, but works nevertheless. Just ignore the error.
+        # This is a known bug with browsers not setting up the correct file
+        # type associations (ie. FireFox).
+        # See also:
+        # http://mail.python.org/pipermail/python-list/2004-July/228312.html
         pass
 
 
