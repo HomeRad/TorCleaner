@@ -27,8 +27,6 @@ import distutils.sysconfig
 import win32service
 import win32serviceutil
 import pywintypes
-# dummy translation to calm down source code checkers
-_ = lambda s: s
 
 
 #################### utility functions ####################
@@ -141,8 +139,9 @@ def do_install ():
     """
     fix_configdata()
     import wc
-    # initialize i18n
-    wc.init_i18n()
+    # initialize logging
+    logfile = os.path.join(confdir, "logging.conf")
+    wc.initlog(logfile, wc.Name)
     install_shortcuts()
     install_certificates()
     install_service()
@@ -386,8 +385,9 @@ def do_remove ():
     Stop and remove the installed NT service.
     """
     import wc
-    # initialize i18n
-    wc.init_i18n()
+    # initialize logging
+    logfile = os.path.join(confdir, "logging.conf")
+    wc.initlog(logfile, wc.Name)
     stop_service()
     remove_service()
     remove_certificates()
