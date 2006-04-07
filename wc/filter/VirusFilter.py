@@ -21,7 +21,6 @@ Search data stream for virus signatures.
 import socket
 import os
 import sys
-import cStringIO as StringIO
 
 import wc
 import wc.configuration
@@ -86,7 +85,7 @@ class VirusFilter (wc.filter.Filter.Filter):
             return
         conf = get_clamav_conf()
         if conf is not None:
-            attrs['virus_buf'] = Buf(conf)
+            attrs['virus_buf'] = Buf(conf, url)
 
 
 # 200kB chunk size, 50kB overlap
@@ -99,12 +98,13 @@ class Buf (wc.fileutil.Buffer):
     Strings must be unicode.
     """
 
-    def __init__ (self, conf):
+    def __init__ (self, conf, url):
         """
         Store rules and initialize buffer.
         """
         super(Buf, self).__init__()
         self.conf = conf
+        self.url = url
 
     def filter (self, data):
         """
@@ -137,7 +137,7 @@ class Buf (wc.fileutil.Buffer):
             data = ""
             for msg in scanner.infected:
                 wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r",
-                            msg, attrs['url'])
+                            msg, self.url)
         return data
 
 
