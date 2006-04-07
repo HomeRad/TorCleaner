@@ -1,5 +1,8 @@
 2.39 "" (released xx.xx.xxxx)
 
+  * Always use the default locale for translation of messages.
+    Type: bugfix
+    Changed: wc/i18n.py
 
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 
