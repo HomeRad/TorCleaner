@@ -536,7 +536,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.read(2) # header
             wire = self.read(l)
             try:
-                self.socket.shutdown(1)
+                self.socket.shutdown(socket.SHUT_WR)
             except socket.error:
                 pass
         else:

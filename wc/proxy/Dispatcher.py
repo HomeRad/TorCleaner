@@ -407,7 +407,7 @@ class Dispatcher (object):
             self.socket.shutdown()
         else:
             try:
-                self.socket.shutdown(2)
+                self.socket.shutdown(socket.SHUT_RDWR)
             except socket.error:
                 pass
         self.socket.close()
