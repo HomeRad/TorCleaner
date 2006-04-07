@@ -506,7 +506,6 @@ static void destroy (JSEnvObject* env) {
 
 /** set python memory exception and destroy JS engine */
 static void shutdown (JSEnvObject* self, char* msg) {
-    destroy(self);
     PyErr_SetString(JSError, msg);
     Py_DECREF(self);
 }
