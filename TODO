@@ -1,6 +1,6 @@
 TODO
 
-- test language enablement of webcleaner installer
+- make better default logfile argument in initlog()
 
 - svn pre-commit hook for python syntax check
 
@@ -140,4 +140,7 @@ TODO
   File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 569, in flush
     self.client.server_content(data)
   AttributeError: 'ClientServerMatchmaker' object has no attribute 'server_content'
+
+- If the template system ever gets replaced, have a look at
+  http://kid.lesscode.org/
 
