@@ -571,12 +571,12 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     self->plugin_class.name = "Plugin";
     self->branch_cnt = 0;
     /* init JS engine */
-    self->runtime=JS_NewRuntime(RUNTIME_SIZE);
+    self->runtime = JS_NewRuntime(RUNTIME_SIZE);
     if (NULL == self->runtime) {
         shutdown(self, "Could not initialize JS runtime");
         return NULL;
     }
-    self->ctx=JS_NewContext(self->runtime, STACK_CHUNK_SIZE);
+    self->ctx = JS_NewContext(self->runtime, STACK_CHUNK_SIZE);
     if (NULL == self->ctx) {
         shutdown(self, "Could not initialize JS context");
         return NULL;
@@ -587,7 +587,7 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     JS_SetBranchCallback(self->ctx, &branchCallback);
 
     /* init global object */
-    self->global_obj=JS_NewObject(self->ctx, &self->global_class, NULL, NULL);
+    self->global_obj = JS_NewObject(self->ctx, &self->global_class, NULL, NULL);
     if (NULL == self->global_obj) {
         shutdown(self, "Could not initialize global object");
         return NULL;
