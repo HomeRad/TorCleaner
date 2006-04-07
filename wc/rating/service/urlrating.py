@@ -1,3 +1,5 @@
+import wc.rating
+
 class WcUrlRating (wc.rating.UrlRating):
 
     def __init__ (self, url, rating, generic=False, comment=None):
