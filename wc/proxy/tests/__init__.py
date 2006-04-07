@@ -43,7 +43,6 @@ def test_suite ():
 
 import cStringIO as StringIO
 import rfc822
-import unittest
 import socket
 import sys
 import BaseHTTPServer
