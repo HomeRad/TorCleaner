@@ -505,11 +505,10 @@ static void destroy (JSEnvObject* env) {
 
 
 /** set python memory exception and destroy JS engine */
-static PyObject* shutdown (JSEnvObject* self, char* msg) {
+static void shutdown (JSEnvObject* self, char* msg) {
     destroy(self);
     PyErr_SetString(JSError, msg);
     Py_DECREF(self);
-    return NULL;
 }
 
 
@@ -532,11 +531,13 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     jsval flash_mimetype_jsval;
     jsval flash_plugin_jsval;
     /* alloc JSEnv object */
-    if ((self = (JSEnvObject*)type->tp_alloc(type, 0))==NULL) {
+    self = (JSEnvObject*)type->tp_alloc(type, 0);
+    if (NULL == self) {
         return NULL;
     }
     /* init python objects */
-    if ((self->listeners = PyList_New(0))==NULL)
+    self->listeners = PyList_New(0);
+    if (NULL == self->listeners)
     {
         Py_DECREF(self);
         return NULL;
@@ -571,11 +572,15 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     self->plugin_class.name = "Plugin";
     self->branch_cnt = 0;
     /* init JS engine */
-    if (!(self->runtime=JS_NewRuntime(RUNTIME_SIZE))) {
-        return shutdown(self, "Could not initialize JS runtime");
+    self->runtime=JS_NewRuntime(RUNTIME_SIZE);
+    if (NULL == self->runtime) {
+        shutdown(self, "Could not initialize JS runtime");
+        return NULL;
     }
-    if (!(self->ctx=JS_NewContext(self->runtime, STACK_CHUNK_SIZE))) {
-        return shutdown(self, "Could not initialize JS context");
+    self->ctx=JS_NewContext(self->runtime, STACK_CHUNK_SIZE);
+    if (NULL == self->ctx) {
+        shutdown(self, "Could not initialize JS context");
+        return NULL;
     }
 
     /* configure JS engine */
@@ -583,448 +588,533 @@ static PyObject* JSEnv_new (PyTypeObject* type, PyObject* args, PyObject* kwds) 
     JS_SetBranchCallback(self->ctx, &branchCallback);
 
     /* init global object */
-    if (!(self->global_obj=JS_NewObject(self->ctx, &self->global_class, NULL, NULL))) {
-        return shutdown(self, "Could not initialize global object");
+    self->global_obj=JS_NewObject(self->ctx, &self->global_class, NULL, NULL);
+    if (NULL == self->global_obj) {
+        shutdown(self, "Could not initialize global object");
+        return NULL;
     }
     if (JS_InitStandardClasses(self->ctx, self->global_obj)==JS_FALSE) {
-        return shutdown(self, "Could not init standard classes");
+        shutdown(self, "Could not init standard classes");
+        return NULL;
     }
     if (JS_SetPrivate(self->ctx, self->global_obj, self)==JS_FALSE) {
-        return shutdown(self, "Could not set private env var");
+        shutdown(self, "Could not set private env var");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "self",
                           OBJECT_TO_JSVAL(self->global_obj), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global self property");
+        shutdown(self, "Could not set global self property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "window",
                           OBJECT_TO_JSVAL(self->global_obj), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global window property");
+        shutdown(self, "Could not set global window property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "top",
                           OBJECT_TO_JSVAL(self->global_obj), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global top property");
+        shutdown(self, "Could not set global top property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "parent",
                           OBJECT_TO_JSVAL(self->global_obj), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global parent property");
+        shutdown(self, "Could not set global parent property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "onload",
                           JSVAL_NULL, 0, &onloadSetter,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global onload property");
+        shutdown(self, "Could not set global onload property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "onunload",
                           JSVAL_NULL, 0, &onunloadSetter,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global onunload property");
+        shutdown(self, "Could not set global onunload property");
+        return NULL;
     }
     if (!(history_array=JS_NewArrayObject(self->ctx, 0, 0))) {
-        return shutdown(self, "Could not create history array object");
+        shutdown(self, "Could not create history array object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "history",
                           OBJECT_TO_JSVAL(history_array), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global history property");
+        shutdown(self, "Could not set global history property");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "open", &windowOpen,
                            1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global open function");
+        shutdown(self, "Could not set global open function");
+        return NULL;
     }
     /* note: window.createPopup() is an IE extension */
     if (!JS_DefineFunction(self->ctx, self->global_obj, "createPopup", &windowOpen,
                            0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global createPopup function");
+        shutdown(self, "Could not set global createPopup function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "setTimeout", &setTimeout,
                            2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global setTimeout function");
+        shutdown(self, "Could not set global setTimeout function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "setInterval", &setTimeout,
                            2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global setInterval function");
+        shutdown(self, "Could not set global setInterval function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "clearTimeout", &doNothing,
                            1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global clearTimeout function");
+        shutdown(self, "Could not set global clearTimeout function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "clearInterval", &doNothing,
                            1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global clearInterval function");
+        shutdown(self, "Could not set global clearInterval function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "alert", &windowOpen,
                            1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global alert function");
+        shutdown(self, "Could not set global alert function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "focus", &doNothing,
                            0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global focus function");
+        shutdown(self, "Could not set global focus function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "blur", &doNothing,
                            0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global blur function");
+        shutdown(self, "Could not set global blur function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "resizeTo", &doNothing,
                            2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global resizeTo function");
+        shutdown(self, "Could not set global resizeTo function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "moveTo", &doNothing,
                            2, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global moveTo function");
+        shutdown(self, "Could not set global moveTo function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "Image", &imageConstructor,
                            0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global Image function");
+        shutdown(self, "Could not set global Image function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->global_obj, "wcDebugLog", &wcDebugLog,
                            0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set global wcDebugLog function");
+        shutdown(self, "Could not set global wcDebugLog function");
+        return NULL;
     }
     /* init location object */
     if (!(location_obj=JS_DefineObject(self->ctx, self->global_obj, "location",
                                        &self->location_class, 0,
                                        JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
-        return shutdown(self, "Could not create location object");
+        shutdown(self, "Could not create location object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "protocol",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "http:")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.protocol property");
+        shutdown(self, "Could not set location.protocol property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "host",
                           JS_GetEmptyStringValue(self->ctx), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.host property");
+        shutdown(self, "Could not set location.host property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "hostname",
                           JS_GetEmptyStringValue(self->ctx), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.hostname property");
+        shutdown(self, "Could not set location.hostname property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "port",
                           INT_TO_JSVAL(80), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.port property");
+        shutdown(self, "Could not set location.port property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "pathname",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "/")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.pathname property");
+        shutdown(self, "Could not set location.pathname property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "hash",
                           JS_GetEmptyStringValue(self->ctx), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.hash property");
+        shutdown(self, "Could not set location.hash property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "href",
                           JS_GetEmptyStringValue(self->ctx), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.href property");
+        shutdown(self, "Could not set location.href property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, location_obj, "search",
                           JS_GetEmptyStringValue(self->ctx), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set location.search property");
+        shutdown(self, "Could not set location.search property");
+        return NULL;
     }
     /* init navigator object */
     if (!(nav_obj=JS_DefineObject(self->ctx, self->global_obj, "navigator",
                                   &self->navigator_class, 0,
                                   JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
-        return shutdown(self, "Could not create nav object");
+        shutdown(self, "Could not create nav object");
+        return NULL;
     }
     if (JS_DefineFunction(self->ctx, nav_obj, "javaEnabled", &javaEnabled, 0,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.javaEnabled property");
+        shutdown(self, "Could not set navigator.javaEnabled property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, nav_obj, "appCodeName",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "Mozilla")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.appCodeName property");
+        shutdown(self, "Could not set navigator.appCodeName property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, nav_obj, "appName",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "Netscape")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.appName property");
+        shutdown(self, "Could not set navigator.appName property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, nav_obj, "appVersion",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "3.01 (Windows; en-US)")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.appVersion property");
+        shutdown(self, "Could not set navigator.appVersion property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, nav_obj, "userAgent",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "Mozilla/3.01Gold (Win95; I)")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.userAgent property");
+        shutdown(self, "Could not set navigator.userAgent property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, nav_obj, "platform",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "Windows")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.userAgent property");
+        shutdown(self, "Could not set navigator.userAgent property");
+        return NULL;
     }
 
     /* init flash objects */
     if (!(mimetypes_array=JS_NewArrayObject(self->ctx, 0, 0))) {
-        return shutdown(self, "Could not create mimetypes array object");
+        shutdown(self, "Could not create mimetypes array object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, nav_obj, "mimeTypes",
                           OBJECT_TO_JSVAL(mimetypes_array), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.mimeTypes property");
+        shutdown(self, "Could not set navigator.mimeTypes property");
+        return NULL;
     }
     if (!(plugins_array=JS_NewArrayObject(self->ctx, 0, 0))) {
-        return shutdown(self, "Could not create plugins array object");
+        shutdown(self, "Could not create plugins array object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, nav_obj, "plugins",
                           OBJECT_TO_JSVAL(plugins_array), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set navigator.plugins property");
+        shutdown(self, "Could not set navigator.plugins property");
+        return NULL;
     }
     if (!(flash_mimetype_obj=JS_DefineObject(self->ctx, mimetypes_array, "application/x-shockwave-flash",
                                              &self->mimetype_class, 0,
                                              JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
-        return shutdown(self, "Could not create flash mimetype object");
+        shutdown(self, "Could not create flash mimetype object");
+        return NULL;
     }
     flash_mimetype_jsval = OBJECT_TO_JSVAL(flash_mimetype_obj);
     if (JS_SetElement(self->ctx, mimetypes_array, 0, &flash_mimetype_jsval)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set mimetype array element");
+        shutdown(self, "Could not set mimetype array element");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, flash_mimetype_obj, "description",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "Shockwave Flash")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set flash description property");
+        shutdown(self, "Could not set flash description property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, flash_mimetype_obj, "type",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "application/x-shockwave-flash")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set flash type property");
+        shutdown(self, "Could not set flash type property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, flash_mimetype_obj, "suffixes",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "swf")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set flash suffixes property");
+        shutdown(self, "Could not set flash suffixes property");
+        return NULL;
     }
     if (!(flash_plugin_obj=JS_DefineObject(self->ctx, flash_mimetype_obj, "enabledPlugin",
                                            &self->plugin_class, 0,
                                            JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
-        return shutdown(self, "Could not create flash plugin object");
+        shutdown(self, "Could not create flash plugin object");
+        return NULL;
     }
     flash_plugin_jsval = OBJECT_TO_JSVAL(flash_plugin_obj);
     if (JS_SetElement(self->ctx, plugins_array, 0, &flash_plugin_jsval)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set plugin array element");
+        shutdown(self, "Could not set plugin array element");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, plugins_array, "Shockwave Flash",
                           flash_plugin_jsval, 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set plugin array string");
+        shutdown(self, "Could not set plugin array string");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, flash_plugin_obj, "name",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "Shockwave Flash")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set enabledPlugin.name property");
+        shutdown(self, "Could not set enabledPlugin.name property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, flash_plugin_obj, "description",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "Shockwave Flash 5.0 r50")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set enabledPlugin.description property");
+        shutdown(self, "Could not set enabledPlugin.description property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, flash_plugin_obj, "length",
                           INT_TO_JSVAL(1), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set enabledPlugin.length property");
+        shutdown(self, "Could not set enabledPlugin.length property");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, flash_plugin_obj, "refresh",
                            &doNothing, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set enabledPlugin.refresh function");
+        shutdown(self, "Could not set enabledPlugin.refresh function");
+        return NULL;
     }
 
     /* init screen object */
     if (!(screen_obj=JS_DefineObject(self->ctx, self->global_obj, "screen",
                                      &self->screen_class, 0,
                                      JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
-        return shutdown(self, "Could not create screen object");
+        shutdown(self, "Could not create screen object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, screen_obj, "width",
                           INT_TO_JSVAL(1024), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set screen.width property");
+        shutdown(self, "Could not set screen.width property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, screen_obj, "height",
                           INT_TO_JSVAL(768), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set screen.height property");
+        shutdown(self, "Could not set screen.height property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, screen_obj, "availWidth",
                           INT_TO_JSVAL(1014), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set screen.availWidth property");
+        shutdown(self, "Could not set screen.availWidth property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, screen_obj, "availHeight",
                           INT_TO_JSVAL(720), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set screen.availHeight property");
+        shutdown(self, "Could not set screen.availHeight property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, screen_obj, "colorDepth",
                           INT_TO_JSVAL(16), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set screen.colorDepth property");
+        shutdown(self, "Could not set screen.colorDepth property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, screen_obj, "pixelDepth",
                           INT_TO_JSVAL(16), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set screen.pixelDepth property");
+        shutdown(self, "Could not set screen.pixelDepth property");
+        return NULL;
     }
 
     /* init frames object */
     if (!(frames_obj=JS_NewArrayObject(self->ctx, 0, 0))) {
-        return shutdown(self, "Could not create frames object");
+        shutdown(self, "Could not create frames object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->global_obj, "frames",
                           OBJECT_TO_JSVAL(frames_obj), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set global frames property");
+        shutdown(self, "Could not set global frames property");
+        return NULL;
     }
 
     /* init document object */
     if (!(self->doc_obj=JS_DefineObject(self->ctx, self->global_obj, "document",
                                        &self->document_class, 0,
                                        JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
-        return shutdown(self, "Could not create document object");
+        shutdown(self, "Could not create document object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "cookie",
                           JS_GetEmptyStringValue(self->ctx), &cookieGetter, &cookieSetter,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set document.cookie property");
+        shutdown(self, "Could not set document.cookie property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "location",
                           OBJECT_TO_JSVAL(location_obj), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set document.location property");
+        shutdown(self, "Could not set document.location property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "domain",
                           JS_GetEmptyStringValue(self->ctx), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set document.domain property");
+        shutdown(self, "Could not set document.domain property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "referrer",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "http://imadoofus/")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set document.referrer property");
+        shutdown(self, "Could not set document.referrer property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "URL",
                           STRING_TO_JSVAL(JS_NewStringCopyZ(self->ctx, "http://imadoofus/")), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set document.URL property");
+        shutdown(self, "Could not set document.URL property");
+        return NULL;
     }
     if (!(images_array=JS_NewArrayObject(self->ctx, 0, 0))) {
-        return shutdown(self, "Could not create images array");
+        shutdown(self, "Could not create images array");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "images",
                           OBJECT_TO_JSVAL(images_array), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT|JSPROP_READONLY)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set document.images property");
+        shutdown(self, "Could not set document.images property");
+        return NULL;
     }
     if (!(layers_array=JS_NewArrayObject(self->ctx, 0, 0))) {
-        return shutdown(self, "Could not create layers array");
+        shutdown(self, "Could not create layers array");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "layers",
                           OBJECT_TO_JSVAL(layers_array), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_PERMANENT|JSPROP_READONLY)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set document.layers property");
+        shutdown(self, "Could not set document.layers property");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->doc_obj, "write", &documentWrite, 1,
                            JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set document.write function");
+        shutdown(self, "Could not set document.write function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->doc_obj, "writeln",
                            &documentWriteln, 1, JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set document.writeln function");
+        shutdown(self, "Could not set document.writeln function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->doc_obj, "open", &doNothing, 0,
                            JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set document.open function");
+        shutdown(self, "Could not set document.open function");
+        return NULL;
     }
     if (!JS_DefineFunction(self->ctx, self->doc_obj, "close", &doNothing, 0,
                            JSPROP_ENUMERATE|JSPROP_PERMANENT)) {
-        return shutdown(self, "Could not set document.close function");
+        shutdown(self, "Could not set document.close function");
+        return NULL;
     }
 
     /* init body object */
     if (!(body_obj=JS_DefineObject(self->ctx, self->doc_obj, "body",
                                    &self->body_class, 0,
                                    JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT))) {
-        return shutdown(self, "Could not create document.body object");
+        shutdown(self, "Could not create document.body object");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, body_obj, "clientHeight",
                           INT_TO_JSVAL(768), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set body.clientHeight property");
+        shutdown(self, "Could not set body.clientHeight property");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, body_obj, "clientWidth",
                           INT_TO_JSVAL(1024), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set body.clientWidth property");
+        shutdown(self, "Could not set body.clientWidth property");
+        return NULL;
     }
 
     /* init form array */
     if (!(self->form_array=JS_NewArrayObject(self->ctx, 0, 0))) {
-        return shutdown(self, "Could not create form array");
+        shutdown(self, "Could not create form array");
+        return NULL;
     }
     if (JS_DefineProperty(self->ctx, self->doc_obj, "forms",
                           OBJECT_TO_JSVAL(self->form_array), 0, 0,
                           JSPROP_ENUMERATE|JSPROP_READONLY|JSPROP_PERMANENT)
         ==JS_FALSE) {
-        return shutdown(self, "Could not set doc forms property");
+        shutdown(self, "Could not set doc forms property");
+        return NULL;
     }
     return (PyObject*) self;
 }
