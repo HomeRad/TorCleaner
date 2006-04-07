@@ -1,3 +1,9 @@
+webcleaner (2.39-0calvin1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Fri,  7 Apr 2006 08:57:22 +0200
+
 webcleaner (2.38-0calvin2) unstable; urgency=low
 
   * Fix syntax error in urlratings.py
