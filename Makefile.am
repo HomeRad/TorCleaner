@@ -122,8 +122,13 @@ md5sums:
 	(cd config && md5sum *.zap > filter-md5sums.txt)
 	(cd config && md5sum blacklists/{ads,aggressive,violence}/*.gz > extern-md5sums.txt)
 
+.PHONY: syntaxcheck
+syntaxcheck:
+	py-verify
+
+
 .PHONY: releasecheck
-releasecheck:
+releasecheck:	syntaxcheck
 	@if egrep -i "xx\.|xxxx|\.xx" ChangeLog > /dev/null; then \
 	  echo "Could not release: edit ChangeLog release date"; false; \
 	fi
