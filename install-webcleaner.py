@@ -140,7 +140,7 @@ def do_install ():
     fix_configdata()
     import wc
     # initialize logging
-    logfile = os.path.join(confdir, "logging.conf")
+    logfile = os.path.join(wc.ConfigDir, "logging.conf")
     wc.initlog(logfile, wc.Name)
     install_shortcuts()
     install_certificates()
@@ -386,7 +386,7 @@ def do_remove ():
     """
     import wc
     # initialize logging
-    logfile = os.path.join(confdir, "logging.conf")
+    logfile = os.path.join(wc.ConfigDir, "logging.conf")
     wc.initlog(logfile, wc.Name)
     stop_service()
     remove_service()
