@@ -41,7 +41,7 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
     logconf = os.path.join(confdir, "logging.conf")
     def checklog ():
         if wc.fileutil.has_changed(logconf):
-            wc.initlog(logconf, wc.Name, filelogs=filelogs)
+            wc.initlog(filename=logconf, filelogs=filelogs)
         # check regularly for a changed logging configuration
         wc.proxy.timer.make_timer(60, checklog)
     checklog()

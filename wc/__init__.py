@@ -88,6 +88,8 @@ LOG_ACCESS = "wc.access"
 LOG_TAL = "TAL"
 LOG_TALES = "TALES"
 
+# default logging configuration
+default_logfile = os.path.join(ConfigDir, "logging.conf")
 
 def get_locdir ():
     """
@@ -161,7 +163,7 @@ def get_log_file (name, logname, trydirs=None):
                   (logname, str(trydirs)))
 
 
-def initlog (filename, appname, filelogs=True):
+def initlog (filename=default_logfile, appname=AppName, filelogs=True):
     """
     Initialize logfiles and configuration.
     """
