@@ -424,97 +424,6 @@ def colorize(texttype, text):
     return '\033[%d;%dm' % (light, code)+ text + '\033[0;0m'
 
 
-def colorize_zope_doctest_output(lines):
-    """Colorize output formatted by the doctest engine included with Zope 3.
-
-    Returns a new sequence of colored strings.
-
-    `lines` is a sequence of strings.
-
-    The typical structure of the doctest output looks either like this:
-
-        File "...", line 123, in foo.bar.baz.doctest_quux
-        Failed example:
-            f(2, 3)
-        Expected:
-            6
-        Got:
-            5
-
-    Or, if an exception has occured, like this:
-
-        File "...", line 123, in foo.bar.baz.doctest_quux
-        Failed example:
-            f(2, 3)
-        Exception raised:
-            Traceback (most recent call last):
-              File "...", line 123, in __init__
-                self.do_something(a, b, c)
-              File "...", line ...
-                ...
-            FooError: something bad happened
-
-    If some assumption made by this function is not met, the original sequence
-    is returned without any modifications.
-    """
-    # XXX bug: doctest may report several failures in one test, they are
-    #          separated by a horizontal dash line.  Only the first one of
-    #          them is now colorized properly.
-    header = lines[0]
-    if not header.startswith('File "'):
-        return lines # not a doctest failure report?
-
-    # Dissect the header in a rather nasty way.
-    header = header[len('File "'):]
-    fn_end = header.find('"')
-    if fn_end == -1:
-        return lines
-    filename = header[:fn_end]
-    header = header[fn_end+len('", line '):]
-    parts = header.split(', in ')
-    if len(parts) != 2:
-        return lines
-    lineno, testname = parts
-    filename = colorize('filename', filename)
-    lineno = colorize('lineno', lineno)
-    testname = colorize('testname', testname)
-    result = ['File "%s", line %s, in %s' % (filename, lineno, testname)]
-
-    # Colorize the 'Failed example:' section.
-    if lines[1] != 'Failed example:':
-        return lines
-    result.append(colorize('doctest_title', lines[1]))
-    remaining = lines[2:]
-    terminators = ['Expected:', 'Expected nothing', 'Exception raised:']
-    while remaining and remaining[0] not in terminators:
-        line = remaining.pop(0)
-        result.append(colorize('doctest_code', line))
-    if not remaining:
-        return lines
-
-    if remaining[0] in ('Expected:', 'Expected nothing'):
-        result.append(colorize('doctest_title', remaining.pop(0))) # Expected:
-        while remaining and remaining[0] not in ('Got:', 'Got nothing'):
-            line = remaining.pop(0)
-            result.append(colorize('doctest_expected', line))
-        if not remaining or remaining[0] not in ('Got:', 'Got nothing'):
-            return lines
-        result.append(colorize('doctest_title', remaining.pop(0))) # Got:
-        while remaining:
-            line = remaining.pop(0)
-            result.append(colorize('doctest_got', line))
-    elif remaining[0] == 'Exception raised:':
-        result.append(colorize('doctest_title', remaining.pop(0))) # E. raised:
-        while remaining:
-            line = remaining.pop(0)
-            # TODO: Scrape and colorize the traceback.
-            result.append(colorize('doctest_got', line))
-    else:
-        return lines
-
-    return result
-
-
 def colorize_exception_only(lines):
     """Colorize result of traceback.format_exception_only."""
     if len(lines) > 1:
@@ -524,28 +433,16 @@ def colorize_exception_only(lines):
     # First, colorize the first line, which usually contains the name
     # and the string of the exception.
     result = []
-    doctest = 'Failed doctest test for' in lines[0]
-    # TODO: We only deal with the output from Zope 3's doctest module.
-    #       A colorizer for the Python's doctest module would be nice too.
-    if doctest:
-        # If we have a doctest, we do not care about this header.  All the
-        # interesting things are below, formatted by the doctest runner.
-        for lineno in range(4):
-            result.append(colorize('doctest_ignored', lines[lineno]))
-        beef = colorize_zope_doctest_output(lines[4:])
-        result.extend(beef)
-        return '\n'.join(result)
+    # A simple exception.  Try to colorize the first row, leave others be.
+    excline = lines[0].split(': ', 1)
+    if len(excline) == 2:
+        excname = colorize('excname', excline[0])
+        excstring = colorize('excstring', excline[1])
+        result.append('%s: %s' % (excname, excstring))
     else:
-        # A simple exception.  Try to colorize the first row, leave others be.
-        excline = lines[0].split(': ', 1)
-        if len(excline) == 2:
-            excname = colorize('excname', excline[0])
-            excstring = colorize('excstring', excline[1])
-            result.append('%s: %s' % (excname, excstring))
-        else:
-            result.append(colorize('excstring', lines[0]))
-        result.extend(lines[1:])
-        return '\n'.join(result)
+        result.append(colorize('excstring', lines[0]))
+    result.extend(lines[1:])
+    return '\n'.join(result)
 
 
 def format_exception(etype, value, tb, limit=None, basedir=None, color=False):
@@ -565,18 +462,13 @@ def format_exception(etype, value, tb, limit=None, basedir=None, color=False):
 
         for filename, lineno, name, locals in extract_tb(tb, limit):
             line = linecache.getline(filename, lineno)
-            if color and 'zope/testing/doctest.py' not in filename:
+            if color:
                 filename = colorize('filename', filename)
                 lineno = colorize('lineno', str(lineno))
                 name = colorize('testname', name)
                 w('  File "%s", line %s, in %s\n' % (filename, lineno, name))
                 if line:
                     w('    %s\n' % line.strip())
-            elif color:
-                s = '  File "%s", line %s, in %s\n' % (filename, lineno, name)
-                w(colorize('doctest_ignored', s))
-                if line:
-                    w('    %s\n' % colorize('doctest_ignored', line.strip()))
             else:
                 w('  File "%s", line %s, in %s\n' % (filename, lineno, name))
                 if line:
