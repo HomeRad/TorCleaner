@@ -139,9 +139,7 @@ def do_install ():
     """
     fix_configdata()
     import wc
-    # initialize logging
-    logfile = os.path.join(wc.ConfigDir, "logging.conf")
-    wc.initlog(logfile, wc.Name)
+    wc.initlog()
     install_shortcuts()
     install_certificates()
     install_service()
@@ -385,9 +383,7 @@ def do_remove ():
     Stop and remove the installed NT service.
     """
     import wc
-    # initialize logging
-    logfile = os.path.join(wc.ConfigDir, "logging.conf")
-    wc.initlog(logfile, wc.Name)
+    wc.initlog()
     stop_service()
     remove_service()
     remove_certificates()

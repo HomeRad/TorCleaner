@@ -71,7 +71,7 @@ def _main ():
         url = fname
     try:
         logfile = os.path.join(confdir, "logging.conf")
-        wc.initlog(logfile, wc.Name, filelogs=False)
+        wc.initlog(logfile, filelogs=False)
         wc.configuration.config = wc.configuration.init(confdir=confdir)
         wc.configuration.config.init_filter_modules()
         wc.proxy.dns_lookups.init_resolver()

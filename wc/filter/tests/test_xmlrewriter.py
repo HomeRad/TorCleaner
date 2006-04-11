@@ -36,7 +36,7 @@ class TestXmlRewriter (tests.StandardTest):
 
     def setUp (self):
         logfile = os.path.join(wc.InstallData, "test", "logging.conf")
-        wc.initlog(logfile, wc.Name, filelogs=False)
+        wc.initlog(logfile, filelogs=False)
         wc.configuration.init()
         wc.configuration.config['filters'] = ['XmlRewriter']
         wc.configuration.config.init_filter_modules()
