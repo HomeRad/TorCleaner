@@ -3,6 +3,11 @@
   * Always use the default locale for translation of messages.
     Type: bugfix
     Changed: wc/i18n.py
+    
+  * Restrict the allowed ports for HTTP CONNECT requests to avoid
+    misuse for mail spamming.
+    Type: bugfix
+    Changed: wc/proxy/Allowed.py, wc/proxy/HttpClient.py
 
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 

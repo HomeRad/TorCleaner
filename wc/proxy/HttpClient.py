@@ -257,7 +257,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         if not self.scheme:
             self.scheme = self.get_default_scheme()
             self.port = wc.url.default_ports[self.scheme]
-        if not self.allow.is_allowed(self.method, self.scheme):
+        if not self.allow.is_allowed(self.method, self.scheme, self.port):
             wc.log.warn(wc.LOG_PROXY, "Unallowed request %r", self.request)
             self.error(403, _("Forbidden"))
             return False

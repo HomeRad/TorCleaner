@@ -25,6 +25,22 @@ import wc.configuration
 MAX_URL_LEN = 8192
 
 
+def allowed_connect_port (port):
+    """
+    Tell if the given port number is allowed in a CONNECT method.
+
+    @param port: port number
+    @type port: integer
+    @return: port is allowed or not
+    @rtype: boolean
+    """
+    if port in (443, 563):
+        # https and snews
+        return True
+    # high port
+    return 1024 <= port <= 65535
+
+
 def is_in_document_list (doc, docs):
     """
     Return True iff doc is document list.
@@ -90,7 +106,7 @@ class AllowedHttpClient (object):
         """
         return method in self.methods
 
-    def is_allowed (self, method, scheme):
+    def is_allowed (self, method, scheme, port):
         """
         Check if givem method, scheme and port are allowed.
         """
@@ -100,9 +116,15 @@ class AllowedHttpClient (object):
         if scheme not in self.schemes:
             wc.log.warn(wc.LOG_PROXY, "illegal scheme %s", scheme)
             return False
-        if method == 'CONNECT' and scheme != 'https':
-            wc.log.warn(wc.LOG_PROXY, "illegal CONNECT scheme %d", scheme)
-            return False
+        if method == 'CONNECT':
+            if scheme != 'https':
+                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT scheme %d", scheme)
+                return False
+            if not allowed_connect_port(port):
+                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT port %d", port)
+                return False
+            if port not in (443, 563):
+                wc.log.warn(wc.LOG_PROXY, "Unusual CONNECT port %d", port)
         return True
 
 
