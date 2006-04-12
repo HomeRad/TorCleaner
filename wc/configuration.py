@@ -391,7 +391,7 @@ rulenames = (
   u'nojscomments',
   u'javascript',
   u'replace',
-# XXX to be implemented  u'rating',
+  u'rating',
   u'antivirus',
   u'htmlrewrite',
   u'xmlrewrite',
