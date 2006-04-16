@@ -106,7 +106,7 @@ function display() {
 // end of script. -->
 </script>""",
 """<script type="text/javascript" defer>
-<!--
+//<![CDATA[
 // window instance
 w = self;
 function finish() {
@@ -131,7 +131,7 @@ function display() {
     message = "Calvin wünscht angenehmes Surfen am " + get_date() + " um " + get_time () + ".";
     w.defaultStatus = message;
 }
-//-->
+//]]>
 </script>""")
 
     def testRecursion1 (self):
@@ -162,9 +162,9 @@ document.write('</SCR'+'IPT>');
    </tr>
 </table>""",
 """<script language="JavaScript1.1">
-<!--
+//<![CDATA[
 a=0;
-//-->
+//]]>
 </script>
       </td>
    </tr>
@@ -177,9 +177,9 @@ a=0;
 </script>""",
 """<!-- error fetching script from u\'http://imadoofus.org/notfound.js\' -->
 <script type="text/javascript">
-<!--
+//<![CDATA[
 // error fetching script from u'http://imadoofus.org/notfound.js'
-//-->
+//]]>
 </script>""")
 
     def testScriptSrc5 (self):
@@ -198,10 +198,10 @@ function a () {
 }
 </script>""",
 """<script language="JavaScript">
-<!--
+//<![CDATA[
 function a () {
 }
-//-->
+//]]>
 </script>""")
         self.filt(
 """<script language="JavaScript">
@@ -210,10 +210,10 @@ function a () {
 }//-->
 </script>""",
 """<script language="JavaScript">
-<!--
+//<![CDATA[
 function a () {
 }
-//-->
+//]]>
 </script>""")
         self.filt(
 """<script language="JavaScript">
@@ -223,10 +223,10 @@ function a () {
 -->
 </script>""",
 """<script language="JavaScript">
-<!--
+//<![CDATA[
 function a () {
 }
-//-->
+//]]>
 </script>""")
 
     def testFlash (self):
@@ -237,9 +237,9 @@ var words = navigator.plugins["Shockwave Flash"].description.split(" ");
 //-->
 </script>""",
 """<script language="JavaScript1.1">
-<!--
+//<![CDATA[
 var words = navigator.plugins["Shockwave Flash"].description.split(" ");
-//-->
+//]]>
 </script>""")
 
     def testHostname (self):
@@ -251,10 +251,10 @@ var v2 = location.hostname;
 //-->
 </script>""",
 """<script language="JavaScript1.1">
-<!--
+//<![CDATA[
 var v1 = document.location.hostname;
 var v2 = location.hostname;
-//-->
+//]]>
 </script>""")
 
     def testNonScript (self):
@@ -278,9 +278,9 @@ tooooooot.
 //-->
 </script>""",
 """<script language="JavaScript1.1">
-<!--
+//<![CDATA[
 tooooooot.
-//-->
+//]]>
 </script>""")
 
     def testCommentQuoting2 (self):
@@ -291,9 +291,9 @@ a = 0
 // bui -->
 </script>""",
 """<script>
-<!--
+//<![CDATA[
 a = 0
-//-->
+//]]>
 </script>""")
 
     def testCommentQuoting3 (self):
@@ -304,9 +304,9 @@ a = 0; b = a--;
 // bui -->
 </script>""",
 """<script>
-<!--
+//<![CDATA[
 a = 0; b = a--;
-//-->
+//]]>
 </script>""")
 
     def testCommentQuoting4 (self):
@@ -317,9 +317,9 @@ a = "-->";
 // bui -->
 </script>""",
 """<script>
-<!--
+//<![CDATA[
 a = "-->";
-//-->
+//]]>
 </script>""")
 
     def testPopup1 (self):
@@ -329,8 +329,7 @@ function a () {
     window.open();
 }
 a();
-</script>""",
-"""""")
+</script>""", "")
 
     def testPopup2 (self):
         self.filt(
@@ -339,8 +338,7 @@ function a () {
     alert("bla");
 }
 a();
-</script>""",
-"""""")
+</script>""", "")
 
     def testFilter (self):
         self.filt("""<script src="http://ivwbox.de"></script>""", "")

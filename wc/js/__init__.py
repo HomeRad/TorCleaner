@@ -27,7 +27,7 @@ def clean (script, jscomments=True):
     Clean script from comments and HTML.
     """
     script = escape_js(remove_html_comments(script, jscomments=jscomments))
-    return u"\n<!--\n%s\n//-->\n" % script
+    return u"//<![CDATA[\n%s//]]>" % script
 
 
 script_sub = re.compile(r"(?i)</script\s*>").sub
@@ -76,8 +76,8 @@ def escape_js_line (script):
     return script
 
 
-_start_js_comment = re.compile(r"^<!--([^\r\n]+)?").search
-_end_js_comment = re.compile(r"\s*(?P<comment>//)?[^/\r\n]*-->[ \t]*$").search
+_start_js_comment = re.compile(r"^(<!--([^\r\n]+)?|//<!\[CDATA\[)").search
+_end_js_comment = re.compile(r"\s*(?P<comment>//)?([^/\r\n]*-->|\]\]>)[ \t]*$").search
 def remove_html_comments (script, jscomments=True):
     """
     Remove leading and trailing HTML comments from the script text.
