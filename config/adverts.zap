@@ -160,7 +160,7 @@
   <title lang="en">Links to ad servers 2</title>
   <description lang="de">Entferne Verknüpfungen zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove links to some ad servers.</description>
-  <attr name="href">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com)</attr>
+  <attr name="href">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com|www\.cpadeal\.com)</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
@@ -170,7 +170,7 @@
   <title lang="en">Links to ad servers 3</title>
   <description lang="de">Entferne Verknüpfungen zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove links to some ad servers.</description>
-  <attr name="href">(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>
+  <attr name="href">(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity|zanox-affiliate)\.de</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
