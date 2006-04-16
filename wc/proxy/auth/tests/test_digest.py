@@ -19,7 +19,7 @@ import unittest
 import tests
 import wc.proxy.auth
 
-class TestDigest (tests.StandardTest):
+class TestDigest (unittest.TestCase):
     """
     Test authentication routines.
     """

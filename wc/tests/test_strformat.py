@@ -24,7 +24,7 @@ import tests
 import wc.strformat
 
 
-class TestStrFormat (tests.StandardTest):
+class TestStrFormat (unittest.TestCase):
     """
     Test string formatting routines.
     """

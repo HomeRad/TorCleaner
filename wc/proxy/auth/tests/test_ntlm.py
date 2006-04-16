@@ -23,7 +23,7 @@ import wc.configuration
 import wc.proxy.auth
 
 
-class TestNtlm (tests.StandardTest):
+class TestNtlm (unittest.TestCase):
     """
     Test ntlm authentication routines.
     """

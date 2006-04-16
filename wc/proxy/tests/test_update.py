@@ -26,7 +26,7 @@ class NoLog (object):
         pass
 
 
-class TestUpdate (tests.StandardTest):
+class TestUpdate (unittest.TestCase):
 
     def setUp (self):
         self.nolog = NoLog()

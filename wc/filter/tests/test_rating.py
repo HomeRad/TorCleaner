@@ -23,7 +23,7 @@ import tests
 import wc.rating
 
 
-class TestRating (tests.StandardTest):
+class TestRating (unittest.TestCase):
 
     def test_split_url (self):
         """

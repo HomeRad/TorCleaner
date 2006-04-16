@@ -24,7 +24,7 @@ import wc.strformat
 import wc.dummy
 
 
-class TestDummy (tests.StandardTest):
+class TestDummy (unittest.TestCase):
     """
     Test dummy object.
     """

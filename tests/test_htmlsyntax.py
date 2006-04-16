@@ -19,6 +19,7 @@
 Test HTML file syntax.
 """
 
+import unittest
 import urllib
 import HTMLParser
 import os
@@ -26,7 +27,7 @@ import sys
 import glob
 import wc.fileutil
 import wc.decorators
-from tests import make_suite, StandardTest
+from tests import make_suite
 
 
 htmlfiles = None
@@ -55,7 +56,7 @@ def parse_html (url):
         fp.close()
 
 
-class CheckHtml (StandardTest):
+class CheckHtml (unittest.TestCase):
 
     def check_html (self, url):
         try:

@@ -5,7 +5,7 @@ import tests
 import wc.ip
 
 
-class TestIp (tests.StandardTest):
+class TestIp (unittest.TestCase):
 
     def testNames (self):
         hosts, nets = wc.ip.hosts2map(["www.kampfesser.net",

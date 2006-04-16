@@ -22,7 +22,7 @@ import wc.http
 import wc.http.date
 
 
-class TestBasic (tests.StandardTest):
+class TestBasic (unittest.TestCase):
 
     def test_http_version (self):
         self.assertEquals(wc.http.parse_http_version("HTTP/0.0"), (0, 0))

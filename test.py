@@ -394,6 +394,7 @@ colorcodes = {'gray': 0, 'red': 1, 'green': 2, 'yellow': 3,
               'blue': 4, 'magenta': 5, 'cyan': 6, 'white': 7}
 
 colormap = {'fail': 'red',
+            'warn': 'yellow',
             'pass': 'green',
             'count': 'white',
             'title': 'white',
@@ -540,7 +541,6 @@ class CustomTestResult(unittest._TextTestResult):
                 self.stream.write(": %s" % name)
                 self._lastWidth = width
             self.stream.flush()
-        test.check_resources = self.check_resources
         self.__super_startTest(test)  # increments testsRun by one and prints
         self.testsRun = n # override the testsRun calculation
         for hook in self.hooks:
@@ -579,7 +579,19 @@ class CustomTestResult(unittest._TextTestResult):
         self.__super_printErrors()
 
     def printSkipped (self):
-        self.printErrorList("SKIPPED", self.skipped)
+        for test, msg in self.skipped:
+            self.printSkip(test, msg)
+
+    def printSkip (self, test, msg):
+        w = self.stream.writeln
+        if self.cfg.colorize:
+            c = colorize
+        else:
+            c = lambda texttype, text: text
+        w()
+        kind = c('warn', "SKIPPED")
+        description = c('longtestname', self.getDescription(test))
+        w("%s: %s %s" % (kind, description, msg))
 
     def formatError(self, err):
         return "".join(format_exception(basedir=self.cfg.basedir,
@@ -600,21 +612,6 @@ class CustomTestResult(unittest._TextTestResult):
         w(self.formatError(err))
         w()
 
-    def printSkip (self, kind, test, err):
-        w = self.stream.writeln
-        if self.cfg.colorize:
-            c = colorize
-        else:
-            c = lambda texttype, text: text
-        w()
-        w(c('separator', self.separator1))
-        kind = c('fail', kind)
-        description = c('longtestname', self.getDescription(test))
-        w("%s: %s" % (kind, description))
-        w(c('separator', self.separator2))
-        w(str(err[1]))
-        w()
-
     def addFailure(self, test, err):
         if self.cfg.immediate_errors:
             self.printTraceback("FAIL", test, err)
@@ -623,19 +620,18 @@ class CustomTestResult(unittest._TextTestResult):
         self.failures.append((test, self.formatError(err)))
 
     def addError(self, test, err):
-        if isinstance(err[1], TestSkipped):
-            self.addSkipped(test, err)
-            return
         if self.cfg.immediate_errors:
             self.printTraceback("ERROR", test, err)
         if self.cfg.postmortem:
             pdb.post_mortem(sys.exc_info()[2])
         self.errors.append((test, self.formatError(err)))
 
-    def addSkipped(self, test, err):
-        if self.cfg.immediate_errors:
-            self.printSkip("SKIP", test, err)
-        self.skipped.append((test, self.formatError(err)))
+    def addSkipped(self, test, msg):
+        if self.showAll:
+            self.stream.writeln("skip")
+        elif self.dots:
+            self.stream.write("S")
+        self.skipped.append((test, msg))
 
     def printErrorList(self, flavour, errors):
         if self.cfg.immediate_errors:
@@ -645,18 +641,77 @@ class CustomTestResult(unittest._TextTestResult):
         else:
             self.__super_printErrorList(flavour, errors)
 
-    def check_resources (self, needed_resources):
-        for res in needed_resources:
-            self.requires(res)
+class CustomTestCase (unittest.TestCase):
+    """
+    A test case with improved inequality test and resource support.
+    """
 
-    def requires (self, resource, msg=None):
-        if not self.is_resource_enabled(resource):
-            if msg is None:
-                msg = "Use of the `%s' resource not enabled" % resource
-            raise ResourceDenied(msg)
+    def denied_resources (self, cfg_resources):
+        resources = getattr(self, "needed_resources", [])
+        return [x for x in resources if x not in cfg_resources]
 
-    def is_resource_enabled (self, resource):
-        return resource in self.cfg.resources
+    def run (self, result=None):
+        if not isinstance(result, CustomTestResult):
+            raise ValueError("Needed CustomTestResult object: %r" % result)
+        result.startTest(self)
+        # get mangled private variables
+        getpriv = lambda x: getattr(self, "_TestCase__" + x)
+        testMethod = getattr(self, getpriv("testMethodName"))
+        try:
+            denied = self.denied_resources(result.cfg.resources)
+            if denied:
+                msg = "missing resources %s" % denied
+                result.addSkipped(self, msg)
+                return
+            try:
+                self.setUp()
+            except KeyboardInterrupt:
+                raise
+            except:
+                result.addError(self, getpriv("exc_info")())
+                return
+
+            ok = False
+            try:
+                testMethod()
+                ok = True
+            except self.failureException:
+                result.addFailure(self, getpriv("exc_info")())
+            except KeyboardInterrupt:
+                raise
+            except:
+                result.addError(self, getpriv("exc_info")())
+
+            try:
+                self.tearDown()
+            except KeyboardInterrupt:
+                raise
+            except:
+                result.addError(self, getpriv("exc_info")())
+                ok = False
+            if ok: result.addSuccess(self)
+        finally:
+            result.stopTest(self)
+
+    def failUnlessEqual (self, first, second, msg=None):
+        """
+        Define the first argument as the test value, and the second
+        one as the excpected value. Adjust the default error message
+        accordingly.
+        """
+        if msg is None:
+            r1 = repr(first)
+            r2 = repr(second)
+            if len(r1) > 40 or len(r2) > 40:
+                sep = "\n"
+            else:
+                sep = ", "
+            msg = "got %s%sexpected %s" % (r1, sep, r2)
+        super(CustomTestCase, self).failUnlessEqual(first, second, msg=msg)
+
+    assertEqual = assertEquals = failUnlessEqual
+
+unittest.TestCase = CustomTestCase
 
 
 class CustomTestRunner(unittest.TextTestRunner):

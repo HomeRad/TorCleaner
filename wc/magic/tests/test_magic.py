@@ -8,7 +8,7 @@ import os
 import tests
 from wc.magic import convert, classify
 
-class TestMagic (tests.StandardTest):
+class TestMagic (unittest.TestCase):
 
     def setUp (self):
         self.basedir = os.path.join(os.getcwd(), "wc", "magic", "tests")

@@ -25,7 +25,7 @@ import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 
 
-class TestReplacer (tests.StandardTest):
+class TestReplacer (unittest.TestCase):
 
     def init (self):
         super(TestReplacer, self).init()

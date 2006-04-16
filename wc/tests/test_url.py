@@ -42,7 +42,7 @@ def url_norm (url):
     return wc.url.url_norm(url)[0]
 
 
-class TestUrl (tests.StandardTest):
+class TestUrl (unittest.TestCase):
     """
     Test url norming and quoting.
     """

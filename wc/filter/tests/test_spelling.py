@@ -23,7 +23,7 @@ import tests
 from wc.filter.html import check_spelling
 
 
-class TestSpelling (tests.StandardTest):
+class TestSpelling (unittest.TestCase):
 
     def test_htmltags (self):
         url = "unknown"

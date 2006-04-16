@@ -20,7 +20,7 @@ import wc.proxy.decoder.UnchunkStream
 import wc.dummy
 
 
-class TestUnchunk (tests.StandardTest):
+class TestUnchunk (unittest.TestCase):
 
     def testUnchunk (self):
         dummy = wc.dummy.Dummy()

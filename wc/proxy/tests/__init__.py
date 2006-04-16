@@ -41,6 +41,7 @@ def test_suite ():
 
 """
 
+import unittest
 import cStringIO as StringIO
 import rfc822
 import socket
@@ -389,7 +390,7 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
 
 ################ Proxy tests ######################
 
-class ProxyTest (tests.StandardTest):
+class ProxyTest (unittest.TestCase):
     """
     Basic proxy test case. Subclasses have complete control over
     request or response data by overriding the

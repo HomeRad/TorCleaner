@@ -22,7 +22,7 @@ import tests
 import wc.filter.VirusFilter
 
 
-class TestVirusFilter (tests.StandardTest):
+class TestVirusFilter (unittest.TestCase):
 
     needed_resources = ['clamav']
 

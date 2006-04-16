@@ -20,7 +20,7 @@ import tests
 import wc.http.header
 
 
-class TestHeader (tests.StandardTest):
+class TestHeader (unittest.TestCase):
 
     def test_add (self):
         d = wc.http.header.WcMessage()

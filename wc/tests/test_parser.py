@@ -180,7 +180,7 @@ flushtests = [
 ]
 
 
-class TestParser (tests.StandardTest):
+class TestParser (unittest.TestCase):
     """
     Test html parser.
     """

@@ -21,7 +21,7 @@ import tests
 import wc.http.date
 
 
-class TestDate (tests.StandardTest):
+class TestDate (unittest.TestCase):
 
     def test_rfc1123 (self):
         now = time.time()
