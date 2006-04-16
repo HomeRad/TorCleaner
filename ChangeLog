@@ -9,6 +9,10 @@
     Type: bugfix
     Changed: wc/proxy/Allowed.py, wc/proxy/HttpClient.py
 
+  * Do not delete empty HTML attribute values.
+    Type: bugfix
+    Changed: wc/filter/html/__init__.py
+
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 
   * Remove literal "</script>" in embedded JavaScript files.
