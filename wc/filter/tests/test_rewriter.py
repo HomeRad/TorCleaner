@@ -309,6 +309,9 @@ class TestRewriter (tests.StandardTest):
         html = '<html><body><img src="foo.jpg"><foo%s><p>Hello'
         self.filt(html % (bork * 1500), html % bork)
 
+    def test_alt_title (self):
+        self.filt("""<img alt="">""", """<img alt="" title="">""")
+
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)
