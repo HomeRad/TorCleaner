@@ -1,11 +1,11 @@
 TODO
 
-- make better default logfile argument in initlog()
+- complete implementation of the rating system
 
 - Disabling network on Windows causes DNS lookup to ignore the
   first error, and subsequent lookups time out indefinitely.
 
-- complete implementation of the rating system
+- Think about using python-adns instead of the dnspython stuff.
 
 - Ajax-enabled web gui theme:
   Since we require JavaScript for this theme, lots of goodies can be realized.
@@ -23,6 +23,8 @@ TODO
 - web gui authentication improvements:
   see http://www.berenddeboer.net/rest/authentication.html
   This will have to be tested for proxy-authentication.
+
+- Add parent proxy support to SSL gateway.
 
 - test HTTP pipelining (esp. the order of the responses)
 
