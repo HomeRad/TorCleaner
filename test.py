@@ -83,23 +83,6 @@ RCS_IGNORE = [
     ".git",
 ]
 
-class TestSkipped (Exception):
-    """Test skipped.
-
-    This can be raised to indicate that a test was deliberatly
-    skipped, but not because a feature wasn't available.  For
-    example, if some resource can't be used, such as the network
-    appears to be unavailable, this should be raised instead of
-    TestFailed.
-    """
-
-class ResourceDenied (TestSkipped):
-    """Test skipped because it requested a disallowed resource.
-
-    This is raised when a test calls requires() for a resource that
-    has not be enabled.  It is used to distinguish between expected
-    and unexpected skips.
-    """
 
 class Options:
     """Configurable properties of the test runner."""
@@ -545,6 +528,7 @@ class CustomTestResult(unittest._TextTestResult):
         self.testsRun = n # override the testsRun calculation
         for hook in self.hooks:
             hook.startTest(test)
+        self.start_time = time.time()
 
     def stopTest(self, test):
         for hook in self.hooks:
@@ -579,6 +563,7 @@ class CustomTestResult(unittest._TextTestResult):
         self.__super_printErrors()
 
     def printSkipped (self):
+        self.stream.writeln()
         for test, msg in self.skipped:
             self.printSkip(test, msg)
 
@@ -588,10 +573,10 @@ class CustomTestResult(unittest._TextTestResult):
             c = colorize
         else:
             c = lambda texttype, text: text
-        w()
         kind = c('warn', "SKIPPED")
-        description = c('longtestname', self.getDescription(test))
-        w("%s: %s %s" % (kind, description, msg))
+        description = c('testname', self.getDescription(test))
+        w("%s: %s:" % (kind, description))
+        w("         %s" % msg)
 
     def formatError(self, err):
         return "".join(format_exception(basedir=self.cfg.basedir,
@@ -633,6 +618,20 @@ class CustomTestResult(unittest._TextTestResult):
             self.stream.write("S")
         self.skipped.append((test, msg))
 
+    def addSuccess (self, test):
+        now = time.time()
+        unittest.TestResult.addSuccess(self, test)
+        if self.cfg.colorize:
+            c = colorize
+        else:
+            c = lambda texttype, text: text
+        if self.showAll:
+            time_taken = float(now - self.start_time)
+            time_str = c('count', '%.1f' % time_taken)
+            self.stream.writeln("ok (%ss)" % time_str)
+        elif self.dots:
+            self.stream.write('.')
+
     def printErrorList(self, flavour, errors):
         if self.cfg.immediate_errors:
             for test, err in errors:
@@ -660,7 +659,9 @@ class CustomTestCase (unittest.TestCase):
         try:
             denied = self.denied_resources(result.cfg.resources)
             if denied:
-                msg = "missing resources %s" % denied
+                res = ",".join(["%r" % x for x in denied])
+                s = len(denied) != 1 and "s" or ""
+                msg = "missing resource%s %s" % (s, res)
                 result.addSkipped(self, msg)
                 return
             try:
@@ -752,12 +753,14 @@ class CustomTestRunner(unittest.TextTestRunner):
         if not self.cfg.quiet:
             self.stream.writeln(c('separator', result.separator2))
             run_str = c('count', str(run))
-            time_str = c('count', '%.3f' % timeTaken)
+            time_str = c('count', '%.1f' % timeTaken)
             self.stream.writeln("Ran %s test%s in %ss" %
                                 (run_str, run != 1 and "s" or "", time_str))
             self.stream.writeln()
         if result.skipped:
-            self.stream.writeln("SKIPPED TESTS (%d)" % len(result.skipped))
+            self.stream.write(c('warn', "SKIPPED TESTS"))
+            count = c('count', str(len(result.skipped)))
+            self.stream.writeln(" (%s)" % count)
         if not result.wasSuccessful():
             self.stream.write(c('fail', "FAILED"))
 
