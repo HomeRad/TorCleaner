@@ -77,6 +77,7 @@
   <title lang="de">Entferne &lt;body&gt; onunload</title>
   <title lang="en">&lt;body&gt; onunload</title>
   <description lang="en">onunload is used for advert popups</description>
+  <nomatchurl>maps\.google\.com</nomatchurl>
   <attr name="onunload"/>
   <replacement part="attr"/>
 </htmlrewrite>

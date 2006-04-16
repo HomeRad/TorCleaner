@@ -16,6 +16,7 @@
 <htmlrewrite sid="wc.78"
  tag="div">
   <title lang="de">Entferne display:none</title>
+  <nomatchurl>maps\.google\.com</nomatchurl>
   <attr name="style">display:\s*none</attr>
 </htmlrewrite>
 </folder>
