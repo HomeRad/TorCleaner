@@ -108,7 +108,7 @@ filtermodules = [
     "XmlRewriter",
     "Replacer",
     "Compress",
-# XXX to be implemented    "RatingHeader",
+    "RatingHeader",
     "VirusFilter",
     "MimeRecognizer",
 ]
@@ -403,7 +403,7 @@ _nestedtags = (
   # htmlrewriter rule nested tag names
   u'attr', u'enclosed', u'replacement',
   # rating rule nested tag names
-  u'url', u'category',
+  u'url', u'limit',
 )
 # make sure no name clashes occur between tag names
 for _x in _nestedtags:
