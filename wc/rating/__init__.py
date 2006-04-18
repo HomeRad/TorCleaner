@@ -19,8 +19,9 @@ Basic data types and routines for rating support.
 """
 
 import wc.decorators
+import wc.containers
 
-class Rating (dict):
+class Rating (wc.containers.CaselessDict):
     """
     A rating is a dictionary filled with name/value items.
     Each name/value item is an instance of a defined rating format.

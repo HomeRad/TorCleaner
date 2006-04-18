@@ -29,21 +29,19 @@ class ValueFormat (wc.rating.RatingFormat):
     """
 
     def __init__ (self, name):
+        """Initialize name and values."""
         _ = lambda x: x
         values = [_("none"), _("mild"), _("heavy")]
         del _
         super(ValueFormat, self).__init__(name, values)
+        self.iterable = True
 
     def valid_value (self, value):
-        """
-        True if value is in values list.
-        """
+        """True if value is in values list."""
         return value in self.values
 
     def allowance (self, value, limit):
-        """
-        Check if value exceeds limit.
-        """
+        """Check if value exceeds limit."""
         return self.values.index(value) > self.values.index(limit)
 
 
@@ -54,22 +52,16 @@ class RangeFormat (wc.rating.RatingFormat):
     """
 
     def __init__ (self, name, minval=None, maxval=None):
-        """
-        Initialize name and values.
-        """
+        """Initialize name and values."""
         super(RangeFormat, self).__init__(name, [minval, maxval])
-        self.is_range = True
+        self.iterable = False
 
     def valid_value (self, value):
-        """
-        Check range value.
-        """
+        """Check range value."""
         return range_check(value, self.values)
 
     def allowance (self, value, limit):
-        """
-        Check if value exceeds limit.
-        """
+        """Check if value exceeds limit."""
         return range_check(value, limit)
 
 

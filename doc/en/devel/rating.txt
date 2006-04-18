@@ -24,6 +24,10 @@ Rating format
 A rating format defines a unique, case insensitive name, and a range
 of valid values along with their interpretation.
 
+A given interpretation allows comparing two ratings against each other,
+to test if one exceeds the other. Comparisons are used to decide wether
+to allow a rated page or not.
+
 URL rating
 ==========
 A URL rating relates a rating to one or more URLs. It consists of

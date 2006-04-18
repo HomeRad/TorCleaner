@@ -526,26 +526,26 @@ Rule (don't) match url
 <table rules="cols" cellpadding="5" cellspacing="0" border="0" summary="">
 <thead>
 <tr style="border-bottom:1px solid black;">
-<th i18n:translate="">Category</th>
+<th i18n:translate="">Rating</th>
 <th colspan="3" i18n:translate="">Allowed limit</th>
 </tr>
 </thead>
 <tbody>
-<tr tal:repeat="category categories">
-<td tal:define="global catname category/name"
- tal:content="catname">violence</td>
-<td tal:condition="not:category/iterable" colspan="3">
+<tr tal:repeat="ratingformat ratingservice/ratingformats">
+<td tal:define="global formatname ratingformat/name"
+ tal:content="formatname">violence</td>
+<td tal:condition="not:ratingformat/iterable" colspan="3">
 <input type="text" size="4"
- tal:attributes="name string:category_${catname};value currule/values/?catname"
+ tal:attributes="name string:rating_${formatname};value currule/rating/?formatname"
 ></td>
-<td tal:condition="category/iterable"
- tal:repeat="value category/values">
+<td tal:condition="ratingformat/iterable"
+ tal:repeat="value ratingformat/values">
 <input type="radio" checked
- tal:condition="currule/values/?catname/?value"
- tal:attributes="name string:category_${catname};value value"
+ tal:condition="currule/values/?formatname/?value"
+ tal:attributes="name string:rating_${formatname};value value"
 ><input type="radio"
- tal:condition="not:currule/values/?catname/?value"
- tal:attributes="name string:category_${catname};value value"
+ tal:condition="not:currule/values/?formatname/?value"
+ tal:attributes="name string:rating_${formatname};value value"
 >&nbsp;<span tal:content="value">Mild</span>
  </td>
 </tr>

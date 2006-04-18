@@ -4,12 +4,11 @@
     Type: bugfix
     Changed: wc/i18n.py
     
-  * Restrict the allowed ports for HTTP CONNECT requests to avoid
-    misuse for mail spamming.
+  * Restrict the allowed ports for HTTP CONNECT requests to avoid misuse.
     Type: bugfix
     Changed: wc/proxy/Allowed.py, wc/proxy/HttpClient.py
 
-  * Do not delete empty HTML attribute values.
+  * Do not leave out empty HTML attribute values.
     Type: bugfix
     Changed: wc/filter/html/__init__.py
 

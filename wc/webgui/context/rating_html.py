@@ -24,14 +24,8 @@ from wc.webgui.context import getval as _getval
 from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.url import is_safe_url as _is_safe_url
 from wc.strformat import strtime as _strtime
-from wc.rating import services, categories
-from wc.rating import get_category as _get_category
-from wc.rating import get_ratings as _get_ratings
-from wc.rating.rating import Rating as _Rating
-from wc.rating.category import intrange_from_string as \
-     _intrange_from_string
-from wc.rating.category import string_from_intrange as \
-     _string_from_intrange
+from wc.rating.service import ratingservice
+from wc.rating.service.ratingformat import intrange_from_string as _intrange_from_string
 
 _entries_per_page = 50
 
@@ -43,7 +37,7 @@ info = {
 error = {
     "ratingupdated": False,
     "ratingdeleted": False,
-    "categoryvalue": False,
+    "ratingvalue": False,
     "selindex": False,
     "url": False,
 }
@@ -53,15 +47,15 @@ rating_modified = {}
 
 def _reset_values ():
     """
-    Reset category values.
+    Reset rating values.
     """
-    for category in categories:
-        if category.iterable:
-            values[category.name] = {}
-            for value in category.values:
-                values[category.name][value] = (value == 'none')
+    for ratingformat in ratingservice.ratingformats:
+        if ratingformat.iterable:
+            values[ratingformat.name] = {}
+            for value in ratingformat.values:
+                values[ratingformat.name][value] = (value == 'none')
         else:
-            values[category.name] = ""
+            values[ratingformat.name] = ""
 
 
 def _calc_ratings_display ():
@@ -79,7 +73,7 @@ def _calc_ratings_display ():
 
 
 _reset_values()
-rating_store = _get_ratings()
+rating_store = {}#_get_ratings()
 url = u""
 generic = False
 # current index of entry to display
@@ -162,20 +156,20 @@ def _form_generic (form):
 
 def _form_ratings (form):
     """
-    Check category value validity.
+    Check rating value validity.
     """
-    for catname, value in _get_prefix_vals(form, 'category_'):
+    for catname, value in _get_prefix_vals(form, 'rating_'):
         category = _get_category(catname)
         if category is None:
             # unknown category
-            error['categoryvalue'] = True
+            error['ratingvalue'] = True
             return False
         if category.iterable:
             realvalue = value
         else:
             realvalue = _intrange_from_string(value)
         if not category.valid_value(realvalue):
-            error['categoryvalue'] = True
+            error['ratingvalue'] = True
             return False
         if category.iterable:
             values[catname]['none'] = False

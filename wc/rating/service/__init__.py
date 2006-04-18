@@ -15,8 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import wc
 import wc.rating
-import wc.rating.service.ratingformat
 
 class WebCleanerService (wc.rating.RatingService):
     """
@@ -32,12 +32,13 @@ class WebCleanerService (wc.rating.RatingService):
         self.name = "%s rating service" % wc.AppName
         # service homepage
         self.url = '%s/rating/' % wc.Url,
-        # rating categories
-        self.formats = [
-            wc.rating.service.ratingformat.ValueFormat("violence"),
-            wc.rating.service.ratingformat.ValueFormat("sex"),
-            wc.rating.service.ratingformat.ValueFormat("language"),
-            wc.rating.service.ratingformat.RangeFormat("age", minval=0),
+        # rating formats
+        import ratingformat
+        self.ratingformats = [
+            ratingformat.ValueFormat("WC-Violence"),
+            ratingformat.ValueFormat("WC-Sex"),
+            ratingformat.ValueFormat("WC-Language"),
+            ratingformat.RangeFormat("WC-Age", minval=0),
         ]
         # submit ratings to service
         self.submit = '%s/submit' % self.url,
@@ -45,17 +46,12 @@ class WebCleanerService (wc.rating.RatingService):
         self.request = '%s/request' % self.url,
         self.cache = {}
 
-    def get_url_rating (self, url):
-        """
-        Get rating for given url.
-        """
-        self.check_url(url)
-        # use a specialized form of longest prefix matching:
-        # split the url in parts and the longest matching part wins
-        parts = wc.rating.split_url(url)
-        # the range selects from all parts (full url) down to the first two parts
-        for i in range(len(parts), 1, -1):
-            url = "".join(parts[:i])
-            if url in self.cache:
-                return self.cache[url]
-        raise KeyError(url)
+    def get_ratingformat (self, name):
+        name = name.lower()
+        for format in self.ratingformats:
+            if format.name.lower() == name:
+                return format
+        return None
+
+# instantiate the global service
+ratingservice = WebCleanerService()

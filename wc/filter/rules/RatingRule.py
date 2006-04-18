@@ -23,6 +23,7 @@ import wc.log
 import wc.filter.rules.UrlRule
 import wc.XmlUtils
 import wc.rating
+from wc.rating.service import ratingservice
 #import wc.rating.storage
 
 
@@ -33,102 +34,60 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     """
     Holds a rating to match against when checking for allowance of
     the rating system.
+    Also stored is the url to display should a rating deny a page.
     """
 
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
                   matchurls=None, nomatchurls=None):
-        """
-        Initialize rating data.
-        """
+        """Initialize rating data."""
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
         self.rating = wc.rating.Rating()
+        self.url = ""
 
     def fill_attrs (self, attrs, name):
-        """
-        Init rating and url attrs.
-        """
+        """Init rating and url attrs."""
         super(RatingRule, self).fill_attrs(attrs, name)
         if name == 'limit':
             self._name = attrs.get('name')
 
     def end_data (self, name):
-        """
-        Store category or url data.
-        """
+        """Store category or url data."""
         super(RatingRule, self).end_data(name)
         if name == 'limit':
             self.rating[self._name] = self._data
+        elif name == 'url':
+	     self.url = self._data
 
     def compile_data (self):
-        """
-        Call super.compile_data() and compile_values().
-        """
+        """Compile parsed rule values."""
         super(RatingRule, self).compile_data()
         self.compile_values()
 
     def compile_values (self):
-        """
-        Fill rating values mapping of the form
-        {category name -> value -> value_is_set}
-        with types
-        {string -> string -> bool}
-        """
+        """Fill missing rating values."""
+        # helper dict for web gui
         self.values = {}
-        # XXX
-        #for name, value in self.ratings.iteritems():
-        #    category = wc.rating.get_category(name)
-        #    if category.iterable:
-        #        self.values[name] = {}
-        #        for v in category.values:
-        #            self.values[name][v] = (v == value)
-        #    else:
-        #        self.values[name] = value
-
-    def rating_allow (self, url):
-        """
-        Asks cache if the rule allows the rating data for given url
-        Looks up cache to find rating data, if not returns a MISSING message.
-        """
-        rating_store = wc.rating.get_ratings()
-        # sanitize url
-        url = wc.rating.make_safe_url(url)
-        if url in rating_store:
-            return self.check_against(rating_store[url])
-        return MISSING
-
-    def check_against (self, rating):
-        """
-        Return None if allowed, else a reason of why not.
-        """
-        for catname, value in rating.category_values.iteritems():
-            if catname not in self.ratings:
-                wc.log.warn(wc.LOG_FILTER,
-                            "Unknown rating category %r specified", catname)
-                continue
-            if not value:
-                # empty value implicates not rated
-                continue
-            limit = self.ratings[catname]
-            if not limit:
-                # no limit is set for this category
-                continue
-            category = wc.rating.get_category(catname)
-            reason = category.allowance(value, limit)
-            if reason:
-                return reason
-        # not exceeded
-        return None
+        for ratingformat in ratingservice.ratingformats:
+            name = ratingformat.name
+            self.values[name] = {}
+            if name not in self.rating:
+                # Use the most restrictive setting as default.
+                value = ratingformat.values[0]
+                self.rating[name] = value
+            if ratingformat.iterable:
+                for value in ratingformat.values:
+                    self.values[name][value] = value == self.rating[name]
 
     def toxml (self):
-        """
-        Rule data as XML for storing.
-        """
+        """Rule data as XML for storing."""
         s = u"%s>" % super(RatingRule, self).toxml()
         s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
+        if self.url:
+            s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
         for name, value in self.rating.iteritems():
             s += u"\n  <limit name=\"%s\">%s</limit>" % \
               (wc.XmlUtils.xmlquoteattr(name), wc.XmlUtils.xmlquote(value))

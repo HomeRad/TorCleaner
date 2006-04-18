@@ -36,6 +36,8 @@ from wc.filter.rules.FolderRule import recalc_up_down as _recalc_up_down
 from wc.filter.rules import register_rule as _register_rule
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
+from wc.rating.service import ratingservice
+from wc.rating.service.ratingformat import intrange_from_string as _intrange_from_string
 
 xmlreplacetypenames = sorted(replacetypenums.iterkeys())
 
@@ -69,7 +71,7 @@ info = {
     "ruleheaderaction": False,
     "ruleimgwidth": False,
     "ruleimgheight": False,
-    "rulecategory": False,
+    "rulerating": False,
     "rulesearch": False,
     "rulereplace": False,
     "ruletag": False,
@@ -111,7 +113,7 @@ error = {
     "folderindex": False,
     "ruleindex": False,
     "selindex": False,
-    "categoryvalue": False,
+    "ratingvalue": False,
     "xmlselector": False,
     "xmlreplacetype": False,
 }
@@ -896,23 +898,24 @@ def _form_apply_rating (form):
     Change RatingRule.
     """
     # rating categories
-    for catname, value in _get_prefix_vals(form, 'category_'):
-        category = _get_category(catname)
-        if category is None:
-            # unknown category
-            error['categoryvalue'] = True
+    for name, value in _get_prefix_vals(form, 'rating_'):
+        ratingformat = ratingservice.get_ratingformat(name)
+        if ratingformat is None:
+            # unknown rating
+            error['ratingvalue'] = True
             return
-        if category.iterable:
+        if ratingformat.iterable:
             realvalue = value
         else:
+            # Value is a range. The conversion returns None on error.
             realvalue = _intrange_from_string(value)
-        if not category.valid_value(realvalue):
-            error['categoryvalue'] = True
+        if realvalue is None or not ratingformat.valid_value(realvalue):
+            error['ratingvalue'] = True
             return
-        if currule.ratings[catname] != value:
-            currule.ratings[catname] = value
+        if currule.rating[name] != value:
+            currule.rating[name] = value
             currule.compile_values()
-            info['rulecategory'] = True
+            info['rulerating'] = True
 
 
 def _form_apply_replace (form):

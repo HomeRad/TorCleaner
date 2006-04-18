@@ -36,30 +36,30 @@ several given categories.</p>
 <table rules="all" border="1" cellpadding="5" cellspacing="0" summary="">
 <thead>
 <tr>
-<th i18n:translate="">Category</th>
-<th colspan="3" i18n:translate="">Rating</th>
+<th i18n:translate="">Rating</th>
+<th colspan="3" i18n:translate="">Value</th>
 </tr>
 </thead>
 <tbody>
-<!-- loop over categories -->
-<tr tal:repeat="category categories">
-<td tal:define="global catname category/name"><label
- tal:attributes="for string:category_${catname}"
- tal:content="catname">violence</label>
+<!-- loop over ratingformats -->
+<tr tal:repeat="ratingformat ratingservice/ratingformats">
+<td tal:define="global formatname ratingformat/name"><label
+ tal:attributes="for string:rating_${formatname}"
+ tal:content="formatname">WC-Violence</label>
 </td>
-<!-- category values -->
-<td tal:condition="not:category/iterable" colspan="3">
+<!-- ratingformat values -->
+<td tal:condition="not:ratingformat/iterable" colspan="3">
 <input type="text" size="4"
- tal:attributes="name string:category_${catname};value values/?catname"
+ tal:attributes="name string:rating_${formatname};value values/?formatname"
 ></td>
-<td tal:condition="category/iterable"
- tal:repeat="value category/values"
+<td tal:condition="ratingformat/iterable"
+ tal:repeat="value ratingformat/values"
 ><input type="radio" checked
- tal:condition="values/?catname/?value"
- tal:attributes="name string:category_${catname};value value"
+ tal:condition="values/?formatname/?value"
+ tal:attributes="name string:rating_${formatname};value value"
 ><input type="radio"
- tal:condition="not:values/?catname/?value"
- tal:attributes="name string:category_${catname};value value"
+ tal:condition="not:values/?formatname/?value"
+ tal:attributes="name string:rating_${formatname};value value"
 >&nbsp;<span tal:content="value">Mild</span>
 </td>
 </tr>
@@ -133,7 +133,7 @@ several given categories.</p>
 <div class="error">
 <div tal:condition="error/ratingupdated" i18n:translate="">Rating could not be updated.</div>
 <div tal:condition="error/ratingdeleted" i18n:translate="">Rating could not be deleted.</div>
-<div tal:condition="error/categoryvalue" i18n:translate="">Invalid category value.</div>
+<div tal:condition="error/ratingvalue" i18n:translate="">Invalid category value.</div>
 <div tal:condition="error/selindex" i18n:translate="">Invalid selection index.</div>
 <div tal:condition="error/url" i18n:translate="">Invalid url.
 The url has to start with <code>http://</code>, <code>https://</code> or
