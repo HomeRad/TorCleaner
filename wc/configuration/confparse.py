@@ -20,7 +20,7 @@ Parse configuration data.
 
 import sets
 import xml.parsers.expat
-
+import wc
 from wc.XmlUtils import xmlquoteattr
 
 ##### xml parsers #########

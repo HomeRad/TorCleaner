@@ -331,7 +331,7 @@ class Configuration (dict):
         self['mime_content_rewriting'] = sets.Set()
         for filtername in self['filters']:
             # import filter module
-            exec "from filter import %s" % filtername
+            exec "from wc.filter import %s" % filtername
             # Filter class has same name as module.
             clazz = getattr(getattr(wc.filter, filtername), filtername)
             if not clazz.enable:
