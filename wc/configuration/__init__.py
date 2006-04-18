@@ -33,6 +33,7 @@ import wc.strformat
 import wc.fileutil
 import wc.rating.service
 import confparse
+import ratingstorage
 
 ConfigCharset = "iso-8859-1"
 
@@ -212,6 +213,7 @@ class Configuration (dict):
         self['baseurl'] = wc.Url
         self['try_google'] = 0
         self['rating_service'] = wc.rating.service.WebCleanerService()
+        self['rating_storage'] = ratingstorage.UrlRatingStorage(self.configdir)
         # delete all registered sids
         from wc.filter.rules import delete_registered_sids
         delete_registered_sids()
