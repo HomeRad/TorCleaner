@@ -2,6 +2,9 @@ TODO
 
 - complete implementation of the rating system
 
+- Add warning for rules that should only have one enabled rule instance:
+  Javascript, Rating, Antivirus, Nocomments
+
 - Disabling network on Windows causes DNS lookup to ignore the
   first error, and subsequent lookups time out indefinitely.
 
