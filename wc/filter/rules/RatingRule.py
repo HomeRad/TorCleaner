@@ -78,6 +78,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
                 self.rating[name] = value
             if ratingformat.iterable:
                 for value in ratingformat.values:
+                    value = str(value)
                     self.values[name][value] = value == self.rating[name]
 
     def toxml (self):
@@ -89,7 +90,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         if self.url:
             s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
         for name, value in self.rating.iteritems():
-            s += u"\n  <limit name=\"%s\">%s</limit>" % \
-              (wc.XmlUtils.xmlquoteattr(name), wc.XmlUtils.xmlquote(value))
+            value = wc.XmlUtils.xmlquote(str(value))
+            name = wc.XmlUtils.xmlquoteattr(name)
+            s += u"\n  <limit name=\"%s\">%s</limit>" % (name, value)
         s += u"\n</%s>" % self.name
         return s

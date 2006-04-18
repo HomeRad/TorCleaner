@@ -38,7 +38,7 @@ class WebCleanerService (wc.rating.RatingService):
             ratingformat.ValueFormat("WC-Violence"),
             ratingformat.ValueFormat("WC-Sex"),
             ratingformat.ValueFormat("WC-Language"),
-            ratingformat.RangeFormat("WC-Age", minval=0),
+            ratingformat.RangeFormat("WC-Age", ratingformat.IntRange(minval=0)),
         ]
         # submit ratings to service
         self.submit = '%s/submit' % self.url,

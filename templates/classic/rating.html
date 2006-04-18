@@ -50,15 +50,15 @@ several given categories.</p>
 <!-- ratingformat values -->
 <td tal:condition="not:ratingformat/iterable" colspan="3">
 <input type="text" size="4"
- tal:attributes="name string:rating_${formatname};value values/?formatname"
+ tal:attributes="name string:rating_${formatname};value cgi_rating/?formatname"
 ></td>
 <td tal:condition="ratingformat/iterable"
  tal:repeat="value ratingformat/values"
 ><input type="radio" checked
- tal:condition="values/?formatname/?value"
+ tal:condition="cgi_rating/?formatname/?value"
  tal:attributes="name string:rating_${formatname};value value"
 ><input type="radio"
- tal:condition="not:values/?formatname/?value"
+ tal:condition="not:cgi_rating/?formatname/?value"
  tal:attributes="name string:rating_${formatname};value value"
 >&nbsp;<span tal:content="value">Mild</span>
 </td>
@@ -90,7 +90,7 @@ several given categories.</p>
 </thead>
 <tbody>
 <tr tal:repeat="rurl ratings_display">
-<td tal:define="global rating rating_store/?rurl">
+<td tal:define="global url_rating rating_store/?rurl">
 <table border="0" cellpadding="0" cellspacing="0" summary="">
 <tr><td><a href="#" i18n:attributes="title"
  title="Edit this rating"
@@ -110,11 +110,11 @@ several given categories.</p>
 </tr></table></td>
 <td><a href="#" tal:attributes="href rurl"
  tal:content="rurl">http://imadoofus.com</a></td>
-<td><span tal:content="rating/generic">True</span></td>
+<td><span tal:content="url_rating/generic">True</span></td>
 <td><span
- tal:repeat="category rating/category_values/keys">
-<span tal:content="category">violence</span>="<span
- tal:replace="rating/category_values/?category">0</span>"
+ tal:repeat="formatname url_rating/rating/keys">
+<span tal:content="formatname">violence</span>="<span
+ tal:replace="url_rating/rating/?formatname">0</span>"
 </span>
 </td>
 <td><span tal:replace="structure rating_modified/?rurl">1. Jan 2004</span></td>

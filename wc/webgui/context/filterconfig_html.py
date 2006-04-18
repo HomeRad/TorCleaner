@@ -22,7 +22,8 @@ import tempfile
 import os
 import re
 from wc import AppName, Version
-from wc.configuration import config, rulenames
+from wc.configuration import config
+from wc.configuration.confparse import rulenames
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import getlist as _getlist
 from wc.webgui.context import get_prefix_vals as _get_prefix_vals
@@ -37,7 +38,7 @@ from wc.filter.rules import register_rule as _register_rule
 from wc.filter.rules import generate_sids as _generate_sids
 from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.rating.service import ratingservice
-from wc.rating.service.ratingformat import intrange_from_string as _intrange_from_string
+from wc.rating.service.ratingformat import parse_range as _parse_range
 
 xmlreplacetypenames = sorted(replacetypenums.iterkeys())
 
@@ -908,7 +909,7 @@ def _form_apply_rating (form):
             realvalue = value
         else:
             # Value is a range. The conversion returns None on error.
-            realvalue = _intrange_from_string(value)
+            realvalue = _parse_range(value)
         if realvalue is None or not ratingformat.valid_value(realvalue):
             error['ratingvalue'] = True
             return

@@ -51,66 +51,63 @@ class RangeFormat (wc.rating.RatingFormat):
     minimum and maximum.
     """
 
-    def __init__ (self, name, minval=None, maxval=None):
+    def __init__ (self, name, intrange):
         """Initialize name and values."""
-        super(RangeFormat, self).__init__(name, [minval, maxval])
+        super(RangeFormat, self).__init__(name, intrange)
         self.iterable = False
 
     def valid_value (self, value):
         """Check range value."""
-        return range_check(value, self.values)
+        return self.values.contains_range(value)
 
     def allowance (self, value, limit):
         """Check if value exceeds limit."""
-        return range_check(value, limit)
+        return value.contains_value(limit)
 
 
-def range_check (value, values):
-    if isinstance(value, tuple):
-        assert len(value) == 2, "Invalid value %r" % repr(value)
-        return range_in_range(value, values)
-    return value_in_range(value, values)
+class IntRange (object):
 
+    def __init__ (self, minval=None, maxval=None):
+        self.minval = minval
+        self.maxval = maxval
 
-def value_in_range (num, prange):
-    """
-    return True iff number is in range.
+    def contains_value (self, num):
+        """Check if number is in range."""
+        if num is None:
+            return True
+        isnum = isinstance(num, int) or isinstance(num, float)
+        assert (isnum and num >= 0), "Invalid value %r" % repr(num)
+        return (self.minval is None or num > self.minval) and \
+               (self.maxval is None or num < self.maxval)
 
-    @param prange: tuple (min, max)
-    @param value: a number
-    """
-    isnum = isinstance(num, int) or isinstance(num, float)
-    assert num is None or (isnum and num >= 0), "Invalid value %r" % repr(num)
-    if prange[0] is not None and num is not None and num < prange[0]:
-        return False
-    if prange[1] is not None and num is not None and num > prange[1]:
-        return False
-    return True
+    def contains_range (self, intrange):
+        """Check if given range lies in this range."""
+        return self.contains_value(intrange.minval) and \
+               self.contains_value(intrange.maxval)
 
-
-def range_in_range (vrange, prange):
-    """
-    return True iff num vrange is in prange.
-
-    @param prange: tuple (min, max)
-    @param vrange: tuple (min, max)
-    """
-    return value_in_range(vrange[0], prange) and \
-           value_in_range(vrange[1], prange)
+    def __str__ (self):
+        s = ""
+        if self.minval:
+            s += "%d-" % self.minval
+        if self.maxval:
+            if not s:
+                s += "-"
+            s += "%d" % self.maxval
+        return s
 
 
 _range_re = re.compile(r'^(\d*)-(\d*)$')
-def intrange_from_string (value):
+def parse_range (value):
     """
     Parse value as range.
-    @return: tuple (rmin, rmax) or None on error
-    @rtype: tuple (int/None, int/None)
+    @return: parsed range object or None on error
+    @rtype: IntRange or None
     """
     if not value:
         # empty range
-        return (None, None)
+        return IntRange()
     if value.isdigit():
-        return (int(value), None)
+        return IntRange(int(value), None)
     mo = _range_re.match(value)
     if not mo:
         return None
@@ -123,18 +120,5 @@ def intrange_from_string (value):
         vmax = None
     else:
         vmax = max(int(vmax), vmin)
-    return (vmin, vmax)
+    return IntRange(vmin, vmax)
 
-
-def string_from_intrange (vrange):
-    """
-    Represent vrange as string.
-    """
-    s = ""
-    if vrange[0]:
-        s += "%d-" % vrange[0]
-    if vrange[1]:
-        if not s:
-            s += "-"
-        s += "%d" % vrange[1]
-    return s

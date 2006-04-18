@@ -14,18 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-"""
-Parameters for rating.html page.
-"""
+"""Parameters for rating.html page."""
 
 from wc import AppName, Email, Version
 from wc.configuration import config
+from wc.containers import CaselessDict as _CaselessDict
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import get_prefix_vals as _get_prefix_vals
 from wc.url import is_safe_url as _is_safe_url
 from wc.strformat import strtime as _strtime
 from wc.rating.service import ratingservice
-from wc.rating.service.ratingformat import intrange_from_string as _intrange_from_string
+from wc.rating.service.ratingformat import parse_range as _parse_range
+from wc.rating import Rating as _Rating
+from wc.rating.service.urlrating import WcUrlRating as _WcUrlRating
 
 _entries_per_page = 50
 
@@ -41,54 +42,48 @@ error = {
     "selindex": False,
     "url": False,
 }
-values = {}
+# rating data
+url = u""
+generic = False
+rating = _Rating()
+rating_store = config['rating_storage']
+# current index of entry to display
+curindex = 0
+# displayed ratings
+ratings_display = []
+# rating data for cgi display
+cgi_rating = _CaselessDict()
 rating_modified = {}
+# select range indexes
+selindex = []
 
-
-def _reset_values ():
-    """
-    Reset rating values.
-    """
+def _reset_cgi_rating ():
+    """Reset CGI rating values."""
     for ratingformat in ratingservice.ratingformats:
+        name = ratingformat.name
         if ratingformat.iterable:
-            values[ratingformat.name] = {}
+            cgi_rating[name] = {}
             for value in ratingformat.values:
-                values[ratingformat.name][value] = (value == 'none')
+                cgi_rating[name][value] = (value == 'none')
         else:
-            values[ratingformat.name] = ""
-
+            cgi_rating[name] = ""
 
 def _calc_ratings_display ():
-    """
-    Calculate current set of ratings to display.
-    """
+    """Calculate current set of ratings to display."""
     global ratings_display, rating_modified
     urls = rating_store.keys()
-    urls.sort()
     ratings_display = urls[curindex:curindex+_entries_per_page]
     rating_modified.clear()
     for _url in ratings_display:
         t = _strtime(rating_store[_url].modified)
         rating_modified[_url] = t.replace(u" ", u"&nbsp;")
 
-
-_reset_values()
-rating_store = {}#_get_ratings()
-url = u""
-generic = False
-# current index of entry to display
-curindex = 0
-# displayed ratings
-ratings_display = []
+_reset_cgi_rating()
 _calc_ratings_display()
-# select range indexes
-selindex = []
 
 
 def _exec_form (form, lang):
-    """
-    HTML CGI form handling.
-    """
+    """HTML CGI form handling."""
     global url
     # calculate global vars
     if not _form_url(form):
@@ -117,14 +112,12 @@ def _exec_form (form, lang):
 
 
 def _form_reset ():
-    """
-    Reset form variables to default values.
-    """
+    """Reset form variables to default values."""
     for key in info.keys():
         info[key] = False
     for key in error.keys():
         error[key] = False
-    _reset_values()
+    _reset_cgi_rating()
     global url, generic, curindex
     url = u""
     generic = False
@@ -132,9 +125,7 @@ def _form_reset ():
 
 
 def _form_url (form):
-    """
-    Check url validity.
-    """
+    """Check url validity."""
     global url
     if form.has_key('url'):
         val = _getval(form, 'url')
@@ -146,43 +137,39 @@ def _form_url (form):
 
 
 def _form_generic (form):
-    """
-    Check generic validity.
-    """
+    """Check generic validity."""
     global generic
     generic = form.has_key('generic')
     return True
 
 
 def _form_ratings (form):
-    """
-    Check rating value validity.
-    """
-    for catname, value in _get_prefix_vals(form, 'rating_'):
-        category = _get_category(catname)
-        if category is None:
-            # unknown category
+    """Check rating value validity."""
+    for name, value in _get_prefix_vals(form, 'rating_'):
+        ratingformat = ratingservice.get_ratingformat(name)
+        if ratingformat is None:
+            # unknown rating
             error['ratingvalue'] = True
             return False
-        if category.iterable:
+        if ratingformat.iterable:
             realvalue = value
         else:
-            realvalue = _intrange_from_string(value)
-        if not category.valid_value(realvalue):
+            realvalue = _parse_range(value)
+        if realvalue is None or not ratingformat.valid_value(realvalue):
             error['ratingvalue'] = True
             return False
-        if category.iterable:
-            values[catname]['none'] = False
-            values[catname][value] = True
+        if ratingformat.iterable:
+            for x in ratingformat.values:
+                x = str(x)
+                cgi_rating[name][x] = (value == x)
         else:
-            values[catname] = value
+            cgi_rating[name] = value
+        rating[name] = realvalue
     return True
 
 
 def _form_selindex (index):
-    """
-    Display entries from given index.
-    """
+    """Display entries from given index."""
     global curindex
     try:
         curindex = int(index)
@@ -191,9 +178,7 @@ def _form_selindex (index):
 
 
 def _calc_selindex (index):
-    """
-    Calculate ratings selection index.
-    """
+    """Calculate ratings selection index."""
     global selindex
     res = [index-1000, index-250, index-50, index, index+50,
            index+250, index+1000]
@@ -201,22 +186,8 @@ def _calc_selindex (index):
 
 
 def _form_apply ():
-    """
-    Store changed ratings.
-    """
-    rating = _Rating(url, generic)
-    rating.remove_categories()
-    for catname, value in values.iteritems():
-        category = _get_category(catname)
-        if category.iterable:
-            value = [x for x in value if value[x]][0]
-        else:
-            value = _intrange_from_string(value)
-            if value is None:
-                error['ratingupdated'] = True
-                return
-        rating.add_category_value(category, value)
-    rating_store[url] = rating
+    """Store changed ratings."""
+    rating_store[url] = _WcUrlRating(url, rating, generic=generic)
     try:
         rating_store.write()
         info['ratingupdated'] = True
@@ -225,9 +196,7 @@ def _form_apply ():
 
 
 def _form_delete ():
-    """
-    Delete rating.
-    """
+    """Delete rating."""
     global url
     try:
         del rating_store[url]
@@ -238,18 +207,15 @@ def _form_delete ():
 
 
 def _form_load ():
-    """
-    Load ratings.
-    """
+    """Load ratings."""
     global generic, url
     if url in rating_store:
-        rating = rating_store[url]
-        generic = rating.generic
-        for catname, value in rating.category_values.iteritems():
-            category = _get_category(catname)
-            if category.iterable:
-                for x in category.values:
-                    values[catname][x] = False
-                values[catname][value] = True
+        url_rating = rating_store[url]
+        generic = url_rating.generic
+        for name, value in url_rating.rating.iteritems():
+            ratingformat = ratingservice.get_ratingformat(name)
+            if ratingformat.iterable:
+                for x in ratingformat.values:
+                    cgi_rating[name][x] = x == value
             else:
-                values[catname] = _string_from_intrange(value)
+                cgi_rating[name] = _string_from_intrange(value)

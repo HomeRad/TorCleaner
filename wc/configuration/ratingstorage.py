@@ -82,8 +82,8 @@ def split_path (path):
 
 class UrlRatingStorage (object):
 
-    def __init__ (self):
-        self.filename = os.path.join(wc.ConfigDir, "rating.dat")
+    def __init__ (self, configdir):
+        self.filename = os.path.join(configdir, "rating.dat")
         self.cache = {}
         if os.path.isfile(self.filename):
             self.load()
@@ -142,9 +142,12 @@ class UrlRatingStorage (object):
         except KeyError:
             return False
 
+    def keys (self):
+        return sorted(self.cache.keys())
+
     def __iter__ (self):
         """Iterate over stored rating urls."""
-        return iter(self.cache)
+        return iter(sorted(self.cache.keys()))
 
     def __len__ (self):
         """Number of stored ratings."""
