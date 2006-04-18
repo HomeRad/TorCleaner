@@ -76,8 +76,13 @@ def escape_js_line (script):
     return script
 
 
-_start_js_comment = re.compile(r"^(<!--([^\r\n]+)?|//<!\[CDATA\[)").search
-_end_js_comment = re.compile(r"\s*(?P<comment>//)?([^/\r\n]*-->|\]\]>)[ \t]*$").search
+_start_js_comment = re.compile(r"^(<!--|//<!\[CDATA\[)([^\r\n]+)?").search
+_end_js_comment = re.compile(r"""\s*
+    (?P<lcomment>//)? #  leading comment
+    [^/\r\n]* # leading characters
+    (?P<ecomment>--> | \]\]>) # ending comment
+    [ \t]*
+    $""", re.VERBOSE).search
 def remove_html_comments (script, jscomments=True):
     """
     Remove leading and trailing HTML comments from the script text.
@@ -94,10 +99,12 @@ def remove_html_comments (script, jscomments=True):
         script = script[mo.end():]
     mo = _end_js_comment(script)
     if mo:
-        if mo.group("comment") is not None:
-            i = script.rindex("//")
+        if mo.group("lcomment") is not None:
+            # cut at leading comment
+            i = mo.start("lcomment")
         else:
-            i = script.rindex("-->")
+            # cut at ending comment
+            i = mo.start("ecomment")
         script = script[:i]
     return script.strip()
 
