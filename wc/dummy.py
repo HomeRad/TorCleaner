@@ -20,8 +20,7 @@ Dummy object.
 
 class Dummy (object):
     """
-    A dummy object ignores all access to it. Useful for testing
-    or ignorant parameters.
+    A dummy object ignores all access to it. Useful for testing.
     """
 
     def __init__ (self, *args, **kwargs):
@@ -59,3 +58,6 @@ class Dummy (object):
 
     def __delitem__ (self, key):
         pass
+
+    def __contains__ (self, key):
+        return False

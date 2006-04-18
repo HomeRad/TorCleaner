@@ -48,6 +48,8 @@ class TestDummy (unittest.TestCase):
         dummy = wc.dummy.Dummy()
         dummy.hulla()
         dummy.hulla().bulla()
+        if "a" in dummy:
+            pass
 
     def test_indexes (self):
         dummy = wc.dummy.Dummy()
