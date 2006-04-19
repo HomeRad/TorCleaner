@@ -21,7 +21,6 @@ Parse configuration data.
 import sets
 import xml.parsers.expat
 import wc
-from wc.XmlUtils import xmlquoteattr
 
 ##### xml parsers #########
 
@@ -90,9 +89,7 @@ class BaseParser (object):
         self.xmlparser = None
 
     def _preparse (self):
-        """
-        Set handler functions before parsing.
-        """
+        """Set handler functions before parsing."""
         self.xmlparser = make_xmlparser()
         self.xmlparser.StartElementHandler = self.start_element
         self.xmlparser.EndElementHandler = self.end_element
@@ -109,9 +106,7 @@ class BaseParser (object):
         self.xmlparser = None
 
     def parse (self, fp=None):
-        """
-        Parse the stored filename, or another source given by fp.
-        """
+        """Parse the stored filename, or another source given by fp."""
         assert wc.log.debug(wc.LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
@@ -127,21 +122,15 @@ class BaseParser (object):
             self._postparse()
 
     def start_element (self, name, attrs):
-        """
-        Basic start element method doing nothing.
-        """
+        """Basic start element method doing nothing."""
         pass
 
     def end_element (self, name):
-        """
-        Basic end element method doing nothing.
-        """
+        """Basic end element method doing nothing."""
         pass
 
     def character_data (self, data):
-        """
-        Basic character data method doing nothing.
-        """
+        """Basic character data method doing nothing."""
         pass
 
 
@@ -151,9 +140,7 @@ class ZapperParser (BaseParser):
     """
 
     def __init__ (self, filename, compile_data=True):
-        """
-        Initialize filename, configuration and compile flag.
-        """
+        """Initialize filename, configuration and compile flag."""
         super(ZapperParser, self).__init__(filename)
         from wc.filter.rules.FolderRule import FolderRule
         self.folder = FolderRule(filename=filename)

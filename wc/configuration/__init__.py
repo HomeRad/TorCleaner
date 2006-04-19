@@ -34,6 +34,7 @@ import wc.fileutil
 import wc.rating.service
 import confparse
 import ratingstorage
+from wc.XmlUtils import xmlquoteattr
 
 ConfigCharset = "iso-8859-1"
 
@@ -291,6 +292,22 @@ class Configuration (dict):
         recalc_up_down(self['folderrules'])
         prefix = self['development'] and "wc" or "lc"
         generate_sids(prefix)
+        self.check_single_rules()
+
+    def check_single_rules (self):
+        single_rules = ('javascript', 'rating', 'antivirus', 'nocomments')
+        enabled = sets.Set()
+        for folder in self['folderrules']:
+            for rule in folder.rules:
+                if rule.disable:
+                    continue
+                key = rule.name
+                if key in single_rules:
+                    if key in enabled:
+                        wc.log.warn(wc.LOG_FILTER,
+                                    "Duplicate %r rule:\n%s.", key, rule)
+                    else:
+                        enabled.add(rule.name)
 
     def merge_folder (self, folder, dryrun=False, log=None):
         """
