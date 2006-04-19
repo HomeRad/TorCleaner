@@ -258,7 +258,8 @@ def update_filter (wconfig, dryrun=False, log=None):
         # parse new filter
         url = baseurl + filename
         page = open_url(url)
-        p = wc.configuration.ZapperParser(fullname, compile_data=False)
+        parserclass = wc.configuration.confparse.ZapperParser
+        p = parserclass(fullname, compile_data=False)
         p.parse(fp=page)
         page.close()
         # compare version compatibility
