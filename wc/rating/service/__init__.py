@@ -34,11 +34,12 @@ class WebCleanerService (wc.rating.RatingService):
         self.url = '%s/rating/' % wc.Url,
         # rating formats
         import ratingformat
+        agerange = ratingformat.IntRange(minval=0)
         self.ratingformats = [
-            ratingformat.ValueFormat("WC-Violence"),
-            ratingformat.ValueFormat("WC-Sex"),
+            ratingformat.RangeFormat("WC-Age", agerange),
             ratingformat.ValueFormat("WC-Language"),
-            ratingformat.RangeFormat("WC-Age", ratingformat.IntRange(minval=0)),
+            ratingformat.ValueFormat("WC-Sex"),
+            ratingformat.ValueFormat("WC-Violence"),
         ]
         # submit ratings to service
         self.submit = '%s/submit' % self.url,

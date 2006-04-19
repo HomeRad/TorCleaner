@@ -57,7 +57,7 @@ def parse_http_response (response, url):
     elif len(parts) != 3:
         wc.log.warn(wc.LOG_PROXY, "invalid response %r from %r",
                     response, url)
-        parts = ['HTTP/1.0', "200", 'Ok']
+        parts = ['HTTP/1.0', "200", 'OK']
     if not is_http_status(parts[1]):
         wc.log.warn(wc.LOG_PROXY, "invalid http statuscode %r from %r",
                     parts[1], url)

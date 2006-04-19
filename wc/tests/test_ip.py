@@ -1,7 +1,6 @@
 # -*- coding: iso-8859-1 -*-
 
 import unittest
-import tests
 import wc.ip
 
 

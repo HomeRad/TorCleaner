@@ -218,4 +218,4 @@ def _form_load ():
                 for x in ratingformat.values:
                     cgi_rating[name][x] = x == value
             else:
-                cgi_rating[name] = _string_from_intrange(value)
+                cgi_rating[name] = str(value)

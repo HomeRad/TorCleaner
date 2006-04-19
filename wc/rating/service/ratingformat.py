@@ -77,13 +77,23 @@ class IntRange (object):
             return True
         isnum = isinstance(num, int) or isinstance(num, float)
         assert (isnum and num >= 0), "Invalid value %r" % repr(num)
-        return (self.minval is None or num > self.minval) and \
-               (self.maxval is None or num < self.maxval)
+        return (self.minval is None or num >= self.minval) and \
+               (self.maxval is None or num <= self.maxval)
 
     def contains_range (self, intrange):
         """Check if given range lies in this range."""
         return self.contains_value(intrange.minval) and \
                self.contains_value(intrange.maxval)
+
+    def __getitem__ (self, index):
+        if index == 0:
+            return self.minval
+        if index == 1:
+            return self.maxval
+        raise IndexError("Invalid index")
+
+    def __eq__ (self, other):
+        return self.minval == other.minval and self.maxval == other.maxval
 
     def __str__ (self):
         s = ""

@@ -20,7 +20,6 @@ Test container routines.
 
 import unittest
 import random
-import tests
 import wc.containers
 
 

@@ -21,7 +21,6 @@ Test url routines.
 import unittest
 import os
 import re
-import tests
 import wc.url
 
 # 'ftp://user:pass@ftp.foo.net/foo/bar':

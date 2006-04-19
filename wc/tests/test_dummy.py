@@ -19,7 +19,6 @@ Test dummy object.
 """
 
 import unittest
-import tests
 import wc.strformat
 import wc.dummy
 

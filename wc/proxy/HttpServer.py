@@ -240,7 +240,7 @@ class HttpServer (wc.proxy.Server.Server):
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
             wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (0, 9))
-            self.response = "%s 200 Ok" % self.protocol
+            self.response = "%s 200 OK" % self.protocol
             self.statuscode = 200
             self.recv_buffer = '\r\n' + self.recv_buffer
         else:
@@ -260,7 +260,7 @@ class HttpServer (wc.proxy.Server.Server):
                             "missing headers in response from %r", self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
             # fix the response
-            self.response = "%s 200 Ok" % self.protocol
+            self.response = "%s 200 OK" % self.protocol
             self.statuscode = 200
         self.state = 'headers'
         stage = wc.filter.STAGE_RESPONSE

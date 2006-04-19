@@ -20,7 +20,6 @@ Test script to test filtering.
 
 import unittest
 import os
-import tests
 import wc
 import wc.configuration
 import wc.filter.xmlfilt.XmlFilter

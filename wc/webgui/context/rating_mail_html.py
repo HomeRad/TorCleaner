@@ -25,8 +25,6 @@ from wc.url import is_safe_url as _is_safe_url
 from wc.mail import valid_mail as _valid_mail
 from wc.mail import send_mail as _send_mail
 from wc.mail import mail_date as _mail_date
-from wc.rating.storage import get_rating_store as _get_rating_store
-from wc.rating.storage.pickle import PickleStorage as _PickleStorage
 
 info = {
     'send': False,
@@ -41,7 +39,7 @@ error = {
 url = ""
 rating = None
 smtphost = "localhost"
-rating_store = _get_rating_store(_PickleStorage)
+rating_storage = config['rating_storage']
 
 def _exec_form (form, lang):
     """
@@ -91,11 +89,11 @@ def _get_rating ():
     if not url:
         error["url"] = True
         return False
-    if url not in rating_store:
+    if url not in rating_storage:
         error["rating"] = True
         return False
     global rating
-    rating = rating_store[url]
+    rating = rating_storage[url]
     return True
 
 
@@ -123,7 +121,7 @@ def _form_send (form):
     headers.append("Date: %s" % _mail_date())
     headers.append("Subject: Webcleaner rating for %s" % url)
     headers.append("X-WebCleaner: rating")
-    message = "%s\r\n%s" % ("\r\n".join(headers), rating.serialize())
+    message = "%s\r\n%s" % ("\r\n".join(headers), rating)
     if not _send_mail(smtphost, fromaddr, toaddrs, message):
         error['send'] = True
         return False

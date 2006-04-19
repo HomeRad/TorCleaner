@@ -7,7 +7,8 @@ EXTRA_DIST = tests scripts \
 	wc/filter/tests \
 	wc/proxy/tests \
 	wc/proxy/auth/tests \
-	wc/magic/tests
+	wc/magic/tests \
+	wc/rating/tests
 
 # python settings
 PYVER := 2.4

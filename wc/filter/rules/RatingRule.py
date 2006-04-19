@@ -58,7 +58,7 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
         if name == 'limit':
             self.rating[self._name] = self._data
         elif name == 'url':
-	     self.url = self._data
+            self.url = self._data
 
     def compile_data (self):
         """Compile parsed rule values."""

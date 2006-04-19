@@ -19,7 +19,6 @@ Test javascript filtering.
 """
 
 import unittest
-import tests
 import wc
 import wc.configuration
 from wc.proxy.mainloop import proxy_poll

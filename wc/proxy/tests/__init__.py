@@ -47,7 +47,6 @@ import rfc822
 import socket
 import sys
 import BaseHTTPServer
-import tests
 import wc.dummy
 import wc.proxy
 import wc.proxy.decoder.UnchunkStream
@@ -403,13 +402,6 @@ class ProxyTest (unittest.TestCase):
     # the proxy to test must be started
     needed_resources = ['proxy']
 
-    def setUp (self):
-        """
-        Set up the test case and check the proxy resource.
-        """
-        super(ProxyTest, self).setUp()
-        self.check_resources(self.needed_resources)
-
     def start_client (self):
         """
         Start a HTTP client which is ready for use.
@@ -577,9 +569,9 @@ class ProxyTest (unittest.TestCase):
 
     def get_response_message (self, status):
         """
-        Get HTTP response message; default 'Ok'.
+        Get HTTP response message; default 'OK'.
         """
-        return "Ok"
+        return "OK"
 
     def get_response_content (self):
         """

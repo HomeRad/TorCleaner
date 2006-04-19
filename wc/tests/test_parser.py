@@ -21,7 +21,6 @@ Test html parsing.
 import wc.HtmlParser
 import wc.HtmlParser.htmlsax
 import wc.HtmlParser.htmllib
-import tests
 import cStringIO as StringIO
 import unittest
 

@@ -40,7 +40,7 @@ class WebConfig (object):
     """
 
     def __init__ (self, client, url, form, protocol, clientheaders,
-                 status=200, msg=_('Ok'), localcontext=None,
+                 status=200, msg='OK', localcontext=None,
                  auth_challenges=None):
         """
         Store template configuration data in the object.

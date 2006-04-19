@@ -72,7 +72,8 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         p.flush()
         if p.handler.ratings:
             # XXX correct raise
-            raise wc.filter.FilterRating("missing rating")
+            #raise wc.filter.FilterRating("missing rating")
+            pass
         p.tagbuf2data()
         return p.getoutput()
 

@@ -29,13 +29,13 @@ at
 <p tal:condition="not:rating" i18n:translate="">Error: no rating for URL
 <span tal:replace="url" i18n:name="url">www.imadoofus.org</span> found.</p>
 <span tal:condition="rating">
-<pre tal:content="rating/serialize">rating info...</pre>
+<pre tal:content="rating">rating info...</pre>
 
 <form action="#" method="POST" name="ratingform"
  tal:attributes="action string:${filename}.${lang}">
 <input type="hidden" name="url" tal:attributes="value url">
 <input type="hidden" name="rating"
- tal:attributes="value rating/serialize">
+ tal:attributes="value rating">
 <p i18n:translate="">Please specify an SMTP host to send the mail to. If
 unsure, leave it at <code>localhost</code>.
 </p>

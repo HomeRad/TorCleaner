@@ -17,7 +17,6 @@
 
 import unittest
 import time
-import tests
 import wc.http.date
 
 

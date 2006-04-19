@@ -19,7 +19,6 @@ Test spell checker.
 """
 
 import unittest
-import tests
 from wc.filter.html import check_spelling
 
 

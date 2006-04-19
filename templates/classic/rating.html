@@ -112,9 +112,9 @@ several given categories.</p>
  tal:content="rurl">http://imadoofus.com</a></td>
 <td><span tal:content="url_rating/generic">True</span></td>
 <td><span
- tal:repeat="formatname url_rating/rating/keys">
-<span tal:content="formatname">violence</span>="<span
- tal:replace="url_rating/rating/?formatname">0</span>"
+ tal:repeat="name url_rating/rating/keys">
+<span tal:content="name">violence</span>="<span
+ tal:replace="url_rating/rating/?name">0</span>"
 </span>
 </td>
 <td><span tal:replace="structure rating_modified/?rurl">1. Jan 2004</span></td>

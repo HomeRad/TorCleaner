@@ -27,9 +27,13 @@ class WcUrlRating (wc.rating.UrlRating):
         self.modified = time.time()
 
     def __str__ (self):
+        lines = []
         if self.generic:
             extra = " (generic)"
         else:
             extra = ""
-        return "<Rating for %s%s\n %s\n comment=%s>" % \
-           (self.url, extra, str(self.rating), self.comment)
+        lines.append("<Rating for %s%s" % (self.url, extra))
+        for item in self.rating.items():
+            lines.append(" %s=%s" % item)
+        lines.append(" comment=%s" % self.comment)
+        return "\n".join(lines)

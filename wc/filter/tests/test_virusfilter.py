@@ -18,7 +18,6 @@
 Test virus filter.
 """
 import unittest
-import tests
 import wc.filter.VirusFilter
 
 

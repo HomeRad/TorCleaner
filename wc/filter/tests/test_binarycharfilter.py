@@ -19,7 +19,6 @@ Test script to test filtering.
 """
 
 import unittest
-import tests
 import wc
 import wc.configuration
 import wc.proxy.Headers

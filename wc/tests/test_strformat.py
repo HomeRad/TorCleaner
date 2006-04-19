@@ -20,7 +20,6 @@ Test string formatting operations.
 
 import unittest
 import os
-import tests
 import wc.strformat
 
 

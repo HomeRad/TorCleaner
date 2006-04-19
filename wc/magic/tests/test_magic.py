@@ -5,7 +5,6 @@ A magic(5) tester.
 
 import unittest
 import os
-import tests
 from wc.magic import convert, classify
 
 class TestMagic (unittest.TestCase):
