@@ -26,6 +26,7 @@
   <title lang="en">Replace 'Referer'</title>
   <description lang="de">Ersetze das Referer Kopfdatum. Einige Seiten funktionieren mit dieser Einstellung nicht.</description>
   <description lang="en">Replace the Referer header. Some sites may not work with this option, because they check the referer. In this case add them to "Don't match URL" list and write me an email.</description>
+  <nomatchurl>81.176.74.183</nomatchurl>
   <replacement>http://$host/</replacement>
 </header>
 
