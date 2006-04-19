@@ -163,6 +163,15 @@ class CaselessDict (dict):
         return dict.pop(self, key.lower(), def_val)
 
 
+class CaselessSortedDict (CaselessDict):
+    """Caseless dictionary with sorted keys."""
+
+    def keys (self):
+        return sorted(super(CaselessSortedDict, self).keys())
+
+    def items (self):
+        return [(x, self[x]) for x in self.keys()]
+
 
 class Node (object):
     """
