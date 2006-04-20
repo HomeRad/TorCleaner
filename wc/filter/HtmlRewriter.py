@@ -51,9 +51,9 @@ class HtmlRewriter (wc.filter.Filter.Filter):
             return data
         p = attrs['htmlrewriter_filter']
         p.feed(data)
-        if p.handler.ratings:
-            # XXX correct raise
-            raise wc.filter.FilterWait("wait for rating decision")
+        #if p.handler.ratings:
+        #    # XXX correct raise
+        #    raise wc.filter.FilterWait("wait for rating decision")
         if p.bom is not None:
             bom, p.bom = p.bom, None
             return bom + p.getoutput()
@@ -70,10 +70,10 @@ class HtmlRewriter (wc.filter.Filter.Filter):
         p.feed(data)
         # flushing can raise FilterWait exception
         p.flush()
-        if p.handler.ratings:
-            # XXX correct raise
-            #raise wc.filter.FilterRating("missing rating")
-            pass
+        #if p.handler.ratings:
+        #    # XXX correct raise
+        #    #raise wc.filter.FilterRating("missing rating")
+        #    pass
         p.tagbuf2data()
         return p.getoutput()
 

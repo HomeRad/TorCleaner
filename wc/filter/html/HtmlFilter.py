@@ -178,7 +178,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                     #msg = rule.rating_allow(self.url)
                     #if msg:
                     #    raise wc.filter.FilterRating(msg)
-                self.ratings = []
+                #self.ratings = []
         elif tag == "base":
             if attrs.has_key('href'):
                 self.base_url = attrs['href']
