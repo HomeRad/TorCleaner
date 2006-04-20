@@ -49,7 +49,9 @@ unsure, leave it at <code>localhost</code>.
 </span>
 
 <div class="info">
-<div tal:condition="info/send" i18n:translate="">Rating data mailed successfully.</div>
+<div tal:condition="info/send" i18n:translate="">Rating data mailed successfully.
+Go back to the rating page:</div>
+<a href="rating.html" i18n:translate="" tal:attributes="href string:rating.html.${lang}">Content rating</a>
 </div>
 
 <div class="error">
