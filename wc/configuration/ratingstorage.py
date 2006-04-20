@@ -18,7 +18,6 @@
 URL rating storage.
 """
 import os
-import pickle
 import cPickle as pickle
 import urlparse
 
