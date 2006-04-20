@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $Id$\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-04-04 21:12+0200\n"
-"PO-Revision-Date: 2006-04-04 21:13+0100\n"
+"POT-Creation-Date: 2006-04-20 21:18+0200\n"
+"PO-Revision-Date: 2006-04-20 21:20+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -155,7 +155,7 @@ msgstr "Setze Content-Type von %r nach %r"
 msgid "unsupported encoding: %r"
 msgstr "Nicht unterstütztes Encoding: %r"
 
-#: ../wc/webgui/context/filterconfig_html.py:473
+#: ../wc/webgui/context/filterconfig_html.py:472
 msgid "No title"
 msgstr "Überschrift"
 
@@ -171,10 +171,6 @@ msgstr "Unbekannter Grund"
 #: ../wc/webgui/context/update_doit_html.py:42
 msgid "Error: nothing to update."
 msgstr "Fehler: keine Aktualisierungen vorhanden."
-
-#: ../wc/webgui/webconfig.py:43
-msgid "Ok"
-msgstr "Ok"
 
 #: ../wc/webgui/webconfig.py:81
 msgid "Not Found"
@@ -241,7 +237,7 @@ msgstr "aktualisiere Beschreibung der Regel für die Sprache %s:"
 msgid "updating rule %s:"
 msgstr "aktualisiere Regel %s:"
 
-#: ../wc/filter/rules/RatingRule.py:29
+#: ../wc/filter/rules/RatingRule.py:30
 msgid "Unknown page"
 msgstr "Unbekannte Seite"
 
@@ -270,25 +266,6 @@ msgstr "Clamd ist nicht richtig konfiguriert: sowohl TCPSocket als auch LocalSoc
 #: ../wc/filter/VirusFilter.py:301
 msgid "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
 msgstr "Sie müssen entweder TCPSocket oder LocalSocket in Ihrer Clamd Konfiguration aktivieren"
-
-#: ../wc/start.py:93
-msgid ""
-"Psyco is installed but not used since the version is too old.\n"
-"Psyco >= 1.4 is needed."
-msgstr ""
-"Psyco ist installiert, wird aber nicht benutzt da die Version zu alt ist.\n"
-"Psyco >= 1.4 wird benötigt."
-
-#: ../wc/configuration.py:307
-#, python-format
-msgid "inserting %s"
-msgstr "füge %s ein"
-
-#: ../wc/configuration.py:536
-#: ../wc/configuration.py:616
-#, python-format
-msgid "unknown tag name %r"
-msgstr "Unbekannter Tagname %r"
 
 #: ../wc/win32start.py:54
 #, python-format
@@ -364,11 +341,11 @@ msgstr "Fehler beim Laden von %s"
 
 #: ../wc/update.py:227
 #: ../wc/update.py:237
-#: ../wc/update.py:275
-#: ../wc/update.py:283
-#: ../wc/update.py:320
-#: ../wc/update.py:336
-#: ../wc/update.py:341
+#: ../wc/update.py:276
+#: ../wc/update.py:284
+#: ../wc/update.py:321
+#: ../wc/update.py:337
+#: ../wc/update.py:342
 msgid "done"
 msgstr "fertig"
 
@@ -387,58 +364,77 @@ msgstr "aktualisiere Filter %s"
 msgid "adding new filter %s"
 msgstr "füge neuen Filter %s hinzu"
 
-#: ../wc/update.py:266
+#: ../wc/update.py:267
 #, python-format
 msgid "Incompatible folder version %s, must be %s"
 msgstr "Inkompatible Ordnerversion %s, muss %s sein"
 
-#: ../wc/update.py:274
-#: ../wc/update.py:281
-#: ../wc/update.py:310
-#: ../wc/update.py:314
-#: ../wc/update.py:335
+#: ../wc/update.py:275
+#: ../wc/update.py:282
+#: ../wc/update.py:311
+#: ../wc/update.py:315
+#: ../wc/update.py:336
 #, python-format
 msgid "error fetching %s:"
 msgstr "Fehler beim Laden von %s:"
 
-#: ../wc/update.py:282
+#: ../wc/update.py:283
 msgid "invalid content"
 msgstr "ungültiger Inhalt"
 
-#: ../wc/update.py:299
+#: ../wc/update.py:300
 #, python-format
 msgid "extern filter %s not changed, ignoring"
 msgstr "externer Filter %s nicht geändert, ignoriere ihn"
 
-#: ../wc/update.py:301
+#: ../wc/update.py:302
 #, python-format
 msgid "updating extern filter %s"
 msgstr "aktualisiere externen Filter %s"
 
-#: ../wc/update.py:303
+#: ../wc/update.py:304
 #, python-format
 msgid "adding new extern filter %s"
 msgstr "füge neuen externen Filter %s hinzu"
 
-#: ../wc/update.py:315
+#: ../wc/update.py:316
 msgid "got no data"
 msgstr "keine Daten erhalten"
 
-#: ../wc/update.py:328
+#: ../wc/update.py:329
 msgid "updating ratings..."
 msgstr "Aktualisierung der Inhaltsbewertung..."
 
-#: ../wc/rating/service/ratingformat.py:33
+#: ../wc/rating/service/ratingformat.py:34
 msgid "none"
 msgstr "keine"
 
-#: ../wc/rating/service/ratingformat.py:33
+#: ../wc/rating/service/ratingformat.py:34
 msgid "mild"
 msgstr "etwas"
 
-#: ../wc/rating/service/ratingformat.py:33
+#: ../wc/rating/service/ratingformat.py:34
 msgid "heavy"
 msgstr "viel"
+
+#: ../wc/start.py:93
+msgid ""
+"Psyco is installed but not used since the version is too old.\n"
+"Psyco >= 1.4 is needed."
+msgstr ""
+"Psyco ist installiert, wird aber nicht benutzt da die Version zu alt ist.\n"
+"Psyco >= 1.4 wird benötigt."
+
+#: ../wc/configuration/__init__.py:327
+#, python-format
+msgid "inserting %s"
+msgstr "füge %s ein"
+
+#: ../wc/configuration/confparse.py:172
+#: ../wc/configuration/confparse.py:252
+#, python-format
+msgid "unknown tag name %r"
+msgstr "Unbekannter Tagname %r"
 
 #: ../webcleaner:27
 #, python-format
@@ -644,41 +640,41 @@ msgstr "Konnte %r nicht löschen: %s"
 msgid "Invalid command %r."
 msgstr "Unbekannter Befehl %r."
 
-#: ../install-webcleaner.py:59
+#: ../install-webcleaner.py:57
 #, python-format
 msgid "Service status error: %s"
 msgstr "Dienst Statusfehler: %s"
 
-#: ../install-webcleaner.py:70
+#: ../install-webcleaner.py:68
 #, python-format
 msgid "Installing %s service..."
 msgstr "Installiere %s Dienst..."
 
-#: ../install-webcleaner.py:83
+#: ../install-webcleaner.py:81
 #, python-format
 msgid "Removing %s service..."
 msgstr "Entferne %s Dienst..."
 
-#: ../install-webcleaner.py:95
+#: ../install-webcleaner.py:93
 #, python-format
 msgid "Starting %s proxy..."
 msgstr "%s Proxy Neustart..."
 
-#: ../install-webcleaner.py:108
+#: ../install-webcleaner.py:106
 #, python-format
 msgid "Stopping %s proxy..."
 msgstr "Stoppe %s Proxy..."
 
-#: ../install-webcleaner.py:227
+#: ../install-webcleaner.py:224
 #, python-format
 msgid "Cannot install shortcuts: %s"
 msgstr "Konnte Verknüpfungen nicht installieren: %s"
 
-#: ../install-webcleaner.py:247
+#: ../install-webcleaner.py:244
 msgid "Uninstall WebCleaner"
 msgstr "Deinstalliere WebCleaner"
 
-#: ../install-webcleaner.py:259
+#: ../install-webcleaner.py:256
 msgid ""
 "Could not install SSL certificates.\n"
 "Perhaps PyOpenSSL is not installed?\n"
@@ -690,16 +686,16 @@ msgstr ""
 "Sie müssen die SSL Zertifikate manuell installieren mit\n"
 "'webcleaner-certificates install'."
 
-#: ../install-webcleaner.py:281
+#: ../install-webcleaner.py:278
 msgid "Error, passwords differ."
 msgstr "Fehler, Passwörter sind verschieden."
 
-#: ../install-webcleaner.py:289
+#: ../install-webcleaner.py:286
 #, python-format
 msgid "%s administrator password"
 msgstr "%s Administrator Passwort"
 
-#: ../install-webcleaner.py:292
+#: ../install-webcleaner.py:289
 #, python-format
 msgid ""
 "The administrator password protects the web\n"
@@ -716,39 +712,39 @@ msgstr ""
 "drücken, muss das Administrator Passwort manuell eingegeben werden\n"
 "(keine Sorge, die Webkonfiguration sagt Ihnen, wie das funktioniert)."
 
-#: ../install-webcleaner.py:300
+#: ../install-webcleaner.py:297
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../install-webcleaner.py:305
+#: ../install-webcleaner.py:302
 msgid "Reenter password:"
 msgstr "Nochmaliges Passwort:"
 
-#: ../install-webcleaner.py:309
+#: ../install-webcleaner.py:306
 msgid "OK"
 msgstr "Ok"
 
-#: ../install-webcleaner.py:311
+#: ../install-webcleaner.py:308
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../install-webcleaner.py:335
+#: ../install-webcleaner.py:332
 msgid "Error, password is empty."
 msgstr "Fehler, Passwort ist leer."
 
-#: ../install-webcleaner.py:339
+#: ../install-webcleaner.py:336
 msgid "Error, password has binary characters."
 msgstr "Fehler, Passwort beinhaltet binäre Zeichen."
 
-#: ../install-webcleaner.py:344
+#: ../install-webcleaner.py:341
 msgid "Password saved."
 msgstr "Passwort gespeichert."
 
-#: ../install-webcleaner.py:369
+#: ../install-webcleaner.py:366
 msgid "Opening proxy configuration interface..."
 msgstr "Öffne Proxykonfiguration..."
 
-#: ../install-webcleaner.py:407
+#: ../install-webcleaner.py:404
 msgid ""
 "Could not remove SSL certificates.\n"
 "Perhaps PyOpenSSL is not installed?\n"
@@ -758,12 +754,12 @@ msgstr ""
 "Vielleicht ist PyOpenSSL nicht installiert?\n"
 "Sie müssen die SSL Zertifikate manuell entfernen."
 
-#: ../install-webcleaner.py:444
+#: ../install-webcleaner.py:441
 #, python-format
 msgid "%s config purge"
 msgstr "%s Konfiguration Löschen"
 
-#: ../install-webcleaner.py:447
+#: ../install-webcleaner.py:444
 #, python-format
 msgid ""
 "There are local filter rules in the configuration directory.\n"
@@ -775,30 +771,30 @@ msgstr ""
 "Installationen von %(appname)s wiederverwendet werden, sind aber\n"
 "ansonsten unnütz."
 
-#: ../install-webcleaner.py:452
+#: ../install-webcleaner.py:449
 msgid "Yes"
 msgstr "Ja"
 
-#: ../install-webcleaner.py:454
+#: ../install-webcleaner.py:451
 msgid "No"
 msgstr "Nein"
 
-#: ../install-webcleaner.py:470
+#: ../install-webcleaner.py:467
 #, python-format
 msgid "File %r removed."
 msgstr "Datei %r entfernt."
 
-#: ../install-webcleaner.py:472
+#: ../install-webcleaner.py:469
 #, python-format
 msgid "Could not remove file %r: %s"
 msgstr "Konnte Datei %r nicht löschen: %s"
 
-#: ../install-webcleaner.py:489
+#: ../install-webcleaner.py:486
 #, python-format
 msgid "Directory %r removed."
 msgstr "Verzeichnis %r entfernt."
 
-#: ../install-webcleaner.py:492
+#: ../install-webcleaner.py:489
 #, python-format
 msgid "Could not remove directory %r: %s"
 msgstr "Konnte Verzeichnis %r nicht löschen: %s"
@@ -1095,11 +1091,6 @@ msgstr "Blockierte Bild URL"
 msgid "Browser configuration"
 msgstr "Browser Konfiguration"
 
-#: ../templates/classic/macros/rules.html:529
-#: ../templates/classic/rating.html:39
-msgid "Category"
-msgstr "Kategorie"
-
 #: ../templates/classic/config.html:233
 msgid "Changes to this option require a proxy <a href=\"restart_ask.html\">restart</a> to take effect."
 msgstr "Änderungen dieser Option erfordern einen <a href=\"restart_ask.html\">Proxy-Neustart</a>, um wirksam zu werden."
@@ -1281,7 +1272,7 @@ msgstr "Fehler beim Löschen des Ordners."
 msgid "Error removing rule."
 msgstr "Fehler beim Löschen der Filterregel."
 
-#: ../templates/classic/rating_mail.html:58
+#: ../templates/classic/rating_mail.html:61
 msgid "Error sending mail."
 msgstr "Fehler beim Mailversand."
 
@@ -1552,7 +1543,6 @@ msgstr "Ungültiger XML Selektor."
 msgid "Invalid attribute name."
 msgstr "Ungültiger Attributname."
 
-#: ../templates/classic/filterconfig.html:256
 #: ../templates/classic/rating.html:136
 msgid "Invalid category value."
 msgstr "Ungültiger Kategorie Wert."
@@ -1589,11 +1579,11 @@ msgstr "Ungültige Bildbreite."
 msgid "Invalid minimum size bytes value."
 msgstr "Ungültiger Wet für minimale Bildgröße."
 
-#: ../templates/classic/rating_mail.html:59
+#: ../templates/classic/rating_mail.html:62
 msgid "Invalid or missing SMTP host."
 msgstr "Ungültiger oder fehlender SMTP Rechnername."
 
-#: ../templates/classic/rating_mail.html:60
+#: ../templates/classic/rating_mail.html:63
 msgid "Invalid or missing sender address."
 msgstr "Ungültige oder fehlende Absenderadresse."
 
@@ -1605,7 +1595,11 @@ msgstr "Ungültige übergeordnete Proxy Portnummer."
 msgid "Invalid proxy port."
 msgstr "Ungültige Proxy Portnummer."
 
-#: ../templates/classic/rating_mail.html:57
+#: ../templates/classic/filterconfig.html:256
+msgid "Invalid rating value."
+msgstr "Ungültiger Wert für die Bewertung."
+
+#: ../templates/classic/rating_mail.html:60
 msgid "Invalid rating."
 msgstr "Ungültige Bewertung."
 
@@ -1646,7 +1640,7 @@ msgstr "Ungültiger Auswahlindex."
 msgid "Invalid timeout value."
 msgstr "Ungültiger Timeoutwert."
 
-#: ../templates/classic/rating_mail.html:56
+#: ../templates/classic/rating_mail.html:59
 msgid "Invalid url."
 msgstr "Ungültige URL."
 
@@ -1978,13 +1972,10 @@ msgstr "PyOpenSSL wird benötigt"
 msgid "Rated"
 msgstr "Bewertet"
 
-#: ../templates/classic/rating.html:40
+#: ../templates/classic/macros/rules.html:529
+#: ../templates/classic/rating.html:39
 msgid "Rating"
 msgstr "Bewertung"
-
-#: ../templates/classic/filterconfig.html:214
-msgid "Rating category limit successfully changed."
-msgstr "Kategorie der Inhaltsbewertung wurde erfolgreich geändert."
 
 #: ../templates/classic/rating.html:135
 msgid "Rating could not be deleted."
@@ -1994,9 +1985,13 @@ msgstr "Bewertung konnte nicht gelöscht werden."
 msgid "Rating could not be updated."
 msgstr "Bewertung konnte nicht geändert werden."
 
-#: ../templates/classic/rating_mail.html:52
-msgid "Rating data mailed successfully."
-msgstr "Mail zur Inhaltsbewertung wurde erfolgreich versendet."
+#: ../templates/classic/rating_mail.html:54
+msgid "Rating data mailed successfully. Go back to the <a href=\"\">Rating page</a>"
+msgstr "Mail zur Inhaltsbewertung wurde erfolgreich versendet. Zurück zur <a href=\"\">Bewertungsseite</a>"
+
+#: ../templates/classic/filterconfig.html:214
+msgid "Rating limit successfully changed."
+msgstr "Grenze der Inhaltsbewertung wurde erfolgreich geändert."
 
 #: ../templates/classic/macros/rules.html:519
 msgid "Rating limits for ${service}:"
@@ -2409,6 +2404,7 @@ msgstr "Benutzername zur Proxy Authentifizierung"
 
 #: ../templates/classic/macros/rules.html:631
 #: ../templates/classic/macros/rules.html:663
+#: ../templates/classic/rating.html:40
 msgid "Value"
 msgstr "Wert"
 
@@ -2623,6 +2619,10 @@ msgstr "siehe Fußnote 6"
 msgid "supply a different rating for this page"
 msgstr "ändern Sie die Bewertung dieser Seite"
 
+#~ msgid "Ok"
+#~ msgstr "Ok"
+#~ msgid "Category"
+#~ msgstr "Kategorie"
 #~ msgid "Rating %r for category %r exceeds limit %r"
 #~ msgstr "Bewertung %r für Kategorie %r überschreitet Grenze %r"
 #~ msgid "Rating %r for category %r is not in range %s"

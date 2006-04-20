@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-04-04 21:12+0200\n"
+"POT-Creation-Date: 2006-04-20 21:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,7 +149,7 @@ msgstr ""
 msgid "unsupported encoding: %r"
 msgstr ""
 
-#: ../wc/webgui/context/filterconfig_html.py:473
+#: ../wc/webgui/context/filterconfig_html.py:472
 msgid "No title"
 msgstr ""
 
@@ -164,10 +164,6 @@ msgstr ""
 
 #: ../wc/webgui/context/update_doit_html.py:42
 msgid "Error: nothing to update."
-msgstr ""
-
-#: ../wc/webgui/webconfig.py:43
-msgid "Ok"
 msgstr ""
 
 #: ../wc/webgui/webconfig.py:81
@@ -235,7 +231,7 @@ msgstr ""
 msgid "updating rule %s:"
 msgstr ""
 
-#: ../wc/filter/rules/RatingRule.py:29
+#: ../wc/filter/rules/RatingRule.py:30
 msgid "Unknown page"
 msgstr ""
 
@@ -265,22 +261,6 @@ msgstr ""
 #: ../wc/filter/VirusFilter.py:301
 msgid ""
 "You have to enable either TCPSocket or LocalSocket in your Clamd configuration"
-msgstr ""
-
-#: ../wc/start.py:93
-msgid ""
-"Psyco is installed but not used since the version is too old.\n"
-"Psyco >= 1.4 is needed."
-msgstr ""
-
-#: ../wc/configuration.py:307
-#, python-format
-msgid "inserting %s"
-msgstr ""
-
-#: ../wc/configuration.py:536 ../wc/configuration.py:616
-#, python-format
-msgid "unknown tag name %r"
 msgstr ""
 
 #: ../wc/win32start.py:54
@@ -354,9 +334,9 @@ msgstr ""
 msgid "error fetching %s"
 msgstr ""
 
-#: ../wc/update.py:227 ../wc/update.py:237 ../wc/update.py:275
-#: ../wc/update.py:283 ../wc/update.py:320 ../wc/update.py:336
-#: ../wc/update.py:341
+#: ../wc/update.py:227 ../wc/update.py:237 ../wc/update.py:276
+#: ../wc/update.py:284 ../wc/update.py:321 ../wc/update.py:337
+#: ../wc/update.py:342
 msgid "done"
 msgstr ""
 
@@ -375,54 +355,70 @@ msgstr ""
 msgid "adding new filter %s"
 msgstr ""
 
-#: ../wc/update.py:266
+#: ../wc/update.py:267
 #, python-format
 msgid "Incompatible folder version %s, must be %s"
 msgstr ""
 
-#: ../wc/update.py:274 ../wc/update.py:281 ../wc/update.py:310
-#: ../wc/update.py:314 ../wc/update.py:335
+#: ../wc/update.py:275 ../wc/update.py:282 ../wc/update.py:311
+#: ../wc/update.py:315 ../wc/update.py:336
 #, python-format
 msgid "error fetching %s:"
 msgstr ""
 
-#: ../wc/update.py:282
+#: ../wc/update.py:283
 msgid "invalid content"
 msgstr ""
 
-#: ../wc/update.py:299
+#: ../wc/update.py:300
 #, python-format
 msgid "extern filter %s not changed, ignoring"
 msgstr ""
 
-#: ../wc/update.py:301
+#: ../wc/update.py:302
 #, python-format
 msgid "updating extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:303
+#: ../wc/update.py:304
 #, python-format
 msgid "adding new extern filter %s"
 msgstr ""
 
-#: ../wc/update.py:315
+#: ../wc/update.py:316
 msgid "got no data"
 msgstr ""
 
-#: ../wc/update.py:328
+#: ../wc/update.py:329
 msgid "updating ratings..."
 msgstr ""
 
-#: ../wc/rating/service/ratingformat.py:33
+#: ../wc/rating/service/ratingformat.py:34
 msgid "none"
 msgstr ""
 
-#: ../wc/rating/service/ratingformat.py:33
+#: ../wc/rating/service/ratingformat.py:34
 msgid "mild"
 msgstr ""
 
-#: ../wc/rating/service/ratingformat.py:33
+#: ../wc/rating/service/ratingformat.py:34
 msgid "heavy"
+msgstr ""
+
+#: ../wc/start.py:93
+msgid ""
+"Psyco is installed but not used since the version is too old.\n"
+"Psyco >= 1.4 is needed."
+msgstr ""
+
+#: ../wc/configuration/__init__.py:327
+#, python-format
+msgid "inserting %s"
+msgstr ""
+
+#: ../wc/configuration/confparse.py:172 ../wc/configuration/confparse.py:252
+#, python-format
+msgid "unknown tag name %r"
 msgstr ""
 
 #: ../webcleaner:27
@@ -557,41 +553,41 @@ msgstr ""
 msgid "Invalid command %r."
 msgstr ""
 
-#: ../install-webcleaner.py:59
+#: ../install-webcleaner.py:57
 #, python-format
 msgid "Service status error: %s"
 msgstr ""
 
-#: ../install-webcleaner.py:70
+#: ../install-webcleaner.py:68
 #, python-format
 msgid "Installing %s service..."
 msgstr ""
 
-#: ../install-webcleaner.py:83
+#: ../install-webcleaner.py:81
 #, python-format
 msgid "Removing %s service..."
 msgstr ""
 
-#: ../install-webcleaner.py:95
+#: ../install-webcleaner.py:93
 #, python-format
 msgid "Starting %s proxy..."
 msgstr ""
 
-#: ../install-webcleaner.py:108
+#: ../install-webcleaner.py:106
 #, python-format
 msgid "Stopping %s proxy..."
 msgstr ""
 
-#: ../install-webcleaner.py:227
+#: ../install-webcleaner.py:224
 #, python-format
 msgid "Cannot install shortcuts: %s"
 msgstr ""
 
-#: ../install-webcleaner.py:247
+#: ../install-webcleaner.py:244
 msgid "Uninstall WebCleaner"
 msgstr ""
 
-#: ../install-webcleaner.py:259
+#: ../install-webcleaner.py:256
 msgid ""
 "Could not install SSL certificates.\n"
 "Perhaps PyOpenSSL is not installed?\n"
@@ -599,16 +595,16 @@ msgid ""
 "'webcleaner-certificates install'."
 msgstr ""
 
-#: ../install-webcleaner.py:281
+#: ../install-webcleaner.py:278
 msgid "Error, passwords differ."
 msgstr ""
 
-#: ../install-webcleaner.py:289
+#: ../install-webcleaner.py:286
 #, python-format
 msgid "%s administrator password"
 msgstr ""
 
-#: ../install-webcleaner.py:292
+#: ../install-webcleaner.py:289
 #, python-format
 msgid ""
 "The administrator password protects the web\n"
@@ -619,51 +615,51 @@ msgid ""
 "worry, the web interface will tell you how to do that)."
 msgstr ""
 
-#: ../install-webcleaner.py:300
+#: ../install-webcleaner.py:297
 msgid "Password:"
 msgstr ""
 
-#: ../install-webcleaner.py:305
+#: ../install-webcleaner.py:302
 msgid "Reenter password:"
 msgstr ""
 
-#: ../install-webcleaner.py:309
+#: ../install-webcleaner.py:306
 msgid "OK"
 msgstr ""
 
-#: ../install-webcleaner.py:311
+#: ../install-webcleaner.py:308
 msgid "Cancel"
 msgstr ""
 
-#: ../install-webcleaner.py:335
+#: ../install-webcleaner.py:332
 msgid "Error, password is empty."
 msgstr ""
 
-#: ../install-webcleaner.py:339
+#: ../install-webcleaner.py:336
 msgid "Error, password has binary characters."
 msgstr ""
 
-#: ../install-webcleaner.py:344
+#: ../install-webcleaner.py:341
 msgid "Password saved."
 msgstr ""
 
-#: ../install-webcleaner.py:369
+#: ../install-webcleaner.py:366
 msgid "Opening proxy configuration interface..."
 msgstr ""
 
-#: ../install-webcleaner.py:407
+#: ../install-webcleaner.py:404
 msgid ""
 "Could not remove SSL certificates.\n"
 "Perhaps PyOpenSSL is not installed?\n"
 "You have to remove the SSL certificates manually."
 msgstr ""
 
-#: ../install-webcleaner.py:444
+#: ../install-webcleaner.py:441
 #, python-format
 msgid "%s config purge"
 msgstr ""
 
-#: ../install-webcleaner.py:447
+#: ../install-webcleaner.py:444
 #, python-format
 msgid ""
 "There are local filter rules in the configuration directory.\n"
@@ -671,30 +667,30 @@ msgid ""
 "installations of %(appname)s, but are useless otherwise."
 msgstr ""
 
-#: ../install-webcleaner.py:452
+#: ../install-webcleaner.py:449
 msgid "Yes"
 msgstr ""
 
-#: ../install-webcleaner.py:454
+#: ../install-webcleaner.py:451
 msgid "No"
 msgstr ""
 
-#: ../install-webcleaner.py:470
+#: ../install-webcleaner.py:467
 #, python-format
 msgid "File %r removed."
 msgstr ""
 
-#: ../install-webcleaner.py:472
+#: ../install-webcleaner.py:469
 #, python-format
 msgid "Could not remove file %r: %s"
 msgstr ""
 
-#: ../install-webcleaner.py:489
+#: ../install-webcleaner.py:486
 #, python-format
 msgid "Directory %r removed."
 msgstr ""
 
-#: ../install-webcleaner.py:492
+#: ../install-webcleaner.py:489
 #, python-format
 msgid "Could not remove directory %r: %s"
 msgstr ""
@@ -975,11 +971,6 @@ msgstr ""
 msgid "Browser configuration"
 msgstr ""
 
-#: ../templates/classic/macros/rules.html:529
-#: ../templates/classic/rating.html:39
-msgid "Category"
-msgstr ""
-
 #: ../templates/classic/config.html:233
 msgid "Changes to this option require a proxy <a href=\"restart_ask.html\">restart</a> to take effect."
 msgstr ""
@@ -1161,7 +1152,7 @@ msgstr ""
 msgid "Error removing rule."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:58
+#: ../templates/classic/rating_mail.html:61
 msgid "Error sending mail."
 msgstr ""
 
@@ -1428,7 +1419,6 @@ msgstr ""
 msgid "Invalid attribute name."
 msgstr ""
 
-#: ../templates/classic/filterconfig.html:256
 #: ../templates/classic/rating.html:136
 msgid "Invalid category value."
 msgstr ""
@@ -1465,11 +1455,11 @@ msgstr ""
 msgid "Invalid minimum size bytes value."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:59
+#: ../templates/classic/rating_mail.html:62
 msgid "Invalid or missing SMTP host."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:60
+#: ../templates/classic/rating_mail.html:63
 msgid "Invalid or missing sender address."
 msgstr ""
 
@@ -1481,7 +1471,11 @@ msgstr ""
 msgid "Invalid proxy port."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:57
+#: ../templates/classic/filterconfig.html:256
+msgid "Invalid rating value."
+msgstr ""
+
+#: ../templates/classic/rating_mail.html:60
 msgid "Invalid rating."
 msgstr ""
 
@@ -1522,7 +1516,7 @@ msgstr ""
 msgid "Invalid timeout value."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:56
+#: ../templates/classic/rating_mail.html:59
 msgid "Invalid url."
 msgstr ""
 
@@ -1850,12 +1844,9 @@ msgstr ""
 msgid "Rated"
 msgstr ""
 
-#: ../templates/classic/rating.html:40
+#: ../templates/classic/macros/rules.html:529
+#: ../templates/classic/rating.html:39
 msgid "Rating"
-msgstr ""
-
-#: ../templates/classic/filterconfig.html:214
-msgid "Rating category limit successfully changed."
 msgstr ""
 
 #: ../templates/classic/rating.html:135
@@ -1866,8 +1857,12 @@ msgstr ""
 msgid "Rating could not be updated."
 msgstr ""
 
-#: ../templates/classic/rating_mail.html:52
-msgid "Rating data mailed successfully."
+#: ../templates/classic/rating_mail.html:54
+msgid "Rating data mailed successfully. Go back to the <a href=\"\">Rating page</a>"
+msgstr ""
+
+#: ../templates/classic/filterconfig.html:214
+msgid "Rating limit successfully changed."
 msgstr ""
 
 #: ../templates/classic/macros/rules.html:519
@@ -2279,6 +2274,7 @@ msgstr ""
 
 #: ../templates/classic/macros/rules.html:631
 #: ../templates/classic/macros/rules.html:663
+#: ../templates/classic/rating.html:40
 msgid "Value"
 msgstr ""
 
