@@ -63,7 +63,7 @@ clean-log:
 localbuild: MANIFEST all
 	$(MAKE) -C wc/HtmlParser
 	$(PYTHON) setup.py build
-	ln -sf build/share share
+	@if [ ! -e share ]; then ln -sf build/share share; fi
 	cp -f build/lib.linux-i686-$(PYVER)/wc/HtmlParser/htmlsax.so wc/HtmlParser/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-i686-$(PYVER)/wc/js/jslib.so wc/js/
