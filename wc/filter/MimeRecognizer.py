@@ -100,9 +100,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         return data
 
     def recognize (self, buf, attrs):
-        """
-        Try to recognize MIME type and write Content-Type header.
-        """
+        """Try to recognize MIME type and write Content-Type header."""
         # note: recognizing a mime type fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024
         assert wc.log.debug(wc.LOG_FILTER, "MIME recognize %d bytes of data",
@@ -125,9 +123,7 @@ class MimeRecognizer (wc.filter.Filter.Filter):
         return data
 
     def update_attrs (self, attrs, url, localhost, stages, headers):
-        """
-        Initialize buffer.
-        """
+        """Initialize buffer."""
         if not self.applies_to_stages(stages):
             return
         parent = super(MimeRecognizer, self)
