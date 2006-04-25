@@ -100,7 +100,7 @@ class HtmlRewriter (wc.filter.Filter.Filter):
                 opts['jscomments'] = False
             elif rule.name == 'javascript':
                 opts['javascript'] = True
-            elif rule.name == 'rating':
+            elif rule.name == 'rating' and rule.use_extern:
                 ratings.append(rule)
         # generate the HTML filter
         handler = wc.filter.html.HtmlFilter.HtmlFilter(rewrites, ratings,

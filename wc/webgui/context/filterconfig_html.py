@@ -898,6 +898,11 @@ def _form_apply_rating (form):
     """
     Change RatingRule.
     """
+    #XXX todo fallback = _getval(form, 'rule_fallback')
+    use_extern = form.has_key('rule_use_extern')
+    if use_extern != currule.use_extern:
+        currule.use_extern = use_extern and 1 or 0
+        info['rulerating'] = True
     # rating categories
     for name, value in _get_prefix_vals(form, 'rating_'):
         ratingformat = ratingservice.get_ratingformat(name)

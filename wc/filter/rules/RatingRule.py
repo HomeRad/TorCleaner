@@ -35,16 +35,21 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
     Holds a rating to match against when checking for allowance of
     the rating system.
     Also stored is the url to display should a rating deny a page.
+    The use_extern flag determines if the filters should parse and use
+    external rating data from HTTP headers or HTML <meta> tags.
     """
 
     def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
-                  matchurls=None, nomatchurls=None):
+                  matchurls=None, nomatchurls=None, use_extern=0):
         """Initialize rating data."""
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
         self.rating = wc.rating.Rating()
         self.url = ""
+        self.use_extern = use_extern
+        self.attrnames.append('use_extern')
+        self.intattrs.append('use_extern')
 
     def fill_attrs (self, attrs, name):
         """Init rating and url attrs."""
@@ -83,7 +88,8 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
 
     def toxml (self):
         """Rule data as XML for storing."""
-        s = u"%s>" % super(RatingRule, self).toxml()
+        s = u'%s\n use_extern="%d">' % (super(RatingRule, self).toxml(),
+                                        self.use_extern)
         s += u"\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")

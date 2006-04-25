@@ -515,6 +515,16 @@ Rule (don't) match url
 <input type="text" class="text" name="rule_fallback" id="rule_fallback"
  value="http://www..." tal:attributes="value currule/url">
 </td></tr>
+<tr valign="top"><td>
+<label for="rule_use_extern" i18n:translate="">Extern ratings</label>:
+</td><td>
+<input tal:condition="currule/use_extern"
+ type="checkbox" class="checkbox" name="rule_use_extern" id="rule_use_extern"
+ value="1" checked>
+<input tal:condition="not:currule/use_extern"
+ type="checkbox" class="checkbox" name="rule_use_extern" id="rule_use_extern"
+ value="1">
+</td></tr>
 <tr valign="top"><td colspan="2">
 <span i18n:translate="">Rating limits for <a
  href="rating.html" tal:attributes="href string:rating.html.${lang}"
