@@ -17,6 +17,8 @@
 
 import wc
 import wc.rating
+import ratingformat
+
 
 class WebCleanerService (wc.rating.RatingService):
     """
@@ -53,6 +55,30 @@ class WebCleanerService (wc.rating.RatingService):
             if format.name.lower() == name:
                 return format
         return None
+
+    def rating_check (self, limit, rating):
+        """Check given rating against limit."""
+        for name, value in limit:
+            format = self.get_ratingformat(name)
+            if format is None:
+                wc.log.warn(wc.LOG_RATING,
+                            "Unknown rating %r in %s", name, limit)
+                continue
+            if name not in rating:
+                wc.log.warn(wc.LOG_RATING,
+                            "Missing rating %r in %s", name, rating)
+                continue
+            rvalue = rating[name]
+            if format.iterable:
+                cvalue = ratingformat.parse_range(rvalue)
+                if cvalue is None:
+                    wc.log.warn(wc.LOG_RATING,
+                                "Invalid value %r in %s", rvalue, rating)
+                    continue
+            else:
+                cvalue = rvalue
+            return format.allowance(cvalue, value)
+
 
 # instantiate the global service
 ratingservice = WebCleanerService()
