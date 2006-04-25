@@ -22,6 +22,7 @@ import wc.filter
 import wc.filter.Filter
 import wc.rating
 import wc.log
+from wc.rating.service.rating import rating_from_headers
 
 
 class Rating (wc.filter.Filter.Filter):
