@@ -1,7 +1,5 @@
 TODO
 
-http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/491274
-
 - complete implementation of the rating system
 
 - Disabling network on Windows causes DNS lookup to ignore the
