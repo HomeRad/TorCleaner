@@ -126,6 +126,7 @@ md5sums:
 .PHONY: syntaxcheck
 syntaxcheck:
 	py-verify
+	$(MAKE) -C config xmlcheck
 
 
 .PHONY: releasecheck
