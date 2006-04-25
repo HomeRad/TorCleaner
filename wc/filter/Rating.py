@@ -58,17 +58,18 @@ class Rating (wc.filter.Filter.Filter):
         if url in storage:
             rating = storage[url].rating
             for rule in rules:
-                # raises Exception
-                service.rating_check(rule.rating, rating, url)
+                if not service.rating_check(rule.rating, rating):
+                    raise wc.filter.FilterRating(url)
         else:
             erules = [r for r in rules if r.use_extern]
+            headers = attrs['headers']['server']
             if erules and headers.has_key('X-Rating') and \
                headers['X-Rating'] == service.url:
                 try:
                     rating = rating_from_headers(headers)
                     for rule in erules:
-                        # raises Exception
-                        service.rating_check(rule.rating, rating, url)
+                        if not service.rating_check(rule.rating, rating):
+                            raise wc.filter.FilterRating(url)
                 except wc.rating.RatingParseError, msg:
                     wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
         return data
