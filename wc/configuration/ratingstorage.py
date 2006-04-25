@@ -27,7 +27,7 @@ import wc.log
 
 def make_safe_url (url):
     """Remove unsafe parts of url for rating cache check."""
-    parts = wc.filter.rating.split_url(url)
+    parts = split_url(url)
     pathparts = [make_safe_part(x) for x in parts[2:]]
     pathparts[0:2] = parts[0:2]
     return "".join(pathparts)
@@ -113,17 +113,18 @@ class UrlRatingStorage (object):
 
     def check_url (self, url):
         """If url is not safe raise a ValueError."""
-        if not wc.url.is_safe_url(url):
-            raise ValueError("Invalid rating url %r." % url)
+        if wc.url.is_safe_url(url):
+            return url
+        return make_safe_url(url)
 
     def __setitem__ (self, url, rating):
         """Add rating for given url."""
-        self.check_url(url)
+        url = self.check_url(url)
         self.cache[url] = rating
 
     def __getitem__ (self, url):
         """Get rating for given url."""
-        self.check_url(url)
+        url = self.check_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
         parts = split_url(url)
@@ -154,5 +155,5 @@ class UrlRatingStorage (object):
 
     def __delitem__ (self, url):
         """Remove rating for given url."""
-        self.check_url(url)
+        url = self.check_url(url)
         del self.cache[url]
