@@ -4,6 +4,9 @@
  
  Changes:
 
+ 20060425 Bastian Kleineidam
+ * Fixed typo for xmlrewrite attribute decl
+ * Changed rating category to limit
  20050920 Bastian Kleineidam
  * added action attribute to header element
  20050809 Bastian Kleineidam
@@ -128,7 +131,7 @@
    replacement is done.
 -->
 <!ELEMENT xmlrewrite (title+,description*,matchurl*,nomatchurl*)>
-<!ATTLIST htmlrewrite
+<!ATTLIST xmlrewrite
  sid      CDATA #REQUIRED
  disable  CDATA "0"
  selector CDATA #REQUIRED
@@ -311,18 +314,18 @@
 
    A rule enabling the rating system in WebCleaner.
 -->
-<!ELEMENT rating (title+,description*,matchurl*,nomatchurl*,url?,category*)>
+<!ELEMENT rating (title+,description*,matchurl*,nomatchurl*,url?,limit*)>
 <!ATTLIST rating
  sid      CDATA #REQUIRED
  disable  CDATA "0"
 >
 
-<!--                      rating category
+<!--                      rating limit
 
-   a category has an identification label and a rating value as content
+   a limit has a name and a rating value as content
 -->
-<!ELEMENT category (#PCDATA)>
-<!ATTLIST category
+<!ELEMENT limit (#PCDATA)>
+<!ATTLIST limit
  name     CDATA #REQUIRED
 >
 
