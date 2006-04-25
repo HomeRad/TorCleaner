@@ -110,7 +110,7 @@ filtermodules = [
     "XmlRewriter",
     "Replacer",
     "Compress",
-    "RatingHeader",
+    "Rating",
     "VirusFilter",
     "MimeRecognizer",
 ]
