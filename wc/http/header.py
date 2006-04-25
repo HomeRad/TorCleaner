@@ -75,8 +75,5 @@ class WcMessage (rfc822.Message, object):
         return self.dict.itervalues()
 
     def iteritems (self):
-        """Get all of a message's headers.
-
-        Returns a list of name, value tuples.
-        """
+        """Get all of a message's header (name, value) items."""
         return self.dict.iteritems()
