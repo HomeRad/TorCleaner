@@ -190,7 +190,9 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                 assert wc.log.debug(wc.LOG_HTML, "%s using base url %r",
                                     self, self.base_url)
         # search for and prevent known security flaws in HTML
-        self.security.scan_start_tag(tag, attrs, self)
+        if self.security.scan_start_tag(tag, attrs, self):
+	    # remove this tag
+	    return
         # look for filter rules which apply
         self.filter_start_element(tag, attrs, starttype)
         # if rule stack is empty, write out the buffered data

@@ -180,7 +180,8 @@ class HtmlSecurity (object):
         check_attr_number(attrs, htmlfilter)
         fun = "%s_start" % tag
         if hasattr(self, fun):
-            getattr(self, fun)(attrs, htmlfilter)
+            if getattr(self, fun)(attrs, htmlfilter):
+	        return True
         # generic length checking
         check_length(attrs, 'width', htmlfilter)
         check_length(attrs, 'height', htmlfilter)
