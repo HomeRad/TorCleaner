@@ -73,6 +73,7 @@ class Rating (wc.filter.Filter.Filter):
                 rating = rating_from_headers(headers)
                 for rule in rules:
                     service.rating_check(rule.rating, rating)
+                return data
             except wc.rating.RatingParseError, msg:
                 wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
         if "HtmlRewriter" in config['filters']:
