@@ -101,7 +101,9 @@ class HtmlRewriter (wc.filter.Filter.Filter):
             elif rule.name == 'javascript':
                 opts['javascript'] = True
             elif rule.name == 'rating' and rule.use_extern:
-                ratings.append(rule)
+                rating_storage = wc.configuration.config['rating_storage']
+                if url not in rating_storage:
+                    ratings.append(rule)
         # generate the HTML filter
         handler = wc.filter.html.HtmlFilter.HtmlFilter(rewrites, ratings,
                                                        url, localhost, **opts)
