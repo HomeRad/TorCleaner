@@ -18,6 +18,7 @@
 
 from wc import AppName, Email, Version
 from wc.configuration import config
+from wc.configuration.ratingstorage import make_safe_url as _make_safe_url
 from wc.containers import CaselessDict as _CaselessDict
 from wc.webgui.context import getval as _getval
 from wc.webgui.context import get_prefix_vals as _get_prefix_vals
@@ -129,10 +130,7 @@ def _form_url (form):
     global url
     if form.has_key('url'):
         val = _getval(form, 'url')
-        if not _is_safe_url(val):
-            error['url'] = True
-            return False
-        url = val
+        url = _make_safe_url(val)
     return True
 
 

@@ -17,6 +17,7 @@
 
 import wc
 import wc.rating
+import wc.filter
 import ratingformat
 
 
@@ -58,7 +59,7 @@ class WebCleanerService (wc.rating.RatingService):
 
     def rating_check (self, limit, rating):
         """Check given rating against limit."""
-        for name, value in limit:
+        for name, value in limit.iteritems():
             format = self.get_ratingformat(name)
             if format is None:
                 wc.log.warn(wc.LOG_RATING,
@@ -69,15 +70,27 @@ class WebCleanerService (wc.rating.RatingService):
                             "Missing rating %r in %s", name, rating)
                 continue
             rvalue = rating[name]
-            if format.iterable:
-                cvalue = ratingformat.parse_range(rvalue)
-                if cvalue is None:
-                    wc.log.warn(wc.LOG_RATING,
-                                "Invalid value %r in %s", rvalue, rating)
-                    continue
-            else:
-                cvalue = rvalue
-            return format.allowance(cvalue, value)
+            if not format.allowance(rvalue, value):
+                msg = "%s limit %r exceeded by %r" % (format, rvalue, value)
+                raise wc.filter.FilterRating(msg)
+
+    def rating_compile (self, rating):
+        """
+        Convert rating values from string representation.
+        """
+        for format in self.ratingformats:
+            name = format.name
+            if name not in rating:
+                # Use the most restrictive setting as default.
+                if format.iterable:
+                    value = format.values[0]
+                else:
+                    value = ratingformat.IntRange(maxval=0)
+                rating[name] = value
+            elif not format.iterable:
+                value = rating[name]
+                if isinstance(value, basestring):
+                    rating[name] = ratingformat.parse_range(value)
 
 
 # instantiate the global service

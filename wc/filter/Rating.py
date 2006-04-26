@@ -22,7 +22,7 @@ import wc.filter
 import wc.filter.Filter
 import wc.rating
 import wc.log
-from wc.rating.service.rating import rating_from_headers, rating_check_rules
+from wc.rating.service.rating import rating_from_headers
 
 
 class Rating (wc.filter.Filter.Filter):
@@ -37,7 +37,9 @@ class Rating (wc.filter.Filter.Filter):
     enable = True
 
     def __init__ (self):
-        """Initialize image reducer flags."""
+        """
+        Initialize image reducer flags.
+        """
         stages = [wc.filter.STAGE_RESPONSE_HEADER]
         rulenames = ['rating']
         super(Rating, self).__init__(stages=stages, rulenames=rulenames)
@@ -59,27 +61,29 @@ class Rating (wc.filter.Filter.Filter):
         service = config['rating_service']
         if url in storage:
             rating = storage[url].rating
-            if not rating_check_rules(service, rules, rating):
-                raise wc.filter.FilterRating(url)
+            for rule in rules:
+                service.rating_check(rule.rating, rating)
             return data
         erules = [r for r in rules if r.use_extern]
         if not erules:
-            raise wc.filter.FilterRating(url)
+            raise wc.filter.FilterRating(_("No rating data found."))
         headers = attrs['headers']['server']
         if headers.has_key('X-Rating') and headers['X-Rating'] == service.url:
             try:
                 rating = rating_from_headers(headers)
-                if not rating_check_rules(service, rules, rating):
-                    raise wc.filter.FilterRating(url)
+                for rule in rules:
+                    service.rating_check(rule.rating, rating)
             except wc.rating.RatingParseError, msg:
                 wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
         if "HtmlRewriter" in config['filters']:
             # Wait for <meta> rating.
             return data
-        raise wc.filter.FilterRating(url)
+        raise wc.filter.FilterRating(_("No rating data found."))
 
     def update_attrs (self, attrs, url, localhost, stages, headers):
-        """Store rating rules in data."""
+        """
+        Store rating rules in data.
+        """
         if not self.applies_to_stages(stages):
             return
         parent = super(Rating, self)

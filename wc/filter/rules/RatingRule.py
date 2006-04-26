@@ -24,7 +24,6 @@ import wc.filter.rules.UrlRule
 import wc.XmlUtils
 import wc.rating
 from wc.rating.service import ratingservice
-#import wc.rating.storage
 
 
 MISSING = _("Unknown page")
@@ -72,15 +71,12 @@ class RatingRule (wc.filter.rules.UrlRule.UrlRule):
 
     def compile_values (self):
         """Fill missing rating values."""
+        ratingservice.rating_compile(self.rating)
         # helper dict for web gui
         self.values = {}
         for ratingformat in ratingservice.ratingformats:
             name = ratingformat.name
             self.values[name] = {}
-            if name not in self.rating:
-                # Use the most restrictive setting as default.
-                value = ratingformat.values[0]
-                self.rating[name] = value
             if ratingformat.iterable:
                 for value in ratingformat.values:
                     value = str(value)

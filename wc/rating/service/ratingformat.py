@@ -42,7 +42,7 @@ class ValueFormat (wc.rating.RatingFormat):
 
     def allowance (self, value, limit):
         """Check if value exceeds limit."""
-        return self.values.index(value) > self.values.index(limit)
+        return self.values.index(value) <= self.values.index(limit)
 
 
 class RangeFormat (wc.rating.RatingFormat):
@@ -62,7 +62,7 @@ class RangeFormat (wc.rating.RatingFormat):
 
     def allowance (self, value, limit):
         """Check if value exceeds limit."""
-        return value.contains_value(limit)
+        return value.contains_range(limit)
 
 
 class IntRange (object):
@@ -97,13 +97,16 @@ class IntRange (object):
 
     def __str__ (self):
         s = ""
-        if self.minval:
+        if self.minval is not None:
             s += "%d-" % self.minval
-        if self.maxval:
+        if self.maxval is not None:
             if not s:
                 s += "-"
             s += "%d" % self.maxval
         return s
+
+    def __repr__ (self):
+        return "<IntRange min=%s max=%s>" % (self.minval, self.maxval)
 
 
 _range_re = re.compile(r'^(\d*)-(\d*)$')

@@ -12,13 +12,14 @@
 <div class="content" id="main">
 <h2 i18n:translate="">Content rated by
 <span tal:replace="AppName" i18n:name="appname">WebCleaner</span></h2>
-<span i18n:translate="">The content of the requested page
-<b tal:content="url" i18n:name="url">http://www.imadoofus.org</b>
-was rated for the following reason:</span>
-<b tal:content="reason">Unknown</b>.
+<div i18n:translate="">The content of the requested page
+<a href="#" tal:attributes="href url"
+ tal:content="url" i18n:name="url">http://www.imadoofus.org</a>
+was rated for the following reason:</div>
+<b tal:content="reason">Unknown</b>
 <br><br>
 <span i18n:translate="">Please point your browser somewhere else or</span>
-<a href="#" tal:attributes="href string:rating.html?url=${url}"
+<a href="#" tal:attributes="href string:rating.html?url=${safeurl}"
  i18n:translate="">supply a different rating for this page</a>
 </div>
 

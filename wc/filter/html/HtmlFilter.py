@@ -29,7 +29,6 @@ import wc.filter.html.JSFilter
 import wc.filter.html.HtmlSecurity
 import wc.rating
 import wc.configuration
-from wc.rating.service.rating import rating_from_headers, rating_check_rules
 
 
 class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
@@ -176,9 +175,9 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                 # XXX what about a missing body tag?
                 service = wc.configuration.config['rating_service']
                 if "" not in self.rating or self.rating[""] != service.url:
-                    raise wc.filter.FilterRating(self.url)
-                if not rating_check_rules(service, self.ratings, self.rating):
-                    raise wc.filter.FilterRating(self.url)
+                    raise wc.filter.FilterRating(_("No rating data found."))
+                for rule in self.ratings:
+                    service.rating_check(rule.rating, self.rating)
                 self.ratings = []
         elif tag == "base":
             if attrs.has_key('href'):

@@ -23,14 +23,14 @@ import urlparse
 
 import wc
 import wc.log
+import wc.url
 
 
 def make_safe_url (url):
     """Remove unsafe parts of url for rating cache check."""
     parts = split_url(url)
     pathparts = [make_safe_part(x) for x in parts[2:]]
-    pathparts[0:2] = parts[0:2]
-    return "".join(pathparts)
+    return "".join(parts[0:2] + pathparts)
 
 
 def make_safe_part (part):
@@ -97,12 +97,12 @@ class UrlRatingStorage (object):
         # remove invalid entries
         toremove = []
         for url in self.cache:
-            if not wc.url.is_safe_url(url):
+            if url != make_safe_url(url):
                 wc.log.warn(wc.LOG_RATING, "Invalid rating url %r", url)
                 toremove.append(url)
         if toremove:
             for url in toremove:
-                del self[url]
+                del self.cache[url]
             self.write()
 
     def write (self):
@@ -111,20 +111,14 @@ class UrlRatingStorage (object):
             pickle.dump(obj, fp, 1)
         wc.fileutil.write_file(self.filename, self.cache, callback=callback)
 
-    def check_url (self, url):
-        """If url is not safe raise a ValueError."""
-        if wc.url.is_safe_url(url):
-            return url
-        return make_safe_url(url)
-
     def __setitem__ (self, url, rating):
         """Add rating for given url."""
-        url = self.check_url(url)
+        url = make_safe_url(url)
         self.cache[url] = rating
 
     def __getitem__ (self, url):
         """Get rating for given url."""
-        url = self.check_url(url)
+        url = make_safe_url(url)
         # use a specialized form of longest prefix matching:
         # split the url in parts and the longest matching part wins
         parts = split_url(url)
@@ -155,5 +149,5 @@ class UrlRatingStorage (object):
 
     def __delitem__ (self, url):
         """Remove rating for given url."""
-        url = self.check_url(url)
+        url = make_safe_url(url)
         del self.cache[url]
