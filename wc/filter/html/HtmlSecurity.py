@@ -168,7 +168,10 @@ class HtmlSecurity (object):
     """
 
     def __init__ (self):
-        self.in_winhelp = False # inside object tag calling WinHelp
+        # inside object tag calling WinHelp
+        self.in_winhelp = False
+        # number of nested <object> levels
+        self.object_level = 0
 
     # scan methods
 
@@ -340,6 +343,10 @@ class HtmlSecurity (object):
         """
         Check <object> start tag.
         """
+        if self.object_level == 3:
+            # Prevent IE crash; see http://secunia.com/advisories/19762/
+            return True
+        self.object_level += 1
         if attrs.has_key('type'):
             # prevent CAN-2003-0344, only one / (slash) allowed
             t = attrs.get_true('type', u"")
@@ -378,6 +385,8 @@ class HtmlSecurity (object):
         """
         Check <object> start tag.
         """
+        if self.object_level > 1:
+            self.object_level -= 1
         if self.in_winhelp:
             self.in_winhelp = False
 

@@ -311,6 +311,11 @@ class TestRewriter (unittest.TestCase):
     def test_alt_title (self):
         self.filt("""<img alt="">""", """<img alt="" title="">""")
 
+    def test_ie_object_crash (self):
+        # nested object tag level is restricted to 3
+        obj_tag = "<object>"
+        self.filt(obj_tag * 4, obj_tag * 3)
+
 
 def test_suite ():
     return unittest.makeSuite(TestRewriter)

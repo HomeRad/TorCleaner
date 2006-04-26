@@ -16,6 +16,10 @@
     Type: feature
     Changed: wc/js/__init__.py
 
+  * Prevent IE nested object exploit.
+    Type: feature
+    Changed: wc/filter/html/HtmlSecurity.py
+
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 
   * Remove literal "</script>" in embedded JavaScript files.
