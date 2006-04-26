@@ -22,7 +22,7 @@ import wc.filter
 import wc.filter.Filter
 import wc.rating
 import wc.log
-from wc.rating.service.rating import rating_from_headers
+from wc.rating.service.rating import rating_from_headers, rating_check_rules
 
 
 class Rating (wc.filter.Filter.Filter):
@@ -54,26 +54,29 @@ class Rating (wc.filter.Filter.Filter):
         if not rules:
             return data
         url = attrs['url']
-        storage = wc.configuration.config['rating_storage']
-        service = wc.configuration.config['rating_service']
+        config = wc.configuration.config
+        storage = config['rating_storage']
+        service = config['rating_service']
         if url in storage:
             rating = storage[url].rating
-            for rule in rules:
-                if not service.rating_check(rule.rating, rating):
+            if not rating_check_rules(service, rules, rating):
+                raise wc.filter.FilterRating(url)
+            return data
+        erules = [r for r in rules if r.use_extern]
+        if not erules:
+            raise wc.filter.FilterRating(url)
+        headers = attrs['headers']['server']
+        if headers.has_key('X-Rating') and headers['X-Rating'] == service.url:
+            try:
+                rating = rating_from_headers(headers)
+                if not rating_check_rules(service, rules, rating):
                     raise wc.filter.FilterRating(url)
-        else:
-            erules = [r for r in rules if r.use_extern]
-            headers = attrs['headers']['server']
-            if erules and headers.has_key('X-Rating') and \
-               headers['X-Rating'] == service.url:
-                try:
-                    rating = rating_from_headers(headers)
-                    for rule in erules:
-                        if not service.rating_check(rule.rating, rating):
-                            raise wc.filter.FilterRating(url)
-                except wc.rating.RatingParseError, msg:
-                    wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
-        return data
+            except wc.rating.RatingParseError, msg:
+                wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
+        if "HtmlRewriter" in config['filters']:
+            # Wait for <meta> rating.
+            return data
+        raise wc.filter.FilterRating(url)
 
     def update_attrs (self, attrs, url, localhost, stages, headers):
         """Store rating rules in data."""

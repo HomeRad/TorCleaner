@@ -28,6 +28,8 @@ import wc.filter.html
 import wc.filter.html.JSFilter
 import wc.filter.html.HtmlSecurity
 import wc.rating
+import wc.configuration
+from wc.rating.service.rating import rating_from_headers, rating_check_rules
 
 
 class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
@@ -43,6 +45,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         super(HtmlFilter, self).__init__(url, localhost, opts)
         self.rules = rules
         self.ratings = ratings
+        self.rating = wc.rating.Rating()
         self.rulestack = []
         self.stackcount = []
         self.base_url = None
@@ -162,23 +165,21 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                     title = title.split('\n')[0].strip()
                 attrs['title'] = title
         elif tag == "meta":
-            if attrs.get_true('http-equiv', u'').lower() == 'content-rating':
-                rating = attrs.get_true('content', u'')
-                rating = wc.HtmlParser.resolve_entities(rating)
-                url, rating = wc.rating.rating_import(self.url, rating)
-                # note: always put this in the cache, since this overrides
-                # any http header setting, and page content changes more
-                # often
-                wc.rating.rating_add(url, rating)
+            name = attrs.get_true('name', u'')
+            if name.lower().startswith('x-rating'):
+                name = name[8:]
+                content = attrs.get_true('content', u'')
+                self.rating[name] = content
         elif tag == "body":
             if self.ratings:
                 # headers finished, check rating data
-                for rule in self.ratings:
-                    pass # XXX
-                    #msg = rule.rating_allow(self.url)
-                    #if msg:
-                    #    raise wc.filter.FilterRating(msg)
-                #self.ratings = []
+                # XXX what about a missing body tag?
+                service = wc.configuration.config['rating_service']
+                if "" not in self.rating or self.rating[""] != service.url:
+                    raise wc.filter.FilterRating(self.url)
+                if not rating_check_rules(service, self.ratings, self.rating):
+                    raise wc.filter.FilterRating(self.url)
+                self.ratings = []
         elif tag == "base":
             if attrs.has_key('href'):
                 self.base_url = attrs['href']
