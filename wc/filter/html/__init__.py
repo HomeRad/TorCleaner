@@ -345,7 +345,7 @@ KnownInvalidTags = {
     "x-claris-window": None, # Claris
     "x-claris-tagview": None, # Claris
     "x-sas-window": None, # Claris
-    "NYT_COPYRIGHT": None, # Times
+    "nyt_copyright": None, # Times
 }
 
 # tags to ignore
