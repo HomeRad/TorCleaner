@@ -81,14 +81,13 @@ jsautokw.h: jskwgen jskeyword.tbl
 ORIGBASEDIR:=/home/calvin/src/mozilla
 ORIGSRCDIR:=$(ORIGBASEDIR)/js/src
 origdiff:
-	(for f in *.c *.h *.tbl *.msg; do diff -u $$f $(ORIGSRCDIR)/$$f 2>/dev/null; done) | less
+	(for f in *.c *.h *.tbl *.msg fdlibm/*.h fdlibm/*.c; do diff -u $$f $(ORIGSRCDIR)/$$f 2>/dev/null; done) | less
 
 origupdate:
-	for f in *.c *.h *.tbl *.msg; do \
+	for f in *.c *.h *.tbl *.msg fdlibm/*.h fdlibm/*.c; do \
 	  if ! diff $$f $(ORIGSRCDIR)/$$f > /dev/null 2>&1; then \
 	      if [ -e $(ORIGSRCDIR)/$$f ]; then \
 	          /bin/cp -vf $(ORIGSRCDIR)/$$f $$f; \
 	      fi; \
 	  fi; \
 	done
-	patch -p0 < fdlibm_endian.diff
