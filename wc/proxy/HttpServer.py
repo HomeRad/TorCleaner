@@ -554,6 +554,11 @@ class HttpServer (wc.proxy.Server.Server):
             # to save CPU time make connection unreadable for a while
             self.set_unreadable(1.0)
             return False
+        except wc.filter.FilterRating, msg:
+            assert wc.log.debug(wc.LOG_PROXY,
+                                "%s FilterRating from content %s", self, msg)
+            self._show_rating_deny(str(msg))
+            return True
         data = self.flush_coders(self.encoders, data=data)
         # the client might already have closed
         if not self.client:
