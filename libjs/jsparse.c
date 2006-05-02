@@ -1,5 +1,4 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
- * vim: set ts=8 sw=4 et tw=80:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -366,52 +365,6 @@ CheckGetterOrSetter(JSContext *cx, JSTokenStream *ts, JSTokenType tt)
 }
 #endif
 
-static void
-MaybeSetupFrame(JSContext *cx, JSObject *chain, JSStackFrame *oldfp,
-                JSStackFrame *newfp)
-{
-    /*
-     * Always push a new frame if the current frame is special, so that
-     * Variables gets the correct variables object: the one from the special
-     * frame's caller.
-     */
-    if (oldfp &&
-        oldfp->varobj &&
-        oldfp->scopeChain == chain &&
-        !(oldfp->flags & JSFRAME_SPECIAL)) {
-        return;
-    }
-
-    memset(newfp, 0, sizeof *newfp);
-
-    /* Default to sharing the same variables object and scope chain. */
-    newfp->varobj = newfp->scopeChain = chain;
-    if (cx->options & JSOPTION_VAROBJFIX) {
-        while ((chain = JS_GetParent(cx, chain)) != NULL)
-            newfp->varobj = chain;
-    }
-    newfp->down = oldfp;
-    if (oldfp) {
-        /*
-         * In the case of eval and debugger frames, we need to dig down and find
-         * the real variables objects and function that our new stack frame is
-         * going to use.
-         */
-        newfp->flags = oldfp->flags & (JSFRAME_SPECIAL | JSFRAME_COMPILE_N_GO);
-        while (oldfp->flags & JSFRAME_SPECIAL) {
-            oldfp = oldfp->down;
-            if (!oldfp)
-                break;
-        }
-        if (oldfp && (newfp->flags & JSFRAME_SPECIAL)) {
-            newfp->varobj = oldfp->varobj;
-            newfp->vars = oldfp->vars;
-            newfp->fun = oldfp->fun;
-        }
-    }
-    cx->fp = newfp;
-}
-
 /*
  * Parse a top-level JS script.
  */
@@ -428,7 +381,18 @@ js_ParseTokenStream(JSContext *cx, JSObject *chain, JSTokenStream *ts)
      * the one passed to us.
      */
     fp = cx->fp;
-    MaybeSetupFrame(cx, chain, fp, &frame);
+    if (!fp || !fp->varobj || fp->scopeChain != chain) {
+        memset(&frame, 0, sizeof frame);
+        frame.varobj = frame.scopeChain = chain;
+        if (cx->options & JSOPTION_VAROBJFIX) {
+            while ((chain = JS_GetParent(cx, chain)) != NULL)
+                frame.varobj = chain;
+        }
+        frame.down = fp;
+        if (fp)
+            frame.flags = fp->flags & (JSFRAME_SPECIAL | JSFRAME_COMPILE_N_GO);
+        cx->fp = &frame;
+    }
 
     /*
      * Protect atoms from being collected by a GC activation, which might
@@ -480,7 +444,18 @@ js_CompileTokenStream(JSContext *cx, JSObject *chain, JSTokenStream *ts,
      * the one passed to us.
      */
     fp = cx->fp;
-    MaybeSetupFrame(cx, chain, fp, &frame);
+    if (!fp || !fp->varobj || fp->scopeChain != chain) {
+        memset(&frame, 0, sizeof frame);
+        frame.varobj = frame.scopeChain = chain;
+        if (cx->options & JSOPTION_VAROBJFIX) {
+            while ((chain = JS_GetParent(cx, chain)) != NULL)
+                frame.varobj = chain;
+        }
+        frame.down = fp;
+        if (fp)
+            frame.flags = fp->flags & (JSFRAME_SPECIAL | JSFRAME_COMPILE_N_GO);
+        cx->fp = &frame;
+    }
     flags = cx->fp->flags;
     cx->fp->flags = flags |
                     (JS_HAS_COMPILE_N_GO_OPTION(cx)
@@ -508,17 +483,14 @@ js_CompileTokenStream(JSContext *cx, JSObject *chain, JSTokenStream *ts,
 #endif
 
         /*
-         * No need to emit bytecode here -- Statements already has, for each
+         * No need to emit code here -- Statements already has, for each
          * statement in turn.  Search for TCF_COMPILING in Statements, below.
          * That flag is set for every tc == &cg->treeContext, and it implies
          * that the tc can be downcast to a cg and used to emit code during
          * parsing, rather than at the end of the parse phase.
-         *
-         * Update: the threaded interpreter needs a stop instruction, so we
-         * do have to emit that here.
          */
         JS_ASSERT(cg->treeContext.flags & TCF_COMPILING);
-        ok = js_Emit1(cx, cg, JSOP_STOP) >= 0;
+        ok = JS_TRUE;
     }
 
 #ifdef METER_PARSENODES
@@ -556,9 +528,10 @@ HasFinalReturn(JSParseNode *pn)
         return HasFinalReturn(PN_LAST(pn));
 
       case TOK_IF:
-        if (!pn->pn_kid3)
-            return ENDS_IN_OTHER;
-        return HasFinalReturn(pn->pn_kid2) & HasFinalReturn(pn->pn_kid3);
+        rv = HasFinalReturn(pn->pn_kid2);
+        if (pn->pn_kid3)
+            rv &= HasFinalReturn(pn->pn_kid3);
+        return rv;
 
 #if JS_HAS_SWITCH_STATEMENT
       case TOK_SWITCH:
@@ -633,7 +606,7 @@ ReportNoReturnValue(JSContext *cx, JSTokenStream *ts)
 
     fun = cx->fp->fun;
     if (fun->atom) {
-        char *name = js_GetStringBytes(cx->runtime, ATOM_TO_STRING(fun->atom));
+        char *name = js_GetStringBytes(ATOM_TO_STRING(fun->atom));
         ok = js_ReportCompileErrorNumber(cx, ts,
                                          JSREPORT_TS |
                                          JSREPORT_WARNING |
@@ -732,25 +705,18 @@ js_CompileFunctionBody(JSContext *cx, JSTokenStream *ts, JSFunction *fun)
                   : JSFRAME_COMPILING;
     cx->fp = &frame;
 
-    /*
-     * Farble the body so that it looks like a block statement to js_EmitTree,
-     * which is called beneath FunctionBody (see Statements, further below in
-     * this file).
-     *
-     * NB: with threaded interpretation, we must emit a stop opcode at the end
-     * of every scripted function and top-level script.
-     */
+    /* Ensure that the body looks like a block statement to js_EmitTree. */
     CURRENT_TOKEN(ts).type = TOK_LC;
     pn = FunctionBody(cx, ts, fun, &funcg.treeContext);
-    if (!pn || js_Emit1(cx, &funcg, JSOP_STOP) < 0) {
+    if (!pn) {
         ok = JS_FALSE;
     } else {
         /*
          * No need to emit code here -- Statements (via FunctionBody) already
          * has.  See similar comment in js_CompileTokenStream, and bug 108257.
          */
-        fun->u.i.script = js_NewScriptFromCG(cx, &funcg, fun);
-        if (!fun->u.i.script) {
+        fun->u.script = js_NewScriptFromCG(cx, &funcg, fun);
+        if (!fun->u.script) {
             ok = JS_FALSE;
         } else {
             fun->interpreted = JS_TRUE;
@@ -874,16 +840,15 @@ FunctionDef(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
                                           js_SetLocalVariable,
                                           SPROP_INVALID_SLOT,
                                           JSPROP_PERMANENT | JSPROP_SHARED,
-                                          SPROP_HAS_SHORTID,
-                                          fp->fun->u.i.nvars)) {
+                                          SPROP_HAS_SHORTID, fp->fun->nvars)) {
                     return NULL;
                 }
-                if (fp->fun->u.i.nvars == JS_BITMASK(16)) {
+                if (fp->fun->nvars == JS_BITMASK(16)) {
                     JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                          JSMSG_TOO_MANY_FUN_VARS);
                     return NULL;
                 }
-                fp->fun->u.i.nvars++;
+                fp->fun->nvars++;
             }
         }
 #endif
@@ -1754,8 +1719,6 @@ Statement(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
          * finally nodes are unary (just the finally expression)
          */
         pn = NewParseNode(cx, ts, PN_TERNARY, tc);
-        if (!pn)
-            return NULL;
         pn->pn_op = JSOP_NOP;
 
         MUST_MATCH_TOKEN(TOK_LC, JSMSG_CURLY_BEFORE_TRY);
@@ -2195,7 +2158,20 @@ Variables(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
     pn->pn_op = CURRENT_TOKEN(ts).t_op;
     PN_INIT_LIST(pn);
 
-    fp = cx->fp;
+    /*
+     * Skip eval and debugger frames when looking for the function whose code
+     * is being compiled.  If we are called from FunctionBody, TCF_IN_FUNCTION
+     * will be set in tc->flags, and we can be sure fp->fun is the function to
+     * use.  But if a function calls eval, the string argument is treated as a
+     * Program (per ECMA), so TCF_IN_FUNCTION won't be set.
+     *
+     * What's more, when the following code is reached from eval, cx->fp->fun
+     * is eval's JSFunction (a native function), so we need to skip its frame.
+     * We should find the scripted caller's function frame just below it, but
+     * we code a loop out of paranoia.
+     */
+    for (fp = cx->fp; (fp->flags & JSFRAME_SPECIAL) && fp->down; fp = fp->down)
+        continue;
     obj = fp->varobj;
     fun = fp->fun;
     clasp = OBJ_GET_CLASS(cx, obj);
@@ -2306,7 +2282,7 @@ Variables(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                     if (clasp == &js_FunctionClass) {
                         JS_ASSERT(sprop->getter == js_GetLocalVariable);
                         JS_ASSERT((sprop->flags & SPROP_HAS_SHORTID) &&
-                                  (uint16) sprop->shortid < fun->u.i.nvars);
+                                  (uint16) sprop->shortid < fun->nvars);
                     } else if (clasp == &js_CallClass) {
                         if (sprop->getter == js_GetCallVariable) {
                             /*
@@ -2315,7 +2291,7 @@ Variables(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                              * that the slot number we have is in range.
                              */
                             JS_ASSERT((sprop->flags & SPROP_HAS_SHORTID) &&
-                                      (uint16) sprop->shortid < fun->u.i.nvars);
+                                      (uint16) sprop->shortid < fun->nvars);
                         } else {
                             /*
                              * A variable introduced through another eval:
@@ -2363,15 +2339,15 @@ Variables(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
                                           currentGetter, currentSetter,
                                           SPROP_INVALID_SLOT,
                                           pn2->pn_attrs | JSPROP_SHARED,
-                                          SPROP_HAS_SHORTID, fun->u.i.nvars)) {
+                                          SPROP_HAS_SHORTID, fun->nvars)) {
                     return NULL;
                 }
-                if (fun->u.i.nvars == JS_BITMASK(16)) {
+                if (fun->nvars == JS_BITMASK(16)) {
                     JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                          JSMSG_TOO_MANY_FUN_VARS);
                     return NULL;
                 }
-                fun->u.i.nvars++;
+                fun->nvars++;
             }
         }
 
@@ -3148,9 +3124,9 @@ EndBracketedExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
  *              PropertySelector :: [ Expression ]
  *              PropertySelector
  *
- * As PrimaryExpression: Identifier is in ECMA-262 and we want the semantics
- * for that rule to result in a name node, but ECMA-357 extends the grammar
- * to include PrimaryExpression: QualifiedIdentifier, we must factor further:
+ * Since PrimaryExpression: Identifier in ECMA-262 and we want the semantics
+ * for that rule to result in a name node, but extend the grammar to include
+ * PrimaryExpression: QualifiedIdentifier, we factor further:
  *
  *      QualifiedIdentifier:
  *              PropertySelector QualifiedSuffix
@@ -3165,7 +3141,7 @@ EndBracketedExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
  *      PrimaryExpression:
  *              Identifier QualifiedSuffix
  *
- * We hoist the :: match into callers of QualifiedSuffix, in order to tweak
+ * We hoists the :: match into callers of QualifiedSuffix, in order to tweak
  * PropertySelector vs. Identifier pn_arity, pn_op, and other members.
  */
 static JSParseNode *
@@ -3311,7 +3287,7 @@ XMLExpr(JSContext *cx, JSTokenStream *ts, JSBool inTag, JSTreeContext *tc)
 }
 
 /*
- * Make a terminal node for one of TOK_XMLNAME, TOK_XMLATTR, TOK_XMLSPACE,
+ * Make a terminal node for oneof TOK_XMLNAME, TOK_XMLATTR, TOK_XMLSPACE,
  * TOK_XMLTEXT, TOK_XMLCDATA, TOK_XMLCOMMENT, or TOK_XMLPI.  When converting
  * parse tree to XML, we preserve a TOK_XMLSPACE node only if it's the sole
  * child of a container tag.
@@ -3734,7 +3710,19 @@ js_ParseXMLTokenStream(JSContext *cx, JSObject *chain, JSTokenStream *ts,
      * the one passed to us.
      */
     fp = cx->fp;
-    MaybeSetupFrame(cx, chain, fp, &frame);
+    if (!fp || !fp->varobj || fp->scopeChain != chain) {
+        memset(&frame, 0, sizeof frame);
+        frame.varobj = frame.scopeChain = chain;
+        if (cx->options & JSOPTION_VAROBJFIX) {
+            while ((chain = JS_GetParent(cx, chain)) != NULL)
+                frame.varobj = chain;
+        }
+        frame.down = fp;
+        if (fp)
+            frame.flags = fp->flags & (JSFRAME_SPECIAL | JSFRAME_COMPILE_N_GO);
+        cx->fp = &frame;
+    }
+
     JS_KEEP_ATOMS(cx->runtime);
     TREE_CONTEXT_INIT(&tc);
 

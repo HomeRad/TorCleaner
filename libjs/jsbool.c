@@ -56,7 +56,7 @@
 
 JSClass js_BooleanClass = {
     "Boolean",
-    JSCLASS_HAS_PRIVATE | JSCLASS_HAS_CACHED_PROTO(JSProto_Boolean),
+    JSCLASS_HAS_PRIVATE,
     JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,
     JS_EnumerateStub, JS_ResolveStub,   JS_ConvertStub,   JS_FinalizeStub,
     JSCLASS_NO_OPTIONAL_MEMBERS
@@ -80,7 +80,7 @@ bool_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
         return js_obj_toSource(cx, obj, argc, argv, rval);
     JS_snprintf(buf, sizeof buf, "(new %s(%s))",
                 js_BooleanClass.name,
-                js_boolean_strs[JSVAL_TO_BOOLEAN(v) ? 1 : 0]);
+                js_boolean_str[JSVAL_TO_BOOLEAN(v) ? 1 : 0]);
     str = JS_NewStringCopyZ(cx, buf);
     if (!str)
         return JS_FALSE;

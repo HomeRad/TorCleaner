@@ -78,7 +78,8 @@ jsautocfg.h: jscpucfg
 jsautokw.h: jskwgen jskeyword.tbl
 	./jskwgen $@
 
-ORIGSRCDIR := /home/calvin/src/mozilla/js/src
+ORIGBASEDIR:=/home/calvin/src/mozilla
+ORIGSRCDIR:=$(ORIGBASEDIR)/js/src
 origdiff:
 	(for f in *.c *.h *.tbl *.msg; do diff -u $$f $(ORIGSRCDIR)/$$f 2>/dev/null; done) | less
 

@@ -314,12 +314,9 @@ extern JSBool
 js_SetJumpOffset(JSContext *cx, JSCodeGenerator *cg, jsbytecode *pc,
                  ptrdiff_t off);
 
-/* Test whether we're in a statement of given type. */
-extern JSBool
-js_InStatement(JSTreeContext *tc, JSStmtType type);
-
 /* Test whether we're in a with statement. */
-#define js_InWithStatement(tc)      js_InStatement(tc, STMT_WITH)
+extern JSBool
+js_InWithStatement(JSTreeContext *tc);
 
 /* Test whether we're in a catch block with exception named by atom. */
 extern JSBool
@@ -415,7 +412,7 @@ typedef enum JSSrcNoteType {
                                    gets and sets */
     SRC_ASSIGNOP    = 8,        /* += or another assign-op follows */
     SRC_COND        = 9,        /* JSOP_IFEQ is from conditional ?: operator */
-    SRC_UNQUOTE     = 10,       /* don't quote a JSOP_STRING */
+    SRC_RESERVED0   = 10,       /* reserved for future use */
     SRC_HIDDEN      = 11,       /* opcode shouldn't be decompiled */
     SRC_PCBASE      = 12,       /* distance back from annotated get- or setprop
                                    op to first obj.prop.subprop bytecode */

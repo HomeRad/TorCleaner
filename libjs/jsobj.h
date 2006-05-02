@@ -302,14 +302,11 @@ js_HoldObjectMap(JSContext *cx, JSObjectMap *map);
 extern JSObjectMap *
 js_DropObjectMap(JSContext *cx, JSObjectMap *map, JSObject *obj);
 
-extern JSBool
-js_GetClassId(JSContext *cx, JSClass *clasp, jsid *idp);
-
 extern JSObject *
 js_NewObject(JSContext *cx, JSClass *clasp, JSObject *proto, JSObject *parent);
 
 extern JSBool
-js_FindClassObject(JSContext *cx, JSObject *start, jsid id, jsval *vp);
+js_FindConstructor(JSContext *cx, JSObject *start, const char *name, jsval *vp);
 
 extern JSObject *
 js_ConstructObject(JSContext *cx, JSClass *clasp, JSObject *proto,
@@ -457,8 +454,7 @@ extern JSBool
 js_IsDelegate(JSContext *cx, JSObject *obj, jsval v, JSBool *bp);
 
 extern JSBool
-js_GetClassPrototype(JSContext *cx, JSObject *scope, jsid id,
-                     JSObject **protop);
+js_GetClassPrototype(JSContext *cx, const char *name, JSObject **protop);
 
 extern JSBool
 js_SetClassPrototype(JSContext *cx, JSObject *ctor, JSObject *proto,
@@ -497,7 +493,7 @@ js_CheckScopeChainValidity(JSContext *cx, JSObject *scopeobj, const char *caller
 
 extern JSBool
 js_CheckPrincipalsAccess(JSContext *cx, JSObject *scopeobj,
-                         JSPrincipals *principals, JSAtom *caller);
+                         JSPrincipals *principals, const char *caller);
 JS_END_EXTERN_C
 
 #endif /* jsobj_h___ */

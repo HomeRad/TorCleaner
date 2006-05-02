@@ -901,7 +901,7 @@ JS_SetDestroyScriptHook(JSRuntime *rt, JSDestroyScriptHook hook,
 
 JS_PUBLIC_API(JSBool)
 JS_EvaluateUCInStackFrame(JSContext *cx, JSStackFrame *fp,
-                          const jschar *chars, uintN length,
+                          const jschar *bytes, uintN length,
                           const char *filename, uintN lineno,
                           jsval *rval)
 {
@@ -919,7 +919,7 @@ JS_EvaluateUCInStackFrame(JSContext *cx, JSStackFrame *fp,
     cx->options = options | JSOPTION_COMPILE_N_GO;
     script = JS_CompileUCScriptForPrincipals(cx, fp->scopeChain,
                                              JS_StackFramePrincipals(cx, fp),
-                                             chars, length, filename, lineno);
+                                             bytes, length, filename, lineno);
     fp->flags = flags;
     cx->options = options;
     if (!script)
@@ -939,12 +939,10 @@ JS_EvaluateInStackFrame(JSContext *cx, JSStackFrame *fp,
 {
     jschar *chars;
     JSBool ok;
-    size_t len = length;
 
-    chars = js_InflateString(cx, bytes, &len);
+    chars = js_InflateString(cx, bytes, length);
     if (!chars)
         return JS_FALSE;
-    length = (uintN) len;
     ok = JS_EvaluateUCInStackFrame(cx, fp, chars, length, filename, lineno,
                                    rval);
     JS_free(cx, chars);
@@ -1234,15 +1232,24 @@ GetAtomTotalSize(JSContext *cx, JSAtom *atom)
 JS_PUBLIC_API(size_t)
 JS_GetFunctionTotalSize(JSContext *cx, JSFunction *fun)
 {
-    size_t nbytes;
+    size_t nbytes, obytes;
+    JSObject *obj;
+    JSAtom *atom;
 
     nbytes = sizeof *fun;
-    if (fun->object)
-        nbytes += JS_GetObjectTotalSize(cx, fun->object);
+    JS_ASSERT(fun->nrefs);
+    obj = fun->object;
+    if (obj) {
+        obytes = JS_GetObjectTotalSize(cx, obj);
+        if (fun->nrefs > 1)
+            obytes = JS_HOWMANY(obytes, fun->nrefs);
+        nbytes += obytes;
+    }
     if (fun->interpreted)
-        nbytes += JS_GetScriptTotalSize(cx, fun->u.i.script);
-    if (fun->atom)
-        nbytes += GetAtomTotalSize(cx, fun->atom);
+        nbytes += JS_GetScriptTotalSize(cx, fun->u.script);
+    atom = fun->atom;
+    if (atom)
+        nbytes += GetAtomTotalSize(cx, atom);
     return nbytes;
 }
 

@@ -294,6 +294,16 @@ typedef enum JSCharType {
 #define JS7_UNHEX(c)    (uintN)(isdigit(c) ? (c) - '0' : 10 + tolower(c) - 'a')
 #define JS7_ISLET(c)    ((c) < 128 && isalpha(c))
 
+/* Initialize truly global state associated with JS strings. */
+extern JSBool
+js_InitStringGlobals(void);
+
+extern void
+js_FreeStringGlobals(void);
+
+extern void
+js_PurgeDeflatedStringCache(JSString *str);
+
 /* Initialize per-runtime string state for the first context in the runtime. */
 extern JSBool
 js_InitRuntimeStringState(JSContext *cx);
@@ -378,12 +388,6 @@ extern intN
 js_CompareStrings(JSString *str1, JSString *str2);
 
 /*
- * Test if strings are equal.
- */
-extern JSBool
-js_EqualStrings(JSString *str1, JSString *str2);
-
-/*
  * Boyer-Moore-Horspool superlinear search for pat:patlen in text:textlen.
  * The patlen argument must be positive and no greater than BMH_PATLEN_MAX.
  * The start argument tells where in text to begin the search.
@@ -420,62 +424,45 @@ js_SkipWhiteSpace(const jschar *s);
 /*
  * Inflate bytes to JS chars and vice versa.  Report out of memory via cx
  * and return null on error, otherwise return the jschar or byte vector that
- * was JS_malloc'ed. length is updated with the length of the new string in jschars.
+ * was JS_malloc'ed.
  */
 extern jschar *
-js_InflateString(JSContext *cx, const char *bytes, size_t *length);
+js_InflateString(JSContext *cx, const char *bytes, size_t length);
 
 extern char *
 js_DeflateString(JSContext *cx, const jschar *chars, size_t length);
 
 /*
  * Inflate bytes to JS chars into a buffer.
- * 'chars' must be large enough for 'length' jschars.
- * The buffer is NOT null-terminated.
- * cx may be NULL, which means no errors are thrown.
- * The destination length needs to be initialized with the buffer size, takes the number of chars moved.
+ * 'chars' must be large enough for 'length'+1 jschars.
  */
-extern JSBool
-js_InflateStringToBuffer(JSContext* cx, const char *bytes, size_t length, jschar *chars, size_t* charsLength);
+extern void
+js_InflateStringToBuffer(jschar *chars, const char *bytes, size_t length);
 
 /*
  * Deflate JS chars to bytes into a buffer.
- * 'bytes' must be large enough for 'length chars.
- * The buffer is NOT null-terminated.
- * cx may be NULL, which means no errors are thrown.
- * The destination length needs to be initialized with the buffer size, takes the number of bytes moved.
+ * 'bytes' must be large enough for 'length'+1 chars.
  */
-extern JSBool
-js_DeflateStringToBuffer(JSContext* cx, const jschar *chars, size_t charsLength, char *bytes, size_t* length);
+extern void
+js_DeflateStringToBuffer(char *bytes, const jschar *chars, size_t length);
 
 /*
  * Associate bytes with str in the deflated string cache, returning true on
  * successful association, false on out of memory.
  */
 extern JSBool
-js_SetStringBytes(JSRuntime *rt, JSString *str, char *bytes, size_t length);
+js_SetStringBytes(JSString *str, char *bytes, size_t length);
 
 /*
  * Find or create a deflated string cache entry for str that contains its
  * characters chopped from Unicode code points into bytes.
  */
 extern char *
-js_GetStringBytes(JSRuntime *rt, JSString *str);
-
-/* Remove a deflated string cache entry associated with str if any. */
-extern void
-js_PurgeDeflatedStringCache(JSRuntime *rt, JSString *str);
+js_GetStringBytes(JSString *str);
 
 JSBool
 js_str_escape(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
               jsval *rval);
-
-/*
- * Convert one UCS-4 char and write it into a UTF-8 buffer, which must be at
- * least 6 bytes long.  Return the number of UTF-8 bytes of data written.
- */
-extern int
-js_OneUcs4ToUtf8Char(uint8 *utf8Buffer, uint32 ucs4Char);
 
 JS_END_EXTERN_C
 

@@ -20,6 +20,12 @@
     Type: feature
     Changed: wc/filter/html/HtmlSecurity.py
 
+  * Downgrade the JS engine to the one found in FireFox 1.5 (end eventually
+    in 2.0). Reason are too much changes in the TRUNK development,
+    especially the drop for support of JS pre-1.5 versions.
+    Type: feature
+    ChangedL libjs/*
+
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 
   * Remove literal "</script>" in embedded JavaScript files.

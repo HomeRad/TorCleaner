@@ -933,12 +933,10 @@ CalculateBitmapSize(CompilerState *state, RENode *target, const jschar *src,
                 localMax = 0xB;
                 break;
             case 'c':
-                if (src < end && RE_IS_LETTER(*src)) {
+                if (src + 1 < end && RE_IS_LETTER(src[1]))
                     localMax = (jschar) (*src++ & 0x1F);
-                } else {
-                    --src;
+                else
                     localMax = '\\';
-                }
                 break;
             case 'x':
                 nDigits = 2;
@@ -1254,7 +1252,7 @@ ParseTerm(CompilerState *state)
             goto doFlat;
         /* Control letter */
         case 'c':
-            if (state->cp < state->cpend && RE_IS_LETTER(*state->cp)) {
+            if (state->cp + 1 < state->cpend && RE_IS_LETTER(state->cp[1])) {
                 c = (jschar) (*state->cp++ & 0x1F);
             } else {
                 /* back off to accepting the original '\' as a literal */
@@ -2294,7 +2292,7 @@ ProcessCharSet(REGlobalData *gData, RECharSet *charSet)
                 thisCh = 0xB;
                 break;
             case 'c':
-                if (src < end && JS_ISWORD(*src)) {
+                if (src + 1 < end && JS_ISWORD(src[1])) {
                     thisCh = (jschar)(*src++ & 0x1F);
                 } else {
                     --src;
@@ -2468,13 +2466,12 @@ ReallocStateStack(REGlobalData *gData)
 
 /*
  * Apply the current op against the given input to see if it's going to match
- * or fail. Return false if we don't get a match, true if we do. If updatecp is
- * true, then update the current state's cp. Always update startpc to the next
- * op.
+ * or fail. Return false if we don't get a match, true if we do and update the
+ * state of the input and pc if the update flag is true.
  */
 static REMatchState *
 SimpleMatch(REGlobalData *gData, REMatchState *x, REOp op,
-            jsbytecode **startpc, JSBool updatecp)
+            jsbytecode **startpc, JSBool update)
 {
     REMatchState *result = NULL;
     jschar matchCh;
@@ -2659,9 +2656,10 @@ SimpleMatch(REGlobalData *gData, REMatchState *x, REOp op,
         JS_ASSERT(JS_FALSE);
     }
     if (result) {
-        if (!updatecp)
+        if (update)
+            *startpc = pc;
+        else
             x->cp = startcp;
-        *startpc = pc;
         return result;
     }
     x->cp = startcp;
@@ -2673,7 +2671,7 @@ ExecuteREBytecode(REGlobalData *gData, REMatchState *x)
 {
     REMatchState *result = NULL;
     REBackTrackData *backTrackData;
-    jsbytecode *nextpc, *testpc;
+    jsbytecode *nextpc;
     REOp nextop;
     RECapture *cap;
     REProgState *curState;
@@ -2786,7 +2784,7 @@ ExecuteREBytecode(REGlobalData *gData, REMatchState *x)
                 continue;
 
             /*
-             * Occurs at (successful) end of REOP_ALT,
+             * Occurs at (succesful) end of REOP_ALT,
              */
             case REOP_JUMP:
                 --gData->stateStackTop;
@@ -2795,7 +2793,7 @@ ExecuteREBytecode(REGlobalData *gData, REMatchState *x)
                 continue;
 
             /*
-             * Occurs at last (successful) end of REOP_ALT,
+             * Occurs at last (succesful) end of REOP_ALT,
              */
             case REOP_ENDALT:
                 --gData->stateStackTop;
@@ -2824,9 +2822,8 @@ ExecuteREBytecode(REGlobalData *gData, REMatchState *x)
                 nextpc = pc + GET_OFFSET(pc);  /* start of term after ASSERT */
                 pc += ARG_LEN;                 /* start of ASSERT child */
                 op = (REOp) *pc++;
-                testpc = pc;
                 if (REOP_IS_SIMPLE(op) &&
-                    !SimpleMatch(gData, x, op, &testpc, JS_FALSE)) {
+                    !SimpleMatch(gData, x, op, &pc, JS_FALSE)) {
                     result = NULL;
                     break;
                 }
@@ -2846,10 +2843,9 @@ ExecuteREBytecode(REGlobalData *gData, REMatchState *x)
                 nextpc = pc + GET_OFFSET(pc);
                 pc += ARG_LEN;
                 op = (REOp) *pc++;
-                testpc = pc;
                 if (REOP_IS_SIMPLE(op) /* Note - fail to fail! */ &&
-                    SimpleMatch(gData, x, op, &testpc, JS_FALSE) &&
-                    *testpc == REOP_ASSERTNOTTEST) {
+                    SimpleMatch(gData, x, op, &pc, JS_FALSE) &&
+                    pc == nextpc) {
                     result = NULL;
                     break;
                 }
@@ -2861,9 +2857,8 @@ ExecuteREBytecode(REGlobalData *gData, REMatchState *x)
                 curState->parenSoFar = parenSoFar;
                 PUSH_STATE_STACK(gData);
                 if (!PushBackTrackState(gData, REOP_ASSERTNOTTEST,
-                                        nextpc, x, x->cp, 0, 0)) {
+                                        nextpc, x, x->cp, 0, 0))
                     return NULL;
-                }
                 continue;
 
             case REOP_ASSERTTEST:
@@ -3760,14 +3755,13 @@ regexp_mark(JSContext *cx, JSObject *obj, void *arg)
 {
     JSRegExp *re = (JSRegExp *) JS_GetPrivate(cx, obj);
     if (re)
-        GC_MARK(cx, re->source, "source");
+        JS_MarkGCThing(cx, re->source, "source", arg);
     return 0;
 }
 
 JSClass js_RegExpClass = {
     js_RegExp_str,
-    JSCLASS_HAS_PRIVATE | JSCLASS_HAS_RESERVED_SLOTS(1) |
-    JSCLASS_HAS_CACHED_PROTO(JSProto_RegExp),
+    JSCLASS_HAS_PRIVATE | JSCLASS_HAS_RESERVED_SLOTS(1),
     JS_PropertyStub,    JS_PropertyStub,
     regexp_getProperty, regexp_setProperty,
     JS_EnumerateStub,   JS_ResolveStub,
@@ -4006,10 +4000,8 @@ regexp_exec_sub(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
         }
     } else {
         str = js_ValueToString(cx, argv[0]);
-        if (!str) {
-            ok = JS_FALSE;
+        if (!str)
             goto out;
-        }
         argv[0] = STRING_TO_JSVAL(str);
     }
 

@@ -154,16 +154,16 @@ const char js_parseFloat_str[] = "parseFloat";
 const char js_parseInt_str[]   = "parseInt";
 
 static JSFunctionSpec number_functions[] = {
-    {js_isNaN_str,          num_isNaN,              1,0,0},
-    {js_isFinite_str,       num_isFinite,           1,0,0},
-    {js_parseFloat_str,     num_parseFloat,         1,0,0},
-    {js_parseInt_str,       num_parseInt,           2,0,0},
+    {"isNaN",           num_isNaN,              1,0,0},
+    {"isFinite",        num_isFinite,           1,0,0},
+    {"parseFloat",      num_parseFloat,         1,0,0},
+    {"parseInt",        num_parseInt,           2,0,0},
     {0,0,0,0,0}
 };
 
 JSClass js_NumberClass = {
-    js_Number_str,
-    JSCLASS_HAS_PRIVATE | JSCLASS_HAS_CACHED_PROTO(JSProto_Number),
+    "Number",
+    JSCLASS_HAS_PRIVATE,
     JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,
     JS_EnumerateStub, JS_ResolveStub,   JS_ConvertStub,   JS_FinalizeStub,
     JSCLASS_NO_OPTIONAL_MEMBERS
@@ -309,7 +309,7 @@ num_toLocaleString(JSContext *cx, JSObject *obj, uintN argc,
         return JS_FALSE;
     JS_ASSERT(JSVAL_IS_STRING(*rval));
     numStr = JSVAL_TO_STRING(*rval);
-    num = js_GetStringBytes(cx->runtime, numStr);
+    num = js_GetStringBytes(numStr);
 
     /* Find bit before the decimal. */
     dec = strchr(num, '.');
@@ -502,6 +502,7 @@ static JSConstDoubleSpec number_constants[] = {
 };
 
 static jsdouble NaN;
+
 
 #if (defined XP_WIN || defined XP_OS2) &&                                     \
     !defined WINCE &&                                                         \

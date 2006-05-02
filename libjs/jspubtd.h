@@ -90,14 +90,6 @@ typedef enum JSType {
     JSTYPE_LIMIT
 } JSType;
 
-/* Dense index into cached prototypes and class atoms for standard objects. */
-typedef enum JSProtoKey {
-#define JS_PROTO(name,init) JSProto_##name,
-#include "jsproto.tbl"
-#undef JS_PROTO
-    JSProto_LIMIT
-} JSProtoKey;
-
 /* JSObjectOps.checkAccess mode enumeration. */
 typedef enum JSAccessMode {
     JSACC_PROTO  = 0,           /* XXXbe redundant w.r.t. id */
@@ -554,28 +546,9 @@ typedef void
 (* JS_DLL_CALLBACK JSErrorReporter)(JSContext *cx, const char *message,
                                     JSErrorReport *report);
 
-/*
- * Possible exception types. These types are part of a JSErrorFormatString
- * structure. They define which error to throw in case of a runtime error.
- * JSEXN_NONE marks an unthrowable error.
- */
-typedef enum JSExnType {
-    JSEXN_NONE = -1,
-      JSEXN_ERR,
-        JSEXN_INTERNALERR,
-        JSEXN_EVALERR,
-        JSEXN_RANGEERR,
-        JSEXN_REFERENCEERR,
-        JSEXN_SYNTAXERR,
-        JSEXN_TYPEERR,
-        JSEXN_URIERR,
-        JSEXN_LIMIT
-} JSExnType;
-
 typedef struct JSErrorFormatString {
-    const char *format;  /* the error message (may be UTF-8 if compiled with JS_C_STRINGS_ARE_UTF8) */
-    uint16 argCount;     /* the number of arguments to convert in the error message */
-    int16 exnType;       /* One of the JSExnType constants above */
+    const char *format;
+    uintN argCount;
 } JSErrorFormatString;
 
 typedef const JSErrorFormatString *

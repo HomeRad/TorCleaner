@@ -1196,12 +1196,12 @@ js_SetJumpOffset(JSContext *cx, JSCodeGenerator *cg, jsbytecode *pc,
 }
 
 JSBool
-js_InStatement(JSTreeContext *tc, JSStmtType type)
+js_InWithStatement(JSTreeContext *tc)
 {
     JSStmtInfo *stmt;
 
     for (stmt = tc->topStmt; stmt; stmt = stmt->down) {
-        if (stmt->type == type)
+        if (stmt->type == STMT_WITH)
             return JS_TRUE;
     }
     return JS_FALSE;
@@ -1585,7 +1585,7 @@ IndexRegExpClone(JSContext *cx, JSParseNode *pn, JSAtomListElement *ale,
     clasp = OBJ_GET_CLASS(cx, varobj);
     if (clasp == &js_FunctionClass) {
         fun = (JSFunction *) JS_GetPrivate(cx, varobj);
-        countPtr = &fun->u.i.nregexps;
+        countPtr = &fun->nregexps;
         cloneIndex = *countPtr;
     } else {
         JS_ASSERT(clasp != &js_CallClass);
@@ -1669,7 +1669,6 @@ EmitAtomIndexOp(JSContext *cx, JSOp op, jsatomid atomIndex, JSCodeGenerator *cg)
           case JSOP_FORNAME:    op = JSOP_FORELEM; break;
           case JSOP_FORPROP:    op = JSOP_FORELEM; break;
           case JSOP_GETPROP:    op = JSOP_GETELEM; break;
-          case JSOP_GETXPROP:   op = JSOP_GETXELEM; break;
           case JSOP_IMPORTPROP: op = JSOP_IMPORTELEM; break;
           case JSOP_INCNAME:    op = JSOP_INCELEM; break;
           case JSOP_INCPROP:    op = JSOP_INCELEM; break;
@@ -1781,10 +1780,6 @@ LookupArgOrVar(JSContext *cx, JSTreeContext *tc, JSParseNode *pn)
     obj = fp->varobj;
     clasp = OBJ_GET_CLASS(cx, obj);
     if (clasp != &js_FunctionClass && clasp != &js_CallClass) {
-        /* Check for an eval or debugger frame. */
-        if (fp->flags & JSFRAME_SPECIAL) 
-            return JS_TRUE;
-
         /*
          * Optimize global variable accesses if there are at least 100 uses
          * in unambiguous contexts, or failing that, if least half of all the
@@ -2054,8 +2049,8 @@ CheckSideEffects(JSContext *cx, JSTreeContext *tc, JSParseNode *pn,
             }
         }
         pn2 = pn->pn_expr;
-        if (pn->pn_type == TOK_DOT) {
-            if (pn2->pn_type == TOK_NAME && !LookupArgOrVar(cx, tc, pn2))
+        if (pn->pn_type == TOK_DOT && pn2->pn_type == TOK_NAME) {
+            if (!LookupArgOrVar(cx, tc, pn2))
                 return JS_FALSE;
             if (!(pn2->pn_op == JSOP_ARGUMENTS &&
                   pn->pn_atom == cx->runtime->atomState.lengthAtom)) {
@@ -2263,11 +2258,6 @@ EmitElemOp(JSContext *cx, JSParseNode *pn, JSOp op, JSCodeGenerator *cg)
 
         if (!js_EmitTree(cx, cg, left))
             return JS_FALSE;
-    }
-    /* The right side of the descendant operator is implicitly quoted. */
-    if (op == JSOP_DESCENDANTS && right->pn_op == JSOP_STRING &&
-        js_NewSrcNote(cx, cg, SRC_UNQUOTE) < 0) {
-        return JS_FALSE;
     }
     if (!js_EmitTree(cx, cg, right))
         return JS_FALSE;
@@ -2790,13 +2780,13 @@ js_EmitFunctionBody(JSContext *cx, JSCodeGenerator *cg, JSParseNode *body,
                   ? JSFRAME_COMPILING | JSFRAME_COMPILE_N_GO
                   : JSFRAME_COMPILING;
     cx->fp = &frame;
-    ok = js_EmitTree(cx, cg, body) && js_Emit1(cx, cg, JSOP_STOP) >= 0;
+    ok = js_EmitTree(cx, cg, body);
     cx->fp = fp;
     if (!ok)
         return JS_FALSE;
 
-    fun->u.i.script = js_NewScriptFromCG(cx, cg, fun);
-    if (!fun->u.i.script)
+    fun->u.script = js_NewScriptFromCG(cx, cg, fun);
+    if (!fun->u.script)
         return JS_FALSE;
     JS_ASSERT(fun->interpreted);
     if (cg->treeContext.flags & TCF_FUN_HEAVYWEIGHT)
@@ -3634,7 +3624,8 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                 }
 
                 /* Construct the scope holder and push it on. */
-                ale = js_IndexAtom(cx, CLASS_ATOM(cx, Object), &cg->atomList);
+                ale = js_IndexAtom(cx, cx->runtime->atomState.ObjectAtom,
+                                   &cg->atomList);
                 if (!ale)
                     return JS_FALSE;
                 EMIT_ATOM_INDEX_OP(JSOP_NAME, ALE_INDEX(ale));
@@ -3914,20 +3905,6 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
         break;
 
       case TOK_RETURN:
-        /*
-         * If we're in a finally clause, then returning must clear any pending
-         * exception state.  Failure to do so could cause a subsequent
-         * non-throwing API failure or native use of JS_IsPendingException to
-         * mislead.
-         */
-        if (js_InStatement(&cg->treeContext, STMT_SUBROUTINE) &&
-            (js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
-             js_Emit1(cx, cg, JSOP_EXCEPTION) < 0 ||
-             js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
-             js_Emit1(cx, cg, JSOP_POP) < 0)) {
-            return JS_FALSE;
-        }
-
         /* Push a return value */
         pn2 = pn->pn_kid;
         if (pn2) {
@@ -4148,10 +4125,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
               case TOK_DOT:
                 if (js_Emit1(cx, cg, JSOP_DUP) < 0)
                     return JS_FALSE;
-                EMIT_ATOM_INDEX_OP((pn2->pn_type == TOK_NAME)
-                                   ? JSOP_GETXPROP
-                                   : JSOP_GETPROP,
-                                   atomIndex);
+                EMIT_ATOM_INDEX_OP(JSOP_GETPROP, atomIndex);
                 break;
               case TOK_LB:
 #if JS_HAS_LVALUE_RETURN
@@ -4596,7 +4570,8 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
          * but use a stack slot for t and avoid dup'ing and popping it via
          * the JSOP_NEWINIT and JSOP_INITELEM bytecodes.
          */
-        ale = js_IndexAtom(cx, CLASS_ATOM(cx, Array), &cg->atomList);
+        ale = js_IndexAtom(cx, cx->runtime->atomState.ArrayAtom,
+                           &cg->atomList);
         if (!ale)
             return JS_FALSE;
         EMIT_ATOM_INDEX_OP(JSOP_NAME, ALE_INDEX(ale));
@@ -4648,7 +4623,8 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
          * but use a stack slot for t and avoid dup'ing and popping it via
          * the JSOP_NEWINIT and JSOP_INITELEM bytecodes.
          */
-        ale = js_IndexAtom(cx, CLASS_ATOM(cx, Object), &cg->atomList);
+        ale = js_IndexAtom(cx, cx->runtime->atomState.ObjectAtom,
+                           &cg->atomList);
         if (!ale)
             return JS_FALSE;
         EMIT_ATOM_INDEX_OP(JSOP_NAME, ALE_INDEX(ale));
@@ -4957,7 +4933,7 @@ JS_FRIEND_DATA(JSSrcNoteSpec) js_SrcNoteSpec[] = {
     {"pcdelta",         1,      0,      1},
     {"assignop",        0,      0,      0},
     {"cond",            1,      0,      1},
-    {"unquote",         0,      0,      0},
+    {"reserved0",       0,      0,      0},
     {"hidden",          0,      0,      0},
     {"pcbase",          1,      0,     -1},
     {"label",           1,      0,      0},
@@ -5220,10 +5196,6 @@ js_SetSrcNoteOffset(JSContext *cx, JSCodeGenerator *cg, uintN index,
 }
 
 #ifdef DEBUG_brendan
-#define DEBUG_srcnotesize
-#endif
-
-#ifdef DEBUG_srcnotesize
 #define NBINS 10
 static uint32 hist[NBINS];
 

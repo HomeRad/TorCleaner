@@ -390,39 +390,6 @@ JS_SuspendRequest(JSContext *cx);
 extern JS_PUBLIC_API(void)
 JS_ResumeRequest(JSContext *cx, jsrefcount saveDepth);
 
-#ifdef __cplusplus
-JS_END_EXTERN_C
-
-class JSAutoRequest {
-  public:
-    JSAutoRequest(JSContext *cx) : mContext(cx), mSaveDepth(0) {
-        JS_BeginRequest(mContext);
-    }
-    ~JSAutoRequest() {
-        JS_EndRequest(mContext);
-    }
-
-    void suspend() {
-        mSaveDepth = JS_SuspendRequest(mContext);
-    }
-    void resume() {
-        JS_ResumeRequest(mContext, mSaveDepth);
-    }
-
-  protected:
-    JSContext *mContext;
-    jsrefcount mSaveDepth;
-
-#if 0
-  private:
-    static void *operator new(size_t) CPP_THROW_NEW { return 0; };
-    static void operator delete(void *, size_t) { };
-#endif
-};
-
-JS_BEGIN_EXTERN_C
-#endif
-
 #endif /* JS_THREADSAFE */
 
 extern JS_PUBLIC_API(void)
@@ -503,12 +470,6 @@ JS_StringToVersion(const char *string);
                                                    called with a null script
                                                    parameter, by native code
                                                    that loops intensively */
-#define JSOPTION_DONT_REPORT_UNCAUGHT \
-                                JS_BIT(8)       /* When returning from the
-                                                   outermost API call, prevent
-                                                   uncaught exceptions from
-                                                   being converted to error
-                                                   reports */
 
 extern JS_PUBLIC_API(uint32)
 JS_GetOptions(JSContext *cx);
@@ -566,10 +527,6 @@ JS_EnumerateStandardClasses(JSContext *cx, JSObject *obj);
 extern JS_PUBLIC_API(JSIdArray *)
 JS_EnumerateResolvedStandardClasses(JSContext *cx, JSObject *obj,
                                     JSIdArray *ida);
-
-extern JS_PUBLIC_API(JSBool)
-JS_GetClassObject(JSContext *cx, JSObject *obj, JSProtoKey key,
-                  JSObject **objp);
 
 extern JS_PUBLIC_API(JSObject *)
 JS_GetScopeChain(JSContext *cx);
@@ -710,35 +667,6 @@ JS_LeaveLocalRootScopeWithResult(JSContext *cx, jsval rval);
 
 extern JS_PUBLIC_API(void)
 JS_ForgetLocalRoot(JSContext *cx, void *thing);
-
-#ifdef __cplusplus
-JS_END_EXTERN_C
-
-class JSAutoLocalRootScope {
-  public:
-    JSAutoLocalRootScope(JSContext *cx) : mContext(cx) {
-        JS_EnterLocalRootScope(mContext);
-    }
-    ~JSAutoLocalRootScope() {
-        JS_LeaveLocalRootScope(mContext);
-    }
-
-    void forget(void *thing) {
-        JS_ForgetLocalRoot(mContext, thing);
-    }
-
-  protected:
-    JSContext *mContext;
-
-#if 0
-  private:
-    static void *operator new(size_t) CPP_THROW_NEW { return 0; };
-    static void operator delete(void *, size_t) { };
-#endif
-};
-
-JS_BEGIN_EXTERN_C
-#endif
 
 #ifdef DEBUG
 extern JS_PUBLIC_API(void)
@@ -956,16 +884,6 @@ struct JSExtendedClass {
 
 /* True if JSClass is really a JSExtendedClass. */
 #define JSCLASS_IS_EXTENDED             (1<<(JSCLASS_HIGH_FLAGS_SHIFT+0))
-#define JSCLASS_IS_ANONYMOUS            (1<<(JSCLASS_HIGH_FLAGS_SHIFT+1))
-
-/* Fast access to the original value of each standard class's prototype. */
-#define JSCLASS_CACHED_PROTO_SHIFT      (JSCLASS_HIGH_FLAGS_SHIFT + 8)
-#define JSCLASS_CACHED_PROTO_WIDTH      8
-#define JSCLASS_CACHED_PROTO_MASK       JS_BITMASK(JSCLASS_CACHED_PROTO_WIDTH)
-#define JSCLASS_HAS_CACHED_PROTO(key)   ((key) << JSCLASS_CACHED_PROTO_SHIFT)
-#define JSCLASS_CACHED_PROTO_KEY(clasp) (((clasp)->flags                      \
-                                          >> JSCLASS_CACHED_PROTO_SHIFT)      \
-                                         & JSCLASS_CACHED_PROTO_MASK)
 
 /* Initializer for unused members of statically initialized JSClass structs. */
 #define JSCLASS_NO_OPTIONAL_MEMBERS     0,0,0,0,0,0,0,0
@@ -1237,10 +1155,6 @@ JS_LookupPropertyWithFlags(JSContext *cx, JSObject *obj, const char *name,
 
 extern JS_PUBLIC_API(JSBool)
 JS_GetProperty(JSContext *cx, JSObject *obj, const char *name, jsval *vp);
-
-extern JS_PUBLIC_API(JSBool)
-JS_GetMethodById(JSContext *cx, JSObject *obj, jsid id, JSObject **objp,
-                 jsval *vp);
 
 extern JS_PUBLIC_API(JSBool)
 JS_GetMethod(JSContext *cx, JSObject *obj, const char *name, JSObject **objp,
@@ -1851,55 +1765,16 @@ JS_UndependString(JSContext *cx, JSString *str);
 extern JS_PUBLIC_API(JSBool)
 JS_MakeStringImmutable(JSContext *cx, JSString *str);
 
-/*
- * Return JS_TRUE if C (char []) strings passed via the API and internally
- * are UTF-8. The source must be compiled with JS_C_STRINGS_ARE_UTF8 defined
- * to get UTF-8 support.
- */
-JS_PUBLIC_API(JSBool)
-JS_CStringsAreUTF8();
-
-/*
- * Character encoding support.
- *
- * For both JS_EncodeCharacters and JS_DecodeBytes, set *dstlenp to the size
- * of the destination buffer before the call; on return, *dstlenp contains the
- * number of bytes (JS_EncodeCharacters) or jschars (JS_DecodeBytes) actually
- * stored.  To determine the necessary destination buffer size, make a sizing
- * call that passes NULL for dst.
- *
- * On errors, the functions report the error. In that case, *dstlenp contains
- * the number of characters or bytes transferred so far.  If cx is NULL, no
- * error is reported on failure, and the functions simply return JS_FALSE.
- *
- * NB: Neither function stores an additional zero byte or jschar after the
- * transcoded string.
- *
- * If the source has been compiled with the #define JS_C_STRINGS_ARE_UTF8 to
- * enable UTF-8 interpretation of C char[] strings, then JS_EncodeCharacters
- * encodes to UTF-8, and JS_DecodeBytes decodes from UTF-8, which may create
- * addititional errors if the character sequence is malformed.  If UTF-8
- * support is disabled, the functions deflate and inflate, respectively.
- */
-JS_PUBLIC_API(JSBool)
-JS_EncodeCharacters(JSContext *cx, const jschar *src, size_t srclen, char *dst,
-                    size_t *dstlenp);
-
-JS_PUBLIC_API(JSBool)
-JS_DecodeBytes(JSContext *cx, const char *src, size_t srclen, jschar *dst,
-               size_t *dstlenp);
-
 /************************************************************************/
 
 /*
- * Locale specific string conversion and error message callbacks.
+ * Locale specific string conversion callback.
  */
 struct JSLocaleCallbacks {
     JSLocaleToUpperCase     localeToUpperCase;
     JSLocaleToLowerCase     localeToLowerCase;
     JSLocaleCompare         localeCompare;
     JSLocaleToUnicode       localeToUnicode;
-    JSErrorCallback         localeGetErrorMessage;
 };
 
 /*

@@ -81,13 +81,6 @@ JS_BEGIN_EXTERN_C
 extern uint8 *
 js_GetGCThingFlags(void *thing);
 
-/*
- * The sole purpose of the function is to preserve public API compatibility
- * in JS_GetStringBytes which takes only single JSString* argument.
- */
-JSRuntime*
-js_GetGCStringRuntime(JSString *str);
-
 /* These are compatible with JSDHashEntryStub. */
 struct JSGCRootHashEntry {
     JSDHashEntryHdr hdr;
@@ -160,35 +153,45 @@ extern JSBool
 js_IsAboutToBeFinalized(JSContext *cx, void *thing);
 
 extern void
-js_MarkAtom(JSContext *cx, JSAtom *atom);
+js_MarkAtom(JSContext *cx, JSAtom *atom, void *arg);
 
 /* We avoid a large number of unnecessary calls by doing the flag check first */
-#define GC_MARK_ATOM(cx, atom)                                                \
+#define GC_MARK_ATOM(cx, atom, arg)                                           \
     JS_BEGIN_MACRO                                                            \
         if (!((atom)->flags & ATOM_MARK))                                     \
-            js_MarkAtom(cx, atom);                                            \
+            js_MarkAtom(cx, atom, arg);                                       \
     JS_END_MACRO
 
-/*
- * Always use GC_MARK macro and never call js_MarkGCThing directly so
- * when GC_MARK_DEBUG is defined the dump of live GC things does not miss
- * a thing.
- */
 extern void
-js_MarkGCThing(JSContext *cx, void *thing);
+js_MarkGCThing(JSContext *cx, void *thing, void *arg);
 
 #ifdef GC_MARK_DEBUG
 
-# define GC_MARK(cx, thing, name) js_MarkNamedGCThing(cx, thing, name)
+typedef struct GCMarkNode GCMarkNode;
 
-extern void
-js_MarkNamedGCThing(JSContext *cx, void *thing, const char *name);
+struct GCMarkNode {
+    void        *thing;
+    const char  *name;
+    GCMarkNode  *next;
+    GCMarkNode  *prev;
+};
 
-#else
+#define GC_MARK(cx_, thing_, name_, prev_)                                    \
+    JS_BEGIN_MACRO                                                            \
+        GCMarkNode node_;                                                     \
+        node_.thing = thing_;                                                 \
+        node_.name  = name_;                                                  \
+        node_.next  = NULL;                                                   \
+        node_.prev  = prev_;                                                  \
+        if (prev_) ((GCMarkNode *)(prev_))->next = &node_;                    \
+        js_MarkGCThing(cx_, thing_, &node_);                                  \
+    JS_END_MACRO
 
-# define GC_MARK(cx, thing, name) js_MarkGCThing(cx, thing)
+#else  /* !GC_MARK_DEBUG */
 
-#endif
+#define GC_MARK(cx, thing, name, prev)   js_MarkGCThing(cx, thing, NULL)
+
+#endif /* !GC_MARK_DEBUG */
 
 /*
  * Flags to modify how a GC marks and sweeps:
@@ -220,6 +223,10 @@ js_GC(JSContext *cx, uintN gcflags);
 
 typedef struct JSGCStats {
     uint32  alloc;      /* number of allocation attempts */
+    uint32  freelen[GC_NUM_FREELISTS];
+                        /* gcFreeList lengths */
+    uint32  recycle[GC_NUM_FREELISTS];
+                        /* number of things recycled through gcFreeList */
     uint32  retry;      /* allocation attempt retries after running the GC */
     uint32  retryhalt;  /* allocation retries halted by the branch callback */
     uint32  fail;       /* allocation failures */
@@ -231,11 +238,11 @@ typedef struct JSGCStats {
     uint32  maxdepth;   /* maximum mark tail recursion depth */
     uint32  cdepth;     /* mark recursion depth of C functions */
     uint32  maxcdepth;  /* maximum mark recursion depth of C functions */
-    uint32  unscanned;  /* mark C stack overflows or number of times
-                           GC things were put in unscanned bag */
-#ifdef DEBUG
-    uint32  maxunscanned;       /* maximum size of unscanned bag */
-#endif
+    uint32  dswmark;    /* mark C stack overflows => Deutsch-Schorr-Waite */
+    uint32  dswdepth;   /* DSW mark depth */
+    uint32  maxdswdepth;/* maximum DSW mark depth */
+    uint32  dswup;      /* DSW moves up the mark spanning tree */
+    uint32  dswupstep;  /* steps in obj->slots to find DSW-reversed pointer */
     uint32  maxlevel;   /* maximum GC nesting (indirect recursion) level */
     uint32  poke;       /* number of potentially useful GC calls */
     uint32  nopoke;     /* useless GC calls where js_PokeGC was not set */
@@ -248,38 +255,6 @@ extern JS_FRIEND_API(void)
 js_DumpGCStats(JSRuntime *rt, FILE *fp);
 
 #endif /* JS_GCMETER */
-
-typedef struct JSGCArena JSGCArena;
-typedef struct JSGCArenaList JSGCArenaList;
-
-#ifdef JS_GCMETER
-typedef struct JSGCArenaStats JSGCArenaStats;
-
-struct JSGCArenaStats {
-    uint32  narenas;        /* number of arena in list */
-    uint32  maxarenas;      /* maximun number of allocated arenas */
-    uint32  nthings;        /* number of allocates JSGCThing */
-    uint32  maxthings;      /* maximum number number of allocates JSGCThing */
-    uint32  totalnew;       /* number of succeeded calls to js_NewGCThing */
-    uint32  freelen;        /* freeList lengths */
-    uint32  recycle;        /* number of things recycled through freeList */
-    uint32  totalarenas;    /* total number of arenas with live things that
-                               GC scanned so far */
-    uint32  totalfreelen;   /* total number of things that GC put to free
-                               list so far */
-};
-#endif
-
-struct JSGCArenaList {
-    JSGCArena   *last;          /* last allocated GC arena */
-    uint16      lastLimit;      /* end offset of allocated so far things in
-                                   the last arena */
-    uint16      thingSize;      /* size of things to allocate on this list */
-    JSGCThing   *freeList;      /* list of free GC things */
-#ifdef JS_GCMETER
-    JSGCArenaStats stats;
-#endif
-};
 
 #ifdef DEBUG_notme
 #define TOO_MUCH_GC 1

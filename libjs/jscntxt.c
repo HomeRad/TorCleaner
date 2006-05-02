@@ -1,5 +1,4 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
- * vim: set ts=8 sw=4 et tw=80:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -64,88 +63,6 @@
 #include "jsscript.h"
 #include "jsstr.h"
 
-#ifdef JS_THREADSAFE
-
-/*
- * Callback function to delete a JSThread info when the thread that owns it
- * is destroyed.
- */
-void JS_DLL_CALLBACK
-js_ThreadDestructorCB(void *ptr)
-{
-    JSThread *thread = (JSThread *)ptr;
-
-    if (!thread)
-        return;
-    while (!JS_CLIST_IS_EMPTY(&thread->contextList))
-        JS_REMOVE_AND_INIT_LINK(thread->contextList.next);
-    free(thread);
-}
-
-/*
- * Get current thread-local JSThread info, creating one if it doesn't exist.
- * Each thread has a unique JSThread pointer.
- *
- * Since we are dealing with thread-local data, no lock is needed.
- *
- * Return a pointer to the thread local info, NULL if the system runs out
- * of memory, or it failed to set thread private data (neither case is very
- * likely; both are probably due to out-of-memory).  It is up to the caller
- * to report an error, if possible.
- */
-JSThread *
-js_GetCurrentThread(JSRuntime *rt)
-{
-    JSThread *thread;
-
-    thread = (JSThread *)PR_GetThreadPrivate(rt->threadTPIndex);
-    if (!thread) {
-        /* New memory is set to 0 so that elements in gcFreeLists are NULL. */
-        thread = (JSThread *) calloc(1, sizeof(JSThread));
-        if (!thread)
-            return NULL;
-
-        if (PR_FAILURE == PR_SetThreadPrivate(rt->threadTPIndex, thread)) {
-            free(thread);
-            return NULL;
-        }
-
-        JS_INIT_CLIST(&thread->contextList);
-        thread->id = js_CurrentThreadId();
-    }
-    return thread;
-}
-
-/*
- * Sets current thread as owning thread of a context by assigning the
- * thread-private info to the context. If the current thread doesn't have
- * private JSThread info, create one.
- */
-JSBool
-js_SetContextThread(JSContext *cx)
-{
-    JSThread *thread = js_GetCurrentThread(cx->runtime);
-
-    if (!thread) {
-        JS_ReportOutOfMemory(cx);
-        return JS_FALSE;
-    }
-    cx->thread = thread;
-    JS_REMOVE_LINK(&cx->threadLinks);
-    JS_APPEND_LINK(&cx->threadLinks, &thread->contextList);
-    return JS_TRUE;
-}
-
-/* Remove the owning thread info of a context. */
-void
-js_ClearContextThread(JSContext *cx)
-{
-    cx->thread = NULL;
-    JS_REMOVE_LINK(&cx->threadLinks);
-}
-
-#endif /* JS_THREADSAFE */
-
 void
 js_OnVersionChange(JSContext *cx)
 {
@@ -183,8 +100,7 @@ js_NewContext(JSRuntime *rt, size_t stackChunkSize)
     cx->stackLimit = (jsuword)-1;
 #endif
 #ifdef JS_THREADSAFE
-    JS_INIT_CLIST(&cx->threadLinks);
-    js_SetContextThread(cx);
+    js_InitContextForLocking(cx);
 #endif
 
     JS_LOCK_GC(rt);
@@ -223,6 +139,9 @@ js_NewContext(JSRuntime *rt, size_t stackChunkSize)
         return NULL;
     }
 #endif
+#if JS_HAS_EXCEPTIONS
+    cx->throwing = JS_FALSE;
+#endif
 
     /*
      * If cx is the first context on this runtime, initialize well-known atoms,
@@ -233,9 +152,6 @@ js_NewContext(JSRuntime *rt, size_t stackChunkSize)
      * as well as "first".
      */
     if (first) {
-#ifdef JS_THREADSAFE
-        JS_BeginRequest(cx);
-#endif
         /*
          * Both atomState and the scriptFilenameTable may be left over from a
          * previous episode of non-zero contexts alive in rt, so don't re-init
@@ -246,15 +162,14 @@ js_NewContext(JSRuntime *rt, size_t stackChunkSize)
         ok = (rt->atomState.liveAtoms == 0)
              ? js_InitAtomState(cx, &rt->atomState)
              : js_InitPinnedAtoms(cx, &rt->atomState);
+        if (ok)
+            ok = js_InitScanner(cx);
         if (ok && !rt->scriptFilenameTable)
             ok = js_InitRuntimeScriptState(rt);
         if (ok)
             ok = js_InitRuntimeNumberState(cx);
         if (ok)
             ok = js_InitRuntimeStringState(cx);
-#ifdef JS_THREADSAFE
-        JS_EndRequest(cx);
-#endif
         if (!ok) {
             js_DestroyContext(cx, JS_NO_GC);
             return NULL;
@@ -399,10 +314,6 @@ js_DestroyContext(JSContext *cx, JSGCMode gcmode)
         }
         JS_free(cx, lrs);
     }
-
-#ifdef JS_THREADSAFE
-    js_ClearContextThread(cx);
-#endif
 
     /* Finally, free cx itself. */
     free(cx);
@@ -760,10 +671,12 @@ js_MarkLocalRoots(JSContext *cx, JSLocalRootStack *lrs)
 #ifdef GC_MARK_DEBUG
             char name[22];
             JS_snprintf(name, sizeof name, "<local root %u>", n);
+#else
+            const char *name = NULL;
 #endif
             m = n & JSLRS_CHUNK_MASK;
             JS_ASSERT(JSVAL_IS_GCTHING(lrc->roots[m]));
-            GC_MARK(cx, JSVAL_TO_GCTHING(lrc->roots[m]), name);
+            JS_MarkGCThing(cx, JSVAL_TO_GCTHING(lrc->roots[m]), name, NULL);
             if (m == 0)
                 lrc = lrc->down;
         }
@@ -775,129 +688,6 @@ js_MarkLocalRoots(JSContext *cx, JSLocalRootStack *lrs)
     JS_ASSERT(!lrc);
 }
 
-JS_STATIC_DLL_CALLBACK(JSObject *)
-js_InitNullClass(JSContext *cx, JSObject *obj)
-{
-    JS_ASSERT(0);
-    return NULL;
-}
-
-#define JS_PROTO(name,init) extern JSObject *init(JSContext *, JSObject *);
-#include "jsproto.tbl"
-#undef JS_PROTO
-
-static JSObjectOp lazy_prototype_init[JSProto_LIMIT] = {
-#define JS_PROTO(name,init) init,
-#include "jsproto.tbl"
-#undef JS_PROTO
-};
-
-/*
- * We optimize prototype caching by storing strong references to standard
- * object prototypes in each cx whose globalObject is populated (eagerly or
- * lazily) with the standard class constructors and global functions.
- *
- * But since in anything like a browser embedding, an object statically
- * scoped by one global object may be accessed by script running on another
- * global object's context, we must not dynamically scope cached prototypes.
- * This may require searching all contexts for a given thread, in the event
- * that a given execution context does not have a global object equal to the
- * global of a given target object.
- */
-static JSContext *
-FindContextForObject(JSContext *cx, JSObject *obj)
-{
-    JSCList *head, *link;
-    JSContext *ocx;
-
-    JS_ASSERT(cx->globalObject != obj);
-#ifdef JS_THREADSAFE
-    head = &cx->thread->contextList;
-#else
-    head = &cx->runtime->contextList;
-#endif
-    for (link = head->next; link != head; link = link->next) {
-#ifdef JS_THREADSAFE
-        ocx = CX_FROM_THREAD_LINKS(link);
-        JS_ASSERT(ocx->thread == cx->thread);
-#else
-        ocx = (JSContext *) link;
-#endif
-        if (ocx != cx && ocx->globalObject == obj)
-            return ocx;
-    }
-    return NULL;
-}
-
-JSBool
-js_GetClassObject(JSContext *cx, JSObject *obj, JSProtoKey key,
-                  JSObject **objp)
-{
-    JSBool ok;
-    JSResolvingKey rkey;
-    JSResolvingEntry *rentry;
-    uint32 generation;
-    JSObject *tmp, *cobj;
-    JSContext *ocx;
-    JSObjectOp init;
-
-    rkey.obj = obj;
-    rkey.id = ATOM_TO_JSID(cx->runtime->atomState.classAtoms[key]);
-    ok = js_StartResolving(cx, &rkey, JSRESFLAG_LOOKUP, &rentry);
-    if (!ok)
-        return JS_FALSE;
-    if (!rentry) {
-        /* Already caching key in obj -- suppress recursion. */
-        *objp = NULL;
-        return JS_TRUE;
-    }
-    generation = cx->resolvingTable->generation;
-
-    while ((tmp = OBJ_GET_PARENT(cx, obj)) != NULL)
-        obj = tmp;
-    if (obj == cx->globalObject) {
-        ocx = cx;
-    } else {
-        ocx = FindContextForObject(cx, obj);
-        if (!ocx) {
-            cobj = NULL;
-            goto out;
-        }
-    }
-
-    cobj = ocx->classObjects[key];
-    if (!cobj) {
-        init = lazy_prototype_init[key];
-        if (init) {
-            if (!init(cx, obj))
-                ok = JS_FALSE;
-            cobj = ocx->classObjects[key];
-        }
-    }
-
-out:
-    *objp = cobj;
-    js_StopResolving(cx, &rkey, JSRESFLAG_LOOKUP, rentry, generation);
-    return ok;
-}
-
-void
-js_SetClassObject(JSContext *cx, JSObject *obj, JSProtoKey key,
-                  JSObject *value)
-{
-    JSContext *ocx;
-
-    JS_ASSERT(!OBJ_GET_PARENT(cx, obj));
-    if (obj == cx->globalObject) {
-        ocx = cx;
-    } else {
-        ocx = FindContextForObject(cx, obj);
-        if (!ocx)
-            return;
-    }
-    ocx->classObjects[key] = value;
-}
-
 static void
 ReportError(JSContext *cx, const char *message, JSErrorReport *reportp)
 {
@@ -907,8 +697,7 @@ ReportError(JSContext *cx, const char *message, JSErrorReport *reportp)
      * exception is thrown, then the JSREPORT_EXCEPTION flag will be set
      * on the error report, and exception-aware hosts should ignore it.
      */
-    JS_ASSERT(reportp);
-    if (reportp->errorNumber == JSMSG_UNCAUGHT_EXCEPTION)
+    if (reportp && reportp->errorNumber == JSMSG_UNCAUGHT_EXCEPTION)
         reportp->flags |= JSREPORT_EXCEPTION;
 
 #if JS_HAS_ERROR_EXCEPTIONS
@@ -941,15 +730,14 @@ ReportError(JSContext *cx, const char *message, JSErrorReport *reportp)
  * type message, and then hope the process ends swiftly.
  */
 void
-js_ReportOutOfMemory(JSContext *cx)
+js_ReportOutOfMemory(JSContext *cx, JSErrorCallback callback)
 {
     JSStackFrame *fp;
     JSErrorReport report;
     JSErrorReporter onError = cx->errorReporter;
 
     /* Get the message for this error, but we won't expand any arguments. */
-    const JSErrorFormatString *efs =
-        js_GetLocalizedErrorMessage(cx, NULL, NULL, JSMSG_OUT_OF_MEMORY);
+    const JSErrorFormatString *efs = callback(NULL, NULL, JSMSG_OUT_OF_MEMORY);
     const char *msg = efs ? efs->format : "Out of memory";
 
     /* Fill out the report, but don't do anything that requires allocation. */
@@ -988,9 +776,7 @@ js_ReportOutOfMemory(JSContext *cx)
 JSBool
 js_ReportErrorVA(JSContext *cx, uintN flags, const char *format, va_list ap)
 {
-    char *message;
-    jschar *ucmessage;
-    size_t messagelen;
+    char *last;
     JSStackFrame *fp;
     JSErrorReport report;
     JSBool warning;
@@ -998,15 +784,12 @@ js_ReportErrorVA(JSContext *cx, uintN flags, const char *format, va_list ap)
     if ((flags & JSREPORT_STRICT) && !JS_HAS_STRICT_OPTION(cx))
         return JS_TRUE;
 
-    message = JS_vsmprintf(format, ap);
-    if (!message)
+    last = JS_vsmprintf(format, ap);
+    if (!last)
         return JS_FALSE;
-    messagelen = strlen(message);
 
     memset(&report, 0, sizeof (struct JSErrorReport));
     report.flags = flags;
-    report.errorNumber = JSMSG_USER_DEFINED_ERROR;
-    report.ucmessage = ucmessage = js_InflateString(cx, message, &messagelen);
 
     /* Find the top-most active script frame, for best line number blame. */
     for (fp = cx->fp; fp; fp = fp->down) {
@@ -1023,9 +806,8 @@ js_ReportErrorVA(JSContext *cx, uintN flags, const char *format, va_list ap)
         warning = JS_FALSE;
     }
 
-    ReportError(cx, message, &report);
-    free(message);
-    JS_free(cx, ucmessage);
+    ReportError(cx, last, &report);
+    free(last);
     return warning;
 }
 
@@ -1057,112 +839,104 @@ js_ExpandErrorArguments(JSContext *cx, JSErrorCallback callback,
     }
 
     *messagep = NULL;
-
-    /* Most calls supply js_GetErrorMessage; if this is so, assume NULL. */
-    if (!callback || callback == js_GetErrorMessage)
-        efs = js_GetLocalizedErrorMessage(cx, userRef, NULL, errorNumber);
-    else
+    if (callback) {
         efs = callback(userRef, NULL, errorNumber);
-    if (efs) {
-        size_t totalArgsLength = 0;
-        size_t argLengths[10]; /* only {0} thru {9} supported */
-        argCount = efs->argCount;
-        JS_ASSERT(argCount <= 10);
-        if (argCount > 0) {
-            /*
-             * Gather the arguments into an array, and accumulate
-             * their sizes. We allocate 1 more than necessary and
-             * null it out to act as the caboose when we free the
-             * pointers later.
-             */
-            reportp->messageArgs = (const jschar **)
-                JS_malloc(cx, sizeof(jschar *) * (argCount + 1));
-            if (!reportp->messageArgs)
-                return JS_FALSE;
-            reportp->messageArgs[argCount] = NULL;
-            for (i = 0; i < argCount; i++) {
-                if (charArgs) {
-                    char *charArg = va_arg(ap, char *);
-                    size_t charArgLength = strlen(charArg);
-                    reportp->messageArgs[i]
-                        = js_InflateString(cx, charArg, &charArgLength);
-                    if (!reportp->messageArgs[i])
-                        goto error;
-                } else {
-                    reportp->messageArgs[i] = va_arg(ap, jschar *);
-                }
-                argLengths[i] = js_strlen(reportp->messageArgs[i]);
-                totalArgsLength += argLengths[i];
-            }
-            /* NULL-terminate for easy copying. */
-            reportp->messageArgs[i] = NULL;
-        }
-        /*
-         * Parse the error format, substituting the argument X
-         * for {X} in the format.
-         */
-        if (argCount > 0) {
-            if (efs->format) {
-                jschar *buffer, *fmt, *out;
-                int expandedArgs = 0;
-                size_t expandedLength;
-                size_t len = strlen(efs->format);
-
-                buffer = fmt = js_InflateString (cx, efs->format, &len);
-                if (!buffer)
-                    goto error;
-                expandedLength = len
-                                 - (3 * argCount)       /* exclude the {n} */
-                                 + totalArgsLength;
-
+        if (efs) {
+            size_t totalArgsLength = 0;
+            size_t argLengths[10]; /* only {0} thru {9} supported */
+            argCount = efs->argCount;
+            JS_ASSERT(argCount <= 10);
+            if (argCount > 0) {
                 /*
-                * Note - the above calculation assumes that each argument
-                * is used once and only once in the expansion !!!
-                */
-                reportp->ucmessage = out = (jschar *)
-                    JS_malloc(cx, (expandedLength + 1) * sizeof(jschar));
-                if (!out) {
-                    JS_free (cx, buffer);
-                    goto error;
-                }
-                while (*fmt) {
-                    if (*fmt == '{') {
-                        if (isdigit(fmt[1])) {
-                            int d = JS7_UNDEC(fmt[1]);
-                            JS_ASSERT(d < argCount);
-                            js_strncpy(out, reportp->messageArgs[d],
-                                       argLengths[d]);
-                            out += argLengths[d];
-                            fmt += 3;
-                            expandedArgs++;
-                            continue;
-                        }
+                 * Gather the arguments into an array, and accumulate
+                 * their sizes. We allocate 1 more than necessary and
+                 * null it out to act as the caboose when we free the
+                 * pointers later.
+                 */
+                reportp->messageArgs = (const jschar **)
+                    JS_malloc(cx, sizeof(jschar *) * (argCount + 1));
+                if (!reportp->messageArgs)
+                    return JS_FALSE;
+                reportp->messageArgs[argCount] = NULL;
+                for (i = 0; i < argCount; i++) {
+                    if (charArgs) {
+                        char *charArg = va_arg(ap, char *);
+                        reportp->messageArgs[i]
+                            = js_InflateString(cx, charArg, strlen(charArg));
+                        if (!reportp->messageArgs[i])
+                            goto error;
                     }
-                    *out++ = *fmt++;
+                    else
+                        reportp->messageArgs[i] = va_arg(ap, jschar *);
+                    argLengths[i] = js_strlen(reportp->messageArgs[i]);
+                    totalArgsLength += argLengths[i];
                 }
-                JS_ASSERT(expandedArgs == argCount);
-                *out = 0;
-                JS_free (cx, buffer);
-                *messagep =
-                    js_DeflateString(cx, reportp->ucmessage,
-                                     (size_t)(out - reportp->ucmessage));
-                if (!*messagep)
-                    goto error;
+                /* NULL-terminate for easy copying. */
+                reportp->messageArgs[i] = NULL;
             }
-        } else {
             /*
-             * Zero arguments: the format string (if it exists) is the
-             * entire message.
+             * Parse the error format, substituting the argument X
+             * for {X} in the format.
              */
-            if (efs->format) {
-                size_t len;
-                *messagep = JS_strdup(cx, efs->format);
-                if (!*messagep)
-                    goto error;
-                len = strlen(*messagep);
-                reportp->ucmessage = js_InflateString(cx, *messagep, &len);
-                if (!reportp->ucmessage)
-                    goto error;
+            if (argCount > 0) {
+                if (efs->format) {
+                    const char *fmt;
+                    const jschar *arg;
+                    jschar *out;
+                    int expandedArgs = 0;
+                    size_t expandedLength
+                        = strlen(efs->format)
+                            - (3 * argCount) /* exclude the {n} */
+                            + totalArgsLength;
+                    /*
+                     * Note - the above calculation assumes that each argument
+                     * is used once and only once in the expansion !!!
+                     */
+                    reportp->ucmessage = out = (jschar *)
+                        JS_malloc(cx, (expandedLength + 1) * sizeof(jschar));
+                    if (!out)
+                        goto error;
+                    fmt = efs->format;
+                    while (*fmt) {
+                        if (*fmt == '{') {
+                            if (isdigit(fmt[1])) {
+                                int d = JS7_UNDEC(fmt[1]);
+                                JS_ASSERT(d < argCount);
+                                arg = reportp->messageArgs[d];
+                                js_strncpy(out, arg, argLengths[d]);
+                                out += argLengths[d];
+                                fmt += 3;
+                                expandedArgs++;
+                                continue;
+                            }
+                        }
+                        /*
+                         * is this kosher?
+                         */
+                        *out++ = (unsigned char)(*fmt++);
+                    }
+                    JS_ASSERT(expandedArgs == argCount);
+                    *out = 0;
+                    *messagep =
+                        js_DeflateString(cx, reportp->ucmessage,
+                                         (size_t)(out - reportp->ucmessage));
+                    if (!*messagep)
+                        goto error;
+                }
+            } else {
+                /*
+                 * Zero arguments: the format string (if it exists) is the
+                 * entire message.
+                 */
+                if (efs->format) {
+                    *messagep = JS_strdup(cx, efs->format);
+                    if (!*messagep)
+                        goto error;
+                    reportp->ucmessage
+                        = js_InflateString(cx, *messagep, strlen(*messagep));
+                    if (!reportp->ucmessage)
+                        goto error;
+                }
             }
         }
     }
@@ -1236,15 +1010,9 @@ js_ReportErrorNumberVA(JSContext *cx, uintN flags, JSErrorCallback callback,
     if (message)
         JS_free(cx, message);
     if (report.messageArgs) {
-        /*
-         * js_ExpandErrorArguments owns its messageArgs only if it had to
-         * inflate the arguments (from regular |char *|s).
-         */
-        if (charArgs) {
-            int i = 0;
-            while (report.messageArgs[i])
-                JS_free(cx, (void *)report.messageArgs[i++]);
-        }
+        int i = 0;
+        while (report.messageArgs[i])
+            JS_free(cx, (void *)report.messageArgs[i++]);
         JS_free(cx, (void *)report.messageArgs);
     }
     if (report.ucmessage)
@@ -1299,10 +1067,10 @@ void js_traceoff(JSContext *cx) { cx->tracefp = NULL; }
 JSErrorFormatString js_ErrorFormatString[JSErr_Limit] = {
 #if JS_HAS_DFLT_MSG_STRINGS
 #define MSG_DEF(name, number, count, exception, format) \
-    { format, count, exception } ,
+    { format, count } ,
 #else
 #define MSG_DEF(name, number, count, exception, format) \
-    { NULL, count, exception } ,
+    { NULL, count } ,
 #endif
 #include "js.msg"
 #undef MSG_DEF
