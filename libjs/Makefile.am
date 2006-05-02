@@ -91,3 +91,4 @@ origupdate:
 	      fi; \
 	  fi; \
 	done
+	patch -p0 < fdlibm_endian.diff
