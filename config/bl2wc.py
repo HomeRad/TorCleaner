@@ -17,6 +17,7 @@ import gzip
 import tarfile
 import wc
 import wc.configuration
+import wc.configuration.confparse
 import wc.XmlUtils
 
 # global vars
@@ -90,7 +91,7 @@ def read_data (fname, name, data):
 
 
 def read_ids (filename, ids):
-    p = wc.configuration.ZapperParser(filename)
+    p = wc.configuration.confparse.ZapperParser(filename)
     p.parse()
     ids['folder']['sid'] = str(p.folder.sid)
     ids['folder']['oid'] = p.folder.oid
@@ -247,6 +248,8 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
 
 def blacklist (fname, extract_to="extracted"):
     source = os.path.join("downloads", fname)
+    if not os.path.isdir(extract_to):
+        os.makedirs(extract_to, 0722)
     # extract tar
     if fname.endswith(".tar.gz") or fname.endswith(".tgz"):
         print "extracting archive", fname
@@ -263,7 +266,7 @@ def blacklist (fname, extract_to="extracted"):
     elif fname.endswith(".gz"):
         print "gunzip..."
         f = gzip.open(source)
-        fname = "extracted/"+fname[:-3]
+        fname = os.path.join(extract_to, fname[:-3])
         os.makedirs(os.path.dirname(fname), 0722)
         w = file(fname, 'wb')
         w.write(f.read())
