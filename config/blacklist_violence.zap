@@ -3,8 +3,8 @@
 <folder sid="wc.19" oid="1" configversion="0.10">
 <title lang="en">Blacklist violence</title>
 <title lang="de">Filter für Gewalt</title>
-<description lang="en">Automatically generated on 2006-03-16 19:24:37</description>
-<description lang="de">Automatisch generiert am 2006-03-16 19:24:37</description>
+<description lang="en">Automatically generated on 2006-05-03 00:26:04</description>
+<description lang="de">Automatisch generiert am 2006-05-03 00:26:04</description>
 <blockdomains sid="wc.18"
  filename="blacklists/violence/domains.gz">
   <title lang="en">Violence domain filter</title>
