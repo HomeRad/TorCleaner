@@ -24,7 +24,7 @@
     in 2.0). Reason are too much changes in the TRUNK development,
     especially the drop for support of JS pre-1.5 versions.
     Type: feature
-    ChangedL libjs/*
+    Changed: libjs/*
 
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 
