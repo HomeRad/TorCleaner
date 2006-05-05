@@ -163,7 +163,7 @@ def get_log_file (name, logname, trydirs=None):
                   (logname, str(trydirs)))
 
 
-def initlog (filename=default_logfile, appname=AppName, filelogs=True):
+def initlog (filename=default_logfile, appname=Name, filelogs=True):
     """
     Initialize logfiles and configuration.
     """
