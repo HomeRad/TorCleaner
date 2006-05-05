@@ -1,5 +1,3 @@
-- complete implementation of the rating system
-
 - The "connect error connection refused" message could be improved.
   Here is what firefox displays:
 
