@@ -273,9 +273,9 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                 self.js_src = False
                 return
             self.htmlparser.tagbuf.append(item)
-        #XXX don't write any data to buf if there are still rating rules
-        #if self.ratings and not finish:
-        #    return
+        # don't write any data to buf if there are still rating rules
+        if self.ratings:
+            return
         if not self.rulestack:
             self.htmlparser.tagbuf2data()
 
