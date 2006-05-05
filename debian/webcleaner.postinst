@@ -6,22 +6,20 @@
 . /usr/share/debconf/confmodule
 db_version 2.0
 
-# set secure umask for .tmp file creation below
-umask 0077
 package=webcleaner
 
 case "$1" in
 configure|reconfigure)
-    db_get $package/port
+    db_get webcleaner/port
     test -n "$RET" || RET="8080"
-    sed -i -e "s/ port=.*/ port=\"$RET\"/" /etc/$package/$package.conf
+    sed -i -e "s/ port=.*/ port=\"$RET\"/" /etc/webcleaner/webcleaner.conf
     RET=""
-    db_get $package/adminpass
+    db_get webcleaner/adminpass
     if [ "x$RET" != "x" ]; then
         P=`echo -n "$RET" | python -c "import sys, base64; print base64.encodestring(sys.stdin.read()).strip()"`
-        sed -i -e "s/ adminpass=.*/ adminpass=\"${P}\"/" /etc/$package/$package.conf
+        sed -i -e "s/ adminpass=.*/ adminpass=\"${P}\"/" /etc/webcleaner/webcleaner.conf
     fi
-    db_unregister $package/adminpass
+    db_unregister webcleaner/adminpass
     ;;
 abort-upgrade|abort-remove|abort-deconfigure)
     ;;
@@ -44,8 +42,8 @@ configure|reconfigure)
     # generate SSL certs
     webcleaner-certificates install
     # install service link
-    if [ ! -e /var/service/$package ]; then
-        ln -s /etc/$package/service /var/service/$package
+    if [ ! -e /var/service/webcleaner ]; then
+        ln -s /etc/webcleaner/service /var/service/webcleaner
     fi
     ;;
 esac
