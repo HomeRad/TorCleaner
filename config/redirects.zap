@@ -54,6 +54,15 @@
   <replacement part="attrval">http://osdn.dl.sourceforge.net\1</replacement>
 </htmlrewrite>
 
+<htmlrewrite sid="wc.50"
+ tag="a">
+  <title lang="de">Berlios Downloads</title>
+  <title lang="en">Berlios Downloads</title>
+  <description lang="en">Use specific mirror for all Berlios downloads.Available are download and download2.</description>
+  <attr name="href">http://prdownload\.berlios\.de(.+)</attr>
+  <replacement part="attrval">http://download.berlios.de\1</replacement>
+</htmlrewrite>
+
 <htmlrewrite sid="wc.13"
  tag="a">
   <title lang="de">Knoppix Weiterleitung</title>
