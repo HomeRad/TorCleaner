@@ -26,6 +26,19 @@
     Type: feature
     Changed: libjs/*
 
+  * Updated spidermonkey JavaScript library from upstream CVS as of
+    20060504.
+    Type: feature
+    Changed: libjs/*
+
+  * Updated Squid blacklists to 20060505.
+    Type: feature
+    Changed: config/blacklist*
+
+  * Reimplemented the rating system, still in beta release state though.
+    Type: feature
+    Added: wc/rating/*
+
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 
   * Remove literal "</script>" in embedded JavaScript files.
