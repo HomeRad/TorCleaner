@@ -306,6 +306,22 @@ a();
     def testFilter (self):
         self.filt("""<script src="http://ivwbox.de"></script>""", "")
 
+    def test_quoting1 (self):
+        self.filt("""<script>
+function a() {
+    alert("This is not a </script>!");
+}
+</script>""", """<script>//<![CDATA[
+function a() {
+    alert("This is not a </scr"+"ipt>!");
+}//]]></script>""")
+
+    def test_quoting2 (self):
+        self.filt("""<script>
+/* </script>blubb */
+</script>""", """<script>//<![CDATA[
+/* blubb *///]]></script>""")
+
 
 def test_suite ():
     return unittest.makeSuite(TestRewriteScript)
