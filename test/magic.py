@@ -26,7 +26,7 @@ def _main (args):
     Read file and guess MIME type.
     """
     import wc.configuration
-    wc.configuration.config = wc.configuration.init()
+    wc.configuration.init()
     import wc.magic
     fp = open(args[0])
     try:

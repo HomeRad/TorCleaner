@@ -46,8 +46,8 @@ def _main ():
         f.close()
     logfile = os.path.join(confdir, "logging.conf")
     wc.initlog(logfile, filelogs=False)
-    wc.configuration.config = wc.configuration.init(confdir=confdir)
-    wc.configuration.config.init_filter_modules()
+    config = wc.configuration.init(confdir=confdir)
+    config.init_filter_modules()
     wc.proxy.dns_lookups.init_resolver()
     headers = wc.http.header.WcMessage(StringIO(''))
     headers['Content-Type'] = mimetypes.guess_type(f)[0]
