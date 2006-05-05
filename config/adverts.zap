@@ -326,6 +326,16 @@
   <replacement part="complete"/>
 </htmlrewrite>
 
+<htmlrewrite sid="wc.85"
+ tag="a">
+  <title lang="de">Entferne Verknüpfungen mit 'adid'</title>
+  <title lang="en">Remove links with 'adid'</title>
+  <description lang="de">Entferne Verknüpfungen mit 'adid' im Namen.</description>
+  <description lang="en">Remove links with 'adid' in the name.</description>
+  <attr name="href">obidos/redirect\?.*adid=.+</attr>
+  <replacement part="complete"/>
+</htmlrewrite>
+
 <htmlrewrite sid="wc.52"
  tag="iframe|script">
   <title lang="de">Rechner mit 'ad'</title>
