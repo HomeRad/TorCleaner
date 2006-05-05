@@ -67,6 +67,6 @@ fi
 #DEBHELPER#
 
 # (re)start webcleaner
-/etc/init.d/webcleaner start || true
+invoke-rc.d webcleaner start || true
 
 exit 0

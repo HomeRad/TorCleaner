@@ -15,6 +15,15 @@
 
 case "$1" in
 upgrade)
+    # stop running webcleaner instance
+    if [ -f /etc/init.d/webcleaner ]; then
+        invoke-rc.d webcleaner stop || true
+        # remove old init.d files and links
+        if [ ! -L /etc/init.d/webcleaner ]; then
+            rm -f /etc/init.d/webcleaner
+            update-rc.d webcleaner remove
+        fi
+    fi
     # remove old files
     rm -rf /etc/webcleaner/whitelists || true
     # move old log files
@@ -22,11 +31,6 @@ upgrade)
         rm -f /var/log/webcleaner/*.log
         mv -f /var/log/webcleaner/main/* /var/log/webcleaner
         rmdir /var/log/webcleaner/main || true
-    fi
-    # remove old init.d files and links
-    if [ -f /etc/init.d/webcleaner ]; then
-        rm -f /etc/init.d/webcleaner
-        update-rc.d webcleaner remove
     fi
     # obsolete files
     rm -f /etc/webcleaner/wcheaders.*
@@ -52,11 +56,6 @@ install|abort-upgrade)
     exit 1
     ;;
 esac
-
-# stop running webcleaner instance
-if [ -e /etc/init.d/webcleaner ]; then
-    /etc/init.d/webcleaner stop || true
-fi
 
 #DEBHELPER#
 
