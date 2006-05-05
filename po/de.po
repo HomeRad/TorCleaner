@@ -1206,7 +1206,7 @@ msgstr "Nicht zutreffende URLs"
 #: ../templates/classic/filterconfig.html:45
 #: ../templates/classic/filterconfig.html:88
 msgid "Down"
-msgstr "Nach unten"
+msgstr "Runter"
 
 #: ../templates/classic/rating.html:97
 msgid "Edit"
