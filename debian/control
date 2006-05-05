@@ -2,7 +2,7 @@ Source: webcleaner
 Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@users.sourceforge.net>
-Standards-Version: 3.7.1.0
+Standards-Version: 3.7.2.0
 Build-Depends: python2.4-dev, debhelper (>= 5), debconf (>= 1.2.9) | debconf-2.0, gettext, cdbs, python | python-dev | python-all-dev
 
 Package: webcleaner
