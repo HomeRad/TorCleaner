@@ -11,6 +11,7 @@
   <title lang="en">Remove STYLE tag</title>
   <description lang="de">Entferne das &lt;style&gt; tag.</description>
   <description lang="en">Remove the &lt;style&gt; tag.</description>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.78"
@@ -18,5 +19,6 @@
   <title lang="de">Entferne display:none</title>
   <nomatchurl>google\.com</nomatchurl>
   <attr name="style">display:\s*none</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 </folder>
