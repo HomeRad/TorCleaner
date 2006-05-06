@@ -31,6 +31,9 @@ import pywintypes
 
 #################### utility functions ####################
 
+# print all messages in encoded form
+enc = lambda s: s.encode("iso8859-1")
+
 def execute (args):
     """
     Execute command with arguments.
@@ -54,7 +57,7 @@ def state_nt_service (name):
     try:
         return win32serviceutil.QueryServiceStatus(name)[1]
     except pywintypes.error, msg:
-        print _("Service status error: %s") % str(msg)
+        print enc(_("Service status error: %s") % str(msg))
     return None
 
 
@@ -65,7 +68,7 @@ def install_service ():
     import wc
     import wc.win32start
     oldargs = sys.argv
-    print _("Installing %s service...") % wc.AppName
+    print enc(_("Installing %s service...") % wc.AppName)
     sys.argv = ['webcleaner', 'install']
     win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     sys.argv = oldargs
@@ -78,7 +81,7 @@ def remove_service ():
     import wc
     import wc.win32start
     oldargs = sys.argv
-    print _("Removing %s service...") % wc.AppName
+    print enc(_("Removing %s service...") % wc.AppName)
     sys.argv  = ['webcleaner', 'remove']
     win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
     sys.argv = oldargs
@@ -90,7 +93,7 @@ def start_service ():
     """
     import wc
     import wc.win32start
-    print _("Starting %s proxy...") % wc.AppName
+    print enc(_("Starting %s proxy...") % wc.AppName)
     oldargs = sys.argv
     sys.argv = ['webcleaner', 'start']
     win32serviceutil.HandleCommandLine(wc.win32start.ProxyService)
@@ -103,7 +106,7 @@ def stop_service ():
     """
     import wc
     import wc.win32start
-    print _("Stopping %s proxy...") % wc.AppName
+    print enc(_("Stopping %s proxy...") % wc.AppName)
     oldargs = sys.argv
     state = state_nt_service(wc.AppName)
     while state == win32service.SERVICE_START_PENDING:
@@ -221,7 +224,7 @@ def install_shortcuts ():
             prg = get_special_folder_path("CSIDL_PROGRAMS")
         except OSError, reason:
             # give up - cannot install shortcuts
-            print _("Cannot install shortcuts: %s") % reason
+            print enc(_("Cannot install shortcuts: %s") % reason)
             sys.exit()
     lib_dir = distutils.sysconfig.get_python_lib(plat_specific=1)
     dest_dir = os.path.join(prg, "WebCleaner")
@@ -253,10 +256,10 @@ def install_certificates ():
     import wc
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
     if execute([pythonw, script, "install"]) != 0:
-        print _("""Could not install SSL certificates.
+        print enc(_("""Could not install SSL certificates.
 Perhaps PyOpenSSL is not installed?
 You have to install the SSL certificates manually with
-'webcleaner-certificates install'.""")
+'webcleaner-certificates install'."""))
 
 
 def install_adminpassword ():
@@ -275,7 +278,7 @@ def install_adminpassword ():
         password = pass_entry.get()
         password2 = pass2_entry.get()
         if password != password2:
-            print _("Error, passwords differ.")
+            print enc(_("Error, passwords differ."))
         else:
             save_adminpassword(password)
         do_quit()
@@ -329,16 +332,16 @@ def save_adminpassword (password):
     import base64
     password = base64.b64encode(password)
     if not password:
-        print _("Error, password is empty.")
+        print enc(_("Error, password is empty."))
         return
     import wc.strformat
     if not wc.strformat.is_ascii(password):
-        print _("Error, password has binary characters.")
+        print enc(_("Error, password has binary characters."))
         return
     config = get_wc_config()
     config["adminpass"] = password
     config.write_proxyconf()
-    print _("Password saved.")
+    print enc(_("Password saved."))
 
 
 def open_browser_config ():
@@ -363,7 +366,7 @@ def open_browser (url):
     """
     Open a URL in the default browser.
     """
-    print _("Opening proxy configuration interface...")
+    print enc(_("Opening proxy configuration interface..."))
     try:
         webbrowser.open(url)
     except WindowsError, msg:
@@ -401,9 +404,9 @@ def remove_certificates ():
     pythonw = os.path.join(sys.prefix, "pythonw.exe")
     script = os.path.join(wc.ScriptDir, "webcleaner-certificates")
     if execute([pythonw, script, "remove"]) != 0:
-        print _("""Could not remove SSL certificates.
+        print enc(_("""Could not remove SSL certificates.
 Perhaps PyOpenSSL is not installed?
-You have to remove the SSL certificates manually.""")
+You have to remove the SSL certificates manually."""))
 
 
 def remove_tempfiles ():
@@ -464,9 +467,9 @@ def remove_file (fname):
     if os.path.exists(fname):
         try:
             os.remove(fname)
-            print _("File %r removed.") % fname
+            print enc(_("File %r removed.") % fname)
         except OSError, msg:
-            print _("Could not remove file %r: %s") % (fname, str(msg))
+            print enc(_("Could not remove file %r: %s") % (fname, str(msg)))
 
 
 def is_empty_dir (name):
@@ -483,10 +486,10 @@ def remove_empty_directories (dname):
     try:
         if is_empty_dir(dname):
             os.rmdir(dname)
-            print _("Directory %r removed.") % dname
+            print enc(_("Directory %r removed.") % dname)
             remove_empty_directories(os.path.dirname(dname))
     except OSError, msg:
-        print _("Could not remove directory %r: %s") % (dname, str(msg))
+        print enc(_("Could not remove directory %r: %s") % (dname, str(msg)))
 
 
 #################### main ####################
