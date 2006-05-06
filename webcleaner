@@ -169,6 +169,10 @@ def main_nt (configdir, filelogs, args):
         print_usage(_("No command given."))
     else:
         command = args[0]
+    if command == "direct":
+        import wc.start
+        wc.start.wstartfunc(confdir=configdir, filelogs=filelogs)
+        return
     import wc.win32start
     wc.win32start.ProxyService.filelogs = filelogs
     if configdir:
