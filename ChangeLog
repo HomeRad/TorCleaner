@@ -1,4 +1,4 @@
-2.39 "Firefly" (released 5.5.2006)
+2.39 "Firefly" (released 7.5.2006)
 
   * Always use the default locale for translation of messages.
     Type: bugfix
@@ -27,7 +27,7 @@
     Changed: libjs/*
 
   * Updated spidermonkey JavaScript library from upstream CVS as of
-    20060504.
+    20060507.
     Type: feature
     Changed: libjs/*
 
