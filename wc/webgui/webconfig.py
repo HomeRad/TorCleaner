@@ -281,9 +281,7 @@ def add_i18n_context (context, lang):
     """
     # language and i18n
     context_add(context, "lang", lang)
-    translator = wc.get_translator(lang, translatorklass=Translator,
-                                   fallbackklass=NullTranslator)
-    context_add(context, "i18n", translator)
+    context_add(context, "i18n", TALTranslator(wc.get_translator(lang)))
     # other available languges
     otherlanguages = []
     for la in wc.i18n.supported_languages:
@@ -303,41 +301,23 @@ def context_add (context, key, val):
     context[key] = val
 
 
-class Translator (gettext.GNUTranslations):
-    """
-    Translator which interpolates TAL expressions.
-    """
+class TALTranslator (object):
+    """Proxy for a gettext translator, providing the "translate" method."""
+
+    def __init__ (self, translator):
+        """The initializer."""
+        super(TALTranslator, self).__init__()
+        self._translator = translator
+
+    def __getattr__ (self, name):
+        return getattr(self._translator, name)
 
     def translate (self, domain, msgid, mapping=None,
                    context=None, target_language=None, default=None):
         """
         Interpolates and translate TAL expression.
         """
-        _msg = self.gettext(msgid)
+        _msg = self.ugettext(msgid)
         assert wc.log.debug(wc.LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
         return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
 
-    def gettext (self, msgid):
-        """
-        Return unicode with ugettext().
-        """
-        return self.ugettext(msgid)
-
-    def ngettext (self, singular, plural, number):
-        """
-        Return unicode with ungettext().
-        """
-        return self.ungettext(singular, plural, number)
-
-
-class NullTranslator (gettext.NullTranslations):
-    """
-    Fallback translator which interpolates TAL expressions.
-    """
-
-    def translate (self, domain, msgid, mapping=None,
-                   context=None, target_language=None, default=None):
-        """
-        Interpolates TAL expression.
-        """
-        return wc.webgui.TAL.TALInterpreter.interpolate(msgid, mapping)
