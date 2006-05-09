@@ -430,8 +430,8 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             conntype = 'TCP'
         else:
             conntype = ''
-        return '<%s %3s  %s%s%s>' % \
-               ('dns-lookup', conntype, self.hostname, retry, where)
+        return '<%s %d %3s  %s%s%s>' % \
+          ('dns-lookup', self.fileno(), conntype, self.hostname, retry, where)
 
     def cancel (self):
         if self.callback:
