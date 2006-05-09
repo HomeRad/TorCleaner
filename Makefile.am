@@ -145,8 +145,8 @@ upload:
 #	ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).tar.gz webcleaner-$(VERSION).tar.gz.asc
 #	-ncftpput upload.sourceforge.net /incoming webcleaner-$(VERSION).win32-py2.4.exe webcleaner-$(VERSION).win32-py2.4.exe.asc
 #	mozilla -remote "openUrl(https://sourceforge.net/projects/webcleaner, new-tab)"
-	@echo "Make SF release and press return..."
-	@read
+#	@echo "Make SF release and press return..."
+#	@read
 
 .PHONY: release
 release: releasecheck clean dist-stamp sign_distfiles homepage upload
