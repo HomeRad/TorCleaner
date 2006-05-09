@@ -183,7 +183,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
         assert wc.log.debug(wc.LOG_PROXY, '%s Connection.close_close', self)
         if self.connected:
             self.connected = False
-            super(Connection, self).close()
+        super(Connection, self).close()
 
     def handle_close (self):
         """
