@@ -388,6 +388,8 @@ def do_remove ():
     import wc
     wc.initlog()
     stop_service()
+    import logging
+    logging.shutdown()
     remove_service()
     remove_certificates()
     remove_tempfiles()
