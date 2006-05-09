@@ -302,7 +302,7 @@
   <title lang="en">Remove links with 'banner'</title>
   <description lang="de">Entferne Verknüpfungen mit 'banner' im Namen.</description>
   <description lang="en">Remove links with 'banner' in the name.</description>
-  <attr name="href">(top|bottom|left|right|)?banner(s|id=|\d|_)</attr>
+  <attr name="href">(top|bottom|left|right|click|)?banner(s|id=|\d|_|\.php\?)</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
