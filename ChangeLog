@@ -1,4 +1,4 @@
-2.39 "Firefly" (released 7.5.2006)
+2.39 "Firefly" (released 9.5.2006)
 
   * Always use the default locale for translation of messages.
     Type: bugfix
@@ -38,6 +38,10 @@
   * Reimplemented the rating system, still in beta release state though.
     Type: feature
     Added: wc/rating/*
+
+  * Fix socket leaks in case of connect timeouts.
+    Type: bugfix
+    Changed: wc/proxy/Connection.py
 
 2.38 "The worlds fastest Indian" (released 5.4.2006)
 
