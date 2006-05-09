@@ -60,7 +60,7 @@ def proxy_poll (timeout=0.0):
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
         for x in e:
-            assert wc.log.debug(wc.LOG_PROXY, "%s poll handle exception", x)
+            assert wc.log.debug(wc.LOG_PROXY, "poll handle exception %s", x)
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
