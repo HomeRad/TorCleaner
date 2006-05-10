@@ -21,7 +21,6 @@ Google utility functions.
 import urllib, urlparse
 
 google_domain = "http://www.google.com"
-#google_domain = "https://www.google.de"
 
 # list of http status codes when to try google
 google_try_status = (410, 503, 504, )
