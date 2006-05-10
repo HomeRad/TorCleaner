@@ -84,7 +84,7 @@ class Magic (object):
     """
 
     data_size = {'byte':1, 'short':2, 'long':4, 'string':1, 'stringnocase':1,
-                 'pstring':1, 'date': 4, 'ldate': 4}
+                 'pstring':1, 'date': 4, 'ldate': 4, 'regex':1}
     type_size = {'b':1, 'B':1, 's':2, 'S':2, 'l':4, 'L':5}
 
 
@@ -164,34 +164,26 @@ class Magic (object):
         offset_type = 'l'
         offset_delta = 0L
         offset_relatif = 0L
-
         # Get the offset information
         if direct:
             offset_delta = wc.magic.convert.convert(text)
         else:
             match_abs = self.se_offset_abs(text)
             match_add = self.se_offset_add(text)
-
             if match_abs:
                 offset_relatif = wc.magic.convert.convert(match_abs.group(1))
-
                 if match_abs.group(2) != None:
                     offset_type = match_abs.group(2)[1]
-
-
             elif match_add:
                 offset_relatif = wc.magic.convert.convert(match_add.group(1))
-
                 if match_add.group(2) != None:
                     offset_type = match_add.group(2)[1]
-
                 if match_add.group(3) == '-':
                     offset_delta = 0L - \
                                 wc.magic.convert.convert(match_add.group(4))
                 else:
                     offset_delta = \
                                  wc.magic.convert.convert(match_add.group(4))
-
         return (direct, offset_type, offset_delta, offset_relatif)
 
     def _oper_mask (self, text):
@@ -254,7 +246,7 @@ class Magic (object):
             return (test, result)
 
     def _data (self, kind, result):
-        if kind == "string":
+        if kind in ("string", "regex"):
             return result.replace("\\", "")
         elif kind == "stringnocase":
             return result.replace("\\", "").lower()
@@ -325,109 +317,103 @@ class Magic (object):
     def read_magic (self, magic_file):
         self.magic = []
 
+        f = file(magic_file, 'rb')
         try:
-            f = file(magic_file, 'rb')
-        except:
-            raise StandardError("No valid magic file called %r" % magic_file)
-        index = 0
+            self.read_magic_file(f)
+        finally:
+            f.close()
+
+    def read_magic_file (self, f):
+        self.index = 0
         for line in f.readlines():
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
-
             part = self._split(line)
-
             # If the line is missing a text string assume it is '\b'
             while len(part) < 4:
                 part.append(r'\b')
+            self.read_magic_part(part)
 
-            # Get the level of the test
-            level = self._level(part[0])
-
-            # XXX: What does the & is used for in ">>&2" as we do
-            # not know skip it
-            offset_string = self._strip_start('&', part[0][level:])
-
-            # offset such as (<number>[.[bslBSL]][+-][<number>]) are
-            # indirect offset
-            (direct, offset_type, offset_delta, offset_relatif) = \
-                                            self._offset(offset_string)
-
-            # The type can be associated to a netmask
-            (oper, mask, rest) = self._oper_mask(part[1])
-
-            # No idea what this 'u' is so skip it
-            full_type = self._strip_start('u', rest)
-
-            endian = self._endian(full_type)
-            kind = self._kind(full_type, endian)
-
-            # Get the comparaison test and result
-            (test, result) = self._test_result(part[2])
-
-            # Get the value to check against
-            data = self._data(kind, result)
-
-            # Get the length of the data
-            length = self._length(kind, data)
-
-            # Special characters
-            mime = self._mime(part[3:])
-
-            # Append the line to the list
-            self._leveldict[index] = level
-            self._direct[index] = direct
-            self._offset_type[index] = offset_type
-            self._offset_delta[index] = offset_delta
-            self._offset_relatif[index] = offset_relatif
-            self._endiandict[index] = endian
-            self._kinddict[index] = kind
-            self._oper[index] = oper
-            self._mask[index] = mask
-            self._test[index] = test
-            self._datadict[index] = data
-            self._lengthdict[index] = length
-            self._mimedict[index] = mime
-
-            index += 1
-            self.entries = index
-
-        f.close()
+    def read_magic_part (self, part):
+        # Get the level of the test
+        level = self._level(part[0])
+        # XXX: What does the & is used for in ">>&2" as we do
+        # not know skip it
+        offset_string = self._strip_start('&', part[0][level:])
+        # offset such as (<number>[.[bslBSL]][+-][<number>]) are
+        # indirect offset
+        (direct, offset_type, offset_delta, offset_relatif) = \
+                                        self._offset(offset_string)
+        # The type can be associated to a netmask
+        (oper, mask, rest) = self._oper_mask(part[1])
+        # No idea what this 'u' is so skip it
+        full_type = self._strip_start('u', rest)
+        endian = self._endian(full_type)
+        kind = self._kind(full_type, endian)
+        # Get the comparaison test and result
+        (test, result) = self._test_result(part[2])
+        # Get the value to check against
+        data = self._data(kind, result)
+        # Get the length of the data
+        length = self._length(kind, data)
+        # Special characters
+        mime = self._mime(part[3:])
+        # Append the line to the list
+        self._leveldict[self.index] = level
+        self._direct[self.index] = direct
+        self._offset_type[self.index] = offset_type
+        self._offset_delta[self.index] = offset_delta
+        self._offset_relatif[self.index] = offset_relatif
+        self._endiandict[self.index] = endian
+        self._kinddict[self.index] = kind
+        self._oper[self.index] = oper
+        self._mask[self.index] = mask
+        self._test[self.index] = test
+        self._datadict[self.index] = data
+        self._lengthdict[self.index] = length
+        self._mimedict[self.index] = mime
+        self.index += 1
+        self.entries = self.index
 
     def write_cache (self, name):
         f = file(name, 'wb')
-        dump(self._leveldict, f)
-        dump(self._direct, f)
-        dump(self._offset_relatif, f)
-        dump(self._offset_type, f)
-        dump(self._offset_delta, f)
-        dump(self._endiandict, f)
-        dump(self._kinddict, f)
-        dump(self._oper, f)
-        dump(self._mask, f)
-        dump(self._test, f)
-        dump(self._datadict, f)
-        dump(self._lengthdict, f)
-        dump(self._mimedict, f)
-        f.close()
+        try:
+            dump(self._leveldict, f)
+            dump(self._direct, f)
+            dump(self._offset_relatif, f)
+            dump(self._offset_type, f)
+            dump(self._offset_delta, f)
+            dump(self._endiandict, f)
+            dump(self._kinddict, f)
+            dump(self._oper, f)
+            dump(self._mask, f)
+            dump(self._test, f)
+            dump(self._datadict, f)
+            dump(self._lengthdict, f)
+            dump(self._mimedict, f)
+        finally:
+            f.close()
 
     def read_cache (self, name):
         f = file(name, 'rb')
-        self._leveldict = cPickle.load(f)
-        self._direct = cPickle.load(f)
-        self._offset_relatif = cPickle.load(f)
-        self._offset_type = cPickle.load(f)
-        self._offset_delta = cPickle.load(f)
-        self._endiandict = cPickle.load(f)
-        self._kinddict = cPickle.load(f)
-        self._oper = cPickle.load(f)
-        self._mask = cPickle.load(f)
-        self._test = cPickle.load(f)
-        self._datadict = cPickle.load(f)
-        self._lengthdict = cPickle.load(f)
-        self._mimedict = cPickle.load(f)
-        self.entries = len(self._leveldict)
-        f.close()
+        try:
+            self._leveldict = cPickle.load(f)
+            self._direct = cPickle.load(f)
+            self._offset_relatif = cPickle.load(f)
+            self._offset_type = cPickle.load(f)
+            self._offset_delta = cPickle.load(f)
+            self._endiandict = cPickle.load(f)
+            self._kinddict = cPickle.load(f)
+            self._oper = cPickle.load(f)
+            self._mask = cPickle.load(f)
+            self._test = cPickle.load(f)
+            self._datadict = cPickle.load(f)
+            self._lengthdict = cPickle.load(f)
+            self._mimedict = cPickle.load(f)
+            self.entries = len(self._leveldict)
+        finally:
+            f.close()
 
     # classify subfuntions
 
@@ -507,6 +493,9 @@ class Magic (object):
             #        value = self._read(f,size)
             #        leng = size
             #        kind = "string"
+        elif kind == 'regex':
+            # XXX: Not done yet
+            pass
         else:
             raise StandardError("Type %r not recognised" % kind)
         return value
