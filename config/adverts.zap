@@ -392,7 +392,7 @@
   <title lang="en">Links with 'ads'</title>
   <description lang="de">Entferne frames/scripts mit 'ads' im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'ads' in the host name.</description>
-  <attr name="src">https?://(servedby\.)?ad(s|server(\d+)?|vertising)?\.</attr>
+  <attr name="src">https?://(servedby\.|layer-)?ad(s|server(\d+)?|vertising)?\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
