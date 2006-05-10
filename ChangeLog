@@ -1,6 +1,9 @@
 3.0 "" (released x.x.xxxx)
 
-  *
+  * Regenerate the magic.mime cache when the text file has a newer
+    modification date.
+    Type: feature
+    Changed: wc/magic/__init__.py
 
 2.39 "Firefly" (released 9.5.2006)
 
