@@ -37,7 +37,7 @@ def make_timer (delay, callback):
     """
     After DELAY seconds, run the CALLBACK function.
     """
-    assert wc.log.debug(wc.LOG_PROXY,
+    assert None == wc.log.debug(wc.LOG_PROXY,
                         "Adding %s to %d timers", callback, len(timers))
     heapq.heappush(timers, (time.time()+delay, callback))
 

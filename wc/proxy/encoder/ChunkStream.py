@@ -83,7 +83,8 @@ class ChunkStream (object):
         Chunk given data s.
         """
         s = chunkenc(s)
-        assert wc.log.debug(wc.LOG_NET, "chunked %d bytes: %r", len(s), s)
+        assert None == wc.log.debug(wc.LOG_NET,
+            "chunked %d bytes: %r", len(s), s)
         return s
 
     def get_trailer (self):
@@ -102,6 +103,6 @@ class ChunkStream (object):
         s = "0\r\n"
         s += self.get_trailer()
         s += "\r\n"
-        assert wc.log.debug(wc.LOG_NET,
+        assert None == wc.log.debug(wc.LOG_NET,
                             "flush chunked %d bytes: %r", len(s), s)
         return s

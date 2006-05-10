@@ -142,11 +142,11 @@ class ImageSize (wc.filter.Filter.Filter):
                 if size == img.size:
                     # size matches, look for format restriction
                     if not formats:
-                        assert wc.log.debug(wc.LOG_FILTER,
+                        assert None == wc.log.debug(wc.LOG_FILTER,
                                             "Blocking image size %s", size)
                         return False
                     elif img.format.lower() in formats:
-                        assert wc.log.debug(wc.LOG_FILTER,
+                        assert None == wc.log.debug(wc.LOG_FILTER,
                                             "Blocking image size %s", size)
                         return False
         except IOError:

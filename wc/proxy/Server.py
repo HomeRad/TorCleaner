@@ -53,7 +53,8 @@ class Server (wc.proxy.CodingConnection.CodingConnection):
         """
         The client has aborted the connection.
         """
-        assert wc.log.debug(wc.LOG_PROXY, "%s Server.client_abort", self)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s Server.client_abort", self)
         self.client = None
         self.close()
 
@@ -73,9 +74,11 @@ class Server (wc.proxy.CodingConnection.CodingConnection):
         """
         Make connection to remote server.
         """
-        assert wc.log.debug(wc.LOG_PROXY, "%s Server.handle_connect", self)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s Server.handle_connect", self)
         if self.state != 'connect':
-            assert wc.log.debug(wc.LOG_PROXY, "%s client has closed", self)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "%s client has closed", self)
             # the client has closed, and thus this server has too
             self.connected = False
             return

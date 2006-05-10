@@ -52,7 +52,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         self.security = wc.filter.html.HtmlSecurity.HtmlSecurity()
         # cache rule match_tag into {tag -> list of rules}
         self.rule_tag_cache = {}
-        assert wc.log.debug(wc.LOG_HTML,
+        assert None == wc.log.debug(wc.LOG_HTML,
                             "%s with %d rules", self, len(self.rules))
 
     def new_instance (self, **opts):
@@ -90,14 +90,15 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         Character data.
         """
-        assert wc.log.debug(wc.LOG_HTML, "%s cdata %r", self, data)
+        assert None == wc.log.debug(wc.LOG_HTML, "%s cdata %r", self, data)
         return self._data(data)
 
     def characters (self, data):
         """
         Characters.
         """
-        assert wc.log.debug(wc.LOG_HTML, "%s characters %r", self, data)
+        assert None == wc.log.debug(wc.LOG_HTML,
+            "%s characters %r", self, data)
         return self._data(data)
 
     def comment (self, data):
@@ -106,7 +107,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         if not (self.comments and data):
             return
-        assert wc.log.debug(wc.LOG_HTML, "%s comment %r", self, data)
+        assert None == wc.log.debug(wc.LOG_HTML, "%s comment %r", self, data)
         item = [wc.filter.html.COMMENT, data]
         if self._is_waiting(item):
             return
@@ -116,21 +117,21 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         HTML doctype.
         """
-        assert wc.log.debug(wc.LOG_HTML, "%s doctype %r", self, data)
+        assert None == wc.log.debug(wc.LOG_HTML, "%s doctype %r", self, data)
         return self._data(u"<!DOCTYPE%s>" % data)
 
     def pi (self, data):
         """
         HTML pi.
         """
-        assert wc.log.debug(wc.LOG_HTML, "%s pi %r", self, data)
+        assert None == wc.log.debug(wc.LOG_HTML, "%s pi %r", self, data)
         return self._data(u"<?%s?>" % data)
 
     def start_element (self, tag, attrs):
         """
         HTML start element.
         """
-        assert wc.log.debug(wc.LOG_HTML,
+        assert None == wc.log.debug(wc.LOG_HTML,
                      "%s start_element %r %s", self, tag, attrs)
         self._start_element(tag, attrs, wc.filter.html.STARTTAG)
 
@@ -138,7 +139,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         """
         HTML start-end element (<a/>).
         """
-        assert wc.log.debug(wc.LOG_HTML,
+        assert None == wc.log.debug(wc.LOG_HTML,
                      "%s start_end_element %r %s", self, tag, attrs)
         self._start_element(tag, attrs, wc.filter.html.STARTENDTAG)
 
@@ -187,8 +188,8 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                     self.base_url = "%s://%s" % \
                                (urllib.splittype(self.url)[0], self.base_url)
                 self.base_url = wc.url.url_norm(self.base_url)[0]
-                assert wc.log.debug(wc.LOG_HTML, "%s using base url %r",
-                                    self, self.base_url)
+                assert None == wc.log.debug(wc.LOG_HTML,
+                    "%s using base url %r", self, self.base_url)
         # search for and prevent known security flaws in HTML
         if self.security.scan_start_tag(tag, attrs, self):
 	    # remove this tag
@@ -196,7 +197,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         # look for filter rules which apply
         self.filter_start_element(tag, attrs, starttype)
         # if rule stack is empty, write out the buffered data
-        if not self.rulestack and not self.javascript:
+        if not (self.rulestack or self.javascript):
             self.htmlparser.tagbuf2data()
 
     def get_tag_rules (self, tag):
@@ -214,7 +215,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         item = [starttype, tag, attrs]
         for rule in self.get_tag_rules(tag):
             if rule.match_attrs(attrs):
-                assert wc.log.debug(wc.LOG_HTML,
+                assert None == wc.log.debug(wc.LOG_HTML,
                  "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
                 if rule.matches_starttag():
                     item = rule.filter_tag(tag, attrs, starttype)
@@ -224,7 +225,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
                     # is a sure hit. Therefore set the filtered flag.
                     filtered = True
                 if rule.matches_endtag():
-                    assert wc.log.debug(wc.LOG_HTML,
+                    assert None == wc.log.debug(wc.LOG_HTML,
                           "%s put rule %r on buffer", self, rule.titles['en'])
                     rulelist.append(rule)
                 if item[0] == starttype and item[1] == tag:
@@ -258,7 +259,8 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         If it matches and the rule stack is now empty we can flush
         the tag buffer (calling tagbuf2data).
         """
-        assert wc.log.debug(wc.LOG_HTML, "%s end_element %r", self, tag)
+        assert None == wc.log.debug(wc.LOG_HTML,
+            "%s end_element %r", self, tag)
         if self._is_waiting([wc.filter.html.ENDTAG, tag]):
             return
         tag = wc.filter.html.check_spelling(tag, self.url)

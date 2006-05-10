@@ -77,7 +77,7 @@ def parse_auth (auth, data):
     @param data: string data to parse
     @return: augmented auth dict and unparsed data
     """
-    assert wc.log.debug(wc.LOG_AUTH, "parse authentication %r", data)
+    assert None == wc.log.debug(wc.LOG_AUTH, "parse authentication %r", data)
     while data:
         key, data = parse_token(data)
         if not data.startswith("="):

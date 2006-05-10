@@ -84,7 +84,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         super(HttpClient, self).__init__('request', sock=sock)
         self.addr = addr
         self.localhost = self.socket.getsockname()[0]
-        assert wc.log.debug(wc.LOG_PROXY, "Connection to %s from %s",
+        assert None == wc.log.debug(wc.LOG_PROXY, "Connection to %s from %s",
                      self.socket.getsockname(), self.addr)
         self.allow = wc.proxy.Allowed.AllowedHttpClient()
         host = self.addr[0]
@@ -97,7 +97,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         Reset connection state.
         """
         super(HttpClient, self).reset()
-        assert wc.log.debug(wc.LOG_PROXY, '%s reset', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s reset', self)
         self.state = 'request'
         self.server = None
         self.request = ''
@@ -116,8 +116,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         Display error page.
         """
         self.state = 'done'
-        assert wc.log.debug(wc.LOG_PROXY,
-                            '%s error %r (%d)', self, msg, status)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            '%s error %r (%d)', self, msg, status)
         if status in wc.google.google_try_status and \
            wc.configuration.config['try_google']:
             self.try_google(self.url, msg)
@@ -185,7 +185,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             return
         # build request
         request = "%s %s HTTP/1.1" % (self.method, self.url)
-        assert wc.log.debug(wc.LOG_PROXY, "%s request %r", self, request)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s request %r", self, request)
         # filter request
         stage = wc.filter.STAGE_REQUEST
         self.attrs = wc.filter.get_filterattrs(self.url,
@@ -299,7 +300,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
-        assert wc.log.debug(wc.LOG_PROXY, "%s client headers \n%s", self, msg)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s client headers \n%s", self, msg)
         self.fix_request_headers(msg)
         self.clientheaders = msg.copy()
         self.set_persistent(msg, self.version)
@@ -312,8 +314,9 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
-            assert wc.log.debug(wc.LOG_PROXY, '%s Transfer-encoding %r',
-                         self, self.headers['Transfer-encoding'])
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                '%s Transfer-encoding %r',
+                self, self.headers['Transfer-encoding'])
             unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(self)
             self.decoders.append(unchunker)
             chunker = wc.proxy.encoder.ChunkStream.ChunkStream(self)
@@ -518,7 +521,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         if self.method == "CONNECT":
             data = self.read()
             if data:
-                assert wc.log.debug(wc.LOG_PROXY,
+                assert None == wc.log.debug(wc.LOG_PROXY,
                         "%s send %d bytes SSL tunneled data to server %s",
                          self, len(data), self.server)
                 self.server.write(data)
@@ -531,7 +534,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         assert self.state == 'receive', \
                              "%s server_request in non-receive state" % self
-        assert wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
+        assert None == wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
                                 self.request, self.headers, self.content)
@@ -541,8 +544,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         Read and filter server response data.
         """
         assert server.connected, "%s server was not connected" % self
-        assert wc.log.debug(wc.LOG_PROXY, '%s server_response %r (%r)',
-                     self, response, status)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            '%s server_response %r (%r)', self, response, status)
         # try google options
         if status in wc.google.google_try_status and \
            wc.configuration.config['try_google']:
@@ -564,7 +567,8 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         Display page with google cache links for requests page.
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s try_google %r', self, response)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            '%s try_google %r', self, response)
         form = None
         protocol = "HTTP/%d.%d" % self.version
         wc.webgui.webconfig.WebConfig(self, '/google.html', form, protocol,
@@ -585,7 +589,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         The server closed.
         """
         assert self.server, "%s server_close had no server" % self
-        assert wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s server_close', self)
         if self.connected:
             self.delayed_close()
         else:
@@ -596,7 +600,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         The server aborted the connection.
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s server_abort', self)
         self.close()
 
     def handle_error (self, what):
@@ -613,7 +617,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         The client closed the connection, so cancel the server connection.
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s handle_close', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s handle_close', self)
         self.send_buffer = ''
         if self.server:
             self.server.client_abort()
@@ -628,7 +632,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         Handle local request by delegating it to the web configuration.
         """
         assert self.state == 'receive'
-        assert wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
         # reject invalid methods
         if self.method not in ['GET', 'POST', 'HEAD']:
             self.error(403, _("Invalid Method"))
@@ -686,7 +690,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         Reset connection state, leave connection alive for pipelining.
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s close_reuse', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s close_reuse', self)
         super(HttpClient, self).close_reuse()
         self.reset()
 
@@ -694,6 +698,6 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         Close this connection.
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s close_close', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s close_close', self)
         self.state = 'closed'
         super(HttpClient, self).close_close()

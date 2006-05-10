@@ -144,20 +144,20 @@ def applyfilter (filterstage, data, fun, attrs):
     for example 'nofilter-blocker'.
     """
     attrs['filterstage'] = filterstage
-    assert wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
+    assert None == wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
                         fun, len(data), filterstage)
     if attrs.get('nofilter') or (fun != 'finish' and not data):
-        assert wc.log.debug(wc.LOG_FILTER, "..don't filter")
+        assert None == wc.log.debug(wc.LOG_FILTER, "..don't filter")
         return data
     for f in wc.configuration.config['filterlist'][filterstage]:
-        assert wc.log.debug(wc.LOG_FILTER, "..filter with %s" % f)
+        assert None == wc.log.debug(wc.LOG_FILTER, "..filter with %s" % f)
         if f.applies_to_mime(attrs['mime']) and \
            not "nofilter-%s" % str(f).lower() in attrs:
-            assert wc.log.debug(wc.LOG_FILTER, "..applying")
+            assert None == wc.log.debug(wc.LOG_FILTER, "..applying")
             data = getattr(f, fun)(data, attrs)
         else:
-            assert wc.log.debug(wc.LOG_FILTER, "..not applying")
-    assert wc.log.debug(wc.LOG_FILTER, "..result %d bytes", len(data))
+            assert None == wc.log.debug(wc.LOG_FILTER, "..not applying")
+    assert None == wc.log.debug(wc.LOG_FILTER, "..result %d bytes", len(data))
     return data
 
 

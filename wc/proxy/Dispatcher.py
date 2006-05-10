@@ -253,14 +253,14 @@ class Dispatcher (object):
         @type addr: tuple (string, int)
         @raise: socket.error on error
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s connecting', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s connecting', self)
         self.connected = False
         self.connect_checks = 0
         err = self.socket.connect_ex(addr)
         if err != 0:
             strerr = os.strerror(err)
-            assert wc.log.debug(wc.LOG_PROXY,
-                                '%s connection error %s', self, strerr)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                '%s connection error %s', self, strerr)
         if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             # Connection is in progress, check the connect condition later.
             def recheck ():
@@ -270,7 +270,7 @@ class Dispatcher (object):
             # Connected!
             self.addr = addr
             self.connected = True
-            assert wc.log.debug(wc.LOG_PROXY, '%s connected', self)
+            assert None == wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
         else:
             # Note that EALREADY is handled as an error. We don't want
@@ -283,10 +283,11 @@ class Dispatcher (object):
         Check if the connection is etablished.
         See also http://cr.yp.to/docs/connect.html and connect(2) manpage.
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
+        assert None == wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
         self.connect_checks += 1
         if self.connect_checks >= 50:
-            assert wc.log.debug(wc.LOG_PROXY, '%s connect timed out', self)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                '%s connect timed out', self)
             self.handle_close()
             return
         def recheck ():
@@ -295,24 +296,24 @@ class Dispatcher (object):
             (r, w, e) = select.select([], [self.fileno()], [], 0.2)
         except select.error, why:
             # not yet ready
-            assert wc.log.debug(wc.LOG_PROXY,
+            assert None == wc.log.debug(wc.LOG_PROXY,
                          '%s connect not ready %s', self, str(why))
             wc.proxy.timer.make_timer(0.2, recheck)
             return
         if self.fileno() not in w:
             # not yet ready
-            assert wc.log.debug(wc.LOG_PROXY, '%s not writable', self)
+            assert None == wc.log.debug(wc.LOG_PROXY, '%s not writable', self)
             wc.proxy.timer.make_timer(0.2, recheck)
             return
         err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
         if err == 0:
             self.addr = addr
             self.connected = True
-            assert wc.log.debug(wc.LOG_PROXY, '%s connected', self)
+            assert None == wc.log.debug(wc.LOG_PROXY, '%s connected', self)
             self.handle_connect()
         elif err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
-            assert wc.log.debug(wc.LOG_PROXY,
-                         '%s connect status in progress/would block', self)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                '%s connect status in progress/would block', self)
             wc.proxy.timer.make_timer(0.2, recheck)
         else:
             strerr = os.strerror(err)
@@ -422,10 +423,10 @@ class Dispatcher (object):
             if not self.connected:
                 self.connected = True
             self.handle_accept()
-        elif not self.connected:
-            self.handle_connect()
+        elif self.connected:
             self.handle_read()
         else:
+            self.handle_connect()
             self.handle_read()
 
     def handle_write_event (self):
@@ -434,10 +435,10 @@ class Dispatcher (object):
         connected handle_connect().
         """
         # getting a write implies that we are connected
-        if not self.connected:
-            self.handle_connect()
-        else:
+        if self.connected:
             self.handle_write()
+        else:
+            self.handle_connect()
 
     def handle_expt_event (self):
         """

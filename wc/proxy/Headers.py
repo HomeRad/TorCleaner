@@ -111,8 +111,8 @@ def remove_warning_headers (headers):
             if warndate is None or warndate == date:
                 tokeep.append(warning)
             else:
-                assert wc.log.debug(wc.LOG_PROXY, "delete warning %s from %s",
-                             warning, headers)
+                assert None == wc.log.debug(wc.LOG_PROXY,
+                    "delete warning %s from %s", warning, headers)
     del headers['Warning']
     for warning in tokeep:
         headers.addheader('Warning', warning+"\r")

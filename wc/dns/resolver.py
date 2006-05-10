@@ -710,7 +710,8 @@ def query(qname, rdtype=wc.dns.rdatatype.A, rdclass=wc.dns.rdataclass.IN,
     object to make the query.
     @see: L{wc.dns.resolver.Resolver.query} for more information on the
     parameters."""
-    assert wc.log.debug(wc.LOG_DNS, "Query %s %s %s", qname, rdtype, rdclass)
+    assert None == wc.log.debug(wc.LOG_DNS,
+        "Query %s %s %s", qname, rdtype, rdclass)
     if resolver is None:
         resolver = get_default_resolver()
     return resolver.query(qname, rdtype, rdclass, tcp)

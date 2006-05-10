@@ -119,7 +119,7 @@ class ClientServerMatchmaker (object):
             self.document = client.document
         assert self.hostname
         # start DNS lookup
-        assert wc.log.debug(wc.LOG_PROXY,
+        assert None == wc.log.debug(wc.LOG_PROXY,
                             "background dns lookup %r", self.hostname)
         wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
@@ -133,7 +133,8 @@ class ClientServerMatchmaker (object):
         Got dns answer, look for server.
         """
         assert self.state == 'dns'
-        assert wc.log.debug(wc.LOG_PROXY, "%s handle dns %r", self, hostname)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s handle dns %r", self, hostname)
         if not self.client.connected:
             wc.log.warn(wc.LOG_PROXY, "%s client closed after DNS", self)
             # The browser has already closed this connection, so abort
@@ -179,21 +180,24 @@ class ClientServerMatchmaker (object):
         addr = (self.ipaddr, self.port)
         # XXX why do I have to import wc again - python bug?
         import wc
-        assert wc.log.debug(wc.LOG_PROXY, "%s find server %s", self, addr)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s find server %s", self, addr)
         if not self.client.connected:
-            assert wc.log.debug(wc.LOG_PROXY, "%s client not connected", self)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "%s client not connected", self)
             # The browser has already closed this connection, so abort
             return
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            assert wc.log.debug(wc.LOG_PROXY,
+            assert None == wc.log.debug(wc.LOG_PROXY,
                                 '%s resurrecting %s', self, server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr) >= \
              serverpool.connection_limit(addr):
-            assert wc.log.debug(wc.LOG_PROXY, '%s server %s busy', self, addr)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                '%s server %s busy', self, addr)
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
             if self.server_busy > BUSY_LIMIT:
@@ -207,8 +211,8 @@ class ClientServerMatchmaker (object):
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
         else:
-            assert wc.log.debug(wc.LOG_PROXY,
-                                "%s new connect to server", self)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
             # note: all Server objects eventually call server_connected
@@ -227,7 +231,8 @@ class ClientServerMatchmaker (object):
         """
         The server has connected.
         """
-        assert wc.log.debug(wc.LOG_PROXY, "%s server_connected", self)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s server_connected", self)
         assert self.state == 'connect'
         assert server.connected
         if not self.client.connected:
@@ -298,8 +303,9 @@ class ClientServerMatchmaker (object):
         """
         The server has closed.
         """
-        assert wc.log.debug(wc.LOG_PROXY, '%s resurrection failed %d %s',
-                     self, server.sequence_number, server)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            '%s resurrection failed %d %s',
+            self, server.sequence_number, server)
         # Look for a server again
         if server.sequence_number > 0:
             # It has already handled a request, so the server is allowed
@@ -315,8 +321,8 @@ class ClientServerMatchmaker (object):
         """
         The server got a response.
         """
-        assert wc.log.debug(wc.LOG_PROXY,
-                            "%s server_response, match client/server", self)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "%s server_response, match client/server", self)
         # Okay, transfer control over to the real client
         if self.client.connected:
             server.client = self.client

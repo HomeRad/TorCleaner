@@ -71,12 +71,13 @@ class ServerPool (object):
         Try to return an existing server connection for given addr,
         or return None if on connection is available at the moment.
         """
-        assert wc.log.debug(wc.LOG_PROXY, "pool reserve server %s", addr)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "pool reserve server %s", addr)
         for server, status in self.smap.get(addr, {}).items():
             if status[0] == 'available':
                 # Let's reuse this one
                 self.smap[addr][server] = ('busy', )
-                assert wc.log.debug(wc.LOG_PROXY,
+                assert None == wc.log.debug(wc.LOG_PROXY,
                                     'pool reserve %s %s', addr, server)
                 return server
         return None
@@ -85,7 +86,7 @@ class ServerPool (object):
         """
         Make given server connection available.
         """
-        assert wc.log.debug(wc.LOG_PROXY,
+        assert None == wc.log.debug(wc.LOG_PROXY,
                             "pool unreserve %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
@@ -99,14 +100,15 @@ class ServerPool (object):
         """
         Register the server as being used.
         """
-        assert wc.log.debug(wc.LOG_PROXY, "pool register %s %s", addr, server)
+        assert None == wc.log.debug(wc.LOG_PROXY,
+            "pool register %s %s", addr, server)
         self.smap.setdefault(addr, {})[server] = ('busy',)
 
     def unregister_server (self, addr, server):
         """
         Unregister the server and remove it from the pool.
         """
-        assert wc.log.debug(wc.LOG_PROXY,
+        assert None == wc.log.debug(wc.LOG_PROXY,
                             "pool unregister %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
         assert server in self.smap[addr], \
@@ -147,7 +149,7 @@ class ServerPool (object):
         """
         Expire server connection that have been unused for too long.
         """
-        assert wc.log.debug(wc.LOG_PROXY, "pool expire servers")
+        assert None == wc.log.debug(wc.LOG_PROXY, "pool expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
         to_expire = []
         for addr, dataset in self.smap.iteritems():
@@ -156,7 +158,7 @@ class ServerPool (object):
                     # It's old .. let's get rid of it
                     to_expire.append((addr, server))
         for addr, server in to_expire:
-            assert wc.log.debug(wc.LOG_PROXY,
+            assert None == wc.log.debug(wc.LOG_PROXY,
                                 "expire %s server %s", addr, server)
             server.close()
             if addr in self.smap:

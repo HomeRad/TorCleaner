@@ -106,7 +106,7 @@ class Header (wc.filter.Filter.Filter):
         for h in data.iterkeys():
             for name_match in attrs['header_delete'][stage]:
                 if name_match(h):
-                    assert wc.log.debug(wc.LOG_FILTER,
+                    assert None == wc.log.debug(wc.LOG_FILTER,
                                  "%s removing header %r", self, h)
                     delete.add(h.lower())
                     # go to next header name
@@ -118,7 +118,7 @@ class Header (wc.filter.Filter.Filter):
                 # substitute template
                 d = {"host": attrs['headers']['client'].get('Host', '')}
                 val = string.Template(val).safe_substitute(d)
-            assert wc.log.debug(wc.LOG_FILTER,
+            assert None == wc.log.debug(wc.LOG_FILTER,
                          "%s adding header %r: %r", self, name, val)
             data[name] = val+"\r"
         for name, val in attrs['header_replace'][stage]:
@@ -128,7 +128,7 @@ class Header (wc.filter.Filter.Filter):
                 # substitute template
                 d = {"host": attrs['headers']['client'].get('Host', '')}
                 val = string.Template(val).safe_substitute(d)
-            assert wc.log.debug(wc.LOG_FILTER,
+            assert None == wc.log.debug(wc.LOG_FILTER,
                          "%s replacing header %r: %r", self, name, val)
             data[name] = val+"\r"
         return data

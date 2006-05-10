@@ -51,10 +51,11 @@ def get_header_challenges (headers, key):
     """
     auths = {}
     for auth in headers.getheaders(key):
-        assert wc.log.debug(wc.LOG_AUTH, "%s header challenge: %s", key, auth)
+        assert None == wc.log.debug(wc.LOG_AUTH,
+            "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).iteritems():
             auths.setdefault(key, []).extend(data)
-    assert wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
+    assert None == wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
     return auths
 
 
@@ -93,7 +94,7 @@ def get_challenges (**args):
             get_basic_challenge(),
             get_digest_challenge(),
         ]
-    assert wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
+    assert None == wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
     return chals
 
 
@@ -103,10 +104,11 @@ def get_header_credentials (headers, key):
     """
     creds = {}
     for cred in headers.getheaders(key):
-        assert wc.log.debug(wc.LOG_AUTH, "%s header credential: %s", key, cred)
+        assert None == wc.log.debug(wc.LOG_AUTH,
+            "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).iteritems():
             creds.setdefault(key, []).extend(data)
-    assert wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
+    assert None == wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
     return creds
 
 
@@ -147,7 +149,7 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    assert wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
+    assert None == wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
     return creds
 
 
@@ -155,8 +157,8 @@ def check_credentials (creds, **attrs):
     """
     Check credentials against given attributes.
     """
-    assert wc.log.debug(wc.LOG_AUTH, "check credentials %s with attrs %s",
-                 creds, attrs)
+    assert None == wc.log.debug(wc.LOG_AUTH,
+        "check credentials %s with attrs %s", creds, attrs)
     if not creds:
         res = False
     elif wc.configuration.config['auth_ntlm'] and 'NTLM' not in creds:

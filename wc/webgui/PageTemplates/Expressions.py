@@ -325,7 +325,8 @@ def restrictedTraverse (object, path, securityManager,
             object = o
             continue
 
-        assert wc.log.debug(wc.LOG_TALES, "expressing %r/%r", object, name)
+        assert None == wc.log.debug(wc.LOG_TALES,
+            "expressing %r/%r", object, name)
         # Try an attribute.
         o = guarded_getattr(object, name, M)
         if o is M:

@@ -115,8 +115,8 @@ def check_digest_credentials (credentials, **attrs):
     response = credentials.get('response')
     our_response = get_response_digest(credentials, **attrs)[2]
     if response != our_response:
-        assert wc.log.debug(wc.LOG_AUTH, "digest wrong response %s!=%s",
-                     response, our_response)
+        assert None == wc.log.debug(wc.LOG_AUTH,
+            "digest wrong response %s!=%s", response, our_response)
         return False
     return True
 

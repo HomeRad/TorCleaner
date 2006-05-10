@@ -46,7 +46,7 @@ def proxy_poll (timeout=0.0):
         e = wc.proxy.Dispatcher.socket_map.values()
         r = [x for x in e if x.readable()]
         w = [x for x in e if x.writable()]
-        assert wc.log.debug(wc.LOG_PROXY, "select with %f timeout", timeout)
+        assert None == wc.log.debug(wc.LOG_PROXY, "select with %f timeout", timeout)
         try:
             (r, w, e) = select.select(r, w, e, timeout)
         except select.error, why:
@@ -55,27 +55,32 @@ def proxy_poll (timeout=0.0):
                 return
             else:
                 raise
-        assert wc.log.debug(wc.LOG_PROXY, "poll result %s", (r, w, e))
+        assert None == wc.log.debug(wc.LOG_PROXY, "poll result %s", (r, w, e))
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
         for x in e:
-            assert wc.log.debug(wc.LOG_PROXY, "poll handle exception %s", x)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "poll handle exception %s", x)
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
-            assert wc.log.debug(wc.LOG_PROXY, "poll handle write %s", x)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "poll handle write %s", x)
             # note: do not put the following "if" in a list filter
             if not x.writable():
-                assert wc.log.debug(wc.LOG_PROXY, "not writable %s", x)
+                assert None == wc.log.debug(wc.LOG_PROXY,
+                    "not writable %s", x)
                 continue
             x.handle_write_event()
             handlerCount += 1
         for x in r:
-            assert wc.log.debug(wc.LOG_PROXY, "poll handle read %s", x)
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "poll handle read %s", x)
             # note: do not put the following "if" in a list filter
             if not x.readable():
-                assert wc.log.debug(wc.LOG_PROXY, "not readable %s", x)
+                assert None == wc.log.debug(wc.LOG_PROXY,
+                    "not readable %s", x)
                 continue
             x.handle_read_event()
             handlerCount += 1

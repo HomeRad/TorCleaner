@@ -130,7 +130,8 @@ class UnchunkStream (object):
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
-        assert wc.log.debug(wc.LOG_NET, "unchunked %d bytes: %r", len(s), s)
+        assert None == wc.log.debug(wc.LOG_NET,
+            "unchunked %d bytes: %r", len(s), s)
         return s
 
     def read_trailer (self):
@@ -155,6 +156,6 @@ class UnchunkStream (object):
         """
         s = self.buf
         self.buf = ''
-        assert wc.log.debug(wc.LOG_NET,
+        assert None == wc.log.debug(wc.LOG_NET,
                             "flush unchunked %d bytes: %r", len(s), s)
         return s
