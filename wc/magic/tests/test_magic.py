@@ -14,7 +14,10 @@ class TestMagic (unittest.TestCase):
 
     def doMagic (self, filename, expected):
         fp = file(os.path.join(self.basedir, filename), 'rb')
-        self.assertEqual(classify(fp), expected)
+        try:
+            self.assertEqual(classify(fp), expected)
+        finally:
+            fp.close()
 
     def test_html (self):
         self.doMagic("test.html", "text/html")
