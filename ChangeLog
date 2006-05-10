@@ -1,3 +1,7 @@
+3.0 "" (released x.x.xxxx)
+
+  *
+
 2.39 "Firefly" (released 9.5.2006)
 
   * Always use the default locale for translation of messages.
