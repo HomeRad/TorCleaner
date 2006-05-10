@@ -10,9 +10,6 @@
   * If your computer or network is protected by a firewall or proxy, make sure
     that Firefox is permitted to access the Web.
 
-- Disabling network on Windows causes DNS lookup to ignore the
-  first error, and subsequent lookups time out indefinitely.
-
 - Think about using python-adns instead of the dnspython stuff.
 
 - Ajax-enabled web gui theme:
