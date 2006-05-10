@@ -35,15 +35,14 @@ unsupported_types = ['text/css']
 
 _magic = None
 
-def classify (fp):
+def classify (fp, magicdir=wc.ConfigDir):
     """
     Classify a file.
     """
     global _magic
     if _magic is None:
-        config = wc.configuration.config
         # initialize mime data
-        magicfile = os.path.join(config.configdir, "magic.mime")
+        magicfile = os.path.join(magicdir, "magic.mime")
         assert os.path.exists(magicfile)
         magiccache = magicfile+".mgc"
         _magic = Magic(magicfile, magiccache)
@@ -111,7 +110,9 @@ class Magic (object):
         self._datadict = {}
         self._lengthdict = {}
         self._mimedict = {}
-        if not os.path.isfile(cachename):
+	do_read = (not os.path.exists(cachename)) or \
+	  (wc.fileutil.get_mtime(filename) > wc.fileutil.get_mtime(cachename))
+        if do_read:
             self.read_magic(filename)
             self.write_cache(cachename)
         else:
