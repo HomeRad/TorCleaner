@@ -12,26 +12,31 @@ The easiest thing is probably sending me URLs of web pages that do
 not work correctly through the WebCleaner proxy.
 
 If you want to implement a feature you need for yourself, here are
-some suggestions that might be helpful.
+some suggestions that might be helpful on a UNIX workstation.
 
 - You will need additional software packages to work with the
-  `WebCleaner CVS`_ repository:
+  `WebCleaner Subversion`_ repository:
   
-  - a cvs client
+  - a subversion client
   - automake >= 1.9
   - libtool
   - python docutils >= 3.3
   
-  Instructions to pull the CVS version are at the `WebCleaner CVS`_
-  repository page.
-  After checking out the CVS tree, run ``./autogen.sh`` to generate
+  Instructions to pull the Subversion version are at the
+  `WebCleaner Subversion`_ repository page. The quick way is to run:
+  
+  ::
+  
+   svn co https://svn.sourceforge.net/svnroot/webcleaner/trunk/webcleaner2 webcleaner
+  
+  After checking out the Subversion tree, run ``./autogen.sh`` to generate
   all the Makefiles. Then run ``make localbuild`` to compile a
   local version. To start the proxy run ``scripts/startdev.sh config``.
 
 - When you want to send me patches, try to make them against
-  the latest released version or the CVS tree.
+  the latest released version or the Subversion repository.
   For example you can use ``cvs diff -u > mypatch.diff`` to generate
   a CVS diff.
 
-.. _WebCleaner CVS:
-   http://sourceforge.net/cvs/?group_id=7692
+.. _WebCleaner Subversion:
+   http://sourceforge.net/svn/?group_id=7692
