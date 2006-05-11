@@ -183,7 +183,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                 assert None == wc.log.debug(wc.LOG_JS,
                                     "%s JS subprocessor is waiting", self)
                 self.htmlparser.state = ('wait', 'recursive script')
-                self.htmlparser.waited = 1
+                self.htmlparser.waited += 1
                 wc.proxy.timer.make_timer(1, lambda: self.js_end_script(item))
                 return
             self.js_htmlparser.debugbuf(cat=wc.LOG_JS)
@@ -347,7 +347,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             # returning here will look like a syntax error
             return
         self.htmlparser.state = ('wait', url)
-        self.htmlparser.waited = 1
+        self.htmlparser.waited += 1
         self.js_src = True
         self.js_client = wc.proxy.HttpProxyClient.HttpProxyClient(
                                self.jsScriptData, (url, ver), self.localhost)
