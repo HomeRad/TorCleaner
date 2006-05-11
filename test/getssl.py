@@ -193,7 +193,7 @@ def proxyrequest4 (url, port):
 
 def _main ():
     """
-    USAGE: test/run.sh test/getssl.py <https url>
+    USAGE: scripts/run.sh test/getssl.py <https url>
     """
     if len(sys.argv) != 2:
         print _main.__doc__.strip()

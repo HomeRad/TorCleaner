@@ -24,7 +24,7 @@ from wc.update import open_url
 
 def _main ():
     """"
-    USAGE: test/run.sh test/imagesize.py <url> [bufsize]
+    USAGE: scripts/run.sh test/imagesize.py <url> [bufsize]
     """
     if len(sys.argv) != 2:
         print _main.__doc__.strip()

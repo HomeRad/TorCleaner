@@ -25,7 +25,7 @@ import sys
 
 def _main ():
     """
-    USAGE: test/run.sh test/get.py <url>
+    USAGE: scripts/run.sh test/get.py <url>
     """
     if len(sys.argv) != 2:
         print _main.__doc__.strip()

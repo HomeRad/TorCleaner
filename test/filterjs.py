@@ -55,7 +55,7 @@ class JSFilter (wc.js.JSListener.JSListener):
 
 def _main ():
     """
-    USAGE: test/run.sh test/filterjs.py <configdir> <.js file>
+    USAGE: scripts/run.sh test/filterjs.py <configdir> <.js file>
     """
     if len(sys.argv) != 3:
         print _main.__doc__.strip()

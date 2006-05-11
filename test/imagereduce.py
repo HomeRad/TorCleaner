@@ -29,7 +29,7 @@ import wc.http.header
 
 def _main ():
     """
-    USAGE: test/run.sh test/imagereduce.py <confdir> <img-file> > reduced.jpg
+    USAGE: scripts/run.sh test/imagereduce.py <confdir> <img-file> > reduced.jpg
     """
     if len(sys.argv) != 3:
         print _main.__doc__.strip()

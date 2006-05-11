@@ -21,7 +21,7 @@ Parse HTML file with optional debugging.
 
 def _main (args):
     """
-    USAGE: test/run.sh test/parsefile.py test.html.
+    USAGE: scripts/run.sh test/parsefile.py test.html.
     """
     if len(args) < 1:
         print _main.__doc__.strip()

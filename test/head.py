@@ -22,7 +22,7 @@ Print headers of an URL.
 
 def _main ():
     """
-    USAGE: test/run.sh test/head.py <url>
+    USAGE: scripts/run.sh test/head.py <url>
     """
     import httplib, urlparse, sys
     if len(sys.argv) != 2:

@@ -32,8 +32,8 @@ def _main (filename):
     if not wc.HasPstats:
         print >> sys.stderr, "The `pstats' Python module is not installed."
         sys.exit(1)
-    if not os.path.isfile(filename):
-        print >> sys.stderr, "Could not find regular file %r." % filename
+    if not os.path.exists(filename):
+        print >> sys.stderr, "Could not find file %r." % filename
         sys.exit(1)
     import pstats
     stats = pstats.Stats(filename)

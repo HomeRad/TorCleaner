@@ -54,7 +54,7 @@ def get_content_type (filename, fp):
 
 def _main ():
     """
-    USAGE: test/run.sh test/filterfile.py <config dir> <filename> [url]
+    USAGE: scripts/run.sh test/filterfile.py <config dir> <filename> [url]
     """
     if len(sys.argv) < 3:
         print _main.__doc__.strip()
