@@ -138,15 +138,11 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                 data = self.inbuf.getvalue() + data
                 self.inbuf.close()
                 self.inbuf = StringIO()
+            assert None == wc.log.debug(wc.LOG_HTML,
+                "%s parser feed %r", self, data)
             if data:
                 # only feed non-empty data
-                assert None == wc.log.debug(wc.LOG_HTML,
-                                    "%s parser feed %r", self, data)
                 super(HtmlParser, self).feed(data)
-            else:
-                assert None == wc.log.debug(wc.LOG_HTML,
-                    "%s empty parser feed", self)
-                pass
         elif self.state[0] == 'wait':
             # wait state ==> put in input buffer
             assert None == wc.log.debug(wc.LOG_HTML, "%s waits", self)
