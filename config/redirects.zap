@@ -49,9 +49,9 @@
  tag="a">
   <title lang="de">Sourceforge Downloads</title>
   <title lang="en">Sourceforge Downloads</title>
-  <description lang="en">Use specific mirror for all SF downloads. Standard is osdn. Choose your own mirror if you dont want this. Available are: Phoenix, AZ, North America (easynews.dl...) Reston, VA, North America (telia.dl...) Chapel Hill, NC, North America (unc.dl...) Minneapolis, MN, North America (umn.dl...) Brookfield, WI, North America (twtelecom.dl...) Brussels, Belgium, Europe (belnet.dl...) Zurich, Switzerland, Europe (swiss.dl...) Prague, Czech Republic, Europe (cesnet.dl...) </description>
+  <description lang="en">Use specific mirror for all SF downloads. Standard is osdn. Choose your own mirror if you dont want this. Available are: Phoenix, AZ, North America (easynews.dl...) Reston, VA, North America (telia.dl...) Chapel Hill, NC, North America (unc.dl...) Minneapolis, MN, North America (umn.dl...) Brookfield, WI, North America (twtelecom.dl...) Brussels, Belgium, Europe (belnet.dl...) Zurich, Switzerland, Europe (switch.dl...) Prague, Czech Republic, Europe (cesnet.dl...) </description>
   <attr name="href">http://prdownloads\.sourceforge\.net(.+)\?download</attr>
-  <replacement part="attrval">http://osdn.dl.sourceforge.net\1</replacement>
+  <replacement part="attrval">http://switch.dl.sourceforge.net\1</replacement>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.50"
