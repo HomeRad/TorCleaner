@@ -255,7 +255,7 @@ def url_parse_query (query):
         append = ""
     l = []
     for k, v, sep in parse_qsl(query, True):
-        k = url_quote_part(k, '-:,; ').replace(' ', '+')
+        k = url_quote_part(k, '/-:,; ').replace(' ', '+')
         if v:
             v = url_quote_part(v, '-:,; ').replace(' ', '+')
             l.append("%s=%s%s" % (k, v, sep))
