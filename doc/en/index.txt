@@ -163,7 +163,7 @@ webcleaner-users@lists.sourceforge.net
 mailing list at the `subscription page`_ or read the `list archives`_.
 
 .. _subscription page:
-   http://lists.sourceforge.net/lists/listinfo/webcleaner-users
+   https://lists.sourceforge.net/lists/listinfo/webcleaner-users
 
 .. _list archives:
    http://sourceforge.net/mailarchive/forum.php?forum=webcleaner-users
