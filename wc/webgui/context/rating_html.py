@@ -189,7 +189,7 @@ def _form_apply ():
     try:
         rating_store.write()
         info['ratingupdated'] = True
-    except:
+    except StandardError:
         error['ratingupdated'] = True
 
 
@@ -200,7 +200,7 @@ def _form_delete ():
         del rating_store[url]
         rating_store.write()
         info['ratingdeleted'] = True
-    except:
+    except StandardError:
         error['ratingdeleted'] = True
 
 

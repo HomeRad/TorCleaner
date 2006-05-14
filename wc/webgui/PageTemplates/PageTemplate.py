@@ -104,7 +104,7 @@ class PageTemplate (object):
         if not self.expand: return
         try:
             self.pt_render(source=1)
-        except:
+        except StandardError:
             return ('Macro expansion failed', '%s: %s' % sys.exc_info()[:2])
 
     def pt_warnings (self):
@@ -145,7 +145,7 @@ class PageTemplate (object):
                 return self._text
             try:
                 return self.pt_render(source=1)
-            except:
+            except StandardError:
                 return ('%s\n Macro expansion failed\n %s\n-->\n%s' %
                         (self._error_start, "%s: %s" % sys.exc_info()[:2],
                          self._text) )
@@ -175,7 +175,7 @@ class PageTemplate (object):
         try:
             parser.parseString(self._text)
             self._v_program, self._v_macros = parser.getCode()
-        except:
+        except StandardError:
             self._v_errors = ["Compilation failed",
                               "%s: %s" % sys.exc_info()[:2]]
         self._v_warnings = parser.getWarnings()

@@ -283,10 +283,10 @@ class Magic (object):
         if kind.startswith("string"):
             replace = ""
             for i in data:
-                # except: Too lazy to handle the '\r' and co otherwise
                 try:
                     replace += chr(i)
-                except:
+                except StandardError:
+                    # Too lazy to handle the '\r' and co otherwise
                     replace += '*'
             # This is for "\0"
             replace = replace.replace('*\0', '*')
@@ -701,7 +701,7 @@ class Magic (object):
                     if replace is not None:
                         try:
                             mime = mime % replace
-                        except:
+                        except StandardError:
                             pass
 
                     if mime != []:

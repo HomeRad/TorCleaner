@@ -31,7 +31,7 @@ class PythonExpr (object):
             d = {}
             exec 'def f():\n return %s\n' % expr.strip() in d
             self._f = d['f']
-        except:
+        except StandardError:
             raise CompilerError, ('Python expression error:\n'
                                   '%s: %s') % sys.exc_info()[:2]
         self._get_used_names()

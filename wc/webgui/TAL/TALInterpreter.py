@@ -702,7 +702,7 @@ class TALInterpreter (object):
         self._stream_write = stream.write
         try:
             self.interpret(block)
-        except:
+        except StandardError:
             exc = sys.exc_info()[1]
             self.restoreState(state)
             engine = self.engine

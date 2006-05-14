@@ -53,7 +53,7 @@ def _updatezapper ():
         doreload = _update_filter(config, log=log, dryrun=False)
         updatelog = log.getvalue()
         config.write_filterconf()
-    except:
+    except StandardError:
         updatelog = log.getvalue()
         updatelog += _traceback.format_exc()
     else:
@@ -72,6 +72,6 @@ def _updaterating ():
         doreload = _update_ratings(config, log=log, dryrun=False)
         updatelog = log.getvalue()
         # XXX
-    except:
+    except StandardError:
         updatelog = log.getvalue()
         updatelog += _traceback.format_exc()

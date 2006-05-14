@@ -274,7 +274,7 @@ def main ():
             program, macros = p.getCode()
             POTALInterpreter(program, macros, engine, stream=Devnull(),
                              metal=False)()
-        except: # Hee hee, I love bare excepts!
+        except StandardError:
             print 'There was an error processing', filename
             traceback.print_exc()
 

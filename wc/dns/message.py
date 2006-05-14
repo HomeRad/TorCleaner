@@ -749,7 +749,7 @@ class _TextReader(object):
                 raise wc.dns.exception.DNSSyntaxError
         except wc.dns.exception.DNSSyntaxError:
             raise wc.dns.exception.DNSSyntaxError
-        except:
+        except StandardError:
             rdclass = wc.dns.rdataclass.IN
         # Type
         rdtype = wc.dns.rdatatype.from_text(token[1])
@@ -781,7 +781,7 @@ class _TextReader(object):
                 raise wc.dns.exception.DNSSyntaxError
         except wc.dns.exception.DNSSyntaxError:
             raise wc.dns.exception.DNSSyntaxError
-        except:
+        except StandardError:
             ttl = 0
         # Class
         try:
@@ -794,7 +794,7 @@ class _TextReader(object):
                 rdclass = self.zone_rdclass
         except wc.dns.exception.DNSSyntaxError:
             raise wc.dns.exception.DNSSyntaxError
-        except:
+        except StandardError:
             rdclass = wc.dns.rdataclass.IN
         # Type
         rdtype = wc.dns.rdatatype.from_text(token[1])

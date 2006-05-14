@@ -100,7 +100,7 @@ def check_length (attrs, name, htmlfilter, maxlen=4):
     if isfloat(tvalue):
         try:
             tvalue = str(int(float(tvalue)))
-        except:
+        except StandardError:
             pass
     if not tvalue.isdigit() or len(tvalue) > maxlen:
         msg = "%s\n Detected invalid length format %r"

@@ -320,7 +320,7 @@ class HttpServer (BaseHTTPServer.HTTPServer):
         if self.verify_request(request, client_address):
             try:
                 self.process_request(request, client_address)
-            except:
+            except StandardError:
                 self.handle_error(request, client_address)
                 self.close_request(request)
                 raise

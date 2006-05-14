@@ -146,7 +146,7 @@ class SeqInner (InnerBase):
     def _supports (self, ob):
         try: ob[0]
         except (TypeError, AttributeError): return 0
-        except: pass
+        except StandardError: pass
         return 1
 
     def prep_next (self, it):
@@ -176,7 +176,7 @@ class IterInner (InnerBase):
         try:
             if hasattr(ob, 'next') and (ob is iter(ob)):
                 return 1
-        except:
+        except StandardError:
             return 0
 
     def prep_next (self, it):
