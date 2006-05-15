@@ -90,7 +90,7 @@ FilterStages = [
     STAGE_RESPONSE_ENCODE,
 ]
 
-class FilterException (Exception):
+class FilterException (StandardError):
     """
     Generic filter exception.
     """

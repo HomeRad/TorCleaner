@@ -65,7 +65,7 @@ def make_xmlparser ():
     return xml.parsers.expat.ParserCreate()
 
 
-class ParseException (Exception):
+class ParseException (StandardError):
     """
     Exception thrown at parse errors.
     """

@@ -31,7 +31,7 @@ def i16 (c):
     return ord(c[0]) | (ord(c[1]) << 8)
 
 
-class RewindException (Exception):
+class RewindException (StandardError):
     """
     Exception saying that more image data is needed for parsing.
     """

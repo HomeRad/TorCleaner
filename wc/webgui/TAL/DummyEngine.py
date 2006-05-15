@@ -42,7 +42,7 @@ Default = _Default()
 
 name_match = re.compile(r"(?s)(%s):(.*)\Z" % NAME_RE).match
 
-class CompilerError (Exception):
+class CompilerError (StandardError):
     pass
 
 class DummyEngine (object):

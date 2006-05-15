@@ -61,7 +61,7 @@ KNOWN_I18N_ATTRIBUTES = [
     "name",
     ]
 
-class TALError (Exception):
+class TALError (StandardError):
 
     def __init__ (self, msg, position=(None, None)):
         assert msg != ""

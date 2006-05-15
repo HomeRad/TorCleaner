@@ -103,7 +103,7 @@ def mainloop (handle=None):
         sslctx = wc.proxy.ssl.get_serverctx(wc.configuration.config.configdir)
         wc.proxy.Listener.Listener(host, port, wc.proxy.SslClient.SslClient,
                                    sslctx=sslctx)
-    class Abort (Exception):
+    class Abort (StandardError):
         pass
     try:
         if handle is not None:

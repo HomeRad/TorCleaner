@@ -70,7 +70,7 @@ def dump (o, f):
     cPickle.dump(o, f, pickle.HIGHEST_PROTOCOL)
 
 
-class Failed (Exception):
+class Failed (StandardError):
     """
     Raised for Failed rules.
     """

@@ -50,7 +50,7 @@ endendtag = re.compile('>')
 endtagfind = re.compile('</\s*([a-zA-Z][-.a-zA-Z0-9:_]*)\s*>')
 
 
-class HTMLParseError (Exception):
+class HTMLParseError (StandardError):
     """Exception raised for all parse errors."""
 
     def __init__ (self, msg, position=(None, None)):
