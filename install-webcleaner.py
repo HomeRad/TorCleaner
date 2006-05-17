@@ -369,14 +369,14 @@ def open_browser (url):
     print enc(_("Opening proxy configuration interface..."))
     try:
         webbrowser.open(url)
-    except WindowsError, msg:
+    except WindowsError:
         # The windows webbrowser.open function raises an exception for http://
         # urls, but works nevertheless. Just ignore the error.
         # This is a known bug with browsers not setting up the correct file
         # type associations (ie. FireFox).
         # See also:
         # http://mail.python.org/pipermail/python-list/2004-July/228312.html
-        pass
+        print enc(_("...failed: %s") % sys.exc_info()[1])
 
 
 #################### removal ####################
