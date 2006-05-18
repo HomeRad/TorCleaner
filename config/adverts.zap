@@ -349,7 +349,7 @@
 <htmlrewrite sid="wc.53"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'ad'</title>
-  <title lang="en">Links with 'ad'</title>
+  <title lang="en">frames/scripts with 'ad'</title>
   <description lang="de">Entferne frames/scripts mit 'ad' im Pfad.</description>
   <description lang="en">Remove frames/scripts with ad words in the path name.</description>
   <attr name="src">/(web)?ad(force|runner|se?rve?|stream|\d*|s|view|log|vert(s|enties|is(ing|e?ments)?)?)/</attr>
@@ -359,7 +359,7 @@
 <htmlrewrite sid="wc.54"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'adbouncer'</title>
-  <title lang="en">Links with 'adbouncer'</title>
+  <title lang="en">frames/scripts with 'adbouncer'</title>
   <description lang="de">Entferne frames/scripts mit 'adbouncer' im Pfad.</description>
   <description lang="en">Remove frames/scripts with 'adbouncer' in the path name.</description>
   <attr name="src">/adbouncer\.phtml</attr>
@@ -369,7 +369,7 @@
 <htmlrewrite sid="wc.55"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'easy-cash'</title>
-  <title lang="en">Links with 'easy-cash'</title>
+  <title lang="en">frames/scripts with 'easy-cash'</title>
   <description lang="de">Entferne frames/scripts mit 'easy-cash' im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'easy-cash' in the host name.</description>
   <attr name="src">easy-cash|/jsads/</attr>
@@ -389,7 +389,7 @@
 <htmlrewrite sid="wc.57"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'ads'</title>
-  <title lang="en">Links with 'ads'</title>
+  <title lang="en">frames/scripts with 'ads'</title>
   <description lang="de">Entferne frames/scripts mit 'ads' im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'ads' in the host name.</description>
   <attr name="src">https?://(servedby\.|layer-)?ad(s|server(\d+)?|vertising)?\.</attr>
@@ -399,7 +399,7 @@
 <htmlrewrite sid="wc.58"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'trade' u.a.</title>
-  <title lang="en">Links with 'trade' etc.</title>
+  <title lang="en">frames/scripts with 'trade' etc.</title>
   <description lang="de">Entferne frames/scripts mit 'trade' und weiteren im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'trade' and others in the host name.</description>
   <attr name="src">https?://[^/]*(tradedoubler|emerchandise|ecommercetimes|ivwbox|sitemeter)\.</attr>
@@ -409,7 +409,7 @@
 <htmlrewrite sid="wc.59"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'linkexchange' u.a.</title>
-  <title lang="en">Links with 'linkexchange' etc.</title>
+  <title lang="en">frames/scripts with 'linkexchange' etc.</title>
   <description lang="de">Entferne frames/scripts mit 'linkexchange' und weiteren im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'linkexchange' and others in the host name.</description>
   <attr name="src">https?://[^/]*((link|media)exchange|mediaplex|realmedia|imgis|adsynergy|fast(click|counter|graphics)|hitexchange)\.</attr>
@@ -419,17 +419,17 @@
 <htmlrewrite sid="wc.60"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'adclick'</title>
-  <title lang="en">Links with 'adclick'</title>
+  <title lang="en">frames/scripts with 'adclick'</title>
   <description lang="de">Entferne frames/scripts mit 'adclick' im Pfad.</description>
   <description lang="en">Remove frames/scripts with 'adlink' in the path.</description>
-  <attr name="src">/adclick\.(exe|php)</attr>
+  <attr name="src">/(adclick|pc_showad)\.(exe|php)</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.61"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'banner' u.a.</title>
-  <title lang="en">Links with 'banner' etc.</title>
+  <title lang="en">frames/scripts with 'banner' etc.</title>
   <description lang="de">Entferne frames/scripts mit 'banner' und weiteren im Pfad.</description>
   <description lang="en">Remove frames/scripts with 'banner' and others in the path.</description>
   <attr name="src">/(v?banner(s|_redirect|click)|clickit|werbung|RealMedia|phpAdsNew|adclick|AdServer)/</attr>
@@ -439,7 +439,7 @@
 <htmlrewrite sid="wc.62"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'event.ng'</title>
-  <title lang="en">Links with 'event.ng'</title>
+  <title lang="en">frames/scripts with 'event.ng'</title>
   <description lang="de">Entferne frames/scripts mit 'event.ng' im Pfad.</description>
   <description lang="en">Remove frames/scripts with 'event.ng' in the path.</description>
   <attr name="src">/event\.ng(\?|/)Type=click</attr>
@@ -449,7 +449,7 @@
 <htmlrewrite sid="wc.63"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'eu-adcenter'</title>
-  <title lang="en">Links with 'eu-adcenter'</title>
+  <title lang="en">frames/scripts with 'eu-adcenter'</title>
   <description lang="de">Lösche frames/scripts mit 'eu-adcenter' im Namen.</description>
   <description lang="en">Remove frames/scripts with 'eu-adcenter' in the path.</description>
   <attr name="src">\.eu-adcenter\.net</attr>
@@ -459,7 +459,7 @@
 <htmlrewrite sid="wc.64"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'click'</title>
-  <title lang="en">Links mit 'click'</title>
+  <title lang="en">frames/scripts mit 'click'</title>
   <description lang="de">Remove frames/scripts with 'click' in the path.</description>
   <attr name="src">([\.\?]click[\?=]|click(stream|thrutraffic|thru|xchange)|clickId=|smartserve/click)</attr>
   <replacement part="complete"/>
@@ -468,7 +468,7 @@
 <htmlrewrite sid="wc.65"
  tag="iframe|script">
   <title lang="de">frames/scripts mit 'werbung' u.a.</title>
-  <title lang="en">Links with 'werbung' etc.</title>
+  <title lang="en">frames/scripts with 'werbung' etc.</title>
   <description lang="de">Lösche frames/scripts mit 'werbung' und weiteren im Namen.</description>
   <description lang="en">Remove frames/scripts with 'werbung' and others in the path.</description>
   <attr name="src">/(publicite|werbung|rekla(ma|me|am)|annonse|maino(kset|nta|s)?)/</attr>
@@ -478,7 +478,7 @@
 <htmlrewrite sid="wc.66"
  tag="iframe|script">
   <title lang="de">frames/scripts zu Werberechnern 1</title>
-  <title lang="en">Links to ad servers 1</title>
+  <title lang="en">frames/scripts to ad servers 1</title>
   <description lang="de">Entferne frames/scripts zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove frames/scripts to some ad servers.</description>
   <attr name="src">https?://((eur\.)?rd\.yahoo\.com|ar\.atwola\.com|partners\.webmasterplan\.com|www\.qksrv\.net|s0b\.bluestreak\.com|ar\.atwola\.com|pagead\.google\.com)</attr>
@@ -488,7 +488,7 @@
 <htmlrewrite sid="wc.67"
  tag="iframe|script">
   <title lang="de">frames/scripts zu Werberechnern 2</title>
-  <title lang="en">Links to ad servers 2</title>
+  <title lang="en">frames/scripts to ad servers 2</title>
   <description lang="de">Entferne frames/scripts zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove frames/scripts to some ad servers.</description>
   <attr name="src">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com|\.adbrite\.com|\.adengage\.com)</attr>
@@ -498,7 +498,7 @@
 <htmlrewrite sid="wc.68"
  tag="iframe|script">
   <title lang="de">frames/scripts zu Werberechnern 3</title>
-  <title lang="en">Links to ad servers 3</title>
+  <title lang="en">frames/scripts to ad servers 3</title>
   <description lang="de">Entferne frames/scripts zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove frames/scripts to some ad servers.</description>
   <attr name="src">(adlink|microexchange|sponsornetz|spezialreporte|emedia|bannercommunity)\.de</attr>
