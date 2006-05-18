@@ -38,9 +38,14 @@ The `article`_ is downloadable as PDF.
 
 Download
 ========
-WebCleaner is available for Windows and Unix systems from the
+WebCleaner is `OpenSource`_ software and licensed under the `GPL`_.
+Downloads are available for Windows and Unix systems from the
 `WebCleaner download section`_.
 
+.. _OpenSource:
+   http://www.opensource.org/
+.. _GPL:
+   http://www.gnu.org/licenses/licenses.html#TOCGPL
 .. _WebCleaner download section:
    http://sourceforge.net/project/showfiles.php?group_id=7692
 
