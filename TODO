@@ -1,3 +1,28 @@
+- endless loop printing:
+WARNING 2006-05-18 13:39:18,269 wc.proxy <HttpServer:response anrtx.tacoda.net:80/rtx/r.js?cmd=tbs&si=11715&r=&v=3.1.0.26azzz&cb=0.9002247550197627 client> flush without status
+WARNING 2006-05-18 13:39:18,271 wc.proxy <HttpServer:response anrtx.tacoda.net:80/rtx/r.js?cmd=tbs&si=11715&r=&v=3.1.0.26azzz&cb=0.9002247550197627 client> flush without status
+traceback after Ctrl-C:
+  File "/home/calvin/src/webcleaner/wc/proxy/mainloop.py", line 124, in mainloop
+    proxy_poll(timeout=max(0, wc.proxy.timer.run_timers()))
+  File "/home/calvin/src/webcleaner/wc/proxy/mainloop.py", line 85, in proxy_poll
+    x.handle_read_event()
+  File "/home/calvin/src/webcleaner/wc/proxy/Dispatcher.py", line 427, in handle_read_event
+    self.handle_read()
+  File "/home/calvin/src/webcleaner/wc/proxy/Connection.py", line 103, in handle_read
+    data = self.recv(self.socket_rcvbuf)
+  File "/home/calvin/src/webcleaner/wc/proxy/Dispatcher.py", line 372, in recv
+    self.handle_close()
+  File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 676, in handle_close
+    super(HttpServer, self).handle_close()
+  File "/home/calvin/src/webcleaner/wc/proxy/Connection.py", line 201, in handle_close
+    self.delayed_close()
+  File "/home/calvin/src/webcleaner/wc/proxy/Connection.py", line 218, in delayed_close
+    if self.close_ready():
+  File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 628, in close_ready
+    if not self.flush():
+  File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 548, in flush
+    wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
+
 - The "connect error connection refused" message could be improved.
   Here is what firefox displays:
 
