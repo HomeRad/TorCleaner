@@ -546,6 +546,7 @@ class HttpServer (wc.proxy.Server.Server):
         assert None == wc.log.debug(wc.LOG_PROXY, "%s HttpServer.flush", self)
         if not self.statuscode and self.method != 'CONNECT':
             wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
+            return True
         data = self.flush_coders(self.decoders)
         try:
             for stage in FilterStages:
