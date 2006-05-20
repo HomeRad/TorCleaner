@@ -166,7 +166,7 @@ class ClamdScanner (object):
         try:
             self.sock.sendall("STREAM")
             port = None
-            for i in range(60):
+            for i in xrange(60):
                 data = self.sock.recv(self.sock_rcvbuf)
                 i = data.find("PORT")
                 if i != -1:

@@ -518,7 +518,7 @@ def _form_removerule (rule):
     """
     rules = curfolder.rules
     rules.remove(rule)
-    for i in range(rule.oid, len(rules)):
+    for i in xrange(rule.oid, len(rules)):
         rules[i].oid = i
     try:
         curfolder.write()

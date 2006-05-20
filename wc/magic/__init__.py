@@ -543,7 +543,7 @@ class Magic (object):
         f.seek(0, 2)
         file_length = f.tell()
 
-        for i in range(self.entries):
+        for i in xrange(self.entries):
             level = self._leveldict[i]
 
             # Optimisation: Skipping all the rule we do not match the
@@ -647,7 +647,7 @@ class Magic (object):
                         if len(extract) > minimum:
                             success = False
                         else:
-                            for index in range(minimum):
+                            for index in xrange(minimum):
                                 if data[index] > extract[index]:
                                     success = False
                                     break

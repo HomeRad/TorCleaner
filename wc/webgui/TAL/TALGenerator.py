@@ -156,7 +156,7 @@ class TALGenerator (object):
             return 1
         opt = 1
         new = ["<" + name]
-        for i in range(len(attrlist)):
+        for i in xrange(len(attrlist)):
             item = attrlist[i]
             if len(item) > 2:
                 opt = 0

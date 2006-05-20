@@ -187,7 +187,7 @@ class HTMLTALParser (HTMLParser):
         close_to = -1
         if BLOCK_CLOSING_TAG_MAP.has_key(tag):
             blocks_to_close = BLOCK_CLOSING_TAG_MAP[tag]
-            for i in range(len(self.tagstack)):
+            for i in xrange(len(self.tagstack)):
                 t = self.tagstack[i]
                 if t in blocks_to_close:
                     if close_to == -1:

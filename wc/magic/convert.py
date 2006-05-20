@@ -65,7 +65,7 @@ def size_number (text):
 
 
 def index_number (text):
-    for index in range(len(text)):
+    for index in xrange(len(text)):
         if _is_number_start(text[index:]) or not text[index:]:
             return index
     return -1

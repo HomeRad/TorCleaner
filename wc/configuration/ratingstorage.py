@@ -123,7 +123,7 @@ class UrlRatingStorage (object):
         # split the url in parts and the longest matching part wins
         parts = split_url(url)
         # the range selects from all parts (full url) down to the first two parts
-        for i in range(len(parts), 1, -1):
+        for i in xrange(len(parts), 1, -1):
             url = "".join(parts[:i])
             if url in self.cache:
                 return self.cache[url]

@@ -585,7 +585,7 @@ def set_odd_parity (byte):
     assert len(byte) == 1
     parity = 0
     ordbyte = ord(byte)
-    for dummy in range(8):
+    for dummy in xrange(8):
         if (ordbyte & 0x01) != 0:
             parity += 1
         ordbyte >>= 1

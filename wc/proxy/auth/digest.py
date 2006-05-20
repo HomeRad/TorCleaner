@@ -237,7 +237,7 @@ def get_cnonce ():
     """
     Return 16 random hex characters.
     """
-    return "".join([ _hexchars[random.randint(0, 15)] for _ in range(16) ])
+    return "".join([ _hexchars[random.randint(0, 15)] for _ in xrange(16) ])
 
 
 _nonce_count = 0

@@ -40,7 +40,7 @@ def nt_quote_args (args):
     """
     Quote arguments for windows
     """
-    for i in range(len(args)):
+    for i in xrange(len(args)):
         if " " in args[i]:
             args[i] = '"%s"' % args[i]
 

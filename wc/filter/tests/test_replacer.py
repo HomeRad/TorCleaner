@@ -36,7 +36,7 @@ class TestReplacer (unittest.TestCase):
         attrs = get_filterattrs("", "localhost", [STAGE_RESPONSE_MODIFY])
         # filter random data, should not raise any exception
         data = []
-        for dummy in range(1024):
+        for dummy in xrange(1024):
             data.append(chr(random.randint(0, 255)))
         data = "".join(data)
         applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', attrs)

@@ -109,7 +109,7 @@ class SubPathExpr (object):
             raise CompilerError, 'Invalid variable name "%s"' % base
         # Parse path
         self._dp = dp = []
-        for i in range(len(path)):
+        for i in xrange(len(path)):
             e = path[i]
             if e[:1] == '?' and _valid_name(e[1:]):
                 dp.append((i, e[1:]))
@@ -152,7 +152,7 @@ class PathExpr (object):
         paths = expr.split('|')
         self._subexprs = []
         add = self._subexprs.append
-        for i in range(len(paths)):
+        for i in xrange(len(paths)):
             path = paths[i].lstrip()
             if _parse_expr(path):
                 # This part is the start of another expression type,

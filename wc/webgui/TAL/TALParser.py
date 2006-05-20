@@ -51,7 +51,7 @@ class TALParser (XMLParser):
         if self.ordered_attributes:
             # attrs is a list of alternating names and values
             attrlist = []
-            for i in range(0, len(attrs), 2):
+            for i in xrange(0, len(attrs), 2):
                 key = attrs[i]
                 value = attrs[i+1]
                 attrlist.append((key, value))

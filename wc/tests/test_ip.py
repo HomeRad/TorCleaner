@@ -35,13 +35,13 @@ class TestIp (unittest.TestCase):
 
     def testBitmask8 (self):
         hosts, nets = wc.ip.hosts2map(["192.168.1.1/8"])
-        for i in range(255):
+        for i in xrange(255):
             self.assert_(wc.ip.host_in_set("192.168.1.%d"%i, hosts, nets))
 
     def testBitmask16 (self):
         hosts, nets = wc.ip.hosts2map(["192.168.1.1/16"])
-        for i in range(255):
-            for j in range(255):
+        for i in xrange(255):
+            for j in xrange(255):
                 self.assert_(wc.ip.host_in_set("192.168.%d.%d"%(i,j), hosts, nets))
 
     def testBitmask32 (self):
@@ -53,13 +53,13 @@ class TestIp (unittest.TestCase):
 
     def testNetmask1 (self):
         hosts, nets = wc.ip.hosts2map(["192.168.1.1/255.255.255.0"])
-        for i in range(255):
+        for i in xrange(255):
             self.assert_(wc.ip.host_in_set("192.168.1.%d"%i, hosts, nets))
 
     def testNetmask2 (self):
         hosts, nets = wc.ip.hosts2map(["192.168.1.1/255.255.0.0"])
-        for i in range(255):
-            for j in range(255):
+        for i in xrange(255):
+            for j in xrange(255):
                 self.assert_(wc.ip.host_in_set("192.168.%d.%d"%(i,j), hosts, nets))
 
     def testNetmask4 (self):
@@ -92,7 +92,7 @@ class TestIp (unittest.TestCase):
         # XXX
 
     def testNetmask (self):
-        for i in range(32):
+        for i in xrange(32):
             hosts, nets = wc.ip.hosts2map(["144.145.146.1/%d"%i])
 
 
