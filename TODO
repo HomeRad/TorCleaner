@@ -1,3 +1,5 @@
+- Preserve self.attr for HttpClient/HttpServer.py
+
 - The "connect error connection refused" message could be improved.
   Here is what firefox displays:
 
