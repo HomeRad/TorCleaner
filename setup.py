@@ -32,6 +32,7 @@ import glob
 import distutils
 from distutils.core import setup, Extension, DEBUG
 from distutils.spawn import find_executable
+from distutils.cmd import Command
 from distutils.command.bdist_wininst import bdist_wininst
 from distutils.command.install import install
 from distutils.command.install_data import install_data
@@ -50,7 +51,8 @@ cc = os.environ.get("CC")
 win_python_dir = "/home/calvin/src/python23-maint-cvs/dist/src/"
 # if we are compiling for or under windows
 win_compiling = (os.name == 'nt') or (cc is not None and "mingw32" in cc)
-
+# installed file list
+INSTALL_LIST = "install_log.txt"
 
 def normpath (path):
     """norm a path name to platform specific notation"""
@@ -99,6 +101,7 @@ def find_packages(where='.', exclude=()):
 class MyInstall (install, object):
 
     def run (self):
+        global INSTALL_LIST
         super(MyInstall, self).run()
         # we have to write a configuration file because we need the
         # <install_data> directory (and other stuff like author, url, ...)
@@ -122,6 +125,12 @@ class MyInstall (install, object):
                 data.append('template_dir = %r' % cnormpath(tdir))
             data.append("%s = %r" % (attr, cnormpath(val)))
         self.distribution.create_conf_file(data, directory=self.install_lib)
+        # Write out the installed file list.
+        fd = open(INSTALL_LIST, 'wb')
+        for item in self.get_outputs():
+            fd.write(item)
+            fd.write(os.linesep)
+        fde.close()
 
     def get_outputs (self):
         """
@@ -178,6 +187,56 @@ class MyInstallData (install_data, object):
                     mode |= 011
                 mode |= 044
                 os.chmod(path, mode)
+
+
+class MyUninstall (Command):
+    description = "Remove all installed files"
+
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+        
+    def get_command_name(self):
+        return 'uninstall'
+
+    def run(self):
+        global INSTALL_LIST
+        if not os.path.isfile(INSTALL_LIST):
+            self.announce("Unable to uninstall, can't find the file list %s." % INSTALL_LIST)
+            return
+        # Suck in the file list.
+        fhandle = open(INSTALL_LIST,'r')
+        file_list = fhandle.readlines()
+        fhandle.close()
+        # Remove the files first.
+        for item in file_list:
+            item = item.strip()
+            if os.path.isfile(item) or os.path.islink(item):
+                self.announce("removing '%s'" % item)
+                if not self.dry_run:
+                    try:
+                        os.remove(item)
+                    except OSError, details:
+                        self.warn("Could not remove file: %s" % details)
+            elif not os.path.isdir(item):
+                self.announce("skipping removal of '%s' (does not exist)" % item)
+        # Remove the directories.
+        file_list.sort()
+        file_list.reverse()
+        # Starting with the longest paths first.
+        for item in file_list:
+            item = item.strip()
+            if os.path.isdir(item):
+                self.announce("removing '%s'" % item)
+                if not self.dry_run:
+                    try:
+                        os.rmdir(item)
+                    except OSError, details:
+                        self.warn("Could not remove directory: %s" % details)
 
 
 class MyDistribution (distutils.dist.Distribution, object):
@@ -548,27 +607,14 @@ scripts = [
 if win_compiling:
     scripts.append('install-webcleaner.py')
 
-data_files = [('share/webcleaner/config',
+data_files = [
+     ('share/webcleaner/config',
+      glob.glob('config/*.zap')),
+     ('share/webcleaner/config',
       ['config/webcleaner.conf',
        'config/webcleaner.dtd',
        'config/filter.dtd',
        'config/logging.conf',
-       'config/adverts.zap',
-       'config/adverts_specific.zap',
-       'config/blacklist_ads.zap',
-       'config/blacklist_aggressive.zap',
-       'config/blacklist_violence.zap',
-       'config/css.zap',
-       'config/erotic.zap',
-       'config/feeds.zap',
-       'config/header.zap',
-       'config/meta.zap',
-       'config/misc.zap',
-       'config/plugins.zap',
-       'config/rating.zap',
-       'config/redirects.zap',
-       'config/scripting.zap',
-       'config/trackers.zap',
        'config/magic.mime',
        ]),
      ('share/webcleaner/config/blacklists',
@@ -583,49 +629,19 @@ data_files = [('share/webcleaner/config',
       ['config/blacklists/violence/domains.gz',
        'config/blacklists/violence/urls.gz']),
      ('share/webcleaner/templates/classic',
-      ['templates/classic/accessibility.html',
-       'templates/classic/adminpass.html',
-       'templates/classic/blocked.html',
-       'templates/classic/blocked.js',
+      glob.glob('templates/classic/*.html')),
+     ('share/webcleaner/templates/classic',
+      glob.glob('templates/classic/*.png')),
+     ('share/webcleaner/templates/classic',
+      ['templates/classic/blocked.js',
        'templates/classic/blocked.swf',
-       'templates/classic/blocked.png',
-       'templates/classic/config.html',
-       'templates/classic/delete.png',
-       'templates/classic/disabled.png',
-       'templates/classic/down.png',
-       'templates/classic/edit.png',
-       'templates/classic/error.html',
-       'templates/classic/favicon.png',
        'templates/classic/favicon.ico',
-       'templates/classic/feedback.html',
-       'templates/classic/filterconfig.html',
-       'templates/classic/google.html',
-       'templates/classic/help.html',
-       'templates/classic/iconbig.png',
-       'templates/classic/index.html',
-       'templates/classic/internal_500.html',
-       'templates/classic/internal_404.html',
-       'templates/classic/internal_401.html',
-       'templates/classic/mail.png',
-       'templates/classic/minidoc.png',
-       'templates/classic/minifolder.png',
-       'templates/classic/minifolderopen.png',
        'templates/classic/pi.js',
-       'templates/classic/rated.html',
-       'templates/classic/rating.html',
-       'templates/classic/rating_mail.html',
-       'templates/classic/restart.html',
-       'templates/classic/restart_ask.html',
        'templates/classic/robots.txt',
-       'templates/classic/up.png',
-       'templates/classic/update.html',
-       'templates/classic/update_doit.html',
        'templates/classic/wc.css',
       ]),
      ('share/webcleaner/templates/classic/macros',
-      ['templates/classic/macros/rules.html',
-       'templates/classic/macros/standard.html',
-      ]),
+      glob.glob('templates/classic/macros/*.html')),
      ('share/webcleaner/examples',
       ['config/bl2wc.py',
        'config/dmozfilter.py',
@@ -685,6 +701,7 @@ setup (name = "webcleaner",
        distclass = MyDistribution,
        cmdclass = {'install': MyInstall,
                    'install_data': MyInstallData,
+                   'uninstall' : MyUninstall,
                    'bdist_wininst': MyBdistWininst,
                    'build_ext': MyBuildExt,
                    'build': MyBuild,
