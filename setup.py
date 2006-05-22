@@ -42,6 +42,7 @@ from distutils.dir_util import remove_tree
 from distutils.file_util import write_file
 from distutils.sysconfig import get_python_version
 from distutils.errors import DistutilsPlatformError
+from distutils.util import convert_path
 
 # cross compile config
 cc = os.environ.get("CC")
@@ -66,6 +67,33 @@ def cnormpath (path):
     if not os.path.isabs(path):
         path = normpath(os.path.join(sys.prefix, path))
     return path
+
+
+# snatched from setuptools :)
+def find_packages(where='.', exclude=()):
+    """Return a list all Python packages found within directory 'where'
+
+    'where' should be supplied as a "cross-platform" (i.e. URL-style) path; it
+    will be converted to the appropriate local path syntax.  'exclude' is a
+    sequence of package names to exclude; '*' can be used as a wildcard in the
+    names, such that 'foo.*' will exclude all subpackages of 'foo' (but not
+    'foo' itself).
+    """
+    out = []
+    stack=[(convert_path(where), '')]
+    while stack:
+        where, prefix = stack.pop(0)
+        for name in os.listdir(where):
+            fn = os.path.join(where, name)
+            if (os.path.isdir(fn) and
+                os.path.isfile(os.path.join(fn,'__init__.py'))
+               ):
+                out.append(prefix+name)
+                stack.append((fn, prefix + name + '.'))
+    for pat in exclude:
+        from fnmatch import fnmatchcase
+        out = [item for item in out if not fnmatchcase(item, pat)]
+    return out
 
 
 class MyInstall (install, object):
@@ -634,14 +662,8 @@ setup (name = "webcleaner",
        download_url = \
                "http://sourceforge.net/project/showfiles.php?group_id=7692",
        license = "GPL",
-       packages = ['wc', 'wc.filter', 'wc.rating', 'wc.rating.service',
-           'wc.filter.rules', 'wc.filter.html', 'wc.filter.xmlfilt',
-           'wc.js', 'wc.magic', 'wc.dns', 'wc.dns.rdtypes', 'wc.http',
-           'wc.dns.rdtypes.IN', 'wc.dns.rdtypes.ANY', 'wc.HtmlParser',
-           'wc.proxy', 'wc.proxy.auth', 'wc.webgui', 'wc.configuration',
-           'wc.proxy.decoder', 'wc.proxy.encoder',
-           'wc.webgui.PageTemplates', 'wc.webgui.TAL', 'wc.webgui.ZTUtils',
-           'wc.webgui.context', ],
+       # Note: don't install test modules
+       packages = find_packages(exclude=("tests", "*.tests", "*.tests.*")),
        ext_modules = extensions,
        long_description = """WebCleaner features:
 * remove unwanted HTML (adverts, flash, etc.)
