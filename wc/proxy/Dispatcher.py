@@ -450,7 +450,7 @@ class Dispatcher (object):
         """
         Handle error. Default is to log an error message.
         """
-        wc.log.error(wc.LOG_PROXY, "%s %s", self, what)
+        wc.log.exception(wc.LOG_PROXY, "%s %s", self, what)
 
     def handle_expt (self):
         """
