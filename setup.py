@@ -127,10 +127,12 @@ class MyInstall (install, object):
         self.distribution.create_conf_file(data, directory=self.install_lib)
         # Write out the installed file list.
         fd = open(INSTALL_LIST, 'wb')
-        for item in self.get_outputs():
-            fd.write(item)
-            fd.write(os.linesep)
-        fde.close()
+        try:
+            for item in self.get_outputs():
+                fd.write(item)
+                fd.write(os.linesep)
+        finally:
+            fd.close()
 
     def get_outputs (self):
         """
@@ -209,9 +211,11 @@ class MyUninstall (Command):
             self.announce("Unable to uninstall, can't find the file list %s." % INSTALL_LIST)
             return
         # Suck in the file list.
-        fhandle = open(INSTALL_LIST,'r')
-        file_list = fhandle.readlines()
-        fhandle.close()
+        fd = open(INSTALL_LIST,'r')
+        try:
+            file_list = fd.readlines()
+        finally:
+            fd.close()
         # Remove the files first.
         for item in file_list:
             item = item.strip()
@@ -390,8 +394,10 @@ def cc_supports_option (cc, option):
     prog = "int main(){}\n"
     cc_cmd = "%s -E %s -" % (cc[0], option)
     pipe = popen2.Popen4(cc_cmd)
-    pipe.tochild.write(prog)
-    pipe.tochild.close()
+    try:
+        pipe.tochild.write(prog)
+    finally:
+        pipe.tochild.close()
     status = pipe.wait()
     if os.WIFEXITED(status):
         return os.WEXITSTATUS(status)==0
