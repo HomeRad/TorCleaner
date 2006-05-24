@@ -55,6 +55,8 @@ update [options]
         Update %(service)s service.
 remove
         Remove %(service)s service.
+direct
+        Start directly without service control. Useful for development.
 
 COMMAND OPTIONS (for 'install' and 'update' commands only)
 --username <domain\username>
