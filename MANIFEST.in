@@ -2,7 +2,6 @@ include MANIFEST.in
 include README
 include CREDITS
 include TODO
-include bdist.bat
 include crossbuild.sh
 include webcleaner
 include install-webcleaner.py
@@ -45,6 +44,7 @@ include test/pycheckrc
 include test/rating/rating.txt
 include test/filter/misc.zap
 include scripts/*.sh
+include scripts/*.bat
 include tests/*.py
 include wc/magic/tests/*.py
 include wc/magic/tests/*.html
