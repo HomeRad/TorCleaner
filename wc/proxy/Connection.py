@@ -153,7 +153,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             if err == errno.EAGAIN:
                 # try again later
                 return
-            self.handle_error(str(err))
+            self.handle_error("write error")
             return
         assert None == wc.log.debug(wc.LOG_NET,
             '%s => wrote %d', self, num_sent)
@@ -261,12 +261,12 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             # The non-blocking socket connect() had an error. This is
             # a Windows peculiarity, on Unix a failed connect() puts
             # the socket in the read list, and issues an empty read.
-            self.handle_error("socket exception while connecting")
+            self.handle_error("error while connecting")
             return
         # Try to read out-of-band data (which might not yet
         # have arrived, despite the exception condition).
         if len(self.recv_buffer) > MAX_BUFSIZE:
-            self.handle_error('read buffer full')
+            self.handle_error('expt read buffer full')
             return
         try:
             data = self.recv(self.socket_rcvbuf, flags=socket.MSG_OOB)
@@ -274,7 +274,7 @@ class Connection (wc.proxy.Dispatcher.Dispatcher):
             if err == errno.EAGAIN:
                 # try again later
                 return
-            self.handle_error('read error')
+            self.handle_error('expt read error')
             return
         if not data:
             # Out-of-band data might just not have been arrived, even
