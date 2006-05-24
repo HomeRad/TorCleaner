@@ -21,7 +21,9 @@ JavaScript helper classes and a Spidermonkey wrapper module.
 import re
 import wc.dns
 import wc.url
+import wc.decorators
 
+@wc.decorators.timeit
 def clean (script, jscomments=True):
     """
     Clean script from comments and HTML.
