@@ -5,6 +5,10 @@
     Type: feature
     Changed: wc/magic/__init__.py
 
+  * Improved performance of JS HTML comment cleaning.
+    Type: feature
+    Changed: wc/js/__init__.py
+
 2.39 "Firefly" (released 9.5.2006)
 
   * Always use the default locale for translation of messages.

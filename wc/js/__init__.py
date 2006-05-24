@@ -21,9 +21,8 @@ JavaScript helper classes and a Spidermonkey wrapper module.
 import re
 import wc.dns
 import wc.url
-import wc.decorators
 
-@wc.decorators.timeit
+
 def clean (script, jscomments=True):
     """
     Clean script from comments and HTML.
@@ -78,12 +77,10 @@ def escape_js_line (script):
     return script
 
 
-_start_js_comment = re.compile(r"^(<!--|//<!\[CDATA\[)([^\r\n]+)?").search
+_start_js_comment = re.compile(r"^(<!--|//<!\[CDATA\[)").search
 _end_js_comment = re.compile(r"""\s*
-    (?P<lcomment>//)? #  leading comment
-    [^/\r\n]* # leading characters
+    (?P<lcomment>//[^/]*)? # leading comment
     (?P<ecomment>--> | \]\]>) # ending comment
-    [ \t]*
     $""", re.VERBOSE).search
 def remove_html_comments (script, jscomments=True):
     """
@@ -95,11 +92,14 @@ def remove_html_comments (script, jscomments=True):
         line = line.rstrip()
         if line and (jscomments or not line.lstrip().startswith('//')):
             lines.append(line)
-    script = "\n".join(lines)
-    mo = _start_js_comment(script)
+    if not lines:
+        return ""
+    mo = _start_js_comment(lines[0])
     if mo:
-        script = script[mo.end():]
-    mo = _end_js_comment(script)
+        del lines[0]
+    if not lines:
+        return ""
+    mo = _end_js_comment(lines[-1])
     if mo:
         if mo.group("lcomment") is not None:
             # cut at leading comment
@@ -107,8 +107,8 @@ def remove_html_comments (script, jscomments=True):
         else:
             # cut at ending comment
             i = mo.start("ecomment")
-        script = script[:i]
-    return script.strip()
+        lines[-1] = lines[-1][:i]
+    return "\n".join(lines)
 
 
 def remove_js_comments (script):
