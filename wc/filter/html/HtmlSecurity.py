@@ -76,8 +76,8 @@ isfloat = re.compile(r"^[1-9][0-9]*\.[0-9]+$").search
 def check_length (attrs, name, htmlfilter, maxlen=4):
     """
     Check correct format of a length attribute. Allowed are
-    digits, followed by 'px' or '%'.
-    Floating point numbers are converted to integers.
+    digits, followed by 'px', 'em' or '%'.
+    Floating point numbers are converted to integers before checking.
     Too long and invalid values will be removed.
     Side effect: attribute value is stripped from whitespace.
     """
@@ -91,9 +91,9 @@ def check_length (attrs, name, htmlfilter, maxlen=4):
     if value.endswith('%%'):
         value = value[:-1]
     attrs[name] = value
-    # check
+    # check value
     tvalue = value.lower()
-    if tvalue.endswith('px'):
+    if tvalue[-2:] in ('px', 'em'):
         tvalue = tvalue[:-2]
     elif tvalue.endswith('%'):
         tvalue = tvalue[:-1]
