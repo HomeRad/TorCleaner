@@ -18,7 +18,6 @@
 HTML configuration interface functions.
 """
 
-import gettext
 import mimetypes
 
 import wc
