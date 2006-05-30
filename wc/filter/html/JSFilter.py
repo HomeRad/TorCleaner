@@ -30,12 +30,12 @@ import wc.url
 import wc.proxy
 import wc.proxy.timer
 import wc.proxy.ClientServerMatchmaker
-import wc.proxy.HttpProxyClient
 import wc.proxy.Headers
 import wc.js
 import wc.js.jslib
 import wc.js.JSListener
 import wc.decorators
+from wc.proxy.HttpProxyClient import HttpProxyClient
 
 
 _replace_ws = re.compile(ur"\s+").sub
@@ -349,8 +349,8 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.htmlparser.state = ('wait', url)
         self.htmlparser.waited += 1
         self.js_src = True
-        self.js_client = wc.proxy.HttpProxyClient.HttpProxyClient(
-                               self.jsScriptData, (url, ver), self.localhost)
+        self.js_client = HttpProxyClient(self.localhost, url)
+        self.js_client.add_content_handler(self.jsScriptData, (url, ver))
         headers = wc.proxy.Headers.get_wc_client_headers(
                                              self.js_client.hostname)
         # note: some javascript servers do not specify content encoding
