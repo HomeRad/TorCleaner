@@ -122,6 +122,26 @@ class Filter (object):
                        [ro for ro in self.mimes if ro.match(mime)]
         return self.mime_cache[mime]
 
+    def which_rules (self, url, mime):
+        """
+        Check which rules apply to the given url/mime.  Returns
+        a list of tuples (applies, reason, rule)
+        """
+        applies = []
+        # get the lang setting here
+        lang = 'en'
+        # resort rules by dynamic order
+        rules = self.rules[:]
+        rules.sort(key=lambda x: x.oid)
+        for rule in rules:
+            if not rule.applies_to_url(url):
+                applies.append((False, 'url', rule))
+            elif not rule.applies_to_mime(mime):
+                applies.append((False, 'mime', rule))
+            else:
+                applies.append((True, '', rule))
+        return applies
+
     def __cmp__ (self, other):
         """
         Compare function considering filter priority.
