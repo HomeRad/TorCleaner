@@ -141,5 +141,5 @@ class ImageReducer (wc.filter.Filter.Filter):
         attrs['imgreducer_quality'] = quality
         attrs['imgreducer_minsize'] = minimal_size_bytes
         # remember original content type in case of error
-        ctype = headers['server'].get('Content-Type')
+        ctype = wc.proxy.Headers.get_content_type(headers['server'], url)
         attrs['imgreducer_ctype'] = ctype
