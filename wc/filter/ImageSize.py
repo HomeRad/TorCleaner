@@ -25,11 +25,12 @@ import wc
 import wc.log
 import wc.configuration
 import wc.filter
+import Filter
 if wc.HasPil:
     import Image
 
 
-class ImageSize (wc.filter.Filter.Filter):
+class ImageSize (Filter.Filter):
     """
     Base filter class which is using the GifParser to deanimate the
     incoming GIF stream.

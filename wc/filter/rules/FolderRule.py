@@ -19,7 +19,7 @@ Group filter rules into folders.
 """
 
 import wc
-import wc.filter.rules.Rule
+import Rule
 
 
 def recalc_up_down (rules):
@@ -33,7 +33,7 @@ def recalc_up_down (rules):
         rule.down = (i<upper)
 
 
-class FolderRule (wc.filter.rules.Rule.Rule):
+class FolderRule (Rule.Rule):
     """
     Container for a list of rules.
     """

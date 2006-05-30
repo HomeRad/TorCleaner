@@ -30,10 +30,10 @@ import select
 
 import wc.log
 import wc.configuration
-import wc.proxy.timer
-import wc.proxy.HttpClient
-import wc.proxy.Listener
-import wc.proxy.Dispatcher
+import timer
+import HttpClient
+import Listener
+import Dispatcher
 
 
 def proxy_poll (timeout=0.0):
@@ -42,8 +42,8 @@ def proxy_poll (timeout=0.0):
     connection handlers.
     """
     handlerCount = 0
-    if wc.proxy.Dispatcher.socket_map:
-        e = wc.proxy.Dispatcher.socket_map.values()
+    if Dispatcher.socket_map:
+        e = Dispatcher.socket_map.values()
         r = [x for x in e if x.readable()]
         w = [x for x in e if x.writable()]
         assert None == wc.log.debug(wc.LOG_PROXY, "select with %f timeout", timeout)
@@ -95,14 +95,13 @@ def mainloop (handle=None):
     import wc
     host = str(wc.configuration.config['bindaddress'])
     port = wc.configuration.config['port']
-    wc.proxy.Listener.Listener(host, port, wc.proxy.HttpClient.HttpClient)
+    Listener.Listener(host, port, HttpClient.HttpClient)
     if wc.configuration.config['sslgateway'] and wc.HasSsl:
-        import wc.proxy.SslClient
-        import wc.proxy.ssl
+        import SslClient
+        import ssl
         port = wc.configuration.config['sslport']
-        sslctx = wc.proxy.ssl.get_serverctx(wc.configuration.config.configdir)
-        wc.proxy.Listener.Listener(host, port, wc.proxy.SslClient.SslClient,
-                                   sslctx=sslctx)
+        sslctx = ssl.get_serverctx(wc.configuration.config.configdir)
+        Listener.Listener(host, port, SslClient.SslClient, sslctx=sslctx)
     class Abort (StandardError):
         pass
     try:
@@ -114,14 +113,14 @@ def mainloop (handle=None):
                 if rc == win32event.WAIT_OBJECT_0:
                     raise Abort()
                 # regularly check for abort
-                wc.proxy.timer.make_timer(5, abort_check)
+                timer.make_timer(5, abort_check)
             abort_check()
         while True:
             # Installing a timeout means we're in a handler, and after
             # dealing with handlers, we come to the main loop, so we don't
             # have to worry about being in asyncore.poll when a timer goes
             # off.
-            proxy_poll(timeout=max(0, wc.proxy.timer.run_timers()))
+            proxy_poll(timeout=max(0, timer.run_timers()))
     except Abort:
         pass
     wc.log.info(wc.LOG_PROXY, "%s stopped", wc.AppName)

@@ -20,16 +20,15 @@ SSL client connection.
 
 import wc
 import wc.webgui
-import wc.proxy.HttpClient
-import wc.proxy.ClientServerMatchmaker
-import wc.proxy.SslConnection
-import wc.proxy.Allowed
+import HttpClient
+import ClientServerMatchmaker
+import SslConnection
+import Allowed
 import wc.log
 import wc.url
 
 
-class SslClient (wc.proxy.HttpClient.HttpClient,
-                 wc.proxy.SslConnection.SslConnection):
+class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
     """
     Handle SSL server requests, no proxy functionality is here.
     Response data will be encrypted with the WebCleaner SSL server
@@ -41,7 +40,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
 
     def __init__ (self, sock, addr):
         super(SslClient, self).__init__(sock, addr)
-        self.allow = wc.proxy.Allowed.AllowedSslClient()
+        self.allow = Allowed.AllowedSslClient()
 
     def get_default_scheme (self):
         return "https"
@@ -51,7 +50,7 @@ class SslClient (wc.proxy.HttpClient.HttpClient,
                       "%s server_request in non-receive state" % self
         assert None == wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
-        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(
+        ClientServerMatchmaker.ClientServerMatchmaker(
               self, self.request, self.headers, self.content, sslserver=True)
 
     def handle_local (self, is_public_doc=False):

@@ -18,10 +18,10 @@
 JavaScript filter rule.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 
 
-class JavascriptRule (wc.filter.rules.UrlRule.UrlRule):
+class JavascriptRule (UrlRule.UrlRule):
     """
     If enabled, this rule tells the HtmlRewriter to filter JavaScript.
     """

@@ -21,7 +21,7 @@ Filter invalid binary chars from HTML.
 import string
 import re
 import wc.filter
-import wc.filter.Filter
+import Filter
 
 # for utf charset check (see below)
 is_utf = re.compile(r"text/html;\s*charset=utf-8", re.I).search
@@ -41,7 +41,7 @@ charmap_in = ''.join(x[0] for x in charmap)
 charmap_out = ''.join(x[1] for x in charmap)
 
 
-class BinaryCharFilter (wc.filter.Filter.Filter):
+class BinaryCharFilter (Filter.Filter):
     """
     Replace binary characters, often found in Microsoft HTML documents,
     with their correct HTML equivalent.

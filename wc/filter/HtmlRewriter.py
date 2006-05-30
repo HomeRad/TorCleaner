@@ -19,14 +19,14 @@ Filter a HTML stream.
 """
 
 import wc.filter
-import wc.filter.Filter
-import wc.filter.html.HtmlParser
-import wc.filter.html.HtmlFilter
+import Filter
+import html.HtmlParser
+import html.HtmlFilter
 
 
 DefaultCharset = 'iso-8859-1'
 
-class HtmlRewriter (wc.filter.Filter.Filter):
+class HtmlRewriter (Filter.Filter):
     """
     This filter can rewrite HTML tags. It uses a parser class.
     """
@@ -98,9 +98,9 @@ class HtmlRewriter (wc.filter.Filter.Filter):
                 if url not in rating_storage:
                     ratings.append(rule)
         # generate the HTML filter
-        handler = wc.filter.html.HtmlFilter.HtmlFilter(rewrites, ratings,
-                                                       url, localhost, **opts)
-        p = wc.filter.html.HtmlParser.HtmlParser(handler)
+        handler = html.HtmlFilter.HtmlFilter(rewrites, ratings,
+                                             url, localhost, **opts)
+        p = html.HtmlParser.HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = p

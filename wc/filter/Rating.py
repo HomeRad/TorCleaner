@@ -19,13 +19,13 @@ Parse and filter ratings.
 """
 
 import wc.filter
-import wc.filter.Filter
+import Filter
 import wc.rating
 import wc.log
 from wc.rating.service.rating import rating_from_headers
 
 
-class Rating (wc.filter.Filter.Filter):
+class Rating (Filter.Filter):
     """
     Reject pages that exceed the configured rating limit. Uses an
     existing rating store, as well as rating data supplied by

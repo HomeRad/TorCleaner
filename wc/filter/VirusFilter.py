@@ -28,11 +28,11 @@ import wc.fileutil
 import wc.strformat
 import wc.log
 import wc.filter
-import wc.filter.Filter
+import Filter
 from wc.proxy.Dispatcher import create_socket
 
 
-class VirusFilter (wc.filter.Filter.Filter):
+class VirusFilter (Filter.Filter):
     """
     Scan for virus signatures in a data stream.
     """

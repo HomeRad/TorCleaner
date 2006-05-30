@@ -29,10 +29,10 @@
 Direct request handling returning static data.
 """
 
-import wc.proxy.Server
+import Server
 
 
-class ServerHandleDirectly (wc.proxy.Server.Server):
+class ServerHandleDirectly (Server.Server):
     """
     Answer a server request with static data.
     """

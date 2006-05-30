@@ -18,10 +18,10 @@
 Image reducer config rule.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 
 
-class ImagereduceRule (wc.filter.rules.UrlRule.UrlRule):
+class ImagereduceRule (UrlRule.UrlRule):
     """
     Configures the image reducer filter (if enabled).
     """

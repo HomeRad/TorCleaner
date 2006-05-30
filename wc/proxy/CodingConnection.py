@@ -21,11 +21,11 @@ Handle encoding and decoding.
 import cStringIO as StringIO
 import wc
 import wc.log
-import wc.proxy.StatefulConnection
+import StatefulConnection
 from wc.decorators import notimplemented
 
 
-class CodingConnection (wc.proxy.StatefulConnection.StatefulConnection):
+class CodingConnection (StatefulConnection.StatefulConnection):
     """
     Connection storing a list of decoders and encoders.
     """

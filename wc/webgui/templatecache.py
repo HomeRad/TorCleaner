@@ -22,7 +22,7 @@ import os
 import stat
 import errno
 
-import wc.webgui.template
+import template
 
 
 class TemplateCache (dict):
@@ -41,14 +41,13 @@ class TemplateCache (dict):
         @return: compiled TAL template from given path
         """
         if key in self:
-            template = super(TemplateCache, self).__getitem__(key)
+            _template = super(TemplateCache, self).__getitem__(key)
             try:
                 mtime = os.stat(key)[stat.ST_MTIME]
-                if mtime > template.mtime:
+                if mtime > _template.mtime:
                     # refresh entry
-                    template = \
-                             wc.webgui.template.WebCleanerTemplate(key, mtime)
-                    self[key] = template
+                    _template = template.WebCleanerTemplate(key, mtime)
+                    self[key] = _template
             except os.error, msg:
                 # ignore missing files if already cached
                 if msg.errno != errno.ENOENT:
@@ -56,9 +55,9 @@ class TemplateCache (dict):
         else:
             # new entry
             mtime = os.stat(key)[stat.ST_MTIME]
-            template = wc.webgui.template.WebCleanerTemplate(key, mtime)
-            self[key] = template
-        return template
+            _template = template.WebCleanerTemplate(key, mtime)
+            self[key] = _template
+        return _template
 
 
 templates = TemplateCache()

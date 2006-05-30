@@ -18,10 +18,10 @@
 HTML comments filter rule.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 
 
-class NocommentsRule (wc.filter.rules.UrlRule.UrlRule):
+class NocommentsRule (UrlRule.UrlRule):
     """
     If enabled, this rule tells the HtmlRewriter to remove HTML comments.
     """

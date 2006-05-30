@@ -19,10 +19,10 @@ Hold a list of urls to block in external file, like those
 found in SquidGuard.
 """
 
-import wc.filter.rules.ExternfileRule
+import ExternfileRule
 
 
-class BlockurlsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
+class BlockurlsRule (ExternfileRule.ExternfileRule):
     """
     Specifies a list of url paths to block, displaying the standard
     block message page.

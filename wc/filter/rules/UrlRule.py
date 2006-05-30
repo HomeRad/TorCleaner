@@ -20,11 +20,11 @@ Apply rule to specific URLs.
 
 import re
 import wc
-import wc.filter.rules.MimeRule
+import MimeRule
 import wc.XmlUtils
 
 
-class UrlRule (wc.filter.rules.MimeRule.MimeRule):
+class UrlRule (MimeRule.MimeRule):
     """
     Rule which applies only to URLs which match a regular expression.
     """

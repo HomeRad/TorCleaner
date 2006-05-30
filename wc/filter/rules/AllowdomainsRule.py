@@ -19,10 +19,10 @@ Hold a list of domains to allow in external file, like those
 found in SquidGuard.
 """
 
-import wc.filter.rules.ExternfileRule
+import ExternfileRule
 
 
-class AllowdomainsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
+class AllowdomainsRule (ExternfileRule.ExternfileRule):
     """
     Specifies a list of domains to allow, even if they would be blocked
     otherwise.

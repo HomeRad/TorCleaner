@@ -40,13 +40,13 @@ import os
 import wc
 import wc.decorators
 import wc.log
-import wc.proxy.Dispatcher
+import Dispatcher
 
 # to prevent DoS attacks, specify a maximum buffer size of 10MB
 MAX_BUFSIZE = 10*1024*1024
 
 
-class Connection (wc.proxy.Dispatcher.Dispatcher):
+class Connection (Dispatcher.Dispatcher):
     """
     Add buffered input and output capabilities.
     """

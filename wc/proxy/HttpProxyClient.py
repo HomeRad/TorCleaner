@@ -20,11 +20,11 @@ Internal http client.
 
 import urlparse
 import wc.http
-import wc.proxy.Headers
-import wc.proxy.HttpServer
-import wc.proxy.HttpClient
-import wc.proxy.ClientServerMatchmaker
-import wc.proxy.decoder.UnchunkStream
+import Headers
+import HttpServer
+import HttpClient
+import ClientServerMatchmaker
+import decoder.UnchunkStream
 import wc.filter
 import wc.log
 import wc.url
@@ -66,7 +66,7 @@ class HttpProxyClient (object):
                                           [wc.filter.STAGE_REQUEST])
         # note: use HTTP/1.0 for older browsers
         request = "%s %s HTTP/1.0" % (self.method, self.url)
-        for stage in wc.proxy.HttpClient.FilterStages:
+        for stage in HttpClient.FilterStages:
             request = wc.filter.applyfilter(stage, request, "filter", attrs)
         self.request = request
         assert None == wc.log.debug(wc.LOG_PROXY, '%s init', self)
@@ -158,7 +158,7 @@ class HttpProxyClient (object):
             # XXX don't look at value, assume chunked encoding for now
             assert None == wc.log.debug(wc.LOG_PROXY,
                 '%s Transfer-encoding %r', self, headers['Transfer-encoding'])
-            unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(self)
+            unchunker = decoder.UnchunkStream.UnchunkStream(self)
             self.decoders.append(unchunker)
 
     def write_trailer (self, data):
@@ -225,7 +225,7 @@ class HttpProxyClient (object):
                                           [wc.filter.STAGE_REQUEST])
         # note: use HTTP/1.0 for older browsers
         request = "%s %s HTTP/1.0" % (self.method, self.url)
-        for stage in wc.proxy.HttpClient.FilterStages:
+        for stage in HttpClient.FilterStages:
             request = wc.filter.applyfilter(stage, request, "filter", attrs)
         if self.request == request:
             # avoid request loop
@@ -233,7 +233,7 @@ class HttpProxyClient (object):
             return
         # close the server and try again
         self.server = None
-        headers = wc.proxy.Headers.get_wc_client_headers(host)
+        headers = Headers.get_wc_client_headers(host)
         headers['Accept-Encoding'] = 'identity\r'
-        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(
+        ClientServerMatchmaker.ClientServerMatchmaker(
                     self, request, headers, content, mime_types=mime_types)

@@ -18,10 +18,10 @@
 Filter viruses.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 
 
-class AntivirusRule (wc.filter.rules.UrlRule.UrlRule):
+class AntivirusRule (UrlRule.UrlRule):
     """
     If enabled, tells the VirusFilter to scan web content for viruses.
     """

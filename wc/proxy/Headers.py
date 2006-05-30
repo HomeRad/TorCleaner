@@ -30,10 +30,10 @@ import wc.http
 import wc.http.header
 import wc.http.date
 import wc.magic
-import wc.proxy.decoder.UnchunkStream
-import wc.proxy.encoder.ChunkStream
-import wc.proxy.decoder.GunzipStream
-import wc.proxy.decoder.DeflateStream
+import decoder.UnchunkStream
+import encoder.ChunkStream
+import decoder.GunzipStream
+import decoder.DeflateStream
 
 
 def get_content_length (headers, default=None):
@@ -325,9 +325,9 @@ def server_set_encoding_headers (server, filename=None):
         if tenc != 'chunked':
             wc.log.warn(wc.LOG_PROXY,
               "unknown transfer encoding %r, assuming chunked encoding", tenc)
-        unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(server)
+        unchunker = decoder.UnchunkStream.UnchunkStream(server)
         server.decoders.append(unchunker)
-        chunker = wc.proxy.encoder.ChunkStream.ChunkStream(server)
+        chunker = encoder.ChunkStream.ChunkStream(server)
         server.encoders.append(chunker)
         if server.headers.has_key("Content-Length"):
             wc.log.warn(wc.LOG_PROXY,
@@ -339,7 +339,7 @@ def server_set_encoding_headers (server, filename=None):
         server.headers['Transfer-Encoding'] = "chunked\r"
         if server.headers.has_key("Content-Length"):
             to_remove.add("Content-Length")
-        chunker = wc.proxy.encoder.ChunkStream.ChunkStream(server)
+        chunker = encoder.ChunkStream.ChunkStream(server)
         server.encoders.append(chunker)
 
     remove_headers(server.headers, to_remove)
@@ -353,10 +353,10 @@ def server_set_encoding_headers (server, filename=None):
        (filename is None or not filename.endswith(".gz")):
         if encoding == 'deflate':
             server.decoders.append(
-                 wc.proxy.decoder.DeflateStream.DeflateStream())
+                 decoder.DeflateStream.DeflateStream())
         else:
             server.decoders.append(
-                 wc.proxy.decoder.GunzipStream.GunzipStream())
+                 decoder.GunzipStream.GunzipStream())
         # remove encoding because we unzip the stream
         to_remove = ['Content-Encoding']
         # remove no-transform cache control

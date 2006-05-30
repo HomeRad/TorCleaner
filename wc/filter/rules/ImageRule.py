@@ -18,11 +18,11 @@
 Filter images by size.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 import wc.XmlUtils
 
 
-class ImageRule (wc.filter.rules.UrlRule.UrlRule):
+class ImageRule (UrlRule.UrlRule):
     """
     If enabled, tells the Image filter to block certain images.
     """

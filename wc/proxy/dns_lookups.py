@@ -43,8 +43,8 @@ import pprint
 import wc
 import wc.log
 import wc.proxy
-import wc.proxy.timer
-import wc.proxy.Connection
+import timer
+import Connection
 import wc.dns.resolver
 import wc.dns.rdataclass
 import wc.dns.rdatatype
@@ -160,11 +160,11 @@ class DnsExpandHostname (object):
                 self.delay = 0.2
         self.requests = self.queries[1:] # queries we haven't yet made
         # Issue the primary request
-        wc.proxy.timer.make_timer(0,
+        timer.make_timer(0,
                           lambda: dnscache.lookup(hostname, self.handle_dns))
         # and then start another request as well if it's needed
         if self.delay < 1 and len(self.requests) > 0:
-            wc.proxy.timer.make_timer(self.delay, self.handle_issue_request)
+            timer.make_timer(self.delay, self.handle_issue_request)
 
     def handle_issue_request (self):
         assert None == wc.log.debug(wc.LOG_DNS, 'issue_request')
@@ -172,13 +172,13 @@ class DnsExpandHostname (object):
         if self.requests and self.callback:
             hostname = self.requests[0]
             del self.requests[0]
-            wc.proxy.timer.make_timer(0,
+            timer.make_timer(0,
                           lambda: dnscache.lookup(hostname, self.handle_dns))
             # XXX: Yes, it's possible that several DNS lookups are
             # being executed at once. To avoid that, we could check
             # if there's already a timer for this object ..
             if self.requests:
-                wc.proxy.timer.make_timer(self.delay, self.handle_issue_request)
+                timer.make_timer(self.delay, self.handle_issue_request)
 
     def handle_dns (self, hostname, answer):
         assert None == wc.log.debug(wc.LOG_DNS,
@@ -372,7 +372,7 @@ class DnsLookupHostname (object):
             self.requests[-1].TIMEOUT = self.outstanding_requests * 2
             if self.nameservers:
                 # Let's create another one soon
-                wc.proxy.timer.make_timer(1, self.issue_request)
+                timer.make_timer(1, self.issue_request)
 
     def handle_dns (self, hostname, answer):
         self.outstanding_requests -= 1
@@ -387,7 +387,7 @@ class DnsLookupHostname (object):
 # Map {nameserver (string) -> whether it accepts TCP requests (bool)}
 dns_accepts_tcp = {}
 
-class DnsLookupConnection (wc.proxy.Connection.Connection):
+class DnsLookupConnection (Connection.Connection):
     """
     Look up a name by contacting a single nameserver..
     """
@@ -421,7 +421,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
         else:
             self.create_socket(family, socket.SOCK_DGRAM)
             self.connect((self.nameserver, self.PORT))
-        wc.proxy.timer.make_timer(30, self.handle_connect_timeout)
+        timer.make_timer(30, self.handle_connect_timeout)
 
     def __repr__ (self):
         where = ''
@@ -488,7 +488,7 @@ class DnsLookupConnection (wc.proxy.Connection.Connection):
             self.send_buffer = struct.pack("!H", l) + wire
         else:
             self.send_buffer = wire
-        wc.proxy.timer.make_timer(self.TIMEOUT + 0.2*self.retries,
+        timer.make_timer(self.TIMEOUT + 0.2*self.retries,
                             self.handle_timeout)
 
     def handle_timeout (self):

@@ -20,11 +20,11 @@ Apply rule to specific MIME types.
 
 import re
 import wc
-import wc.filter.rules.Rule
+import Rule
 import wc.XmlUtils
 
 
-class MimeRule (wc.filter.rules.Rule.Rule):
+class MimeRule (Rule.Rule):
     """
     Rule which applies only to given MIME types.
     """

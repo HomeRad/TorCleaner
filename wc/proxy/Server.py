@@ -34,10 +34,10 @@ import socket
 import wc
 import wc.decorators
 import wc.log
-import wc.proxy.CodingConnection
+import CodingConnection
 
 
-class Server (wc.proxy.CodingConnection.CodingConnection):
+class Server (CodingConnection.CodingConnection):
     """
     Basic class for server connections.
     """

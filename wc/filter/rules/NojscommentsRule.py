@@ -18,10 +18,10 @@
 HTML comments filter rule.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 
 
-class NojscommentsRule (wc.filter.rules.UrlRule.UrlRule):
+class NojscommentsRule (UrlRule.UrlRule):
     """
     If enabled, this rule tells the HtmlRewriter to remove JavaScript
     comments.

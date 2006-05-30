@@ -28,7 +28,7 @@ import wc.log
 import wc.configuration
 import wc.url
 import wc.filter
-import wc.filter.Filter
+import Filter
 
 
 def is_flash_mime (mime):
@@ -112,7 +112,7 @@ def try_append_lines (lst, rule):
                      rule.filename, str(msg))
 
 
-class Blocker (wc.filter.Filter.Filter):
+class Blocker (Filter.Filter):
     """
     Block urls and show replacement data instead.
     """

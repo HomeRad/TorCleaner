@@ -33,10 +33,10 @@ import socket
 import wc
 import wc.configuration
 import wc.log
-import wc.proxy.Dispatcher
+import Dispatcher
 
 
-class Listener (wc.proxy.Dispatcher.Dispatcher):
+class Listener (Dispatcher.Dispatcher):
     """
     A listener accepts connections on a specified port. Each
     accepted incoming connection gets delegated to an instance of the

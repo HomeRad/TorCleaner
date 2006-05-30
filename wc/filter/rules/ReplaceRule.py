@@ -18,12 +18,12 @@
 Rule replacing parts of text.
 """
 
-import wc.filter.rules.UrlRule
-import wc.filter.rules.Rule
+import UrlRule
+import Rule
 import wc.XmlUtils
 
 
-class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
+class ReplaceRule (UrlRule.UrlRule):
     """
     This rule can Replace parts of text data according to regular expressions.
     """
@@ -52,7 +52,7 @@ class ReplaceRule (wc.filter.rules.UrlRule.UrlRule):
         Compile url regular expressions.
         """
         super(ReplaceRule, self).compile_data()
-        wc.filter.rules.Rule.compileRegex(self, "search")
+        Rule.compileRegex(self, "search")
 
     def update (self, rule, dryrun=False, log=None):
         """

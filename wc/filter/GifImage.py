@@ -21,7 +21,7 @@ Deanimate GIF images.
 import base64
 import wc.log
 import wc.filter
-import wc.filter.Filter
+import Filter
 
 
 def i16 (c):
@@ -38,7 +38,7 @@ class RewindException (StandardError):
     pass
 
 
-class GifImage (wc.filter.Filter.Filter):
+class GifImage (Filter.Filter):
     """
     Base filter class which is using the GifParser to deanimate the
     incoming GIF stream.

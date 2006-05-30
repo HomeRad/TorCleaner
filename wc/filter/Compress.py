@@ -24,7 +24,7 @@ import zlib
 import wc
 import wc.log
 import wc.filter
-import wc.filter.Filter
+import Filter
 import wc.proxy.Headers
 
 
@@ -75,7 +75,7 @@ def compress (data, compobj):
     return compressed
 
 
-class Compress (wc.filter.Filter.Filter):
+class Compress (Filter.Filter):
     """
     Filter class compressing its input with zlib.
     """

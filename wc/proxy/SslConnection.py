@@ -20,11 +20,11 @@ SSL connection, usable for both client and server connections.
 
 import wc
 import wc.log
-import wc.proxy.Connection
+import Connection
 import OpenSSL.SSL
 
 
-class SslConnection (wc.proxy.Connection.Connection):
+class SslConnection (Connection.Connection):
     """
     Mix-in class for SSL connections.
     """
@@ -37,7 +37,7 @@ class SslConnection (wc.proxy.Connection.Connection):
         assert self.connected
         assert None == wc.log.debug(wc.LOG_PROXY,
             '%s SslConnection.handle_read', self)
-        if len(self.recv_buffer) > wc.proxy.Connection.MAX_BUFSIZE:
+        if len(self.recv_buffer) > Connection.MAX_BUFSIZE:
             self.handle_error('read buffer full')
             return
         try:

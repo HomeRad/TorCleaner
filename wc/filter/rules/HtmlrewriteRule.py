@@ -25,8 +25,8 @@ from StringIO import StringIO
 import wc
 import wc.log
 import wc.XmlUtils
-import wc.filter.rules.UrlRule
-import wc.filter.rules.Rule
+import UrlRule
+import Rule
 import wc.filter.html
 import wc.HtmlParser.htmllib
 
@@ -74,7 +74,7 @@ def num_part (i):
     return partvalnames[i]
 
 
-class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
+class HtmlrewriteRule (UrlRule.UrlRule):
     """
     A rewrite rule applies to a specific tag, optional with attribute
     constraints (stored in self.attrs) or a regular expression to
@@ -130,8 +130,8 @@ class HtmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
         Compile url regular expressions.
         """
         super(HtmlrewriteRule, self).compile_data()
-        wc.filter.rules.Rule.compileRegex(self, "enclosed")
-        wc.filter.rules.Rule.compileRegex(self, "tag", fullmatch=True)
+        Rule.compileRegex(self, "enclosed")
+        Rule.compileRegex(self, "tag", fullmatch=True)
         # optimization: use string equality if tag is a plain string
         if self.tag.isalpha():
             self.match_tag = self._match_tag

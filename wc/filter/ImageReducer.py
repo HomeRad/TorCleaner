@@ -21,7 +21,7 @@ Reduce big images to JPGs to save bandwidth.
 import cStringIO as StringIO
 import wc
 import wc.filter
-import wc.filter.Filter
+import Filter
 import wc.proxy.Headers
 import wc.log
 if wc.HasPil:
@@ -29,7 +29,7 @@ if wc.HasPil:
 
 
 # XXX honor minimal_size_bytes
-class ImageReducer (wc.filter.Filter.Filter):
+class ImageReducer (Filter.Filter):
     """
     Reduce the image size by making low quality JPEGs.
     """

@@ -43,11 +43,11 @@ import wc.url
 import wc.magic
 import wc.filter
 import wc.http
-import wc.proxy.timer
-import wc.proxy.Server
-import wc.proxy.auth
-import wc.proxy.Headers
-import wc.proxy.ServerPool
+import timer
+import Server
+import auth
+import Headers
+import ServerPool
 
 
 # DEBUGGING
@@ -62,7 +62,7 @@ FilterStages = [
 ]
 
 
-class HttpServer (wc.proxy.Server.Server):
+class HttpServer (Server.Server):
     """
     HttpServer handles the connection between the proxy and a http server.
     It writes the client request to the server and sends answer data back
@@ -234,12 +234,12 @@ class HttpServer (wc.proxy.Server.Server):
             self.response = "%s %d %s" % (ver, status, tail)
             self.statuscode = status
             # Let the server pool know what version this is
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr,
+            ServerPool.serverpool.set_http_version(self.addr,
                                                             version)
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (0, 9))
+            ServerPool.serverpool.set_http_version(self.addr, (0, 9))
             self.response = "%s 200 OK" % self.protocol
             self.statuscode = 200
             self.recv_buffer = '\r\n' + self.recv_buffer
@@ -249,13 +249,13 @@ class HttpServer (wc.proxy.Server.Server):
             wc.log.warn(wc.LOG_PROXY,
                         'invalid or missing response from %r: %r',
                         self.url, self.response)
-            wc.proxy.ServerPool.serverpool.set_http_version(self.addr, (1, 0))
+            ServerPool.serverpool.set_http_version(self.addr, (1, 0))
             # put the read bytes back to the buffer
             self.recv_buffer = self.response + self.recv_buffer
             # look if the response line was a header
             # Example:
             # http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
-            if not wc.proxy.Headers.is_header(self.response):
+            if not Headers.is_header(self.response):
                 wc.log.warn(wc.LOG_PROXY,
                             "missing headers in response from %r", self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
@@ -302,7 +302,7 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'response'
             return
         self.set_persistent(msg,
-                     wc.proxy.ServerPool.serverpool.http_versions[self.addr])
+                     ServerPool.serverpool.http_versions[self.addr])
         try:
             self.headers = self.filter_headers(msg)
         except wc.filter.FilterRating, err:
@@ -318,7 +318,7 @@ class HttpServer (wc.proxy.Server.Server):
             location = self.headers.get('Location')
             if location:
                 host = wc.url.url_split(location)[1]
-                if host in wc.proxy.dns_lookups.resolver.localhosts:
+                if host in dns_lookups.resolver.localhosts:
                     self.handle_error(_('redirection to localhost'))
                     return
         self.mangle_response_headers()
@@ -359,16 +359,16 @@ class HttpServer (wc.proxy.Server.Server):
         """
         Modify response headers.
         """
-        wc.proxy.Headers.server_set_headers(self.headers, self.url)
+        Headers.server_set_headers(self.headers, self.url)
         self.bytes_remaining = \
-              wc.proxy.Headers.server_set_encoding_headers(self)
+              Headers.server_set_encoding_headers(self)
         if self.bytes_remaining is None:
             self.persistent = False
         if self.statuscode == 304:
             # 304 Not Modified does not send any type info, because it
             # was cached
             return
-        wc.proxy.Headers.server_set_content_headers(
+        Headers.server_set_content_headers(
                     self.statuscode, self.headers, self.mime_types, self.url)
 
     def set_persistent (self, headers, http_ver):
@@ -376,10 +376,10 @@ class HttpServer (wc.proxy.Server.Server):
         Return True iff this server connection is persistent.
         """
         if http_ver >= (1, 1):
-            self.persistent = not wc.proxy.Headers.has_header_value(
+            self.persistent = not Headers.has_header_value(
                                               headers, 'Connection', 'Close')
         elif http_ver >= (1, 0):
-            self.persistent = wc.proxy.Headers.has_header_value(
+            self.persistent = Headers.has_header_value(
                                          headers, 'Connection', 'Keep-Alive')
         else:
             self.persistent = False
@@ -507,9 +507,9 @@ class HttpServer (wc.proxy.Server.Server):
                 wc.configuration.config['parentproxycreds'] = None
                 return
             self.authtries += 1
-            challenges = wc.proxy.auth.get_header_challenges(self.headers,
+            challenges = auth.get_header_challenges(self.headers,
                               'Proxy-Authenticate')
-            wc.proxy.Headers.remove_headers(self.headers,
+            Headers.remove_headers(self.headers,
                                                   ['Proxy-Authentication'])
             attrs = {
                 'password_b64': wc.configuration.config['parentproxypass'],
@@ -523,12 +523,12 @@ class HttpServer (wc.proxy.Server.Server):
                     self.method = 'GET'
             if 'Digest' in challenges:
                 # note: assume self.document is already url-encoded
-                attrs['uri'] = wc.proxy.auth.get_auth_uri(self.document)
+                attrs['uri'] = auth.get_auth_uri(self.document)
                 # with https, this is CONNECT
                 attrs['method'] = self.method
                 attrs['requireExtraQuotes'] = \
            self.headers.get('Server', '').lower().startswith('microsoft-iis')
-            creds = wc.proxy.auth.get_credentials(challenges, **attrs)
+            creds = auth.get_credentials(challenges, **attrs)
             # resubmit the request with proxy credentials
             self.state = 'client'
             wc.configuration.config['parentproxycreds'] = creds
@@ -584,7 +584,7 @@ class HttpServer (wc.proxy.Server.Server):
         assert None == wc.log.debug(wc.LOG_PROXY,
             "%s HttpServer.set_unreadable", self)
         oldstate, self.state = self.state, 'unreadable'
-        wc.proxy.timer.make_timer(secs, lambda: self.set_readable(oldstate))
+        timer.make_timer(secs, lambda: self.set_readable(oldstate))
 
     def set_readable (self, state):
         """
@@ -612,7 +612,7 @@ class HttpServer (wc.proxy.Server.Server):
         self.state = 'client'
         self.reset()
         # be sure to unreserve _after_ reset because of callbacks
-        wc.proxy.ServerPool.serverpool.unreserve_server(self.addr, self)
+        ServerPool.serverpool.unreserve_server(self.addr, self)
 
     def close_ready (self):
         """
@@ -652,7 +652,7 @@ class HttpServer (wc.proxy.Server.Server):
             self.state = 'closed'
         super(HttpServer, self).close_close()
         if unregister:
-            wc.proxy.ServerPool.serverpool.unregister_server(self.addr, self)
+            ServerPool.serverpool.unregister_server(self.addr, self)
         assert not self.connected
 
     def handle_error (self, what):
@@ -689,4 +689,4 @@ def speedcheck_print_status ():
         pass
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
-    wc.proxy.timer.make_timer(5, speedcheck_print_status)
+    timer.make_timer(5, speedcheck_print_status)

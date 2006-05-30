@@ -20,13 +20,13 @@ TAL template class for WebCleaner.
 
 import os.path
 
-import wc.webgui.PageTemplates.PageTemplate
-import wc.webgui.PageTemplates.Expressions
-import wc.webgui.TAL.TALInterpreter
-import wc.webgui.ZTUtils
+import PageTemplates.PageTemplate
+import PageTemplates.Expressions
+import TAL.TALInterpreter
+import ZTUtils
 
 
-class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
+class WebCleanerTemplate (PageTemplates.PageTemplate.PageTemplate):
     """A page template class."""
 
     def __init__ (self, path, mtime):
@@ -39,7 +39,7 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
         if self._v_errors:
             msg = ", ".join(self._v_errors)
             name = os.path.basename(path)
-            raise wc.webgui.PageTemplates.PageTemplate.PTRuntimeError(
+            raise PageTemplates.PageTemplate.PTRuntimeError(
                                          'Template /%s:\n%s' % (name, msg))
 
     def html (self):
@@ -54,11 +54,11 @@ class WebCleanerTemplate (wc.webgui.PageTemplates.PageTemplate.PageTemplate):
         """
         Render this Page Template.
         """
-        out = wc.webgui.ZTUtils.FasterStringIO()
+        out = ZTUtils.FasterStringIO()
         __traceback_supplement__ = \
-  (wc.webgui.PageTemplates.PageTemplate.PageTemplateTracebackSupplement, self)
-        engine = wc.webgui.PageTemplates.Expressions.getEngine()
-        wc.webgui.TAL.TALInterpreter.TALInterpreter(
+          (PageTemplates.PageTemplate.PageTemplateTracebackSupplement, self)
+        engine = PageTemplates.Expressions.getEngine()
+        TAL.TALInterpreter.TALInterpreter(
             self._v_program, self.macros,
             engine.getContext(context), out, tal=1, strictinsert=0)()
         return out.getvalue().encode("iso8859-1")

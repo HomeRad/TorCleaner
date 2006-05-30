@@ -33,7 +33,7 @@ import time
 
 import wc
 import wc.log
-import wc.proxy
+import timer
 
 
 class ServerPool (object):
@@ -57,7 +57,7 @@ class ServerPool (object):
         self.smap = {} # {(ipaddr, port) -> {server -> ('available'|'busy')}}
         self.http_versions = {} # {(ipaddr, port) -> http_version}
         self.callbacks = {} # {(ipaddr, port) -> [functions to call]}
-        wc.proxy.timer.make_timer(60, self.expire_servers)
+        timer.make_timer(60, self.expire_servers)
 
     def count_servers (self, addr):
         """
@@ -164,7 +164,7 @@ class ServerPool (object):
             if addr in self.smap:
                 assert not self.smap[addr].has_key(server), \
                        "Not expired: %s" % str(self.smap[addr])
-        wc.proxy.timer.make_timer(60, self.expire_servers)
+        timer.make_timer(60, self.expire_servers)
 
     def invoke_callbacks (self, addr):
         """

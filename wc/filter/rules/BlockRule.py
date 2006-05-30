@@ -18,11 +18,11 @@
 Block URLs.
 """
 
-import wc.filter.rules.AllowRule
+import AllowRule
 import wc.XmlUtils
 
 
-class BlockRule (wc.filter.rules.AllowRule.AllowRule):
+class BlockRule (AllowRule.AllowRule):
     """
     Define a regular expression for urls to be blocked, and a
     replacement url with back references for matched subgroups.
@@ -52,7 +52,7 @@ class BlockRule (wc.filter.rules.AllowRule.AllowRule):
         """
         Rule data as XML for storing.
         """
-        s =  super(wc.filter.rules.AllowRule.AllowRule, self).toxml() + \
+        s =  super(AllowRule.AllowRule, self).toxml() + \
              u'\n url="%s"' % wc.XmlUtils.xmlquoteattr(self.url)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:

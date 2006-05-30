@@ -18,11 +18,11 @@
 Block URLs.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 import wc.XmlUtils
 
 
-class AllowRule (wc.filter.rules.UrlRule.UrlRule):
+class AllowRule (UrlRule.UrlRule):
     """
     Define a regular expression for urls to be allowed, even if they
     would be blocked by a block rule otherwise.

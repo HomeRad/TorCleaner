@@ -20,7 +20,7 @@ Rule rewriting xml tags.
 
 import re
 import locale
-import wc.filter.rules.UrlRule
+import UrlRule
 import wc.filter.html.RssHtmlFilter
 import wc.filter.html.HtmlFilter
 
@@ -109,7 +109,7 @@ def match_element (tag, attrs, element_match):
     return True
 
 
-class XmlrewriteRule (wc.filter.rules.UrlRule.UrlRule):
+class XmlrewriteRule (UrlRule.UrlRule):
     """
     An XML rule first matches a document selector (which is a simple
     XPath expression) to select the correct XML documents this rule

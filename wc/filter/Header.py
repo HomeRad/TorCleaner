@@ -26,10 +26,10 @@ import wc
 import wc.log
 import wc.proxy.Headers
 import wc.filter
-import wc.filter.Filter
+import Filter
 
 
-class Header (wc.filter.Filter.Filter):
+class Header (Filter.Filter):
     """
     Filter for adding, modifying and deleting headers.
     """

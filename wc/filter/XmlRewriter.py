@@ -21,12 +21,12 @@ Filter a XML stream.
 import xml.sax.expatreader
 
 import wc.filter
-import wc.filter.Filter
-import wc.filter.xmlfilt.XmlFilter
+import Filter
+import xmlfilt.XmlFilter
 
 DefaultCharset = 'iso-8859-1'
 
-class XmlRewriter (wc.filter.Filter.Filter):
+class XmlRewriter (Filter.Filter):
     """
     This filter can rewrite XML tags. It uses an expat parser.
     """
@@ -95,7 +95,7 @@ class XmlRewriter (wc.filter.Filter.Filter):
             elif rule.name == u'htmlrewrite':
                 htmlrules.append(rule)
         encoding = attrs.get("charset", "UTF-8")
-        xfilt = wc.filter.xmlfilt.XmlFilter.XmlFilter
+        xfilt = xmlfilt.XmlFilter.XmlFilter
         handler = xfilt(xmlrules, htmlrules, url, localhost, encoding)
         p = xml.sax.expatreader.ExpatParser(namespaceHandling=1)
         p.setContentHandler(handler)

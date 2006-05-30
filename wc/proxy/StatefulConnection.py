@@ -29,10 +29,10 @@
 Stateful connections.
 """
 
-import wc.proxy.Connection
+import Connection
 
 
-class StatefulConnection (wc.proxy.Connection.Connection):
+class StatefulConnection (Connection.Connection):
     """
     Connection class allowing the connection to be in a specified state.
     """

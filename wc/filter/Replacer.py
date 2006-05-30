@@ -21,12 +21,12 @@ removing/replacing certain strings.
 
 import wc.fileutil
 import wc.filter
-import wc.filter.Filter
+import Filter
 
 
 DefaultCharset = 'iso-8859-1'
 
-class Replacer (wc.filter.Filter.Filter):
+class Replacer (Filter.Filter):
     """Replace regular expressions in a data stream."""
 
     enable = True

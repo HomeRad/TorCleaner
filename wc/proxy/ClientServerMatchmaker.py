@@ -36,11 +36,11 @@ import wc
 import wc.log
 import wc.configuration
 import wc.url
-import wc.proxy.dns_lookups
-import wc.proxy.Headers
-import wc.proxy.ServerHandleDirectly
-import wc.proxy.HttpServer
-from wc.proxy.ServerPool import serverpool
+import dns_lookups
+import Headers
+import ServerHandleDirectly
+import HttpServer
+from ServerPool import serverpool
 
 
 BUSY_LIMIT = 10
@@ -121,7 +121,7 @@ class ClientServerMatchmaker (object):
         # start DNS lookup
         assert None == wc.log.debug(wc.LOG_PROXY,
                             "background dns lookup %r", self.hostname)
-        wc.proxy.dns_lookups.background_lookup(self.hostname, self.handle_dns)
+        dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
     def get_ip_addr (self):
         ip = self.try_addrs[0]
@@ -158,7 +158,7 @@ class ClientServerMatchmaker (object):
             new_url += self.document
             wc.log.info(wc.LOG_PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
-            wc.proxy.ServerHandleDirectly.ServerHandleDirectly(
+            ServerHandleDirectly.ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol, 301,
               wc.http.header.WcMessage(
@@ -218,10 +218,10 @@ class ClientServerMatchmaker (object):
             # note: all Server objects eventually call server_connected
             try:
                 if self.do_ssl and self.sslserver:
-                    import wc.proxy.SslServer
-                    klass = wc.proxy.SslServer.SslServer
+                    import SslServer
+                    klass = SslServer.SslServer
                 else:
-                    klass = wc.proxy.HttpServer.HttpServer
+                    klass = HttpServer.HttpServer
                 server = klass(self.ipaddr, self.port, self)
                 serverpool.register_server(addr, server)
             except socket.error:

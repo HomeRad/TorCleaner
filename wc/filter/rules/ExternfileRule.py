@@ -19,11 +19,11 @@ Hold a list of urls/domains to filter in external files, like those
 found in SquidGuard.
 """
 
-import wc.filter.rules.Rule
+import Rule
 import wc.XmlUtils
 
 
-class ExternfileRule (wc.filter.rules.Rule.Rule):
+class ExternfileRule (Rule.Rule):
     """
     Rule with data stored in a (compressed) external file, used for
     huge url and domain block lists.

@@ -27,8 +27,8 @@ import wc.log
 import wc.proxy.auth
 import wc.proxy.Headers
 import wc.webgui
-import wc.webgui.templatecache
-import wc.webgui.TAL
+import templatecache
+import TAL
 
 
 class WebConfig (object):
@@ -116,7 +116,7 @@ class WebConfig (object):
                 self.load()
                 return
             # get (compiled) template
-            template = wc.webgui.templatecache.templates[path]
+            template = templatecache.templates[path]
             # expand template
             self.data = expand_template(template, context)
             # note: data is already encoded
@@ -232,11 +232,11 @@ def add_default_context (context, filename, hostname, lang):
     """
     # rule macros
     path, dirs = wc.webgui.get_safe_template_path("macros/rules.html")
-    rulemacros = wc.webgui.templatecache.templates[path]
+    rulemacros = templatecache.templates[path]
     context_add(context, "rulemacros", rulemacros.macros)
     # standard macros
     path, dirs = wc.webgui.get_safe_template_path("macros/standard.html")
-    macros = wc.webgui.templatecache.templates[path]
+    macros = templatecache.templates[path]
     context_add(context, "macros", macros.macros)
     # used by navigation macro
     add_nav_context(context, filename)
@@ -319,5 +319,5 @@ class TALTranslator (object):
         _msg = self.ugettext(msgid)
         assert None == wc.log.debug(wc.LOG_TAL,
             "TRANSLATED %r %r", msgid, _msg)
-        return wc.webgui.TAL.TALInterpreter.interpolate(_msg, mapping)
+        return TAL.TALInterpreter.interpolate(_msg, mapping)
 

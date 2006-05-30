@@ -20,7 +20,7 @@ Filter according to rating rules.
 
 import wc
 import wc.log
-import wc.filter.rules.UrlRule
+import UrlRule
 import wc.XmlUtils
 import wc.rating
 from wc.rating.service import ratingservice
@@ -29,7 +29,7 @@ from wc.rating.service import ratingservice
 MISSING = _("Unknown page")
 
 
-class RatingRule (wc.filter.rules.UrlRule.UrlRule):
+class RatingRule (UrlRule.UrlRule):
     """
     Holds a rating to match against when checking for allowance of
     the rating system.

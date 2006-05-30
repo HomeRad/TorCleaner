@@ -25,7 +25,7 @@ mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
 import wc.log
 import wc.filter
-import wc.filter.Filter
+import Filter
 import wc.magic
 
 
@@ -49,7 +49,7 @@ def is_preferred_mime (mime, origmime):
     return True
 
 
-class MimeRecognizer (wc.filter.Filter.Filter):
+class MimeRecognizer (Filter.Filter):
     """
     Recognizes missing or wrong content type header of URLs request data.
     """

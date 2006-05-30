@@ -18,11 +18,11 @@
 Filter HTTP headers.
 """
 
-import wc.filter.rules.UrlRule
+import UrlRule
 import wc.XmlUtils
 
 
-class HeaderRule (wc.filter.rules.UrlRule.UrlRule):
+class HeaderRule (UrlRule.UrlRule):
     """
     Rule for filtering HTTP headers.
     """
