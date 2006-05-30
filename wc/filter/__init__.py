@@ -47,6 +47,8 @@ These must be handled in the appropriate proxy functions to work
 properly.
 """
 
+import cgi
+import os
 import wc
 import wc.log
 import wc.configuration
@@ -194,3 +196,68 @@ def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
         # mime type can change dynamically
         f.update_attrs(attrs, url, localhost, filterstages, attrheaders)
     return attrs
+
+
+def which_filters (url, mime):
+    """
+    Deduce which filters apply to the given url/mime.
+    """
+    filters_by_stage = {}
+    for stage in FilterStages:
+        filters = wc.configuration.config['filterlist'][stage]
+        applies = []
+        for filter in filters:
+            rules = filter.which_rules(url, mime)
+            if not filter.applies_to_stages([stage]):
+                applies.append((False, 'stage', filter, rules))
+            elif not filter.applies_to_mime(mime):
+                applies.append((False, 'mime', filter, rules))
+            else:
+                applies.append((True, '', filter, rules))
+        filters_by_stage[stage] = applies
+    return filters_by_stage
+
+
+def show_rules (url, mime):
+    """
+    Build an html document showing which rules are enabled for the given
+    url and mime type.
+    """
+    lang = 'en'
+    filters_by_stage = which_filters(url, mime)
+    s = ''
+    for stage in FilterStages:
+        s += '<h3>Stage: %s</h3>\n<ul>\n' % stage
+        filters = filters_by_stage[stage]
+        for enabled, why, filter, rules in filters:
+            klass = enabled and 'filter_on' or 'filter_off hide'
+            filter_name = cgi.escape(str(filter))
+            s += '<li class="%s" title="%s">filter %s with %d rules\n<ul>\n' % \
+                (klass, why, filter_name, len(rules))
+            for enabled, why, rule in rules:
+                klass = enabled and 'rule_on' or 'rule_off hide'
+                name = cgi.escape(rule.titles[lang])
+                desc = cgi.escape(rule.descriptions[lang], True)
+                folder = cgi.escape(rule.parent.titles[lang])
+                base = 'http://localhost:8088/filterconfig.html.en'
+                folder_loc = '%s?selfolder=%d' % (base, rule.parent.oid)
+                folder_link = '<a href="%s">%s</a>' % (folder_loc, folder)
+                rule_loc = '%s&selrule=%d' % (folder_loc, rule.oid)
+                rule_link = '<a href="%s">%s</a>' % (rule_loc, name)
+                s += '<li class="%s" title="%s">rule %s in folder %s</li>\n' % \
+                    (klass, why, rule_link, folder_link)
+            s += '</ul></li>\n'
+        s += '</ul>\n'
+    ruleset = s
+    config = wc.configuration.config
+    theme = config["gui_theme"]
+    page_template = os.path.join(wc.TemplateDir, theme, 'show_rules.html')
+    proxy = config['bindaddress'], config['port']
+    enabled_img = 'http://%s:%s/rule_enabled.png' % proxy
+    disabled_img = 'http://%s:%s/rule_disabled.png' % proxy
+    fd = open(page_template, 'r')
+    try:
+        return fd.read() % locals()
+    finally:
+        fd.close()
+
