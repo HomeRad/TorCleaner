@@ -29,6 +29,12 @@ import wc.filter
 import wc.log
 import wc.url
 
+def funcname (func):
+    name = func.func_name
+    if hasattr(func, 'im_class'):
+        name = func.im_class.__name__+"."+name
+    return name
+
 
 class HttpProxyClient (object):
     """
@@ -38,15 +44,14 @@ class HttpProxyClient (object):
     Buffered data is None on error, else the content string.
     """
 
-    def __init__ (self, handler, args, localhost):
+    def __init__ (self, localhost, url, method="GET"):
         """
         Args is a tuple (url, JS version).
         """
-        self.handler = handler
-        self.args = args
-        self.method = "GET"
+        self.handlers = {}
+        self.method = method
         self.decoders = []
-        self.url = wc.url.url_norm(self.args[0])[0]
+        self.url = wc.url.url_norm(url)[0]
         self.scheme, self.hostname, self.port, self.document = \
                                                   wc.url.url_split(self.url)
         # fix missing trailing /
@@ -59,24 +64,32 @@ class HttpProxyClient (object):
         self.headers = wc.http.header.WcMessage()
         attrs = wc.filter.get_filterattrs(self.url, self.localhost,
                                           [wc.filter.STAGE_REQUEST])
-        # note: use HTTP/1.0 for JavaScript
-        request = "GET %s HTTP/1.0" % self.url
+        # note: use HTTP/1.0 for older browsers
+        request = "%s %s HTTP/1.0" % (self.method, self.url)
         for stage in wc.proxy.HttpClient.FilterStages:
             request = wc.filter.applyfilter(stage, request, "filter", attrs)
         self.request = request
         assert None == wc.log.debug(wc.LOG_PROXY, '%s init', self)
 
+    def add_content_handler (self, handler, args=()):
+        self.handlers['content'] = (handler, args)
+        assert self.method != "HEAD", "No content for HEAD method"
+
+    def add_header_handler (self, handler, args=()):
+        self.handlers['headers'] = (handler, args)
+
     def __repr__ (self):
         """
         Object representation.
         """
-        if self.handler is None:
-            handler = "None"
-        else:
-            handler = self.handler.func_name
-            if hasattr(self.handler, 'im_class'):
-                handler = self.handler.im_class.__name__+"."+handler
-        return '<%s: %s %s>' % ('proxyclient', self.args[0], handler)
+        slist = []
+        for key, value in self.handlers.items():
+            handler, args = value
+            s = "%s: %s" % (key, funcname(handler))
+            if args:
+                s += " %s" % args[0]
+            slist.append(s)
+        return '<%s: %s>' % ('proxyclient', "\n ".join(slist))
 
     def flush_coders (self, coders, data=""):
         while coders:
@@ -92,11 +105,12 @@ class HttpProxyClient (object):
         """
         assert None == wc.log.debug(wc.LOG_PROXY, '%s finish', self)
         data = self.flush_coders(self.decoders)
-        if self.handler:
+        if "content" in self.handlers:
+            handler, args = self.handlers['content']
             if data:
-                self.handler(data, *self.args)
-            self.handler(None, *self.args)
-            self.handler = None
+                handler(data, *args)
+            handler(None, *args)
+            del self.handlers["content"]
 
     def error (self, status, msg, txt=''):
         """
@@ -112,8 +126,9 @@ class HttpProxyClient (object):
         """
         for decoder in self.decoders:
             data = decoder.process(data)
-        if self.handler and data:
-            self.handler(data, *self.args)
+        if "content" in self.handlers and data:
+            handler, args = self.handlers['content']
+            handler(data, *args)
 
     def server_response (self, server, response, status, headers):
         """
@@ -124,16 +139,21 @@ class HttpProxyClient (object):
         assert None == wc.log.debug(wc.LOG_PROXY,
             '%s server_response %r', self, response)
         version, status, msg = \
-               wc.http.parse_http_response(response, self.args[0])
+               wc.http.parse_http_response(response, self.url)
         # XXX check version
         assert None == wc.log.debug(wc.LOG_PROXY,
             '%s response %s %d %s', self, version, status, msg)
         if status in (302, 301):
             self.isredirect = True
-        elif not (200 <= status < 300):
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "%s got %s status %d %r", self, version, status, msg)
-            self.finish()
+        else:
+            if "headers" in self.handlers:
+                handler, args = self.handlers['headers']
+                handler(headers, *args)
+                del self.handlers["headers"]
+            if not (200 <= status < 300):
+                assert None == wc.log.debug(wc.LOG_PROXY,
+                    "%s got %s status %d %r", self, version, status, msg)
+                self.finish()
         if headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
             assert None == wc.log.debug(wc.LOG_PROXY,
@@ -177,7 +197,7 @@ class HttpProxyClient (object):
         """
         Local data is not allowed here, finish.
         """
-        wc.log.error(wc.LOG_PROXY, "%s handle_local %s", self, self.args)
+        wc.log.error(wc.LOG_PROXY, "%s handle_local %s", self)
         self.finish()
 
     def redirect (self):
@@ -191,7 +211,6 @@ class HttpProxyClient (object):
                      self.server.headers.getheader("Uri", ""))
         url = urlparse.urljoin(self.server.url, url)
         self.url = wc.url.url_norm(url)[0]
-        self.args = (self.url, self.args[1])
         self.isredirect = False
         assert None == wc.log.debug(wc.LOG_PROXY, "%s redirected", self)
         self.scheme, self.hostname, self.port, self.document = \
@@ -202,8 +221,16 @@ class HttpProxyClient (object):
         host = wc.url.stripsite(self.url)[0]
         mime_types = self.server.mime_types
         content = ''
-        # note: use HTTP/1.0 for JavaScript
-        request = "GET %s HTTP/1.0" % self.url
+        attrs = wc.filter.get_filterattrs(self.url, self.localhost,
+                                          [wc.filter.STAGE_REQUEST])
+        # note: use HTTP/1.0 for older browsers
+        request = "%s %s HTTP/1.0" % (self.method, self.url)
+        for stage in wc.proxy.HttpClient.FilterStages:
+            request = wc.filter.applyfilter(stage, request, "filter", attrs)
+        if self.request == request:
+            # avoid request loop
+            self.finish()
+            return
         # close the server and try again
         self.server = None
         headers = wc.proxy.Headers.get_wc_client_headers(host)
