@@ -41,22 +41,22 @@ import wc.strformat
 import wc.configuration
 import wc.http
 import wc.url
-import wc.proxy.StatefulConnection
-import wc.proxy.ClientServerMatchmaker
-import wc.proxy.ServerHandleDirectly
-import wc.proxy.decoder.UnchunkStream
-import wc.proxy.encoder.ChunkStream
-import wc.proxy.Allowed
-import wc.proxy
-import wc.proxy.Headers
-import wc.proxy.auth
+import CodingConnection
+import ClientServerMatchmaker
+import ServerHandleDirectly
+import decoder.UnchunkStream
+import encoder.ChunkStream
+import Allowed
+import Headers
+import auth
+import dns_lookups
 if wc.HasCrypto:
-    import wc.proxy.auth.ntlm
+    from auth import ntlm
 import wc.filter
 import wc.webgui
 import wc.webgui.webconfig
 import wc.google
-
+from HttpProxyClient import HttpProxyClient
 
 FilterStages = [
     wc.filter.STAGE_REQUEST_DECODE,
@@ -66,7 +66,7 @@ FilterStages = [
 
 hostattr = re.compile(r"^(?i)([-a-z0-9\.]+)\.wc-([-a-z0-9]+)$")
 
-class HttpClient (wc.proxy.CodingConnection.CodingConnection):
+class HttpClient (CodingConnection.CodingConnection):
     """
     States:
      - request (read first line)
@@ -86,7 +86,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         self.localhost = self.socket.getsockname()[0]
         assert None == wc.log.debug(wc.LOG_PROXY, "Connection to %s from %s",
                      self.socket.getsockname(), self.addr)
-        self.allow = wc.proxy.Allowed.AllowedHttpClient()
+        self.allow = Allowed.AllowedHttpClient()
         host = self.addr[0]
         if not self.allow.host(host):
             wc.log.warn(wc.LOG_PROXY, "host %s access denied", host)
@@ -192,6 +192,23 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         self.attrs = wc.filter.get_filterattrs(self.url,
                                                self.localhost, [stage])
         request = self.check_host_attrs(request)
+        if self.attrs.get('show'):
+            # return html doc showing active filters
+            headers = wc.http.header.WcMessage()
+            headers['Content-Type'] = 'text/html\r'
+            headers['Server'] = 'WebCleaner\r'
+            def callback (headers):
+                mime = Headers.get_content_type(headers, self.url)
+                body = wc.filter.show_rules(self.url, mime)
+                ServerHandleDirectly.ServerHandleDirectly(self,
+                 'HTTP/%d.%d 200 OK' % self.version, 200, headers, body)
+            hpc = HttpProxyClient(self.localhost, self.url, method="HEAD")
+            hpc.add_header_handler(callback)
+            headers = Headers.get_wc_client_headers(hpc.hostname)
+            ClientServerMatchmaker.ClientServerMatchmaker(
+                 hpc, hpc.request, headers, '')
+            self.state = 'done'
+            return
         request = wc.filter.applyfilter(stage, request, "finish", self.attrs)
         self.request = request
         # final request checking
@@ -227,12 +244,12 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         # Assumes that the request now has correct syntax.
         self.method, self.url, protocol = self.request.split()
         # enforce a maximum url length
-        if len(self.url) > wc.proxy.Allowed.MAX_URL_LEN:
+        if len(self.url) > Allowed.MAX_URL_LEN:
             wc.log.warn(wc.LOG_PROXY,
                          "%s request url length %d chars is too long",
                          self, len(self.url))
             self.error(414, _("URL too long"),
-        txt=_('URL length limit is %d bytes.') % wc.proxy.Allowed.MAX_URL_LEN)
+        txt=_('URL length limit is %d bytes.') % Allowed.MAX_URL_LEN)
             return False
         if len(self.url) > 1024:
             wc.log.warn(wc.LOG_PROXY,
@@ -306,20 +323,20 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         self.clientheaders = msg.copy()
         self.set_persistent(msg, self.version)
         self.mangle_request_headers(msg)
-        self.compress = wc.proxy.Headers.client_set_encoding_headers(msg)
+        self.compress = Headers.client_set_encoding_headers(msg)
         self.headers = self.filter_headers(msg)
         # if content-length header is missing, assume zero length
         self.bytes_remaining = \
-               wc.proxy.Headers.get_content_length(self.headers, 0)
+               Headers.get_content_length(self.headers, 0)
         # chunked encoded
         if self.headers.has_key('Transfer-Encoding'):
             # XXX don't look at value, assume chunked encoding for now
             assert None == wc.log.debug(wc.LOG_PROXY,
                 '%s Transfer-encoding %r',
                 self, self.headers['Transfer-encoding'])
-            unchunker = wc.proxy.decoder.UnchunkStream.UnchunkStream(self)
+            unchunker = decoder.UnchunkStream.UnchunkStream(self)
             self.decoders.append(unchunker)
-            chunker = wc.proxy.encoder.ChunkStream.ChunkStream(self)
+            chunker = encoder.ChunkStream.ChunkStream(self)
             self.encoders.append(chunker)
             self.bytes_remaining = None
         if self.bytes_remaining is None:
@@ -340,7 +357,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             self.error(400, _("Bad Request"))
             return
         # local request?
-        if self.hostname in wc.proxy.dns_lookups.resolver.localhosts and \
+        if self.hostname in dns_lookups.resolver.localhosts and \
            self.port == wc.configuration.config['port']:
             # this is a direct proxy call, jump directly to content
             self.state = 'content'
@@ -354,41 +371,41 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         else:
             self.headers['Host'] = "%s\r" % self.hostname
         if wc.configuration.config["proxyuser"]:
-            creds = wc.proxy.auth.get_header_credentials(self.headers,
+            creds = auth.get_header_credentials(self.headers,
                        'Proxy-Authorization')
             if not creds:
                 self.error(407, _("Proxy Authentication Required"),
-                           auth_challenges=wc.proxy.auth.get_challenges())
+                           auth_challenges=auth.get_challenges())
                 return
             if 'NTLM' in creds:
                 if creds['NTLM'][0]['type'] == \
-                                       wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
+                                       ntlm.NTLMSSP_NEGOTIATE:
                     attrs = {
                         'host': creds['NTLM'][0]['host'],
                         'domain': creds['NTLM'][0]['domain'],
-                        'type': wc.proxy.auth.ntlm.NTLMSSP_CHALLENGE,
+                        'type': ntlm.NTLMSSP_CHALLENGE,
                     }
                     self.error(407, _("Proxy Authentication Required"),
-                        auth_challenges=wc.proxy.auth.get_challenges(**attrs))
+                        auth_challenges=auth.get_challenges(**attrs))
                     return
             # XXX the data=None argument should hold POST data
-            if not wc.proxy.auth.check_credentials(creds,
+            if not auth.check_credentials(creds,
                            username=wc.configuration.config['proxyuser'],
                            password_b64=wc.configuration.config['proxypass'],
-                           uri=wc.proxy.auth.get_auth_uri(self.url),
+                           uri=auth.get_auth_uri(self.url),
                            method=self.method, data=None):
                 wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s",
                             self.addr[0])
                 self.error(407, _("Proxy Authentication Required"),
-                           auth_challenges=wc.proxy.auth.get_challenges())
+                           auth_challenges=auth.get_challenges())
                 return
         if self.method in ['OPTIONS', 'TRACE'] and \
-           wc.proxy.Headers.client_get_max_forwards(self.headers) == 0:
+           Headers.client_get_max_forwards(self.headers) == 0:
             # XXX display options ?
             self.state = 'done'
             headers = wc.http.header.WcMessage()
             headers['Content-Type'] = 'text/plain\r'
-            wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
+            ServerHandleDirectly.ServerHandleDirectly(self,
                  'HTTP/%d.%d 200 OK' % self.version, 200, headers, '')
             return
         if self.needs_redirect:
@@ -396,7 +413,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             headers = wc.http.header.WcMessage()
             headers['Content-Type'] = 'text/plain\r'
             headers['Location'] = '%s\r' % self.url
-            wc.proxy.ServerHandleDirectly.ServerHandleDirectly(self,
+            ServerHandleDirectly.ServerHandleDirectly(self,
                 'HTTP/%d.%d 302 Found' % self.version, 302, headers, '')
             return
         self.state = 'content'
@@ -419,12 +436,12 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         # look if client wants persistent connections
         if http_ver >= (1, 1):
             self.persistent = \
-              not (wc.proxy.Headers.has_header_value(headers,
+              not (Headers.has_header_value(headers,
                      'Proxy-Connection', 'Close') or
-                   wc.proxy.Headers.has_header_value(headers,
+                   Headers.has_header_value(headers,
                      'Connection', 'Close'))
         else:
-            self.persistent = wc.proxy.Headers.has_header_value(headers,
+            self.persistent = Headers.has_header_value(headers,
                                            "Proxy-Connection", "Keep-Alive")
 
     def fix_request_headers (self, headers):
@@ -438,7 +455,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         """
         Modify request headers.
         """
-        wc.proxy.Headers.client_set_headers(headers, self.url)
+        Headers.client_set_headers(headers, self.url)
 
     def process_content (self):
         """
@@ -488,7 +505,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
             # We're done reading content
             self.state = 'receive'
             is_local = self.hostname in \
-                       wc.proxy.dns_lookups.resolver.localhosts and \
+                       dns_lookups.resolver.localhosts and \
                        self.port in (wc.configuration.config['port'],
                                      wc.configuration.config['sslport'])
             if is_local:
@@ -536,7 +553,7 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
                              "%s server_request in non-receive state" % self
         assert None == wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
-        wc.proxy.ClientServerMatchmaker.ClientServerMatchmaker(self,
+        ClientServerMatchmaker.ClientServerMatchmaker(self,
                                 self.request, self.headers, self.content)
 
     def server_response (self, server, response, status, headers):
@@ -640,27 +657,27 @@ class HttpClient (wc.proxy.CodingConnection.CodingConnection):
         # check admin pass
         if not (is_public_doc or is_admin_doc) and \
            wc.configuration.config["adminuser"]:
-            creds = wc.proxy.auth.get_header_credentials(self.headers,
+            creds = auth.get_header_credentials(self.headers,
                                                          'Authorization')
             if not creds:
                 self.error(401, _("Authentication Required"),
-                           auth_challenges=wc.proxy.auth.get_challenges())
+                           auth_challenges=auth.get_challenges())
                 return
             if 'NTLM' in creds and creds['NTLM'][0]['type'] == \
-               wc.proxy.auth.ntlm.NTLMSSP_NEGOTIATE:
+               ntlm.NTLMSSP_NEGOTIATE:
                 self.error(401, _("Authentication Required"),
                            auth_challenges=[",".join(creds['NTLM'][0])])
                 return
             # XXX the data=None argument should hold POST data
-            if not wc.proxy.auth.check_credentials(creds,
+            if not auth.check_credentials(creds,
                             username=wc.configuration.config['adminuser'],
                             password_b64=wc.configuration.config['adminpass'],
-                            uri=wc.proxy.auth.get_auth_uri(self.url),
+                            uri=auth.get_auth_uri(self.url),
                             method=self.method, data=None):
                 wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s",
                             self.addr[0])
                 self.error(401, _("Authentication Required"),
-                           auth_challenges=wc.proxy.auth.get_challenges())
+                           auth_challenges=auth.get_challenges())
                 return
         # get cgi form data
         form = self.get_form_data()
