@@ -21,6 +21,8 @@ Header mangling.
 import re
 import sets
 import time
+import urlparse
+import mimetypes
 
 import wc
 import wc.log
@@ -48,6 +50,21 @@ def get_content_length (headers, default=None):
         wc.log.warn(wc.LOG_PROXY, "invalid Content-Length value %r",
                     headers['Content-Length'])
     return None
+
+
+def get_content_type (headers, url, default="application/octet-stream"):
+    """
+    Get a mime type for this url.  First check the response headers.
+    If not found, try to deduce from the file extension.
+    If all else fails, return default value.
+    """
+    ctype = headers.get('Content-Type')
+    if ctype is None:
+        path = urlparse.urlparse (url) [2]
+        ctype = mimetypes.guess_type(path)[0]
+    if ctype is None:
+        return default
+    return ctype
 
 
 def get_wc_client_headers (host):
