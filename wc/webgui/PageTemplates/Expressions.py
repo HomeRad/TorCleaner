@@ -48,16 +48,14 @@ def installHandlers (engine):
 
 from PythonExpr import getSecurityManager, PythonExpr
 guarded_getattr = getattr
-try:
-    from zExceptions import Unauthorized
-except ImportError:
-    Unauthorized = "Unauthorized"
+
+class Unauthorized (Exception): pass
 
 
 def acquisition_security_filter (orig, inst, name, v, real_validate):
     if real_validate(orig, inst, name, v):
         return 1
-    raise Unauthorized, name
+    raise Unauthorized(name)
 
 
 def call_with_ns (f, ns, arg=1):
@@ -321,7 +319,7 @@ def restrictedTraverse (object, path, securityManager,
             o = object[name]
             # Check access to the item.
             if not validate(object, object, name, o):
-                raise Unauthorized, name
+                raise Unauthorized(name)
             object = o
             continue
 

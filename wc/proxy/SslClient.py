@@ -19,7 +19,7 @@ SSL client connection.
 """
 
 import wc
-import wc.webgui
+import wc.webgui.webconfig
 import HttpClient
 import ClientServerMatchmaker
 import SslConnection
@@ -59,8 +59,8 @@ class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
         form = None
         self.url = "/blocked.html"
         self.headers['Host'] = '%s\r' % self.socket.getsockname()[0]
-        wc.webgui.WebConfig(self, self.url, form,
-                            self.protocol, self.headers).send()
+        wc.webgui.webconfig.WebConfig(self, self.url, form,
+                                      self.protocol, self.headers).send()
 
     def mangle_request_headers (self, headers):
         # nothing to do
