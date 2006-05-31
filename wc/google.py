@@ -18,7 +18,8 @@
 Google utility functions.
 """
 
-import urllib, urlparse
+import urllib
+import urlparse
 
 google_domain = "http://www.google.com"
 

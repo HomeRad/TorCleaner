@@ -29,7 +29,7 @@ import pickle
 
 import wc
 import wc.configuration
-import wc.magic.convert
+import convert
 
 unsupported_types = ['text/css']
 
@@ -130,7 +130,7 @@ class Magic (object):
             part = []
             top = len(split)
             while pos < top:
-                if wc.magic.convert.is_final_dash(split[pos]):
+                if convert.is_final_dash(split[pos]):
                     result = split[pos] + ' '
                     index = line.find(result)
                     if index != -1:
@@ -166,24 +166,22 @@ class Magic (object):
         offset_relatif = 0L
         # Get the offset information
         if direct:
-            offset_delta = wc.magic.convert.convert(text)
+            offset_delta = convert.convert(text)
         else:
             match_abs = self.se_offset_abs(text)
             match_add = self.se_offset_add(text)
             if match_abs:
-                offset_relatif = wc.magic.convert.convert(match_abs.group(1))
+                offset_relatif = convert.convert(match_abs.group(1))
                 if match_abs.group(2) != None:
                     offset_type = match_abs.group(2)[1]
             elif match_add:
-                offset_relatif = wc.magic.convert.convert(match_add.group(1))
+                offset_relatif = convert.convert(match_add.group(1))
                 if match_add.group(2) != None:
                     offset_type = match_add.group(2)[1]
                 if match_add.group(3) == '-':
-                    offset_delta = 0L - \
-                                wc.magic.convert.convert(match_add.group(4))
+                    offset_delta = 0L - convert.convert(match_add.group(4))
                 else:
-                    offset_delta = \
-                                 wc.magic.convert.convert(match_add.group(4))
+                    offset_delta = convert.convert(match_add.group(4))
         return (direct, offset_type, offset_delta, offset_relatif)
 
     def _oper_mask (self, text):
@@ -192,12 +190,12 @@ class Magic (object):
 
         if len(type_mask_and) > 1:
             oper = '&'
-            mask = wc.magic.convert.convert(type_mask_and[1])
+            mask = convert.convert(type_mask_and[1])
             rest = type_mask_and[0]
             return (oper, mask, rest)
         if len(type_mask_or) > 1:
             oper = '^'
-            mask = wc.magic.convert.convert(type_mask_or[1])
+            mask = convert.convert(type_mask_or[1])
             rest = type_mask_or[0]
             return (oper, mask, rest)
         return ('', 0L, text)
@@ -253,7 +251,7 @@ class Magic (object):
         pos = 0
         data = list('')
         while pos < len(result):
-            if wc.magic.convert.is_c_escape(result[pos:]):
+            if convert.is_c_escape(result[pos:]):
                 # \0 is not a number it is the null string
                 if result[pos+1] == '0':
                     data.append(result[pos])
@@ -263,13 +261,13 @@ class Magic (object):
                     data.append(result[pos:pos+2])
                 pos += 2
             else:
-                base = wc.magic.convert.which_base(result[pos:])
+                base = convert.which_base(result[pos:])
                 if base == 0:
                     data.append(ord(result[pos])*1L)
                     pos += 1
                 else:
-                    size_base = wc.magic.convert.size_base(base)
-                    size_number = wc.magic.convert.size_number(result[pos:])
+                    size_base = convert.size_base(base)
+                    size_number = convert.size_number(result[pos:])
                     start = pos + size_base
                     end = pos + size_base + size_number
                     assert start < end
@@ -421,13 +419,13 @@ class Magic (object):
         # Raise file error if file too short
         f.seek(offset)
         if type == 'l':
-            delta = wc.magic.convert.little4(self._read(f, 4))
+            delta = convert.little4(self._read(f, 4))
         elif type == 'L':
-            delta = wc.magic.convert.big4(self._read(f, 4))
+            delta = convert.big4(self._read(f, 4))
         elif type == 's':
-            delta = wc.magic.convert.little2(self._read(f, 2))
+            delta = convert.little2(self._read(f, 2))
         elif type == 'S':
-            delta = wc.magic.convert.big2(self._read(f, 2))
+            delta = convert.big2(self._read(f, 2))
         elif type == 'b':
             delta = ord(self._read(f, 1))
         elif type == 'B':
@@ -454,22 +452,22 @@ class Magic (object):
             if len(data) < 2:
                 raise StandardError("Should never happen, not enough data")
             if endian == 'local':
-                value = wc.magic.convert.local2(data)
+                value = convert.local2(data)
             elif endian == 'little':
-                value = wc.magic.convert.little2(data)
+                value = convert.little2(data)
             elif endian == 'big':
-                value = wc.magic.convert.big2(data)
+                value = convert.big2(data)
             else:
                 raise StandardError("Endian type unknown")
         elif kind == 'long':
             if len(data) < 4:
                 raise StandardError("Should never happen, not enough data")
             if endian == 'local':
-                value = wc.magic.convert.local4(data)
+                value = convert.local4(data)
             elif endian == 'little':
-                value = wc.magic.convert.little4(data)
+                value = convert.little4(data)
             elif endian == 'big':
-                value = wc.magic.convert.big4(data)
+                value = convert.big4(data)
             else:
                 raise StandardError("Endian type unknown")
         elif kind == 'date':

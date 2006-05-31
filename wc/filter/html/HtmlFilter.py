@@ -25,13 +25,13 @@ import wc.url
 import wc.log
 import wc.filter
 import wc.filter.html
-import wc.filter.html.JSFilter
-import wc.filter.html.HtmlSecurity
+import JSFilter
+import HtmlSecurity
 import wc.rating
 import wc.configuration
 
 
-class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
+class HtmlFilter (JSFilter.JSFilter):
     """
     Filtering HTML parser handler. Has filter rules and a rule stack.
     The callbacks modify parser state and buffers.
@@ -49,7 +49,7 @@ class HtmlFilter (wc.filter.html.JSFilter.JSFilter):
         self.stackcount = []
         self.base_url = None
         # for security flaw scanning
-        self.security = wc.filter.html.HtmlSecurity.HtmlSecurity()
+        self.security = HtmlSecurity.HtmlSecurity()
         # cache rule match_tag into {tag -> list of rules}
         self.rule_tag_cache = {}
         assert None == wc.log.debug(wc.LOG_HTML,

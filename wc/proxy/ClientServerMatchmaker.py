@@ -37,7 +37,6 @@ import wc.log
 import wc.configuration
 import wc.url
 import dns_lookups
-import Headers
 import ServerHandleDirectly
 import HttpServer
 from ServerPool import serverpool

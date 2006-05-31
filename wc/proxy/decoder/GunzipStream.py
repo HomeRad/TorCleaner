@@ -38,10 +38,10 @@ but exports a proxy4 encoding interface:
 
 import wc
 import wc.log
-import wc.proxy.decoder.DeflateStream
+import DeflateStream
 
 
-class GunzipStream (wc.proxy.decoder.DeflateStream.DeflateStream):
+class GunzipStream (DeflateStream.DeflateStream):
     """
     Stream filter ungzipp'ing data.
     """

@@ -25,7 +25,7 @@ import wc
 import wc.HtmlParser
 import wc.log
 import wc.filter
-import wc.filter.html.HtmlParser
+import HtmlParser
 import wc.url
 import wc.proxy
 import wc.proxy.timer
@@ -155,7 +155,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         handler = self.new_instance(comments=self.comments,
             jscomments=self.jscomments,
             javascript=self.javascript, level=self.level+1)
-        self.js_htmlparser = wc.filter.html.HtmlParser.HtmlParser(handler)
+        self.js_htmlparser = HtmlParser.HtmlParser(handler)
         handler.htmlparser = self.js_htmlparser
         # encode for JS engine
         script = script.encode(self.htmlparser.encoding, "ignore")

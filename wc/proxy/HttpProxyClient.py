@@ -21,7 +21,6 @@ Internal http client.
 import urlparse
 import wc.http
 import Headers
-import HttpServer
 import HttpClient
 import ClientServerMatchmaker
 import decoder.UnchunkStream
