@@ -20,8 +20,7 @@ Filter a HTML stream.
 
 import wc.filter
 import Filter
-import html.HtmlParser
-import html.HtmlFilter
+from html import HtmlParser, HtmlFilter
 
 
 DefaultCharset = 'iso-8859-1'
@@ -98,9 +97,9 @@ class HtmlRewriter (Filter.Filter):
                 if url not in rating_storage:
                     ratings.append(rule)
         # generate the HTML filter
-        handler = html.HtmlFilter.HtmlFilter(rewrites, ratings,
-                                             url, localhost, **opts)
-        p = html.HtmlParser.HtmlParser(handler)
+        handler = HtmlFilter.HtmlFilter(rewrites, ratings,
+                                        url, localhost, **opts)
+        p = HtmlParser.HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = p

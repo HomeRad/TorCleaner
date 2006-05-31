@@ -30,10 +30,8 @@ import wc.http
 import wc.http.header
 import wc.http.date
 import wc.magic
-import decoder.UnchunkStream
-import encoder.ChunkStream
-import decoder.GunzipStream
-import decoder.DeflateStream
+from encoder import ChunkStream
+from decoder import UnchunkStream, GunzipStream, DeflateStream
 
 
 def get_content_length (headers, default=None):
@@ -325,10 +323,8 @@ def server_set_encoding_headers (server, filename=None):
         if tenc != 'chunked':
             wc.log.warn(wc.LOG_PROXY,
               "unknown transfer encoding %r, assuming chunked encoding", tenc)
-        unchunker = decoder.UnchunkStream.UnchunkStream(server)
-        server.decoders.append(unchunker)
-        chunker = encoder.ChunkStream.ChunkStream(server)
-        server.encoders.append(chunker)
+        server.decoders.append(UnchunkStream.UnchunkStream(server))
+        server.encoders.append(ChunkStream.ChunkStream(server))
         if server.headers.has_key("Content-Length"):
             wc.log.warn(wc.LOG_PROXY,
                         'chunked encoding should not have Content-Length')
@@ -339,8 +335,7 @@ def server_set_encoding_headers (server, filename=None):
         server.headers['Transfer-Encoding'] = "chunked\r"
         if server.headers.has_key("Content-Length"):
             to_remove.add("Content-Length")
-        chunker = encoder.ChunkStream.ChunkStream(server)
-        server.encoders.append(chunker)
+        server.encoders.append(ChunkStream.ChunkStream(server))
 
     remove_headers(server.headers, to_remove)
     # only decompress on rewrite
@@ -352,11 +347,9 @@ def server_set_encoding_headers (server, filename=None):
     if encoding in ('gzip', 'x-gzip', 'deflate') and \
        (filename is None or not filename.endswith(".gz")):
         if encoding == 'deflate':
-            server.decoders.append(
-                 decoder.DeflateStream.DeflateStream())
+            server.decoders.append(DeflateStream.DeflateStream())
         else:
-            server.decoders.append(
-                 decoder.GunzipStream.GunzipStream())
+            server.decoders.append(GunzipStream.GunzipStream())
         # remove encoding because we unzip the stream
         to_remove = ['Content-Encoding']
         # remove no-transform cache control

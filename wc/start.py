@@ -23,10 +23,7 @@ import wc
 import configuration
 import log
 import fileutil
-import proxy
-import proxy.mainloop
-import proxy.timer
-import proxy.dns_lookups
+from proxy import mainloop, timer, dns_lookups
 import filter.VirusFilter
 
 
@@ -42,13 +39,13 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
         if fileutil.has_changed(logconf):
             wc.initlog(filename=logconf, filelogs=filelogs)
         # check regularly for a changed logging configuration
-        proxy.timer.make_timer(60, checklog)
+        timer.make_timer(60, checklog)
     checklog()
     # read configuration
     config = configuration.init(confdir)
     filter.VirusFilter.init_clamav_conf(config['clamavconf'])
     config.init_filter_modules()
-    proxy.dns_lookups.init_resolver()
+    dns_lookups.init_resolver()
     if profiling and wc.HasProfile:
         _profile = "webcleaner.prof"
         run = True
@@ -66,14 +63,14 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
             import profile
             prof = profile.Profile()
             try:
-                prof.runcall(proxy.mainloop.mainloop, handle=handle)
+                prof.runcall(mainloop.mainloop, handle=handle)
             except KeyboardInterrupt:
                 pass
             prof.dump_stats(_profile)
             return
     load_psyco()
     # start the proxy
-    proxy.mainloop.mainloop(handle=handle)
+    mainloop.mainloop(handle=handle)
 
 
 def load_psyco ():
