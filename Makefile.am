@@ -176,7 +176,10 @@ homepage-zapper: md5sums
 
 .PHONY: pylint
 pylint: localbuild
-	$(PYLINT) $(PYLINTOPTS) $(PYFILES) | grep -v win32start | uniq
+	$(PYLINT) $(PYLINTOPTS) $(PYFILES) | \
+	  grep -v win32start | \
+	  grep -v "Undefined variable '\(_\|_n\)'" | \
+	  uniq
 
 .PHONY: pyflakes
 pyflakes:
