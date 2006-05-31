@@ -69,13 +69,10 @@ class Rating (Filter.Filter):
             raise wc.filter.FilterRating(_("No rating data found."))
         headers = attrs['headers']['server']
         if headers.has_key('X-Rating') and headers['X-Rating'] == service.url:
-            try:
-                rating = rating_from_headers(headers)
-                for rule in rules:
-                    service.rating_check(rule.rating, rating)
-                return data
-            except wc.rating.RatingParseError, msg:
-                wc.log.warn(wc.LOG_FILTER, "rating parse error: %s", msg)
+            rating = rating_from_headers(headers)
+            for rule in rules:
+                service.rating_check(rule.rating, rating)
+            return data
         if "HtmlRewriter" in config['filters']:
             # Wait for <meta> rating.
             return data
