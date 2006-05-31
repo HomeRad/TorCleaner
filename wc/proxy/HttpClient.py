@@ -50,13 +50,13 @@ import Allowed
 import Headers
 import auth
 import dns_lookups
+import HttpProxyClient
 if wc.HasCrypto:
     from auth import ntlm
 import wc.filter
 import wc.webgui
 import wc.webgui.webconfig
 import wc.google
-from HttpProxyClient import HttpProxyClient
 
 FilterStages = [
     wc.filter.STAGE_REQUEST_DECODE,
@@ -202,7 +202,8 @@ class HttpClient (CodingConnection.CodingConnection):
                 body = wc.filter.show_rules(self.url, mime)
                 ServerHandleDirectly.ServerHandleDirectly(self,
                  'HTTP/%d.%d 200 OK' % self.version, 200, headers, body)
-            hpc = HttpProxyClient(self.localhost, self.url, method="HEAD")
+            hpc = HttpProxyClient.HttpProxyClient(self.localhost,
+                                                  self.url, method="HEAD")
             hpc.add_header_handler(callback)
             headers = Headers.get_wc_client_headers(hpc.hostname)
             ClientServerMatchmaker.ClientServerMatchmaker(
