@@ -28,9 +28,9 @@ import ConfigParser
 import logging.config
 
 import _webcleaner2_configdata as configdata
-import wc.log
-import wc.i18n
-import wc.fileutil
+import log
+import i18n
+import fileutil
 
 def abspath (path):
     """
@@ -65,12 +65,12 @@ InstallData = abspath(configdata.install_data)
 ScriptDir = abspath(configdata.install_scripts)
 
 # optional features
-HasSsl = wc.fileutil.has_module("OpenSSL")
-HasCrypto = wc.fileutil.has_module("Crypto")
-HasPil = wc.fileutil.has_module("PIL")
-HasPsyco = wc.fileutil.has_module("psyco")
-HasProfile = wc.fileutil.has_module("profile")
-HasPstats = wc.fileutil.has_module("pstats")
+HasSsl = fileutil.has_module("OpenSSL")
+HasCrypto = fileutil.has_module("Crypto")
+HasPil = fileutil.has_module("PIL")
+HasPsyco = fileutil.has_module("psyco")
+HasProfile = fileutil.has_module("profile")
+HasPstats = fileutil.has_module("pstats")
 
 # logger areas
 LOG_WC = "wc"
@@ -106,16 +106,16 @@ def init_i18n ():
     Deploy i18n gettext method into the default namespace.
     The LOCPATH environment variable is supported.
     """
-    wc.i18n.init(configdata.name, get_locdir())
+    i18n.init(configdata.name, get_locdir())
 
 # init i18n on import
-wc.init_i18n()
+init_i18n()
 
 def get_translator (lang, translatorklass=None, fallbackklass=None):
     """
     Return translator class.
     """
-    return wc.i18n.get_translator(configdata.name, get_locdir(), [lang],
+    return i18n.get_translator(configdata.name, get_locdir(), [lang],
          translatorklass=translatorklass,
          fallback=True, fallbackklass=fallbackklass)
 
@@ -185,7 +185,7 @@ def initlog (filename=default_logfile, appname=Name, filelogs=True):
         logname = "%s-access.log" % appname
         logfile = get_log_file(appname, logname, trydirs=trydirs)
         handler = get_access_handler(logfile)
-        logging.getLogger("wc.access").addHandler(handler)
+        logging.getLogger(LOG_ACCESS).addHandler(handler)
 
 
 def set_format (handler):
@@ -242,7 +242,7 @@ def restart ():
     script = os.path.join(ScriptDir, "webcleaner")
     args = [py_exe, script, "restart"]
     if os.name == 'nt':
-        import wc.win32start
-        wc.win32start.nt_quote_args(args)
-    wc.log.info(LOG_PROXY, "Restarting with: %s", args)
+        import win32start
+        win32start.nt_quote_args(args)
+    log.info(LOG_PROXY, "Restarting with: %s", args)
     os.spawnv(os.P_NOWAIT, py_exe, args)

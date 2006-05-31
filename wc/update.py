@@ -22,9 +22,9 @@ import os
 import md5
 
 import wc
-import wc.log
-import wc.configuration
-#XXXfrom wc.filter.Rating import rating_cache_merge, rating_cache_parse
+import log
+import configuration
+#XXXfrom filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
 # urlutils.py - Simplified urllib handling
@@ -191,13 +191,13 @@ def open_url (url, proxies=None):
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
-        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
+        log.error(wc.LOG_GUI, "could not open url %r", url)
         raise IOError(x)
     except (socket.gaierror, socket.error, urllib2.URLError), x:
-        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
+        log.error(wc.LOG_GUI, "could not open url %r", url)
         raise IOError("no network access available")
     except IOError, data:
-        wc.log.error(wc.LOG_GUI, "could not open url %r", url)
+        log.error(wc.LOG_GUI, "could not open url %r", url)
         if data and data[0] == 'http error' and data[1] == 404:
             raise IOError(data)
         else:
@@ -228,7 +228,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         return chg
     # remember all local config files
     filemap = {}
-    for filename in wc.configuration.filterconf_files(wconfig.filterdir):
+    for filename in configuration.filterconf_files(wconfig.filterdir):
         filemap[os.path.basename(filename)] = filename
     # read md5sums
     for line in page.read().splitlines():
@@ -258,7 +258,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         # parse new filter
         url = baseurl + filename
         page = open_url(url)
-        parserclass = wc.configuration.confparse.ZapperParser
+        parserclass = configuration.confparse.ZapperParser
         p = parserclass(fullname, compile_data=False)
         p.parse(fp=page)
         page.close()
@@ -337,7 +337,7 @@ def update_ratings (wconfig, dryrun=False, log=None):
         print >> log, "...", _("done")
         return chg
     # Merge new ratings.
-    new_ratings = wc.rating.storage.rating_parse(page)
-    chg = wc.rating.ratings.merge(new_ratings, dryrun=dryrun, log=log)
+    new_ratings = rating.storage.rating_parse(page)
+    chg = rating.ratings.merge(new_ratings, dryrun=dryrun, log=log)
     print >> log, "...", _("done")
     return chg

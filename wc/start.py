@@ -20,15 +20,14 @@ Proxy start function.
 
 import os
 import wc
-import wc.configuration
-import wc.url
-import wc.log
-import wc.proxy
-import wc.proxy.mainloop
-import wc.proxy.timer
-import wc.proxy.dns_lookups
-import wc.filter
-import wc.filter.VirusFilter
+import configuration
+import log
+import fileutil
+import proxy
+import proxy.mainloop
+import proxy.timer
+import proxy.dns_lookups
+import filter.VirusFilter
 
 
 def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
@@ -40,16 +39,16 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
     # init logging
     logconf = os.path.join(confdir, "logging.conf")
     def checklog ():
-        if wc.fileutil.has_changed(logconf):
+        if fileutil.has_changed(logconf):
             wc.initlog(filename=logconf, filelogs=filelogs)
         # check regularly for a changed logging configuration
-        wc.proxy.timer.make_timer(60, checklog)
+        proxy.timer.make_timer(60, checklog)
     checklog()
     # read configuration
-    config = wc.configuration.init(confdir)
-    wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
+    config = configuration.init(confdir)
+    filter.VirusFilter.init_clamav_conf(config['clamavconf'])
     config.init_filter_modules()
-    wc.proxy.dns_lookups.init_resolver()
+    proxy.dns_lookups.init_resolver()
     if profiling and wc.HasProfile:
         _profile = "webcleaner.prof"
         run = True
@@ -67,14 +66,14 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
             import profile
             prof = profile.Profile()
             try:
-                prof.runcall(wc.proxy.mainloop.mainloop, handle=handle)
+                prof.runcall(proxy.mainloop.mainloop, handle=handle)
             except KeyboardInterrupt:
                 pass
             prof.dump_stats(_profile)
             return
     load_psyco()
     # start the proxy
-    wc.proxy.mainloop.mainloop(handle=handle)
+    proxy.mainloop.mainloop(handle=handle)
 
 
 def load_psyco ():
@@ -89,7 +88,7 @@ def load_psyco ():
             psyco.profile(memory=10000, memorymax=100000)
         else:
             # warn about old psyco version
-            wc.log.warn(wc.LOG_PROXY,
+            log.warn(wc.LOG_PROXY,
          _("Psyco is installed but not used since the version is too old.\n"
            "Psyco >= 1.4 is needed."))
 
@@ -104,9 +103,9 @@ def restart ():
     start_cmd = "runsvctrl up %s" % service
     status = os.system(stop_cmd)
     if status != 0:
-        wc.log.error(wc.LOG_PROXY,
+        log.error(wc.LOG_PROXY,
                      "Stop command %r failed: %s", stop_cmd, str(status))
     status = os.system(start_cmd)
     if status != 0:
-        wc.log.error(wc.LOG_PROXY,
+        log.error(wc.LOG_PROXY,
                      "Start command %r failed: %s", start_cmd, str(status))

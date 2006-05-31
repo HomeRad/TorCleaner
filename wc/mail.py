@@ -22,7 +22,7 @@ import socket
 import smtplib
 import email.Utils
 import wc
-import wc.log
+import log
 
 
 def valid_mail (address):
@@ -45,7 +45,7 @@ def send_mail (smtphost, fromaddr, toaddrs, message):
         conn.quit()
         return True
     except (socket.error, smtplib.SMTPException), x:
-        wc.log.exception(wc.LOG_GUI, 'SMTP send failure: %s', x)
+        log.exception(wc.LOG_GUI, 'SMTP send failure: %s', x)
     return False
 
 

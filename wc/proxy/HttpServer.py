@@ -48,6 +48,7 @@ import Server
 import auth
 import Headers
 import ServerPool
+import dns_lookups
 
 
 # DEBUGGING

@@ -24,7 +24,7 @@ import struct
 import sets
 
 import wc
-import wc.log
+import log
 
 
 # IP Adress regular expressions
@@ -204,23 +204,23 @@ def hosts2map (hosts):
             host, mask = host.split("/")
             mask = int(mask)
             if not is_valid_cidrmask(mask):
-                wc.log.error(wc.LOG_NET,
-                             "CIDR mask %d is not a valid network mask", mask)
+                log.error(wc.LOG_NET,
+                          "CIDR mask %d is not a valid network mask", mask)
                 continue
             if not is_valid_ipv4(host):
-                wc.log.error(wc.LOG_NET,
-                             "host %r is not a valid ip address", host)
+                log.error(wc.LOG_NET,
+                          "host %r is not a valid ip address", host)
                 continue
             nets.append(dq2net(host, cidr2mask(mask)))
         elif _host_netmask_re.match(host):
             host, mask = host.split("/")
             if not is_valid_ipv4(host):
-                wc.log.error(wc.LOG_NET,
-                             "host %r is not a valid ip address", host)
+                log.error(wc.LOG_NET,
+                          "host %r is not a valid ip address", host)
                 continue
             if not is_valid_ipv4(mask):
-                wc.log.error(wc.LOG_NET,
-                             "mask %r is not a valid ip network mask", mask)
+                log.error(wc.LOG_NET,
+                          "mask %r is not a valid ip network mask", mask)
                 continue
             nets.append(dq2net(host, netmask2mask(mask)))
         elif is_valid_ip(host):
@@ -266,5 +266,5 @@ def resolve_host (host):
             # add first ip of socket address
             ips.add(res[4][0])
     except socket.error:
-        wc.log.warn(wc.LOG_NET, "Ignored invalid host %r", host)
+        log.warn(wc.LOG_NET, "Ignored invalid host %r", host)
     return ips
