@@ -59,6 +59,7 @@
   <title lang="de">Entferne &lt;body&gt; onload</title>
   <title lang="en">&lt;body&gt; onload</title>
   <description lang="en">Remove onload javascript attribute</description>
+  <nomatchurl>\.google\.com</nomatchurl>
   <attr name="onload"/>
   <replacement part="attr"/>
 </htmlrewrite>
@@ -77,7 +78,7 @@
   <title lang="de">Entferne &lt;body&gt; onunload</title>
   <title lang="en">&lt;body&gt; onunload</title>
   <description lang="en">onunload is used for advert popups</description>
-  <nomatchurl>maps\.google\.com</nomatchurl>
+  <nomatchurl>\.google\.com</nomatchurl>
   <attr name="onunload"/>
   <replacement part="attr"/>
 </htmlrewrite>
