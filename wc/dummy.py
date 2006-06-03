@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-Dummy object.
+Dummy objects.
 """
 
 class Dummy (object):
@@ -61,3 +61,10 @@ class Dummy (object):
 
     def __contains__ (self, key):
         return False
+
+
+def dummy (*args, **kwargs):
+    """
+    Ignore any positional or keyword arguments, return None.
+    """
+    pass
