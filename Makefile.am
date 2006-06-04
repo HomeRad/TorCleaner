@@ -24,7 +24,7 @@ PYLINTOPTS := --disable-msg-cat=C,R,W
 # all Python files in the source
 PYFILES = $(wildcard webcleaner webcleaner-certificates *.py \
 	    test/*.py config/*.py) wc tests
-PYFLAKES:=pyflakes
+PYFLAKES:=python$(PYVER) /usr/bin/pyflakes
 CHECKFILES = *.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
 SERVICEDIR := /etc/webcleaner/service
