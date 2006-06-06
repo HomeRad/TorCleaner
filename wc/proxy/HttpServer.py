@@ -231,8 +231,7 @@ class HttpServer (Server.Server):
                    wc.http.parse_http_response(self.response, self.url)
             # XXX reject invalid HTTP version
             # reconstruct cleaned response
-            ver = "HTTP/%d.%d" % version
-            self.response = "%s %d %s" % (ver, status, tail)
+            self.response = "%s %d %s" % (self.protocol, status, tail)
             self.statuscode = status
             # Let the server pool know what version this is
             ServerPool.serverpool.set_http_version(self.addr,
