@@ -313,58 +313,69 @@ def server_set_encoding_headers (server, filename=None):
     rewrite = server.is_rewrite()
     bytes_remaining = get_content_length(server.headers)
     to_remove = sets.Set()
-    # remove content length
-    if rewrite:
-        to_remove.add('Content-Length')
-    # add decoders
     if server.headers.has_key('Transfer-Encoding'):
-        # chunked encoded
-        tenc = server.headers['Transfer-Encoding']
-        if tenc != 'chunked':
-            wc.log.warn(wc.LOG_PROXY,
-              "unknown transfer encoding %r, assuming chunked encoding", tenc)
-        server.decoders.append(UnchunkStream.UnchunkStream(server))
-        server.encoders.append(ChunkStream.ChunkStream(server))
+        to_remove.add('Transfer-Encoding')
+        tencs = server.headers['Transfer-Encoding'].lower()
+        for tenc in tencs.split(","):
+            tenc = tenc.strip()
+            if ";" in tenc:
+                tenc = tenc.split(";", 1)[0]
+            if not tenc or tenc == 'identity':
+                continue
+            if tenc == 'chunked':
+                server.decoders.append(UnchunkStream.UnchunkStream(server))
+            elif tenc in ('x-gzip', 'gzip'):
+                server.decoders.append(GunzipStream.GunzipStream(server))
+            elif tenc == 'deflate':
+                server.decoders.append(DeflateStream.DeflateStream(server))
+            else:
+                wc.log.warn(wc.LOG_PROXY,
+                            "unsupported transfer encoding in %r", tencs)
         if server.headers.has_key("Content-Length"):
             wc.log.warn(wc.LOG_PROXY,
-                        'chunked encoding should not have Content-Length')
+                        'Transfer-Encoding should not have Content-Length')
             to_remove.add("Content-Length")
         bytes_remaining = None
-    elif rewrite:
-        # To make pipelining possible, enable chunked encoding.
-        server.headers['Transfer-Encoding'] = "chunked\r"
-        if server.headers.has_key("Content-Length"):
-            to_remove.add("Content-Length")
-        server.encoders.append(ChunkStream.ChunkStream(server))
-
+    if rewrite:
+        to_remove.add('Content-Length')
     remove_headers(server.headers, to_remove)
-    # only decompress on rewrite
-    if not rewrite:
-        return bytes_remaining
-    # Compressed content (uncompress only for rewriting modules)
-    encoding = server.headers.get('Content-Encoding', '').lower()
-    # note: do not gunzip .gz files
-    if encoding in ('gzip', 'x-gzip', 'deflate') and \
-       (filename is None or not filename.endswith(".gz")):
-        if encoding == 'deflate':
-            server.decoders.append(DeflateStream.DeflateStream())
-        else:
-            server.decoders.append(GunzipStream.GunzipStream())
-        # remove encoding because we unzip the stream
-        to_remove = ['Content-Encoding']
-        # remove no-transform cache control
-        if server.headers.get('Cache-Control', '').lower() == 'no-transform':
-            to_remove.append('Cache-Control')
-        remove_headers(server.headers, to_remove)
-        # add warning
-        server.headers['Warning'] = "214 Transformation applied\r"
-    elif encoding and encoding!='identity':
-        wc.log.warn(wc.LOG_PROXY, _("unsupported encoding: %r"), encoding)
-        # do not disable filtering for unknown content-encodings
-        # this could result in a DoS attack (server sending garbage
-        # as content-encoding)
     if not server.headers.has_key('Content-Length'):
         server.headers['Connection'] = 'close\r'
+    if not rewrite:
+        # only decompress on rewrite
+        return bytes_remaining
+    to_remove = sets.Set()
+    #if server.protocol == "HTTP/1.1":
+    #    # To make pipelining possible, enable chunked encoding.
+    #    server.headers['Transfer-Encoding'] = "chunked\r"
+    #    server.encoders.append(ChunkStream.ChunkStream(server))
+    # Compressed content (uncompress only for rewriting modules)
+    if server.headers.has_key('Content-Encoding'):
+        to_remove.add('Content-Encoding')
+        cencs = server.headers['Content-Encoding'].lower()
+        for cenc in cencs.split(","):
+            cenc = cenc.strip()
+            if ";" in cenc:
+                cenc = cenc.split(";", 1)[0]
+            if not cenc or cenc == 'identity':
+                continue
+            if filename is not None and \
+               (filename.endswith(".gz") or filename.endswith(".tgz")):
+                continue
+            # note: do not gunzip .gz files
+            if cenc in ('gzip', 'x-gzip'):
+                server.decoders.append(GunzipStream.GunzipStream())
+            elif cenc == 'deflate':
+                server.decoders.append(DeflateStream.DeflateStream())
+            else:
+                wc.log.warn(wc.LOG_PROXY,
+                            "unsupported content encoding in %r", encoding)
+        # remove no-transform cache control
+        if server.headers.get('Cache-Control', '').lower() == 'no-transform':
+            to_remove.add('Cache-Control')
+        # add warning
+        server.headers['Warning'] = "214 Transformation applied\r"
+    remove_headers(server.headers, to_remove)
     return bytes_remaining
 
 
