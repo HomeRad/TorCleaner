@@ -359,8 +359,7 @@ class HttpServer (Server.Server):
         Modify response headers.
         """
         Headers.server_set_headers(self.headers, self.url)
-        self.bytes_remaining = \
-              Headers.server_set_encoding_headers(self)
+        self.bytes_remaining = Headers.server_set_encoding_headers(self)
         if self.bytes_remaining is None:
             self.persistent = False
         if self.statuscode == 304:
