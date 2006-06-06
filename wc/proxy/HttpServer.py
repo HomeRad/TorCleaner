@@ -234,8 +234,7 @@ class HttpServer (Server.Server):
             self.response = "%s %d %s" % (self.protocol, status, tail)
             self.statuscode = status
             # Let the server pool know what version this is
-            ServerPool.serverpool.set_http_version(self.addr,
-                                                            version)
+            ServerPool.serverpool.set_http_version(self.addr, version)
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
             wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
