@@ -632,6 +632,42 @@ js_LeaveSharpObject(JSContext *cx, JSIdArray **idap)
     }
 }
 
+JS_STATIC_DLL_CALLBACK(intN)
+gc_sharp_table_entry_marker(JSHashEntry *he, intN i, void *arg)
+{
+    GC_MARK((JSContext *)arg, (JSObject *)he->key, "sharp table entry", NULL);
+    return JS_DHASH_NEXT;
+}
+
+void
+js_GCMarkSharpMap(JSContext *cx, JSSharpObjectMap *map)
+{
+    JS_ASSERT(map->depth > 0);
+    JS_ASSERT(map->table);
+
+    /*
+     * During recursive calls to MarkSharpObjects a non-native object or
+     * object with a custom getProperty method can potentially return an
+     * unrooted value or even cut from the object graph an argument of one of
+     * MarkSharpObjects recursive invocations. So we must protect map->table
+     * entries against GC.
+     *
+     * We can not simply use JSTempValueRooter to mark the obj argument of
+     * MarkSharpObjects during recursion as we have to protect *all* entries
+     * in JSSharpObjectMap including those that contains otherwise unreachable
+     * objects just allocated through custom getProperty. Otherwise newer
+     * allocations can re-use the address of an object stored in the hashtable
+     * confusing js_EnterSharpObject. So to address the problem we simply
+     * mark all objects from map->table.
+     *
+     * An alternative "proper" solution is to use JSTempValueRooter in
+     * MarkSharpObjects with code to remove during finalization entries
+     * with otherwise unreachable objects. But this is way too complex
+     * to justify spending efforts.
+     */
+    JS_HashTableEnumerateEntries(map->table, gc_sharp_table_entry_marker, cx);
+}
+
 #define OBJ_TOSTRING_EXTRA      4       /* for 4 local GC roots */
 
 #if JS_HAS_INITIALIZERS || JS_HAS_TOSOURCE
@@ -2138,13 +2174,18 @@ js_ConstructObject(JSContext *cx, JSClass *clasp, JSObject *proto,
                    JSObject *parent, uintN argc, jsval *argv)
 {
     jsval cval, rval;
-    JSTempValueRooter tvr;
+    JSTempValueRooter argtvr, tvr;
     JSObject *obj, *ctor;
 
-    if (!js_FindConstructor(cx, parent, clasp->name, &cval))
+    JS_PUSH_TEMP_ROOT(cx, argc, argv, &argtvr);
+
+    if (!js_FindConstructor(cx, parent, clasp->name, &cval)) {
+        JS_POP_TEMP_ROOT(cx, &argtvr);
         return NULL;
+    }
     if (JSVAL_IS_PRIMITIVE(cval)) {
         js_ReportIsNotFunction(cx, &cval, JSV2F_CONSTRUCT | JSV2F_SEARCH_STACK);
+        JS_POP_TEMP_ROOT(cx, &argtvr);
         return NULL;
     }
 
@@ -2153,7 +2194,6 @@ js_ConstructObject(JSContext *cx, JSClass *clasp, JSObject *proto,
      * this point, all control flow must exit through label out with obj set.
      */
     JS_PUSH_SINGLE_TEMP_ROOT(cx, cval, &tvr);
-    obj = NULL;
 
     /*
      * If proto or parent are NULL, set them to Constructor.prototype and/or
@@ -2167,6 +2207,7 @@ js_ConstructObject(JSContext *cx, JSClass *clasp, JSObject *proto,
                               ATOM_TO_JSID(cx->runtime->atomState
                                            .classPrototypeAtom),
                               &rval)) {
+            obj = NULL;
             goto out;
         }
         if (JSVAL_IS_OBJECT(rval))
@@ -2177,17 +2218,37 @@ js_ConstructObject(JSContext *cx, JSClass *clasp, JSObject *proto,
     if (!obj)
         goto out;
 
-    if (!js_InternalConstruct(cx, obj, cval, argc, argv, &rval)) {
-        cx->newborn[GCX_OBJECT] = NULL;
-        obj = NULL;
+    if (!js_InternalConstruct(cx, obj, cval, argc, argv, &rval))
+        goto bad;
+
+    if (JSVAL_IS_PRIMITIVE(rval))
         goto out;
+    obj = JSVAL_TO_OBJECT(rval);
+
+    /*
+     * If the given class has both the JSCLASS_HAS_PRIVATE and the
+     * JSCLASS_CONSTRUCT_PROTOTYPE flags, then the class should have its private
+     * data set. If it doesn't, then it means the constructor was replaced, and
+     * we should throw a typerr.
+     */
+    if (OBJ_GET_CLASS(cx, obj) != clasp ||
+        (!(~clasp->flags & (JSCLASS_HAS_PRIVATE |
+                            JSCLASS_CONSTRUCT_PROTOTYPE)) &&
+         !JS_GetPrivate(cx, obj))) {
+        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
+                             JSMSG_WRONG_CONSTRUCTOR, clasp->name);
+        goto bad;
     }
 
-    if (!JSVAL_IS_PRIMITIVE(rval))
-        obj = JSVAL_TO_OBJECT(rval);
 out:
     JS_POP_TEMP_ROOT(cx, &tvr);
+    JS_POP_TEMP_ROOT(cx, &argtvr);
     return obj;
+
+bad:
+    cx->newborn[GCX_OBJECT] = NULL;
+    obj = NULL;
+    goto out;
 }
 
 void
