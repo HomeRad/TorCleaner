@@ -25,7 +25,7 @@ if not hasattr(sys, "version_info"):
 if sys.version_info < (2, 4, 0, 'final', 0):
     raise SystemExit, "This program requires Python 2.4 or later."
 import os
-import popen2
+import subprocess
 import stat
 import string
 import glob
@@ -384,24 +384,31 @@ class MyBdistWininst (bdist_wininst, object):
         return super(MyBdistWininst, self).get_exe_bytes()
 
 
+_cc_test_file = ".setup.test"
+_cc_test_file_c = ".setup.test.c"
 def cc_supports_option (cc, option):
     """
-    Check if the given C compiler supports the given option.
+    Check if the given C compiler supports the given option by
+    compiling and linking a simple test program.
 
     @return: True if the compiler supports the option, else False
     @rtype: bool
     """
-    prog = "int main(){}\n"
-    cc_cmd = "%s -E %s -" % (cc[0], option)
-    pipe = popen2.Popen4(cc_cmd)
-    try:
-        pipe.tochild.write(prog)
-    finally:
-        pipe.tochild.close()
-    status = pipe.wait()
-    if os.WIFEXITED(status):
-        return os.WEXITSTATUS(status)==0
-    return False
+    if not os.path.exists(_cc_test_file_c):
+        f = open(_cc_test_file_c, "w")
+        try:
+            f.write("int main(){return 0;}\n")
+        finally:
+            f.close()
+    cmd_args = [cc[0], option, "-o", _cc_test_file,_cc_test_file_c]
+    retcode = subprocess.call(cmd_args)
+    # remove temp files
+    for filename in (_cc_test_file, _cc_test_file_c):
+        try:
+            os.unlink(filename)
+        except os.error:
+            pass
+    return retcode == 0
 
 
 class MyBuildExt (build_ext, object):
@@ -415,17 +422,26 @@ class MyBuildExt (build_ext, object):
         And compress extension libraries.
         """
         # For gcc >= 3 we can add -std=gnu99 to get rid of warnings.
+        # For gcc >= 4.1 we can add -fstack-protector
         extra = []
+        libs = []
         if self.compiler.compiler_type == 'unix':
-            option = "-std=gnu99"
-            if cc_supports_option(self.compiler.compiler, option):
-                extra.append(option)
+            if cc_supports_option(self.compiler.compiler, "-std=gnu99"):
+                extra.append("-std=gnu99")
+            if cc_supports_option(self.compiler.compiler, "-fstack-protector"):
+                extra.append("-fstack-protector")
+                libs.append("ssp_nonshared")
+                libs.append("ssp")
+
         # First, sanity-check the 'extensions' list
         self.check_extensions_list(self.extensions)
         for ext in self.extensions:
             for opt in extra:
                 if opt not in ext.extra_compile_args:
                     ext.extra_compile_args.append(opt)
+            for lib in libs:
+                if lib not in ext.libraries:
+                    ext.libraries.append(lib)
             self.build_extension(ext)
         self.compress_extensions()
 
