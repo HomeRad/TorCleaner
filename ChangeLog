@@ -1,4 +1,4 @@
-3.0 "" (released x.x.xxxx)
+2.40 "Lucky Number Slevin" (released x.x.xxxx)
 
   * Regenerate the magic.mime cache when the text file has a newer
     modification date.
@@ -8,6 +8,12 @@
   * Improved performance of JS HTML comment cleaning.
     Type: feature
     Changed: wc/js/__init__.py
+
+  * Don't send HTTP/1.0 responses with chunked encoding.
+    Fixes incompatibilities with browsers Firefox 1.5.0.4, and
+    Opera.
+    Type: bugfix
+    Changed: wc/proxy/HttpServer.py
 
 2.39 "Firefly" (released 9.5.2006)
 
