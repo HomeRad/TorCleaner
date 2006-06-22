@@ -18,7 +18,8 @@
 Filter a XML stream.
 """
 
-import xml.sax.expatreader
+import xml.sax.handler
+from xml.sax import expatreader
 
 import wc.filter
 import Filter
@@ -97,7 +98,7 @@ class XmlRewriter (Filter.Filter):
         encoding = attrs.get("charset", "UTF-8")
         xfilt = xmlfilt.XmlFilter.XmlFilter
         handler = xfilt(xmlrules, htmlrules, url, localhost, encoding)
-        p = xml.sax.expatreader.ExpatParser(namespaceHandling=1)
+        p = expatreader.ExpatParser(namespaceHandling=1)
         p.setContentHandler(handler)
         p.setFeature(xml.sax.handler.feature_external_ges, 0)
         attrs['xmlrewriter_parser'] = p
