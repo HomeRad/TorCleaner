@@ -52,9 +52,16 @@ class TestDummy (unittest.TestCase):
 
     def test_indexes (self):
         dummy = wc.dummy.Dummy()
+        i = len(dummy)
         dummy[1] = dummy[2]
         dummy[1][-1]
         dummy[1:3] = None
+        del dummy[1]
+        del dummy[2]
+        del dummy[2:3]
+        s = str(dummy)
+        s = repr(dummy)
+        s = unicode(dummy)
 
 
 def test_suite ():
