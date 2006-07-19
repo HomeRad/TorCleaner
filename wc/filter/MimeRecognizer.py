@@ -44,7 +44,7 @@ def is_preferred_mime (mime, origmime):
     if origmime.startswith(mime+";"):
         return False
     # Sometimes text/html is recognized as text/plain.
-    if origmime.startswith("text/html") and mime.startswith("text/"):
+    if origmime.startswith("text/html") and mime.startswith("text/plain"):
         return False
     return True
 
@@ -72,7 +72,7 @@ class MimeRecognizer (Filter.Filter):
         Feed data to recognizer.
         """
         if 'mimerecognizer_buf' not in attrs or \
-           'mimerecognizer_ignore' in attrs:
+           attrs.get('mimerecognizer_ignore'):
             return data
         buf = attrs['mimerecognizer_buf']
         if buf.closed:
@@ -87,7 +87,7 @@ class MimeRecognizer (Filter.Filter):
         Feed data to recognizer.
         """
         if 'mimerecognizer_buf' not in attrs or \
-           'mimerecognizer_ignore' in attrs:
+           attrs.get('mimerecognizer_ignore'):
             return data
         buf = attrs['mimerecognizer_buf']
         if buf.closed:
