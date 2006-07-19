@@ -1,7 +1,7 @@
 SUBDIRS			= fdlibm
 
 INCLUDES		= -I$(top_srcdir) -I$(top_builddir)
-EXTRA_DIST		= js.msg jskeyword.tbl jsopcode.tbl README
+EXTRA_DIST		= js.msg jskeyword.tbl jsopcode.tbl jsproto.tbl README
 
 BUILT_SOURCES		= jsautocfg.h jsautokw.h
 
@@ -24,6 +24,7 @@ libjs_la_SOURCES	= jsapi.c jsapi.h \
 			jsgc.c jsgc.h \
 			jshash.c jshash.h \
 			jsinterp.c jsinterp.h \
+			jsiter.c jsiter.h \
 			jslock.c jslock.h \
 			jslog2.c \
 			jslong.c jslong.h \
@@ -56,6 +57,7 @@ libjs_la_SOURCES	= jsapi.c jsapi.h \
 			$(CONFIG_HEADER)
 
 jsopcode.h jsinterp.h: jsopcode.tbl
+jspubtd.h jsatom.h: jsproto.tbl
 
 libjs_la_LIBADD		= ./fdlibm/libfdm.la
 
