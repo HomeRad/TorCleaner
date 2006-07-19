@@ -46,7 +46,7 @@ def which_base (text):
     return 0
 
 
-_size = { 10:0, 8:1, 16:2 }
+_size = {10:0, 8:1, 16:2}
 def size_base (base):
     return _size[base]
 
@@ -58,7 +58,7 @@ def size_number (text):
         return 0
     length = len(text)
     size = size_base(base)
-    end = size+1
+    end = size + 1
     while end < length and text[end] in _hex[:base]:
         end += 1
     return end-size
@@ -76,7 +76,7 @@ def convert (text):
     if base == 0:
         return text
     start = size_base(base)
-    end = start+size_number(text)
+    end = start + size_number(text)
     return int(text[start:end], base)
 
 
