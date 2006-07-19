@@ -90,6 +90,7 @@ distclean-local:
 	rm -f webcleaner-$(VERSION).tar.gz
 	rm -f webcleaner-$(VERSION).tar.gz.asc
 	rm -f MANIFEST _*_configdata.* dist-stamp
+	rm -rf autom4te.cache
 
 dist-stamp: dist
 	touch $@
