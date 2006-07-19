@@ -44,7 +44,7 @@ def classify (fp, magicdir=wc.ConfigDir):
         # initialize mime data
         magicfile = os.path.join(magicdir, "magic.mime")
         assert os.path.exists(magicfile)
-        magiccache = magicfile+".mgc"
+        magiccache = magicfile + ".mgc"
         _magic = Magic(magicfile, magiccache)
     pos = fp.tell()
     mime = _magic.classify(fp)
@@ -715,5 +715,5 @@ class Magic (object):
 
         # The magic file use "backspace" to concatenate what is normally
         # separated with a space"
-        result = result.lstrip('\x08').strip().replace(' \x08', '')
+        result = result.lstrip('\x08').replace(' \x08', '').strip()
         return result
