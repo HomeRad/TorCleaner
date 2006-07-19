@@ -95,17 +95,12 @@
 # end local stuff
 #------------------------------------------------------------------------------
 
-# xml based formats!
+# xml-based formats!
 
-# svg
-
-0	string		\<?xml
-#			text/xml
->38	string		\<\!DOCTYPE\040svg	image/svg+xml
-
-
-# xml
-0	string		\<?xml			text/xml
+0      string          \<?xml
+>0     string          \<?xml
+>>38   string          \<\!DOCTYPE\040svg      image/svg+xml
+>0     string          \<?xml                  text/xml
 
 
 #------------------------------------------------------------------------------
@@ -405,8 +400,6 @@
 0       string/bc	\<html	text/html
 0	string		\<!--	text/html
 0	string/c	\<h1	text/html
-
-0	string		\<?xml			text/xml
 
 #------------------------------------------------------------------------------
 # images:  file(1) magic for image formats (see also "c-lang" for XPM bitmaps)
