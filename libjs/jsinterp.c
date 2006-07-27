@@ -482,26 +482,9 @@ CloneBlockChain(JSContext *cx, JSStackFrame *fp, JSObject *obj)
         parent = CloneBlockChain(cx, fp, parent);
         if (!parent)
             return NULL;
+        fp->scopeChain = parent;
     }
     return js_CloneBlockObject(cx, obj, parent, fp);
-}
-
-static JSBool
-PutBlockObjects(JSContext *cx, JSStackFrame *fp)
-{
-    JSBool ok;
-    JSObject *obj;
-
-    /*
-     * Walk the scope chain looking for block scopes whose locals need to be
-     * copied from stack slots into object slots before fp goes away.
-     */
-    ok = JS_TRUE;
-    for (obj = fp->scopeChain; obj; obj = OBJ_GET_PARENT(cx, obj)) {
-        if (OBJ_GET_CLASS(cx, obj) == &js_BlockClass)
-            ok &= js_PutBlockObject(cx, obj);
-    }
-    return ok;
 }
 
 JSObject *
@@ -521,6 +504,24 @@ js_GetScopeChain(JSContext *cx, JSStackFrame *fp)
     }
     JS_ASSERT(fp->scopeChain);
     return fp->scopeChain;
+}
+
+/*
+ * Walk the scope chain looking for block scopes whose locals need to be
+ * copied from stack slots into object slots before fp goes away.
+ */
+static JSBool
+PutBlockObjects(JSContext *cx, JSStackFrame *fp)
+{
+    JSBool ok;
+    JSObject *obj;
+
+    ok = JS_TRUE;
+    for (obj = fp->scopeChain; obj; obj = OBJ_GET_PARENT(cx, obj)) {
+        if (OBJ_GET_CLASS(cx, obj) == &js_BlockClass)
+            ok &= js_PutBlockObject(cx, obj);
+    }
+    return ok;
 }
 
 JSObject *
@@ -2172,7 +2173,9 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
 
     /*
      * To support generator_throw and to catch ignored exceptions, fail right
-     * away if cx->throwing is set.
+     * away if cx->throwing is set.  If no exception is pending, null obj in
+     * case a callable object is being sent into a yield expression, and the
+     * yield's result is invoked.
      */
     ok = !cx->throwing;
     if (!ok) {
@@ -2182,6 +2185,7 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
 #endif
         goto out;
     }
+    obj = NULL;
 
 #ifdef JS_THREADED_INTERP
 
@@ -2282,12 +2286,6 @@ interrupt:
           EMPTY_CASE(JSOP_GROUP)
 
           BEGIN_CASE(JSOP_PUSH)
-            /*
-             * Clear for-in loop flags in case we are pushing an old-style
-             * iterator slot.  XXX remove this if we can prevent old XDR'd
-             * bytecode from being deserialized and executed
-             */
-            flags = 0;
             PUSH_OPND(JSVAL_VOID);
           END_CASE(JSOP_PUSH)
 
@@ -5956,7 +5954,8 @@ interrupt:
                 STORE_OPND(0, JSVAL_VOID);
                 sp++;
             }
-            JS_ASSERT(OBJ_GET_PARENT(cx, obj) == fp->blockChain);
+            JS_ASSERT(!fp->blockChain ||
+                      OBJ_GET_PARENT(cx, obj) == fp->blockChain);
             fp->blockChain = obj;
           END_LITOPX_CASE(JSOP_ENTERBLOCK)
 
