@@ -35,13 +35,15 @@ unsupported_types = ['text/css']
 
 _magic = None
 
-def classify (fp, magicdir=wc.ConfigDir):
+def classify (fp, magicdir=None):
     """
     Classify a file.
     """
     global _magic
     if _magic is None:
         # initialize mime data
+        if magicdir is None:
+            magicdir = wc.configuration.config.configdir
         magicfile = os.path.join(magicdir, "magic.mime")
         assert os.path.exists(magicfile)
         magiccache = magicfile + ".mgc"
