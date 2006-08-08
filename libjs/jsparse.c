@@ -1746,6 +1746,10 @@ FindPropertyValue(JSParseNode *pn, JSParseNode *pnid, FindPropValData *data)
         return JS_DHASH_ENTRY_IS_BUSY(&entry->hdr) ? entry->pnval : NULL;
     }
 
+    /* If pn is not an object initialiser node, we can't do anything here. */
+    if (pn->pn_type != TOK_RC)
+        return NULL;
+
     /*
      * We must search all the way through pn's list, to handle the case of an
      * id duplicated for two or more property initialisers.
@@ -1808,8 +1812,7 @@ FindPropertyValue(JSParseNode *pn, JSParseNode *pnid, FindPropValData *data)
 /*
  * If args is null, the caller is AssignExpr and instead of binding variables,
  * we specialize lvalues in the propery value positions of the left-hand side.
- * With type annotations and structural types, we can also type check here (or
- * in a second pass?).
+ * If right is null, just check for well-formed lvalues.
  */
 static JSBool
 CheckDestructuring(JSContext *cx, BindVarArgs *args,
@@ -2009,7 +2012,11 @@ ReturnOrYield(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
     if (tt2 == TOK_ERROR)
         return NULL;
 
-    if (tt2 != TOK_EOF && tt2 != TOK_EOL && tt2 != TOK_SEMI && tt2 != TOK_RC) {
+    if (tt2 != TOK_EOF && tt2 != TOK_EOL && tt2 != TOK_SEMI && tt2 != TOK_RC
+#if JS_HAS_GENERATORS
+        && (tt != TOK_YIELD || (tt2 != tt && tt2 != TOK_RB && tt2 != TOK_RP))
+#endif
+        ) {
         pn2 = operandParser(cx, ts, tc);
         if (!pn2)
             return NULL;
@@ -4798,6 +4805,7 @@ PrimaryExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
                 js_MatchToken(cx, ts, TOK_FOR)) {
                 JSParseNode **pnp, *pnexp, *pntop, *pnlet;
                 BindVarArgs args;
+                JSRuntime *rt;
                 JSObject *obj;
                 JSStmtInfo stmtInfo;
                 JSAtom *atom;
@@ -4832,6 +4840,7 @@ PrimaryExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
                 args.u.let.index = 0;
                 args.u.let.overflow = JSMSG_ARRAY_INIT_TOO_BIG;
 
+                rt = cx->runtime;
                 do {
                     /*
                      * FOR node is binary, left is control and right is body.
@@ -4842,28 +4851,59 @@ PrimaryExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
                     if (!pn2)
                         return NULL;
 
+                    if (js_MatchToken(cx, ts, TOK_NAME)) {
+                        if (CURRENT_TOKEN(ts).t_atom == rt->atomState.eachAtom)
+                            pn2->pn_op = JSOP_FOREACH;
+                        else
+                            js_UngetToken(ts);
+                    }
                     MUST_MATCH_TOKEN(TOK_LP, JSMSG_PAREN_AFTER_FOR);
-                    MUST_MATCH_TOKEN(TOK_NAME, JSMSG_NAME_AFTER_FOR_PAREN);
-                    atom = CURRENT_TOKEN(ts).t_atom;
 
-                    if (!DeclareLetVar(cx, atom, &args))
-                        return NULL;
+                    tt = js_GetToken(cx, ts);
+                    switch (tt) {
+#if JS_HAS_DESTRUCTURING
+                      case TOK_LB:
+                      case TOK_LC:
+                        pnlet = PrimaryExpr(cx, ts, tc, tt, JS_FALSE);
+                        if (!pnlet)
+                            return NULL;
 
-                    /*
-                     * Create a name node with op JSOP_NAME.  We can't set op
-                     * JSOP_GETLOCAL here, because we don't yet know the block
-                     * depth in the operand stack frame.  The code generator
-                     * computes that, and it tries to bind all names to slots,
-                     * so we must let it do this optimization.
-                     */
-                    pnlet = NewParseNode(cx, ts, PN_NAME, tc);
-                    if (!pnlet)
+                        if (!CheckDestructuring(cx, &args, pnlet, NULL, tc))
+                            return NULL;
+
+                        /* Destructuring requires [key, value] enumeration. */
+                        pn2->pn_op = JSOP_FOREACHKEYVAL;
+                        break;
+#endif
+
+                      case TOK_NAME:
+                        atom = CURRENT_TOKEN(ts).t_atom;
+                        if (!DeclareLetVar(cx, atom, &args))
+                            return NULL;
+
+                        /*
+                         * Create a name node with op JSOP_NAME.  We can't set
+                         * op to JSOP_GETLOCAL here, because we don't yet know
+                         * the block's depth in the operand stack frame.  The
+                         * code generator computes that, and it tries to bind
+                         * all names to slots, so we must let it do the deed.
+                         */
+                        pnlet = NewParseNode(cx, ts, PN_NAME, tc);
+                        if (!pnlet)
+                            return NULL;
+                        pnlet->pn_op = JSOP_NAME;
+                        pnlet->pn_atom = atom;
+                        pnlet->pn_expr = NULL;
+                        pnlet->pn_slot = -1;
+                        pnlet->pn_attrs = 0;
+                        break;
+
+                      default:
+                        js_ReportCompileErrorNumber(cx, ts,
+                                                    JSREPORT_TS|JSREPORT_ERROR,
+                                                    JSMSG_NO_VARIABLE_NAME);
                         return NULL;
-                    pnlet->pn_op = JSOP_NAME;
-                    pnlet->pn_atom = atom;
-                    pnlet->pn_expr = NULL;
-                    pnlet->pn_slot = -1;
-                    pnlet->pn_attrs = 0;
+                    }
 
                     MUST_MATCH_TOKEN(TOK_IN, JSMSG_IN_AFTER_FOR_NAME);
                     pn3 = NewBinary(cx, TOK_IN, JSOP_NOP, pnlet,

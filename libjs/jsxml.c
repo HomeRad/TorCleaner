@@ -248,7 +248,7 @@ JS_FRIEND_DATA(JSExtendedClass) js_NamespaceClass = {
     NULL,              NULL,              NULL,              NULL,
     NULL,              NULL,              namespace_mark,    NULL },
     namespace_equality,NULL,              NULL,              NULL,
-    JSCLASS_NO_RESERVED_MEMBERS
+    NULL,              NULL,              NULL,              NULL
 };
 
 #define NAMESPACE_ATTRS                                                       \
@@ -451,7 +451,7 @@ JS_FRIEND_DATA(JSExtendedClass) js_QNameClass = {
     NULL,              NULL,              NULL,              NULL,
     NULL,              NULL,              qname_mark,        NULL },
     qname_equality,    NULL,              NULL,              NULL,
-    JSCLASS_NO_RESERVED_MEMBERS
+    NULL,              NULL,              NULL,              NULL
 };
 
 /*
@@ -2166,9 +2166,7 @@ ToXMLList(JSContext *cx, jsval v)
         list = (JSXML *) JS_GetPrivate(cx, listobj);
         for (i = 0; i < length; i++) {
             kid = OrphanXMLChild(cx, xml, i);
-            if (!kid)
-                return NULL;
-            if (!Append(cx, list, kid)) {
+            if (!kid || !Append(cx, list, kid)) {
                 listobj = NULL;
                 break;
             }

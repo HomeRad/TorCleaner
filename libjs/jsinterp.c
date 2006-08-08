@@ -2697,21 +2697,12 @@ interrupt:
                  * stack slot, which JSOP_STARTITER allocated for us.
                  */
                 vp[-1] = OBJECT_TO_JSVAL(obj);
-            } else if (JSVAL_IS_VOID(rval)) {
-                /* Bytecode compatible old way: don't use iteration protocol. */
-                flags |= JSITER_COMPAT | JSITER_HIDDEN;
-                ok = js_NewNativeIterator(cx, obj, flags, vp);
-                if (!ok)
-                    goto out;
-                iterobj = JSVAL_TO_OBJECT(*vp);
             } else {
                 /* This is not the first iteration. Recover iterator state. */
                 JS_ASSERT(!JSVAL_IS_PRIMITIVE(rval));
                 iterobj = JSVAL_TO_OBJECT(rval);
                 flags |= js_GetNativeIteratorFlags(cx, iterobj);
-                obj = (flags & JSITER_COMPAT)
-                      ? JSVAL_TO_OBJECT(iterobj->slots[JSSLOT_PARENT])
-                      : JSVAL_TO_OBJECT(vp[-1]);
+                obj = JSVAL_TO_OBJECT(vp[-1]);
             }
 
           enum_next_property:
@@ -2726,11 +2717,9 @@ interrupt:
             fid = JSVAL_NULL;
 #endif
             ok = js_CallIteratorNext(cx, iterobj, flags,
-                                     (iterobj == obj) ? NULL : &fid,
+                                     (flags & JSITER_ENUMERATE) ? &fid : NULL,
                                      &rval);
             if (!ok) {
-                uintN protoFlags;
-
                 /* Nothing more to iterate in obj, or some other exception? */
                 if (!cx->throwing ||
                     !VALUE_IS_STOP_ITERATION(cx, cx->exception)) {
@@ -2744,12 +2733,13 @@ interrupt:
 
                 /*
                  * Enumerate the properties on obj's prototype chain, unless
-                 * the iterator is the iterable -- in this case, do not merge
+                 * the JSITER_ENUMERATE is clear -- in this case, do not merge
                  * ECMA precedent and the Pythonic iteration protocol.  Loop
-                 * over only the keys, or [key, value] pairs, returned by the
-                 * iterator for the directly referenced object.
+                 * over only whatever values are returned by the iterator for
+                 * the directly referenced object.
                  */
-                if (iterobj == obj || !(obj = OBJ_GET_PROTO(cx, obj))) {
+                if (!(flags & JSITER_ENUMERATE) ||
+                    !(obj = OBJ_GET_PROTO(cx, obj))) {
                     /* End of property list -- terminate loop. */
                     ok = JS_TRUE;
                     flags = 0;
@@ -2764,38 +2754,25 @@ interrupt:
                  * the original object, so we must do our own getting, further
                  * below when testing 'if (flags & JSITER_FOREACH)'.
                  */
-                protoFlags = flags & ~JSITER_FOREACH;
+                ok = js_NewNativeIterator(cx, obj, flags & ~JSITER_FOREACH, vp);
+                if (!ok)
+                    goto out;
+                iterobj = JSVAL_TO_OBJECT(*vp);
 
-                if (flags & JSITER_COMPAT) {
-                    ok = js_NewNativeIterator(cx, obj, protoFlags, vp);
-                    if (!ok)
-                        goto out;
-                    iterobj = JSVAL_TO_OBJECT(*vp);
-                } else {
-                    iterobj = js_ValueToIterator(cx, OBJECT_TO_JSVAL(obj),
-                                                 protoFlags);
-                    if (!iterobj) {
-                        JS_ASSERT(!ok);
-                        goto out;
-                    }
-
-                    /* Reset ok and store the current iterable in vp[-1]. */
-                    ok = JS_TRUE;
-                    vp[-1] = OBJECT_TO_JSVAL(obj);
-                }
-
-                *vp = OBJECT_TO_JSVAL(iterobj);
+                /* Reset ok and store the current iterable in vp[-1]. */
+                ok = JS_TRUE;
+                vp[-1] = OBJECT_TO_JSVAL(obj);
                 goto enum_next_property;
             }
 
             /*
-             * If the iterator is the iterable, do not expect to lookup fid
+             * Without the JSITER_ENUMERATE flag, do not expect to lookup fid
              * and find anything.  The iteration protocol does not require any
              * such thing, which would make a name collision on 'next' hazard.
-             * But if the iterable is a different object, we must do the usual
+             * But if the JSITER_ENUMERATE flag is set, we must do the usual
              * deleted-property and shadowed-proto-property tests.
              */
-            if (iterobj != obj) {
+            if (flags & JSITER_ENUMERATE) {
                 /* Skip properties not in obj when looking from origobj. */
                 ok = OBJ_LOOKUP_PROPERTY(cx, origobj, fid, &obj2, &prop);
                 if (!ok)
@@ -2843,7 +2820,7 @@ interrupt:
                     if (!ok)
                         goto out;
                 }
-            } else if (iterobj == obj) {
+            } else if (!(flags & JSITER_ENUMERATE)) {
                 /* Iterators return arbitrary values, not string ids. */
                 JS_ASSERT(fid == JSVAL_NULL);
             } else if (JSID_IS_ATOM(fid)) {
@@ -6074,20 +6051,13 @@ interrupt:
             rval = sp[-2];
             if (!JSVAL_IS_NULL(rval)) {
                 /*
-                 * Finalize a native iterator only if it's not the same object
-                 * as the iterable.  Otherwise an iterator was explicitly used
-                 * on the right of 'in' in a for-in loop, and there could be
-                 * other live refs still.
-                 *
                  * js_CloseNativeIterator checks whether the iterator is not
                  * native, and also detects the case of a native iterator that
                  * has already escaped, even though a for-in loop caused it to
                  * be created.  See jsiter.c.
                  */
-                if (rval != sp[-3]) {
-                    SAVE_SP_AND_PC(fp);
-                    js_CloseNativeIterator(cx, JSVAL_TO_OBJECT(rval));
-                }
+                SAVE_SP_AND_PC(fp);
+                js_CloseNativeIterator(cx, JSVAL_TO_OBJECT(rval));
                 sp[-2] = JSVAL_NULL;
             }
             sp -= 3;
