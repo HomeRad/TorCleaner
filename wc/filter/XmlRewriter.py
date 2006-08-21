@@ -101,5 +101,7 @@ class XmlRewriter (Filter.Filter):
         p = expatreader.ExpatParser(namespaceHandling=1)
         p.setContentHandler(handler)
         p.setFeature(xml.sax.handler.feature_external_ges, 0)
+        # Note: expat does not read external parameter entities, so
+        # setting feature_external_pes is not necessary
         attrs['xmlrewriter_parser'] = p
         attrs['xmlrewriter_filter'] = handler
