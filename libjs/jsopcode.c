@@ -939,6 +939,7 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
 #define inXML JS_FALSE
 #endif
     jsval val;
+    int stackDummy;
 
     static const char catch_cookie[]     = "/*CATCH*/";
     static const char finally_cookie[]   = "/*FINALLY*/";
@@ -999,6 +1000,11 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
     JS_END_MACRO
 
     cx = ss->sprinter.context;
+    if (!JS_CHECK_STACK_SIZE(cx, stackDummy)) {
+        JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL, JSMSG_OVER_RECURSED);
+        return JS_FALSE;
+    }
+
     jp = ss->printer;
     endpc = pc + nb;
     forelem_tail = forelem_done = NULL;
@@ -1373,6 +1379,34 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                   case SRC_HIDDEN:
                     /* Hide this pop, it's from a goto in a with or for/in. */
                     todo = -2;
+                    break;
+
+                  case SRC_DECL:
+                    /* This pop is at the end of the head of a let form. */
+                    pc += js_CodeSpec[JSOP_POP].length;
+                    len = js_GetSrcNoteOffset(sn, 0);
+                    if (pc[len] == JSOP_LEAVEBLOCK) {
+                        js_printf(jp, "\tlet (%s) {\n", POP_STR());
+                        jp->indent += 4;
+                        DECOMPILE_CODE(pc, len);
+                        jp->indent -= 4;
+                        js_printf(jp, "\t}\n");
+                        todo = -2;
+                    } else {
+                        JS_ASSERT(pc[len] == JSOP_LEAVEBLOCKEXPR);
+
+                        lval = JS_strdup(cx, POP_STR());
+                        if (!lval)
+                            return JS_FALSE;
+
+                        if (!Decompile(ss, pc, len)) {
+                            JS_free(cx, (char *)lval);
+                            return JS_FALSE;
+                        }
+                        rval = POP_STR();
+                        todo = Sprint(&ss->sprinter, "let (%s) %s", lval, rval);
+                        JS_free(cx, (char *)lval);
+                    }
                     break;
 
                   default:
