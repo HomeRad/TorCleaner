@@ -55,7 +55,7 @@ Direct download links are in brackets.
 
 2. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
-   [http://switch.dl.sourceforge.net/pywin32/pywin32-208.win32-py2.4.exe]
+   [http://switch.dl.sourceforge.net/pywin32/pywin32-209.win32-py2.4.exe]
    
    To run Pythonwin, you may need a copy of the Microsoft MFC DLLs.
    You should only install these files if the install process tells you
@@ -73,7 +73,7 @@ Direct download links are in brackets.
 4. *Optional but recommended (used for SSL connections)*
    Install OpenSSL and PyOpenSSL for Windows from
    http://www.shininglightpro.com/products/Win32OpenSSL.html
-   [http://www.shininglightpro.com/download/Win32OpenSSL-v0.9.8b.exe]
+   [http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8c.exe]
    and
    http://pyopenssl.sourceforge.net/
    [http://webcleaner.sourceforge.net/pyOpenSSL-0.6.win32-py2.4.exe]
