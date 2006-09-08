@@ -518,8 +518,11 @@ PutBlockObjects(JSContext *cx, JSStackFrame *fp)
 
     ok = JS_TRUE;
     for (obj = fp->scopeChain; obj; obj = OBJ_GET_PARENT(cx, obj)) {
-        if (OBJ_GET_CLASS(cx, obj) == &js_BlockClass)
+        if (OBJ_GET_CLASS(cx, obj) == &js_BlockClass) {
+            if (JS_GetPrivate(cx, obj) != fp)
+                break;
             ok &= js_PutBlockObject(cx, obj);
+        }
     }
     return ok;
 }
@@ -1981,14 +1984,6 @@ InternNonIntElementId(JSContext *cx, jsval idval, jsid *idp)
 # undef JS_THREADED_INTERP
 #endif
 
-typedef enum JSOpLength {
-#define OPDEF(op,val,name,token,length,nuses,ndefs,prec,format) \
-    op##_LENGTH = length,
-#include "jsopcode.tbl"
-#undef OPDEF
-    JSOP_LIMIT_LENGTH
-} JSOpLength;
-
 JSBool
 js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
 {
@@ -2617,9 +2612,7 @@ interrupt:
 
           BEGIN_CASE(JSOP_FORARG)
           BEGIN_CASE(JSOP_FORVAR)
-#if JS_HAS_BLOCK_SCOPE
           BEGIN_CASE(JSOP_FORLOCAL)
-#endif
             /*
              * JSOP_FORARG and JSOP_FORVAR don't require any lval computation
              * here, because they address slots on the stack (in fp->args and
@@ -2861,7 +2854,6 @@ interrupt:
                 fp->vars[slot] = rval;
                 break;
 
-#if JS_HAS_BLOCK_SCOPE
               case JSOP_FORLOCAL:
                 slot = GET_UINT16(pc);
                 JS_ASSERT(slot < (uintN)depth);
@@ -2869,7 +2861,6 @@ interrupt:
                 GC_POKE(cx, *vp);
                 *vp = rval;
                 break;
-#endif
 
               case JSOP_FORELEM:
                 /* FORELEM is not a SET operation, it's more like BINDNAME. */
@@ -4273,9 +4264,7 @@ interrupt:
               case JSOP_XMLOBJECT:    goto do_JSOP_XMLOBJECT;
               case JSOP_XMLPI:        goto do_JSOP_XMLPI;
 #endif
-#if JS_HAS_BLOCK_SCOPE
               case JSOP_ENTERBLOCK:   goto do_JSOP_ENTERBLOCK;
-#endif
               default:                JS_ASSERT(0);
             }
             /* NOTREACHED */
@@ -4921,7 +4910,6 @@ interrupt:
              */
             JS_ASSERT(!fp->blockChain);
             obj2 = fp->scopeChain;
-            JS_ASSERT(OBJ_GET_CLASS(cx, obj2) != &js_BlockClass);
             if (OBJ_GET_PARENT(cx, obj) != obj2) {
                 obj = js_CloneFunctionObject(cx, obj, obj2);
                 if (!obj) {
@@ -5013,7 +5001,6 @@ interrupt:
             /* If re-parenting, store a clone of the function object. */
             JS_ASSERT(!fp->blockChain);
             parent = fp->scopeChain;
-            JS_ASSERT(OBJ_GET_CLASS(cx, parent) != &js_BlockClass);
             if (OBJ_GET_PARENT(cx, obj) != parent) {
                 SAVE_SP_AND_PC(fp);
                 obj = js_CloneFunctionObject(cx, obj, parent);
@@ -5467,12 +5454,23 @@ interrupt:
           END_CASE(JSOP_SETSP)
 
           BEGIN_CASE(JSOP_GOSUB)
+            JS_ASSERT(cx->exception != JSVAL_HOLE);
+            if (!cx->throwing) {
+                lval = JSVAL_HOLE;
+            } else {
+                lval = cx->exception;
+                cx->throwing = JS_FALSE;
+            }
+            PUSH(lval);
             i = PTRDIFF(pc, script->main, jsbytecode) + JSOP_GOSUB_LENGTH;
             len = GET_JUMP_OFFSET(pc);
             PUSH(INT_TO_JSVAL(i));
           END_VARLEN_CASE
 
           BEGIN_CASE(JSOP_GOSUBX)
+            JS_ASSERT(cx->exception != JSVAL_HOLE);
+            lval = cx->throwing ? cx->exception : JSVAL_HOLE;
+            PUSH(lval);
             i = PTRDIFF(pc, script->main, jsbytecode) + JSOP_GOSUBX_LENGTH;
             len = GET_JUMPX_OFFSET(pc);
             PUSH(INT_TO_JSVAL(i));
@@ -5481,6 +5479,19 @@ interrupt:
           BEGIN_CASE(JSOP_RETSUB)
             rval = POP();
             JS_ASSERT(JSVAL_IS_INT(rval));
+            lval = POP();
+            if (lval != JSVAL_HOLE) {
+                /*
+                 * Exception was pending during finally, throw it *before* we
+                 * adjust pc, because pc indexes into script->trynotes.  This
+                 * turns out not to be necessary, but it seems clearer.  And
+                 * it points out a FIXME: 350509, due to Igor Bukanov.
+                 */
+                cx->throwing = JS_TRUE;
+                cx->exception = lval;
+                ok = JS_FALSE;
+                goto out;
+            }
             len = JSVAL_TO_INT(rval);
             pc = script->main;
           END_VARLEN_CASE
@@ -5489,6 +5500,11 @@ interrupt:
             PUSH(cx->exception);
             cx->throwing = JS_FALSE;
           END_CASE(JSOP_EXCEPTION)
+
+          BEGIN_CASE(JSOP_THROWING)
+            JS_ASSERT(!cx->throwing);
+            cx->throwing = JS_TRUE;
+          END_CASE(JSOP_THROWING)
 
           BEGIN_CASE(JSOP_THROW)
             cx->throwing = JS_TRUE;
@@ -5921,7 +5937,6 @@ interrupt:
           END_CASE(JSOP_GETFUNNS)
 #endif /* JS_HAS_XML_SUPPORT */
 
-#if JS_HAS_BLOCK_SCOPE
           BEGIN_LITOPX_CASE(JSOP_ENTERBLOCK, 0)
             obj = ATOM_TO_OBJECT(atom);
             JS_ASSERT(fp->spbase + OBJ_BLOCK_DEPTH(cx, obj) == sp);
@@ -6045,8 +6060,6 @@ interrupt:
 
 #undef FAST_LOCAL_INCREMENT_OP
 
-#endif /* JS_HAS_BLOCK_SCOPE */
-
 #if JS_HAS_GENERATORS
           BEGIN_CASE(JSOP_STARTITER)
             /*
@@ -6095,6 +6108,17 @@ interrupt:
 
           BEGIN_CASE(JSOP_YIELD)
             ASSERT_NOT_THROWING(cx);
+            if (FRAME_TO_GENERATOR(fp)->state == JSGEN_CLOSING) {
+                str = js_DecompileValueGenerator(cx, JSDVG_SEARCH_STACK,
+                                                 fp->argv[-2], NULL);
+                if (str) {
+                    JS_ReportErrorNumberUC(cx, js_GetErrorMessage, NULL,
+                                           JSMSG_BAD_GENERATOR_YIELD,
+                                           JSSTRING_CHARS(str));
+                }
+                ok = JS_FALSE;
+                goto out;
+            }
             fp->rval = FETCH_OPND(-1);
             fp->flags |= JSFRAME_YIELDING;
             pc += JSOP_YIELD_LENGTH;
@@ -6121,19 +6145,6 @@ interrupt:
           END_CASE(JSOP_ARRAYPUSH)
 #endif /* JS_HAS_GENERATORS */
 
-#if !JS_HAS_BLOCK_SCOPE
-          L_JSOP_ENTERBLOCK:
-          L_JSOP_LEAVEBLOCK:
-          L_JSOP_LEAVEBLOCKEXPR:
-          L_JSOP_GETLOCAL:
-          L_JSOP_SETLOCAL:
-          L_JSOP_INCLOCAL:
-          L_JSOP_DECLOCAL:
-          L_JSOP_LOCALINC:
-          L_JSOP_LOCALDEC:
-          L_JSOP_FORLOCAL:
-#endif
-
 #if !JS_HAS_GENERATORS
           L_JSOP_STARTITER:
           L_JSOP_ENDITER:
@@ -6149,7 +6160,6 @@ interrupt:
 
 #ifdef JS_THREADED_INTERP
           L_JSOP_BACKPATCH:
-          L_JSOP_BACKPATCH_PUSH:
           L_JSOP_BACKPATCH_POP:
 #else
           default:
@@ -6255,13 +6265,30 @@ out:
             /*
              * Look for a try block in script that can catch this exception.
              */
-            SCRIPT_FIND_CATCH_START(script, pc, pc);
-            if (pc) {
-                /* Don't clear cx->throwing to save cx->exception from GC. */
-                len = 0;
-                ok = JS_TRUE;
-                DO_NEXT_OP(len);
+#if JS_HAS_GENERATORS
+            if (JS_LIKELY(cx->exception != JSVAL_ARETURN)) {
+                SCRIPT_FIND_CATCH_START(script, pc, pc);
+                if (!pc)
+                    goto no_catch;
+            } else {
+                pc = js_FindFinallyHandler(script, pc);
+                if (!pc) {
+                    cx->throwing = JS_FALSE;
+                    ok = JS_TRUE;
+                    fp->rval = JSVAL_VOID;
+                    goto no_catch;
+                }
             }
+#else
+            SCRIPT_FIND_CATCH_START(script, pc, pc);
+            if (!pc)
+                goto no_catch;
+#endif
+
+            /* Don't clear cx->throwing to save cx->exception from GC. */
+            len = 0;
+            ok = JS_TRUE;
+            DO_NEXT_OP(len);
         }
 no_catch:;
     }

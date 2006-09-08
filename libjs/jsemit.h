@@ -121,7 +121,9 @@ struct JSTreeContext {              /* tree context for semantic checks */
     uint32          loopyGlobalUses;/* optimizable global var uses in loops */
     JSStmtInfo      *topStmt;       /* top of statement info stack */
     JSStmtInfo      *topScopeStmt;  /* top lexical scope statement */
-    JSObject        *blockChain;    /* compile time block scope chain */
+    JSObject        *blockChain;    /* compile time block scope chain (NB: one
+                                       deeper than the topScopeStmt/downScope
+                                       chain when in head of let block/expr) */
     JSParseNode     *blockNode;     /* parse node for a lexical scope.
                                        XXX combine with blockChain? */
     JSAtomList      decls;          /* function, const, and var declarations */
@@ -251,6 +253,8 @@ struct JSCodeGenerator {
     uintN           numJumpTargets; /* number of jump targets */
     ptrdiff_t       spanDepTodo;    /* offset from main.base of potentially
                                        unoptimized spandeps */
+
+    uintN           arrayCompSlot;  /* stack slot of array in comprehension */
 
     uintN           emitLevel;      /* js_EmitTree recursion level */
     JSAtomList      constList;      /* compile time constants */
@@ -404,6 +408,23 @@ js_LookupCompileTimeConstant(JSContext *cx, JSCodeGenerator *cg, JSAtom *atom,
                              jsval *vp);
 
 /*
+ * Find a lexically scoped variable (one declared by let, catch, or an array
+ * comprehension) named by atom, looking in tc's compile-time scopes.
+ *
+ * If a WITH statement is reached along the scope stack, return its statement
+ * info record, so callers can tell that atom is ambiguous.  If slotp is not
+ * null, then if atom is found, set *slotp to its stack slot, otherwise to -1. 
+ * This means that if slotp is not null, all the block objects on the lexical
+ * scope chain must have had their depth slots computed by the code generator,
+ * so the caller must be under js_EmitTree.
+ *
+ * In any event, directly return the statement info record in which atom was
+ * found.  Otherwise return null.
+ */
+extern JSStmtInfo *
+js_LexicalLookup(JSTreeContext *tc, JSAtom *atom, jsint *slotp);
+
+/*
  * Emit code into cg for the tree rooted at pn.
  */
 extern JSBool
@@ -455,7 +476,7 @@ typedef enum JSSrcNoteType {
                                    gets and sets */
     SRC_ASSIGNOP    = 8,        /* += or another assign-op follows */
     SRC_COND        = 9,        /* JSOP_IFEQ is from conditional ?: operator */
-    SRC_UNQUOTE     = 10,       /* don't quote a JSOP_STRING */
+    SRC_UNUSED10    = 10,       /* unused */
     SRC_HIDDEN      = 11,       /* opcode shouldn't be decompiled */
     SRC_PCBASE      = 12,       /* distance back from annotated get- or setprop
                                    op to first obj.prop.subprop bytecode */
@@ -468,13 +489,19 @@ typedef enum JSSrcNoteType {
                                    2nd off to first JSOP_CASE if condswitch */
     SRC_FUNCDEF     = 19,       /* JSOP_NOP for function f() with atomid */
     SRC_CATCH       = 20,       /* catch block has guard */
-    SRC_UNUSED21    = 21,       /* Unused source note */
+    SRC_UNUSED21    = 21,       /* unused */
     SRC_NEWLINE     = 22,       /* bytecode follows a source newline */
     SRC_SETLINE     = 23,       /* a file-absolute source line number note */
     SRC_XDELTA      = 24        /* 24-31 are for extended delta notes */
 } JSSrcNoteType;
 
-/* Constants for the SRC_DECL source note. */
+/*
+ * Constants for the SRC_DECL source note.  Note that span-dependent bytecode
+ * selection means that any SRC_DECL offset greater than SRC_DECL_LET may need
+ * to be adjusted, but these "offsets" are too small to span a span-dependent
+ * instruction, so can be used to denote distinct declaration syntaxes to the
+ * decompiler.
+ */
 #define SRC_DECL_VAR             0
 #define SRC_DECL_CONST           1
 #define SRC_DECL_LET             2
