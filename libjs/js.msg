@@ -248,7 +248,7 @@ MSG_DEF(JSMSG_NEWREGEXP_FLAGGED,      165, 0, JSEXN_TYPEERR, "can't supply flags
 MSG_DEF(JSMSG_RESERVED_SLOT_RANGE,    166, 0, JSEXN_RANGEERR, "reserved slot index out of range")
 MSG_DEF(JSMSG_CANT_DECODE_PRINCIPALS, 167, 0, JSEXN_INTERNALERR, "can't decode JSPrincipals")
 MSG_DEF(JSMSG_CANT_SEAL_OBJECT,       168, 1, JSEXN_ERR, "can't seal {0} objects")
-MSG_DEF(JSMSG_UNUSED169,              169, 0, JSEXN_NONE, "")
+MSG_DEF(JSMSG_TOO_MANY_CATCH_VARS,    169, 0, JSEXN_SYNTAXERR, "too many catch variables")
 MSG_DEF(JSMSG_BAD_XML_MARKUP,         170, 0, JSEXN_SYNTAXERR, "invalid XML markup")
 MSG_DEF(JSMSG_BAD_XML_CHARACTER,      171, 0, JSEXN_SYNTAXERR, "illegal XML character")
 MSG_DEF(JSMSG_BAD_DEFAULT_XML_NAMESPACE,172,0,JSEXN_SYNTAXERR, "invalid default XML namespace")
@@ -296,3 +296,4 @@ MSG_DEF(JSMSG_KEYWORD_NOT_NS,         213, 0, JSEXN_SYNTAXERR, "keyword is used 
 MSG_DEF(JSMSG_BAD_GENERATOR_YIELD,    214, 1, JSEXN_TYPEERR, "yield from closing generator {0}")
 MSG_DEF(JSMSG_BAD_YIELD_SYNTAX,       215, 0, JSEXN_SYNTAXERR, "yield expression must be parenthesized")
 MSG_DEF(JSMSG_ARRAY_COMP_LEFTSIDE,    216, 0, JSEXN_SYNTAXERR, "invalid array comprehension left-hand side")
+MSG_DEF(JSMSG_YIELD_FROM_FILTER,      217, 0, JSEXN_INTERNALERR, "yield not yet supported from filtering predicate")

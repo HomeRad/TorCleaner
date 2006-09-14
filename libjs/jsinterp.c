@@ -463,47 +463,66 @@ js_SetLocalVariable(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
     return JS_TRUE;
 }
 
-/*
- * Recursive helper to convert a compile-time block chain to a runtime block
- * scope chain prefix.  Each cloned block object is safe from GC by virtue of
- * the object newborn root.  This root cannot be displaced by arbitrary code
- * called from within js_NewObject, because we pass non-null proto and parent
- * arguments (so js_NewObject won't call js_GetClassPrototype).
- */
-static JSObject *
-CloneBlockChain(JSContext *cx, JSStackFrame *fp, JSObject *obj)
-{
-    JSObject *parent;
-
-    parent = OBJ_GET_PARENT(cx, obj);
-    if (!parent) {
-        parent = fp->scopeChain;
-    } else {
-        parent = CloneBlockChain(cx, fp, parent);
-        if (!parent)
-            return NULL;
-        fp->scopeChain = parent;
-    }
-    return js_CloneBlockObject(cx, obj, parent, fp);
-}
-
 JSObject *
 js_GetScopeChain(JSContext *cx, JSStackFrame *fp)
 {
-    JSObject *obj;
+    JSObject *obj, *cursor, *clonedChild, *parent;
+    JSTempValueRooter tvr;
 
     obj = fp->blockChain;
-    if (obj) {
-        obj = CloneBlockChain(cx, fp, obj);
-        if (!obj)
-            return NULL;
-        fp->flags |= JSFRAME_POP_BLOCKS;
-        fp->scopeChain = obj;
-        fp->blockChain = NULL;
-        return obj;
+    if (!obj) {
+        JS_ASSERT(fp->scopeChain);
+        return fp->scopeChain;
     }
-    JS_ASSERT(fp->scopeChain);
-    return fp->scopeChain;
+
+    /*
+     * Clone the block chain. To avoid recursive cloning we set the parent of
+     * the cloned child after we clone the parent. In the following loop when
+     * clonedChild is null it indicates the first iteration when no special GC
+     * rooting is necessary. On the second and the following iterations we
+     * have to protect clonedChild against the GC during cloning of the parent.
+     */
+    cursor = obj;
+    clonedChild = NULL;
+    for (;;) {
+        parent = OBJ_GET_PARENT(cx, cursor);
+
+        /*
+         * We pass fp->scopeChain and not null even if we override the parent
+         * slot later as null triggers useless calculations of slot's value in
+         * js_NewObject that js_CloneBlockObject calls.
+         */
+        cursor = js_CloneBlockObject(cx, cursor, fp->scopeChain, fp);
+        if (!cursor) {
+            if (clonedChild)
+                JS_POP_TEMP_ROOT(cx, &tvr);
+            return NULL;
+        }
+        if (!clonedChild) {
+            obj = cursor;
+            if (parent)
+                JS_PUSH_SINGLE_TEMP_ROOT(cx, cursor, &tvr);
+        } else {
+            /*
+             * Avoid OBJ_SET_PARENT overhead as clonedChild cannot escape to
+             * other threads.
+             */
+            clonedChild->slots[JSSLOT_PARENT] = OBJECT_TO_JSVAL(cursor);
+            JS_ASSERT(tvr.u.value == OBJECT_TO_JSVAL(clonedChild));
+            tvr.u.value = OBJECT_TO_JSVAL(cursor);
+        }
+        if (!parent) {
+            if (clonedChild)
+                JS_POP_TEMP_ROOT(cx, &tvr);
+            break;
+        }
+        clonedChild = cursor;
+        cursor = parent;
+    }
+    fp->flags |= JSFRAME_POP_BLOCKS;
+    fp->scopeChain = obj;
+    fp->blockChain = NULL;
+    return obj;
 }
 
 /*
@@ -1264,6 +1283,7 @@ have_fun:
         /* All arguments must be contiguous, so we may have to copy actuals. */
         nalloc = nslots;
         limit = (jsval *) cx->stackPool.current->limit;
+        JS_ASSERT((jsval *) cx->stackPool.current->base <= sp && sp <= limit);
         if (sp + nslots > limit) {
             /* Hit end of arena: we have to copy argv[-2..(argc+nslots-1)]. */
             nalloc += 2 + argc;
@@ -1382,10 +1402,6 @@ out:
         if (hook)
             hook(cx, &frame, JS_FALSE, &ok, hookData);
     }
-
-    /* If frame has block objects on its scope chain, cut them loose. */
-    if (frame.flags & JSFRAME_POP_BLOCKS)
-        ok &= PutBlockObjects(cx, &frame);
 
     /* If frame has a call object, sync values and clear back-pointer. */
     if (frame.callobj)
@@ -1750,9 +1766,26 @@ js_CheckRedeclaration(JSContext *cx, JSObject *obj, jsid id, uintN attrs,
     if (!prop)
         return JS_TRUE;
 
-    /* From here, return true, or goto bad on failure to drop prop. */
-    if (!OBJ_GET_ATTRIBUTES(cx, obj2, id, prop, &oldAttrs))
+    /*
+     * Use prop as a speedup hint to OBJ_GET_ATTRIBUTES, but drop it on error.
+     * An assertion at label bad: will insist that it is null.
+     */
+    if (!OBJ_GET_ATTRIBUTES(cx, obj2, id, prop, &oldAttrs)) {
+        OBJ_DROP_PROPERTY(cx, obj2, prop);
+#ifdef DEBUG
+        prop = NULL;
+#endif
         goto bad;
+    }
+
+    /*
+     * From here, return true, or else goto bad on failure to null out params.
+     * If our caller doesn't want prop, drop it (we don't need it any longer).
+     */
+    if (!propp) {
+        OBJ_DROP_PROPERTY(cx, obj2, prop);
+        prop = NULL;
+    }
 
     /* If either property is readonly, we have an error. */
     report = ((oldAttrs | attrs) & JSPROP_READONLY)
@@ -1803,7 +1836,7 @@ bad:
         *objp = NULL;
         *propp = NULL;
     }
-    OBJ_DROP_PROPERTY(cx, obj2, prop);
+    JS_ASSERT(!prop);
     return JS_FALSE;
 }
 
@@ -2350,6 +2383,18 @@ interrupt:
                 JSInlineFrame *ifp = (JSInlineFrame *) fp;
                 void *hookData = ifp->hookData;
 
+                /*
+                 * If fp has blocks on its scope chain, home their locals now,
+                 * before calling any debugger hook, and before freeing stack.
+                 * This matches the order of block putting and hook calling in
+                 * the "out-of-line" return code at the bottom of js_Interpret
+                 * and in js_Invoke.
+                 */
+                if (fp->flags & JSFRAME_POP_BLOCKS) {
+                    SAVE_SP_AND_PC(fp);
+                    ok &= PutBlockObjects(cx, fp);
+                }
+
                 if (hookData) {
                     JSInterpreterHook hook = cx->runtime->callHook;
                     if (hook) {
@@ -2357,12 +2402,6 @@ interrupt:
                         hook(cx, fp, JS_FALSE, &ok, hookData);
                         LOAD_INTERRUPT_HANDLER(rt);
                     }
-                }
-
-                /* If fp has blocks on its scope chain, cut them loose. */
-                if (fp->flags & JSFRAME_POP_BLOCKS) {
-                    SAVE_SP_AND_PC(fp);
-                    ok &= PutBlockObjects(cx, fp);
                 }
 
                 /*
@@ -2568,6 +2607,10 @@ interrupt:
                 OBJ_DROP_PROPERTY(cx, obj2, prop);
           END_CASE(JSOP_IN)
 
+          BEGIN_CASE(JSOP_FORIN)
+            flags = 0;
+          END_CASE(JSOP_FORIN)
+
           BEGIN_CASE(JSOP_FOREACH)
             flags = JSITER_FOREACH;
           END_CASE(JSOP_FOREACH)
@@ -2667,10 +2710,7 @@ interrupt:
 
             /* Is this the first iteration ? */
             if (JSVAL_IS_NULL(rval)) {
-                /*
-                 * Yes, and because rval is null we know JSOP_STARTITER stored
-                 * that slot, and we must use the new iteration protocol.
-                 */
+                /* Yes, use the new iteration protocol. */
                 fp->pc = (jsbytecode *) sp[i-depth];
                 iterobj = js_ValueToIterator(cx, OBJECT_TO_JSVAL(obj), flags);
                 fp->pc = pc;
@@ -4247,7 +4287,6 @@ interrupt:
               case JSOP_GETMETHOD:    goto do_JSOP_GETMETHOD;
               case JSOP_SETMETHOD:    goto do_JSOP_SETMETHOD;
 #endif
-              case JSOP_INITCATCHVAR: goto do_JSOP_INITCATCHVAR;
               case JSOP_NAMEDFUNOBJ:  goto do_JSOP_NAMEDFUNOBJ;
               case JSOP_NUMBER:       goto do_JSOP_NUMBER;
               case JSOP_OBJECT:       goto do_JSOP_OBJECT;
@@ -5258,6 +5297,7 @@ interrupt:
             /* Ensure that id has a type suitable for use with obj. */
             CHECK_ELEMENT_ID(obj, id);
 
+            SAVE_SP_AND_PC(fp);
             if (JS_TypeOfValue(cx, rval) != JSTYPE_FUNCTION) {
                 JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,
                                      JSMSG_BAD_GETTER_OR_SETTER,
@@ -5513,41 +5553,16 @@ interrupt:
             /* let the code at out try to catch the exception. */
             goto out;
 
-          BEGIN_LITOPX_CASE(JSOP_INITCATCHVAR, 0)
-            /* Load the value into rval, while keeping it live on stack. */
-            JS_ASSERT(sp - fp->spbase >= 2);
-            rval = FETCH_OPND(-1);
-
-            /* Get the immediate catch variable name into id. */
-            id   = ATOM_TO_JSID(atom);
-
-            /* Find the object being initialized at top of stack. */
-            lval = FETCH_OPND(-2);
-            JS_ASSERT(JSVAL_IS_OBJECT(lval));
-            obj = JSVAL_TO_OBJECT(lval);
-
-            SAVE_SP_AND_PC(fp);
-
+          BEGIN_CASE(JSOP_SETLOCALPOP)
             /*
-             * It's possible for an evil script to substitute a random object
-             * for the new object. Check to make sure that we don't override a
-             * readonly property with the below OBJ_DEFINE_PROPERTY.
+             * The stack must have a block with at least one local slot below
+             * the exception object.
              */
-            ok = OBJ_GET_ATTRIBUTES(cx, obj, id, NULL, &attrs);
-            if (!ok)
-                goto out;
-            if (!(attrs & (JSPROP_READONLY | JSPROP_PERMANENT |
-                           JSPROP_GETTER | JSPROP_SETTER))) {
-                /* Define obj[id] to contain rval and to be permanent. */
-                ok = OBJ_DEFINE_PROPERTY(cx, obj, id, rval, NULL, NULL,
-                                         JSPROP_PERMANENT, NULL);
-                if (!ok)
-                    goto out;
-            }
-
-            /* Now that we're done with rval, pop it. */
-            sp--;
-          END_LITOPX_CASE(JSOP_INITCATCHVAR)
+            JS_ASSERT(sp - fp->spbase >= 2);
+            slot = GET_UINT16(pc);
+            JS_ASSERT(slot + 1 < (uintN)depth);
+            fp->spbase[slot] = POP_OPND();
+          END_CASE(JSOP_SETLOCALPOP)
 
           BEGIN_CASE(JSOP_INSTANCEOF)
             SAVE_SP_AND_PC(fp);
@@ -6009,7 +6024,11 @@ interrupt:
             JS_ASSERT(op == JSOP_LEAVEBLOCKEXPR
                       ? fp->spbase + OBJ_BLOCK_DEPTH(cx, obj) == sp - 1
                       : fp->spbase + OBJ_BLOCK_DEPTH(cx, obj) == sp);
+
             *chainp = OBJ_GET_PARENT(cx, obj);
+            JS_ASSERT(chainp != &fp->blockChain ||
+                      !*chainp ||
+                      OBJ_GET_CLASS(cx, *chainp) == &js_BlockClass);
           }
           END_CASE(JSOP_LEAVEBLOCK)
 
@@ -6063,15 +6082,12 @@ interrupt:
 #if JS_HAS_GENERATORS
           BEGIN_CASE(JSOP_STARTITER)
             /*
-             * Start of a for-in or for-each-in loop: clear flags and push two
-             * nulls.  If this is a for-each-in loop, JSOP_FOREACH will follow
-             * and set flags = JSITER_FOREACH.  Push null instead of undefined
-             * so that code at do_forinloop: can tell that this opcode pushed
-             * the iterator slot, rather than a backward compatible JSOP_PUSH
-             * that was emitted prior to the introduction of the new iteration
-             * protocol.
+             * Start of a for-in or for-each-in loop: push two nulls.  Push
+             * null instead of undefined so that code at do_forinloop: can
+             * tell that this opcode pushed the iterator slot, rather than a
+             * backward compatible JSOP_PUSH that was emitted prior to the
+             * introduction of the new iteration protocol.
              */
-            flags = 0;
             sp[0] = sp[1] = JSVAL_NULL;
             sp += 2;
           END_CASE(JSOP_STARTITER)
@@ -6108,6 +6124,13 @@ interrupt:
 
           BEGIN_CASE(JSOP_YIELD)
             ASSERT_NOT_THROWING(cx);
+            if (fp->flags & JSFRAME_FILTERING) {
+                /* FIXME: bug 309894 -- fix to eliminate this error. */
+                JS_ReportErrorNumberUC(cx, js_GetErrorMessage, NULL,
+                                       JSMSG_YIELD_FROM_FILTER);
+                ok = JS_FALSE;
+                goto out;
+            }
             if (FRAME_TO_GENERATOR(fp)->state == JSGEN_CLOSING) {
                 str = js_DecompileValueGenerator(cx, JSDVG_SEARCH_STACK,
                                                  fp->argv[-2], NULL);
@@ -6307,6 +6330,12 @@ no_catch:;
      * Restore the previous frame's execution state.
      */
     if (JS_LIKELY(mark != NULL)) {
+        /* If fp has blocks on its scope chain, home their locals now. */
+        if (fp->flags & JSFRAME_POP_BLOCKS) {
+            SAVE_SP_AND_PC(fp);
+            ok &= PutBlockObjects(cx, fp);
+        }
+
         fp->sp = fp->spbase;
         fp->spbase = NULL;
         js_FreeRawStack(cx, mark);
