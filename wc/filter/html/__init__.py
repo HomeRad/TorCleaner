@@ -79,279 +79,278 @@ is_other_namespace = re.compile(r"^(?i)[-a-z_.]+:").search
 filter_tag_garbage = re.compile(r"(?P<tag>^[a-z][-a-z0-9.:_]*)").search
 
 # HTML 4.01 tags
-HtmlTags = {
-    "a" : None,
-    "abbr" : None,
-    "acronym" : None,
-    "address" : None,
-    "applet" : None,
-    "area" : None,
-    "b" : None,
-    "base" : None,
-    "basefont" : None,
-    "bdo" : None,
-    "big" : None,
-    "blockquote" : None,
-    "body" : None,
-    "br" : None,
-    "button" : None,
-    "caption" : None,
-    "center" : None,
-    "cite" : None,
-    "code" : None,
-    "col" : None,
-    "colgroup" : None,
-    "dd" : None,
-    "del" : None,
-    "dfn" : None,
-    "dir" : None,
-    "div" : None,
-    "dl" : None,
-    "dt" : None,
-    "em" : None,
-    "fieldset" : None,
-    "font" : None,
-    "form" : None,
-    "frame" : None,
-    "frameset" : None,
-    "h1" : None,
-    "h2" : None,
-    "h3" : None,
-    "h4" : None,
-    "h5" : None,
-    "h6" : None,
-    "head" : None,
-    "hr" : None,
-    "html" : None,
-    "i" : None,
-    "iframe" : None,
-    "img" : None,
-    "input" : None,
-    "ins" : None,
-    "isindex" : None,
-    "kbd" : None,
-    "label" : None,
-    "legend" : None,
-    "li" : None,
-    "link" : None,
-    "map" : None,
-    "menu" : None,
-    "meta" : None,
-    "noframes" : None,
-    "noscript" : None,
-    "object" : None,
-    "ol" : None,
-    "optgroup" : None,
-    "option" : None,
-    "p" : None,
-    "param" : None,
-    "pre" : None,
-    "q" : None,
-    "s" : None,
-    "samp" : None,
-    "script" : None,
-    "select" : None,
-    "small" : None,
-    "span" : None,
-    "strike" : None,
-    "strong" : None,
-    "style" : None,
-    "sub" : None,
-    "sup" : None,
-    "table" : None,
-    "tbody" : None,
-    "td" : None,
-    "textarea" : None,
-    "tfoot" : None,
-    "th" : None,
-    "thead" : None,
-    "title" : None,
-    "tr" : None,
-    "tt" : None,
-    "u" : None,
-    "ul" : None,
-    "var" : None,
-}
+HtmlTags = set([
+    "a",
+    "abbr",
+    "acronym",
+    "address",
+    "applet",
+    "area",
+    "b",
+    "base",
+    "basefont",
+    "bdo",
+    "big",
+    "blockquote",
+    "body",
+    "br",
+    "button",
+    "caption",
+    "center",
+    "cite",
+    "code",
+    "col",
+    "colgroup",
+    "dd",
+    "del",
+    "dfn",
+    "dir",
+    "div",
+    "dl",
+    "dt",
+    "em",
+    "fieldset",
+    "font",
+    "form",
+    "frame",
+    "frameset",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "head",
+    "hr",
+    "html",
+    "i",
+    "iframe",
+    "img",
+    "input",
+    "ins",
+    "isindex",
+    "kbd",
+    "label",
+    "legend",
+    "li",
+    "link",
+    "map",
+    "menu",
+    "meta",
+    "noframes",
+    "noscript",
+    "object",
+    "ol",
+    "optgroup",
+    "option",
+    "p",
+    "param",
+    "pre",
+    "q",
+    "s",
+    "samp",
+    "script",
+    "select",
+    "small",
+    "span",
+    "strike",
+    "strong",
+    "style",
+    "sub",
+    "sup",
+    "table",
+    "tbody",
+    "td",
+    "textarea",
+    "tfoot",
+    "th",
+    "thead",
+    "title",
+    "tr",
+    "tt",
+    "u",
+    "ul",
+    "var",
+])
 
 # MathML tags
-MathTags = {
-    "abs" : None,
-    "and" : None,
-    "annotation" : None,
-    "annotation-xml" : None,
-    "apply" : None,
-    "arccos" : None,
-    "arcsin" : None,
-    "arctan" : None,
-    "bvar" : None,
-    "ci" : None,
-    "cn" : None,
-    "compose" : None,
-    "condition" : None,
-    "conjugate" : None,
-    "cos" : None,
-    "cosh" : None,
-    "cot" : None,
-    "coth" : None,
-    "csc" : None,
-    "csch" : None,
-    "declare" : None,
-    "degree" : None,
-    "determinant" : None,
-    "diff" : None,
-    "divide" : None,
-    "eq" : None,
-    "exists" : None,
-    "exp" : None,
-    "factorial" : None,
-    "fn" : None,
-    "forall" : None,
-    "gcd" : None,
-    "geq" : None,
-    "gt" : None,
-    "ident" : None,
-    "implies" : None,
-    "in" : None,
-    "int" : None,
-    "intersect" : None,
-    "interval" : None,
-    "inverse" : None,
-    "lambda" : None,
-    "leq" : None,
-    "limit" : None,
-    "list" : None,
-    "ln" : None,
-    "log" : None,
-    "logbase" : None,
-    "lowlimit" : None,
-    "lt" : None,
-    "maction" : None,
-    "maligngroup" : None,
-    "malignmark" : None,
-    "math" : None,
-    "matrix" : None,
-    "matrixrow" : None,
-    "max" : None,
-    "mean" : None,
-    "median" : None,
-    "merror" : None,
-    "mfenced" : None,
-    "mfrac" : None,
-    "mi" : None,
-    "min" : None,
-    "minus" : None,
-    "mmultiscripts" : None,
-    "mn" : None,
-    "mo" : None,
-    "mode" : None,
-    "moment" : None,
-    "mover" : None,
-    "mpadded" : None,
-    "mphantom" : None,
-    "mprescripts" : None,
-    "mroot" : None,
-    "mrow" : None,
-    "ms" : None,
-    "mspace" : None,
-    "msqrt" : None,
-    "mstyle" : None,
-    "msub" : None,
-    "msubsup" : None,
-    "msup" : None,
-    "mtable" : None,
-    "mtd" : None,
-    "mtext" : None,
-    "mtr" : None,
-    "munder" : None,
-    "munderover" : None,
-    "neq" : None,
-    "none" : None,
-    "not" : None,
-    "notin" : None,
-    "notprsubset" : None,
-    "notsubset" : None,
-    "or" : None,
-    "partialdiff" : None,
-    "plus" : None,
-    "power" : None,
-    "product" : None,
-    "prsubset" : None,
-    "quotient" : None,
-    "reln" : None,
-    "rem" : None,
-    "root" : None,
-    "sdev" : None,
-    "sec" : None,
-    "sech" : None,
-    "selector" : None,
-    "semantics" : None,
-    "sep" : None,
-    "set" : None,
-    "setdiff" : None,
-    "sin" : None,
-    "sinh" : None,
-    "subset" : None,
-    "sum" : None,
-    "tan" : None,
-    "tanh" : None,
-    "tendsto" : None,
-    "times" : None,
-    "transpose" : None,
-    "union" : None,
-    "uplimit" : None,
-    "variance" : None,
-    "vector" : None,
-    "xor" : None,
-}
+MathTags = set([
+    "abs",
+    "and",
+    "annotation",
+    "annotation-xml",
+    "apply",
+    "arccos",
+    "arcsin",
+    "arctan",
+    "bvar",
+    "ci",
+    "cn",
+    "compose",
+    "condition",
+    "conjugate",
+    "cos",
+    "cosh",
+    "cot",
+    "coth",
+    "csc",
+    "csch",
+    "declare",
+    "degree",
+    "determinant",
+    "diff",
+    "divide",
+    "eq",
+    "exists",
+    "exp",
+    "factorial",
+    "fn",
+    "forall",
+    "gcd",
+    "geq",
+    "gt",
+    "ident",
+    "implies",
+    "in",
+    "int",
+    "intersect",
+    "interval",
+    "inverse",
+    "lambda",
+    "leq",
+    "limit",
+    "list",
+    "ln",
+    "log",
+    "logbase",
+    "lowlimit",
+    "lt",
+    "maction",
+    "maligngroup",
+    "malignmark",
+    "math",
+    "matrix",
+    "matrixrow",
+    "max",
+    "mean",
+    "median",
+    "merror",
+    "mfenced",
+    "mfrac",
+    "mi",
+    "min",
+    "minus",
+    "mmultiscripts",
+    "mn",
+    "mo",
+    "mode",
+    "moment",
+    "mover",
+    "mpadded",
+    "mphantom",
+    "mprescripts",
+    "mroot",
+    "mrow",
+    "ms",
+    "mspace",
+    "msqrt",
+    "mstyle",
+    "msub",
+    "msubsup",
+    "msup",
+    "mtable",
+    "mtd",
+    "mtext",
+    "mtr",
+    "munder",
+    "munderover",
+    "neq",
+    "none",
+    "not",
+    "notin",
+    "notprsubset",
+    "notsubset",
+    "or",
+    "partialdiff",
+    "plus",
+    "power",
+    "product",
+    "prsubset",
+    "quotient",
+    "reln",
+    "rem",
+    "root",
+    "sdev",
+    "sec",
+    "sech",
+    "selector",
+    "semantics",
+    "sep",
+    "set",
+    "setdiff",
+    "sin",
+    "sinh",
+    "subset",
+    "sum",
+    "tan",
+    "tanh",
+    "tendsto",
+    "times",
+    "transpose",
+    "union",
+    "uplimit",
+    "variance",
+    "vector",
+    "xor",
+])
 
 # old tags
-OldTags = {
-    "bgsound": None, # IE 2.x-6.x
-    "blink" : None, # Netscape Navigator
-    "embed" : None, # Netscape Navigator 4
-    "ilayer" : None, # Netscape Navigator 4
-    "keygen" : None, # Netscape Navigator
-    "layer" : None, # Netscape Navigator 4
-    "listing" : None, # HTML 3.2
-    "marquee" : None, # IE 4.x
-    "multicol" : None, # Netscape Navigator 3
-    "nobr" : None, # Netscape Navigator 1.1
-    "nbr" : None, # deprecated, unknown origin
-    "noembed" : None, # Netscape Navigator 4
-    "nolayer" : None, # Netscape Navigator 4
-    "plaintext" : None, # HTML 3.2
-    "spacer" : None, # Netscape Navigator 3
-    "wbr" : None, # Netscape Navigator 1.1
-    "xmp" : None, # HTML 3.2
-}
+OldTags = set([
+    "bgsound", # IE 2.x-6.x
+    "blink", # Netscape Navigator
+    "embed", # Netscape Navigator 4
+    "ilayer", # Netscape Navigator 4
+    "keygen", # Netscape Navigator
+    "layer", # Netscape Navigator 4
+    "listing", # HTML 3.2
+    "marquee", # IE 4.x
+    "multicol", # Netscape Navigator 3
+    "nobr", # Netscape Navigator 1.1
+    "nbr", # deprecated, unknown origin
+    "noembed", # Netscape Navigator 4
+    "nolayer", # Netscape Navigator 4
+    "plaintext", # HTML 3.2
+    "spacer", # Netscape Navigator 3
+    "wbr", # Netscape Navigator 1.1
+    "xmp", # HTML 3.2
+])
 
 # known invalid tags (to prevent correction)
-KnownInvalidTags = {
-    "cadv" : None, # www.heise.de
-    "contentbanner" : None, # www.heise.de
-    "forum" : None, # www.heise.de
-    "heiseadvert" : None, # www.heise.de
-    "heisetext" : None, # www.heise.de
-    "image": None, # imdb.com
-    "skyscraper" : None, # www.heise.de
-    "u2uforen" : None, # www.heise.de
-    "update" : None, # slashdot.org
-    "htmlpromo" : None, # www.pcworld.com
-    "noindex": None, # atomz.com software
-    "quote": None, # xhtml 2.0 (draft)
-    "csscriptdict": None, # GoLive
-    "csactiondict": None, # GoLive
-    "csobj": None, # GoLive
-    "x-claris-window": None, # Claris
-    "x-claris-tagview": None, # Claris
-    "x-sas-window": None, # Claris
-    "nyt_copyright": None, # Times
-}
+KnownInvalidTags = set([
+    "cadv", # www.heise.de
+    "contentbanner", # www.heise.de
+    "forum", # www.heise.de
+    "heiseadvert", # www.heise.de
+    "heisetext", # www.heise.de
+    "image", # imdb.com
+    "skyscraper", # www.heise.de
+    "u2uforen", # www.heise.de
+    "update", # slashdot.org
+    "htmlpromo", # www.pcworld.com
+    "noindex", # atomz.com software
+    "quote", # xhtml 2.0 (draft)
+    "csscriptdict", # GoLive
+    "csactiondict", # GoLive
+    "csobj", # GoLive
+    "x-claris-window", # Claris
+    "x-claris-tagview", # Claris
+    "x-sas-window", # Claris
+    "nyt_copyright", # Times
+])
 
 # tags to ignore
-IgnoreTags = HtmlTags.keys() + MathTags.keys() + OldTags.keys() + \
-   KnownInvalidTags.keys()
-CheckTags = HtmlTags.keys() + OldTags.keys() + MathTags.keys()
+IgnoreTags = HtmlTags | MathTags | OldTags | KnownInvalidTags
+CheckTags = HtmlTags | OldTags | MathTags
 
 def check_spelling (tag, url):
     """
