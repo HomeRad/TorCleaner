@@ -2222,7 +2222,14 @@ js_Interpret(JSContext *cx, jsbytecode *pc, jsval *result)
      * jump is distributed throughout interruptJumpTable, and comes back to
      * the interrupt label.  The dispatch on op is through normalJumpTable.
      * The trick is LOAD_INTERRUPT_HANDLER setting jumpTable appropriately.
+     *
+     * It is important that "op" be initialized before the interrupt label
+     * because it is possible for "op" to be specially assigned during the
+     * normally processing of an opcode while looping (in particular, this
+     * happens in JSOP_TRAP while debugging).  We rely on DO_NEXT_OP to
+     * correctly manage "op" in all other cases.
      */
+    op = (JSOp) *pc;
     if (interruptHandler) {
 interrupt:
         SAVE_SP_AND_PC(fp);
@@ -2246,7 +2253,7 @@ interrupt:
         LOAD_INTERRUPT_HANDLER(rt);
     }
 
-    op = (JSOp) *pc;
+    JS_ASSERT((uintN)op < (uintN)JSOP_LIMIT);
     JS_EXTENSION_(goto *normalJumpTable[op]);
 
 #else  /* !JS_THREADED_INTERP */
@@ -3691,7 +3698,8 @@ interrupt:
                      * or decrement result, if converted to a jsdouble from
                      * a non-number value, from GC nesting in the setter.
                      */
-                    vp = sp++;
+                    vp = sp;
+                    PUSH(JSVAL_VOID);
                     SAVE_SP(fp);
                     --i;
                 }
@@ -5056,13 +5064,13 @@ interrupt:
             obj = ATOM_TO_OBJECT(atom);
 
             /* If re-parenting, push a clone of the function object. */
+            SAVE_SP_AND_PC(fp);
             parent = js_GetScopeChain(cx, fp);
             if (!parent) {
                 ok = JS_FALSE;
                 goto out;
             }
             if (OBJ_GET_PARENT(cx, obj) != parent) {
-                SAVE_SP_AND_PC(fp);
                 obj = js_CloneFunctionObject(cx, obj, parent);
                 if (!obj) {
                     ok = JS_FALSE;
