@@ -28,11 +28,12 @@ def _main (args):
     import wc.configuration
     wc.configuration.init()
     import wc.magic
-    fp = open(args[0])
-    try:
-        print repr(wc.magic.classify(fp))
-    finally:
-        fp.close()
+    for arg in args:
+        fp = open(arg)
+        try:
+            print repr(wc.magic.classify(fp))
+        finally:
+            fp.close()
 
 
 if __name__ == '__main__':
