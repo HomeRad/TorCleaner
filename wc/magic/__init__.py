@@ -86,7 +86,7 @@ class Magic (object):
     """
 
     data_size = {'byte':1, 'short':2, 'long':4, 'string':1, 'stringnocase':1,
-                 'pstring':1, 'date': 4, 'ldate': 4, 'regex':1}
+              'pstring':1, 'date': 4, 'ldate': 4, 'regex':1, 'regexnocase':1}
     type_size = {'b':1, 'B':1, 's':2, 'S':2, 'l':4, 'L':5}
 
 
@@ -218,12 +218,17 @@ class Magic (object):
         # XXX: white space compaction option not implemented
         # XXX: Not very used ...
         if kind.startswith("string/"):
-            # XXX todo
+            # XXX todo: support b and B
             if "c" in kind[7:]:
                 kind = "stringnocase"
             else:
                 kind = "string"
-        # XXX: No idea what are those extension
+        elif kind.startswith("regex/"):
+            if "c" in kind[6:]:
+                kind = "regexnocase"
+            else:
+                kind = "regex"
+        # XXX: No idea what are those extensions
         elif kind.startswith("ldate-"):
             # XXX todo
             #NOT_DONE_YET = kind[6:]
@@ -248,7 +253,7 @@ class Magic (object):
     def _data (self, kind, result):
         if kind in ("string", "regex"):
             return result.replace("\\", "")
-        elif kind == "stringnocase":
+        elif kind in ("stringnocase", "regexnocase"):
             return result.replace("\\", "").lower()
         pos = 0
         data = list('')
@@ -441,6 +446,15 @@ class Magic (object):
             raise IOError("out of file access")
         return data
 
+    def _readlines (self, fp, number):
+        lines = []
+        for i in xrange(number):
+            data = fp.readline()
+            if not data:
+                raise IOError("out of file access")
+            lines.append(data)
+        return "\n".join(lines)
+
     def _convert (self, kind, endian, data):
         # Can raise StandardError and IOError
         value = data
@@ -478,10 +492,10 @@ class Magic (object):
         elif kind == 'ldate':
             # XXX: Not done yet
             pass
-        elif kind == 'string':
+        elif kind in ('string', 'regex'):
             # Nothing to do
             pass
-        elif kind == 'stringnocase':
+        elif kind in ('stringnocase', 'regexnocase'):
             value = data.lower()
         elif kind == 'pstring':
             # Not done here anymore
@@ -493,9 +507,6 @@ class Magic (object):
             #        value = self._read(f,size)
             #        leng = size
             #        kind = "string"
-        elif kind == 'regex':
-            # XXX: Not done yet
-            pass
         else:
             raise StandardError("Type %r not recognised" % kind)
         return value
@@ -603,7 +614,10 @@ class Magic (object):
 
                 # Make sure we can read the data at the offset position
                 f.seek(offset)
-                extract = self._read(f, leng)
+                if kind.startswith("regex"):
+                    extract = self._readlines(f, offset)
+                else:
+                    extract = self._read(f, leng)
                 if not extract:
                     raise Failed("Could not extract %d bytes from offset %d" %
                                  (leng, offset))
@@ -619,6 +633,8 @@ class Magic (object):
                     # If we are comparing string the string is already read
                     if kind.startswith('string'):
                         success = (data==value)
+                    elif kind.startswith('regex'):
+                        success = re.compile(data).search(value)
                     elif kind == 'pstring':
                         raise Failed("pstring not implemented")
                     else:
