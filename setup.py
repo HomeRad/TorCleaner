@@ -612,11 +612,11 @@ if win_compiling:
 else:
     define_macros = []
 extensions.append(Extension('wc.js.jslib',
-                  sources=['wc/js/jslib.c'],
+                  sources=[normpath('wc/js/jslib.c')],
                   include_dirs = include_dirs + ['libjs'],
                   define_macros = define_macros,
                   extra_compile_args = extra_compile_args,
-                  extra_objects = ['libjs/.libs/libjs.a'],
+                  extra_objects = [normpath('libjs/.libs/libjs.a')],
                   library_dirs = library_dirs,
                   libraries = libraries,
                  ))
