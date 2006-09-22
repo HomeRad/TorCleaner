@@ -39,6 +39,9 @@ def is_preferred_mime (mime, origmime):
     """
     if mime == origmime:
         return False
+    # keep specific applications
+    if origmime.startswith("application/"):
+        return False
     # New mime could be same as orig, but without appendix. Example:
     # mime="text/html", origmime="text/html; charset=UTF8"
     if origmime.startswith(mime+";"):
