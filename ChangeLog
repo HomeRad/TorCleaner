@@ -1,4 +1,4 @@
-2.40 "Lucky Number Slevin" (released x.x.xxxx)
+2.40 "Lucky Number Slevin" (released x.x.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
     modification date.
@@ -14,6 +14,14 @@
     Opera.
     Type: bugfix
     Changed: wc/proxy/HttpServer.py
+
+  * Fixed the stripping of the MIME return value.
+    Type: bugfix
+    Changed: wc/magic/__init__.py
+
+  * Implement the magic(5) regex match type.
+    Type: feature
+    Changed: wc/magic/__init__.py
 
 2.39 "Firefly" (released 9.5.2006)
 
