@@ -97,11 +97,11 @@
 
 # xml-based formats!
 
-0      string          \<?xml
->0     string          \<?xml
->>38   string          \<\!DOCTYPE\040svg      image/svg+xml
->>38   string/cB       \<\!DOCTYPE\ html       text/html
->0     string          \<?xml                  text/xml
+0	string		\<?xml
+>0	string		\<?xml
+>>2	regex/c		\<!DOCTYPE\ svg		image/svg+xml
+>>2	regex/c		\<!DOCTYPE\ html	text/html
+>0	string		\<?xml			text/xml
 
 
 #------------------------------------------------------------------------------
