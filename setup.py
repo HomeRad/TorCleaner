@@ -549,6 +549,16 @@ class MyClean (clean, object):
         clean.run(self)
 
 
+class MySdist (sdist, object):
+    """
+    Custom sdist command.
+    """
+
+    def get_file_list (self):
+        super(MySdist, self).get_file_list()
+        self.filelist.append("MANIFEST")
+
+
 # global include dirs
 include_dirs = []
 # global macros
@@ -728,6 +738,7 @@ setup (name = "webcleaner",
                    'build_ext': MyBuildExt,
                    'build': MyBuild,
                    'clean': MyClean,
+                   'sdist': MySdist,
                   },
        scripts = scripts,
        data_files = data_files,
