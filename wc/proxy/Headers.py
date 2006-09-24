@@ -24,9 +24,7 @@ import time
 import urlparse
 import mimetypes
 
-import wc
 import wc.log
-import wc.http
 import wc.http.header
 import wc.http.date
 import wc.magic
@@ -369,7 +367,7 @@ def server_set_encoding_headers (server, filename=None):
                 server.decoders.append(DeflateStream.DeflateStream())
             else:
                 wc.log.warn(wc.LOG_PROXY,
-                            "unsupported content encoding in %r", encoding)
+                            "unsupported content encoding in %r", cenc)
         # remove no-transform cache control
         if server.headers.get('Cache-Control', '').lower() == 'no-transform':
             to_remove.add('Cache-Control')
