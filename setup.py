@@ -39,6 +39,7 @@ from distutils.command.install_data import install_data
 from distutils.command.build_ext import build_ext
 from distutils.command.build import build
 from distutils.command.clean import clean
+from distutils.command.sdist import sdist
 from distutils.dir_util import remove_tree
 from distutils.file_util import write_file
 from distutils.sysconfig import get_python_version
