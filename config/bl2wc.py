@@ -15,8 +15,6 @@ import re
 import urllib2
 import gzip
 import tarfile
-import wc
-import wc.configuration
 import wc.configuration.confparse
 import wc.XmlUtils
 
