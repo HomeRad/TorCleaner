@@ -99,8 +99,9 @@
 
 0	string		\<?xml
 >0	string		\<?xml
->>2	regex/c		\<!DOCTYPE\ svg		image/svg+xml
->>2	regex/c		\<!DOCTYPE\ html	text/html
+>>3	regex/c		\<!DOCTYPE\ svg		image/svg+xml
+>>3	regex/c		\<!DOCTYPE\ html	text/html
+>>3	regex/c		\<rss			application/rss+xml
 >0	string		\<?xml			text/xml
 
 
