@@ -24,7 +24,6 @@ import os
 import stat
 import mimetypes
 import cStringIO as StringIO
-import wc
 import wc.http.header
 
 def _main ():

@@ -21,10 +21,8 @@ Filter a given file in response modify stage.
 
 import sys
 import os
-import wc
 import wc.configuration
 import wc.filter
-import wc.proxy
 import wc.proxy.mainloop
 import wc.proxy.timer
 import wc.proxy.dns_lookups

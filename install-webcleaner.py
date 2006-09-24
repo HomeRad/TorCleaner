@@ -65,7 +65,6 @@ def install_service ():
     """
     Install WebCleaner NT service.
     """
-    import wc
     import wc.win32start
     oldargs = sys.argv
     print enc(_("Installing %s service...") % wc.AppName)
@@ -78,7 +77,6 @@ def remove_service ():
     """
     Remove WebCleaner NT service.
     """
-    import wc
     import wc.win32start
     oldargs = sys.argv
     print enc(_("Removing %s service...") % wc.AppName)
@@ -91,7 +89,6 @@ def start_service ():
     """
     Start WebCleaner NT service.
     """
-    import wc
     import wc.win32start
     print enc(_("Starting %s proxy...") % wc.AppName)
     oldargs = sys.argv
@@ -104,7 +101,6 @@ def stop_service ():
     """
     Stop WebCleaner NT service (if it is running).
     """
-    import wc
     import wc.win32start
     print enc(_("Stopping %s proxy...") % wc.AppName)
     oldargs = sys.argv
@@ -348,7 +344,6 @@ def open_browser_config ():
     """
     Open the WebCleaner administration web interface.
     """
-    import wc
     import wc.configuration
     state = state_nt_service(wc.AppName)
     while state == win32service.SERVICE_START_PENDING:

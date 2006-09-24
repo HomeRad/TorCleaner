@@ -21,7 +21,6 @@ Test block filter.
 
 import sys
 import os
-import wc
 import wc.http.header
 
 def _main ():
