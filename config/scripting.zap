@@ -182,7 +182,7 @@
   <replacement part="attr"/>
 </htmlrewrite>
 
-<javascript sid="wc.304">
+<javascript sid="wc.304" disable="1">
   <title lang="de">Aktiviere JavaScript Filter</title>
   <title lang="en">Activate JavaScript Filter</title>
   <description lang="en">The HTML parser will parse and execute Javascript to remove Popups, and delete JS advertising text written with document.write()</description>
