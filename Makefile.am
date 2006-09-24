@@ -19,8 +19,6 @@ HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
 SPLINTOPTS := +posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
-PYLINT := env PYTHONPATH=. PYLINTRC=config/pylintrc $(PYTHON) /usr/bin/pylint
-PYLINTOPTS := --disable-msg-cat=C,R,W
 # all Python files in the source
 PYFILES = $(wildcard webcleaner webcleaner-certificates *.py \
 	    test/*.py config/*.py) wc tests
@@ -174,13 +172,6 @@ homepage-zapper: md5sums
 	@for d in ads aggressive violence; do \
 	  cp config/blacklists/$$d/*.gz $(HTMLDIR)/htdocs/filter/blacklists/$$d/; \
 	done
-
-.PHONY: pylint
-pylint: localbuild
-	$(PYLINT) $(PYLINTOPTS) $(PYFILES) | \
-	  grep -v win32start | \
-	  grep -v "Undefined variable '\(_\|_n\)'" | \
-	  uniq
 
 .PHONY: pyflakes
 pyflakes:
