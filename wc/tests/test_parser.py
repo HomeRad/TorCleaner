@@ -18,7 +18,6 @@
 Test html parsing.
 """
 
-import wc.HtmlParser
 import wc.HtmlParser.htmlsax
 import wc.HtmlParser.htmllib
 import cStringIO as StringIO

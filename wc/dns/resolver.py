@@ -25,7 +25,6 @@ import sys
 import time
 import encodings.idna
 
-import wc
 import wc.log
 import wc.dns.exception
 import wc.dns.message
