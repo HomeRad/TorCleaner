@@ -17,7 +17,6 @@
 
 import unittest
 import base64
-import wc
 import wc.configuration
 import wc.proxy.auth
 

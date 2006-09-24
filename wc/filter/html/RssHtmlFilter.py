@@ -21,7 +21,6 @@ in an RSS reader.
 
 from StringIO import StringIO
 
-import wc
 import wc.log
 import wc.HtmlParser.htmllib
 import wc.HtmlParser.htmlsax

@@ -41,7 +41,6 @@ import socket
 import select
 import errno
 
-import wc
 import wc.configuration
 import wc.log
 import timer

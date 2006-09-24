@@ -23,7 +23,6 @@ import os
 import gzip
 import urllib
 
-import wc
 import wc.log
 import wc.configuration
 import wc.url

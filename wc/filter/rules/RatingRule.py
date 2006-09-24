@@ -18,7 +18,6 @@
 Filter according to rating rules.
 """
 
-import wc
 import wc.log
 import UrlRule
 import wc.XmlUtils

@@ -21,7 +21,6 @@ Support for different HTTP proxy authentication schemes.
 # default realm for authentication
 wc_realm = "unknown"
 
-import wc
 import wc.configuration
 import wc.log
 import wc.url

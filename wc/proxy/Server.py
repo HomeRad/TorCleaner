@@ -31,7 +31,6 @@ Server connections.
 
 import socket
 
-import wc
 import wc.decorators
 import wc.log
 import CodingConnection

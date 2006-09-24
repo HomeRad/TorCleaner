@@ -20,7 +20,6 @@ Test script to test filtering.
 
 import unittest
 import os
-import wc
 import wc.configuration
 import wc.filter.html.JSFilter
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY

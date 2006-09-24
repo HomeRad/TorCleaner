@@ -37,7 +37,6 @@ import socket
 import errno
 import os
 
-import wc
 import wc.decorators
 import wc.log
 import Dispatcher

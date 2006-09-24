@@ -21,7 +21,6 @@ Buffered HTML parser.
 from StringIO import StringIO
 import codecs
 import wc.log
-import wc.filter
 import wc.filter.html
 import wc.HtmlParser.htmlsax
 

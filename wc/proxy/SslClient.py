@@ -18,7 +18,6 @@
 SSL client connection.
 """
 
-import wc
 import wc.webgui.webconfig
 import HttpClient
 import ClientServerMatchmaker

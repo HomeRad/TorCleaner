@@ -30,7 +30,6 @@ import time
 
 from parse import parse_auth
 
-import wc
 import wc.log
 # the default realm
 from wc.proxy.auth import wc_realm

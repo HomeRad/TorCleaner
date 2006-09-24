@@ -27,7 +27,6 @@ import re
 import cPickle
 import pickle
 
-import wc
 import wc.configuration
 import convert
 

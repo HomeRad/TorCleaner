@@ -25,7 +25,6 @@ import sets
 import stat
 import glob
 
-import wc
 import wc.log
 import wc.ip
 import wc.decorators

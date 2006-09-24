@@ -18,7 +18,6 @@
 Numeric constants for XML/HTML document parts.
 """
 
-import wc
 import wc.log
 import wc.XmlUtils
 

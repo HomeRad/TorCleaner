@@ -22,7 +22,6 @@ import re
 import string
 import sets
 
-import wc
 import wc.log
 import wc.proxy.Headers
 import wc.filter

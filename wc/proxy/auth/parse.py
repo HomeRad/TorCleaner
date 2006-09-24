@@ -18,7 +18,6 @@
 Parse basic and digest HTTP auth strings into key/value tokens.
 """
 
-import wc
 import wc.log
 
 separators = ("()<>@,;:\\\"/[]?={} \t")

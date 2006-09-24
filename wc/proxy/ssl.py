@@ -20,7 +20,6 @@ SSL related utility functions.
 
 import os
 
-import wc
 import wc.log
 from OpenSSL import SSL, crypto
 

@@ -40,7 +40,6 @@ import struct
 import re
 import pprint
 
-import wc
 import wc.log
 import wc.proxy
 import timer

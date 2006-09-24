@@ -35,7 +35,6 @@ import cgi
 import urlparse
 import cStringIO as StringIO
 
-import wc
 import wc.log
 import wc.strformat
 import wc.configuration
@@ -54,7 +53,6 @@ import HttpProxyClient
 if wc.HasCrypto:
     from auth import ntlm
 import wc.filter
-import wc.webgui
 import wc.webgui.webconfig
 import wc.google
 

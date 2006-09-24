@@ -22,7 +22,6 @@ import socket
 import os
 import sys
 
-import wc
 import wc.configuration
 import wc.fileutil
 import wc.strformat

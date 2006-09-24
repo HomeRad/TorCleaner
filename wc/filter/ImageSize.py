@@ -21,7 +21,6 @@ Filter images by size.
 import os
 import cStringIO as StringIO
 
-import wc
 import wc.log
 import wc.configuration
 import wc.filter

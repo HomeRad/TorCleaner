@@ -49,7 +49,6 @@ properly.
 
 import cgi
 import os
-import wc
 import wc.log
 import wc.configuration
 import wc.filter.rules

@@ -45,7 +45,6 @@ import random
 import struct
 import time
 
-import wc
 import wc.log
 from Crypto.Hash import MD4
 from Crypto.Cipher import DES

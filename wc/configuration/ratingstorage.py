@@ -21,7 +21,6 @@ import os
 import cPickle as pickle
 import urlparse
 
-import wc
 import wc.log
 import wc.url
 

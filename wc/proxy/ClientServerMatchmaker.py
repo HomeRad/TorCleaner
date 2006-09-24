@@ -32,7 +32,6 @@ Mediator between client and server connection objects.
 import socket
 import cStringIO as StringIO
 
-import wc
 import wc.log
 import wc.configuration
 import wc.url

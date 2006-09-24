@@ -21,7 +21,6 @@ Compress documents on-the-fly with zlib.
 import struct
 import time
 import zlib
-import wc
 import wc.log
 import wc.filter
 import Filter

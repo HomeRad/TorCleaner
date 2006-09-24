@@ -19,7 +19,6 @@ Reduce big images to JPGs to save bandwidth.
 """
 
 import cStringIO as StringIO
-import wc
 import wc.filter
 import Filter
 import wc.proxy.Headers

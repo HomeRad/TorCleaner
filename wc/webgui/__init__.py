@@ -23,7 +23,6 @@ import re
 import urllib
 import urlparse
 
-import wc
 import wc.configuration
 import wc.i18n
 import wc.log

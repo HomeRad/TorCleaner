@@ -19,7 +19,6 @@ Apply rule to specific MIME types.
 """
 
 import re
-import wc
 import Rule
 import wc.XmlUtils
 

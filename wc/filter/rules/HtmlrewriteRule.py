@@ -22,7 +22,6 @@ import re
 import urllib
 from StringIO import StringIO
 
-import wc
 import wc.log
 import wc.XmlUtils
 import UrlRule

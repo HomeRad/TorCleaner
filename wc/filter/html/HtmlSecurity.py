@@ -26,7 +26,6 @@ by this module, you are encouraged to inform me with details.
 import re
 import urllib
 
-import wc
 import wc.log
 import wc.url
 

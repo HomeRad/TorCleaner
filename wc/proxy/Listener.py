@@ -30,7 +30,6 @@ TCP socket listener.
 """
 
 import socket
-import wc
 import wc.configuration
 import wc.log
 import Dispatcher

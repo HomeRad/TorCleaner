@@ -18,7 +18,6 @@
 SSL connection, usable for both client and server connections.
 """
 
-import wc
 import wc.log
 import Connection
 import OpenSSL.SSL

@@ -19,7 +19,6 @@ Handle encoding and decoding.
 """
 
 import cStringIO as StringIO
-import wc
 import wc.log
 import StatefulConnection
 from wc.decorators import notimplemented

@@ -23,7 +23,6 @@ import urllib
 import wc.HtmlParser
 import wc.url
 import wc.log
-import wc.filter
 import wc.filter.html
 import JSFilter
 import HtmlSecurity

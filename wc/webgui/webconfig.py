@@ -20,7 +20,6 @@ HTML configuration interface functions.
 
 import mimetypes
 
-import wc
 import wc.configuration
 import wc.i18n
 import wc.log

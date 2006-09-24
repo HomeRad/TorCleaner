@@ -35,7 +35,6 @@ chunk-data     = chunk-size(OCTET)
 trailer        = *(entity-header CRLF)
 """
 
-import wc
 import wc.log
 
 

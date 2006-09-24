@@ -19,7 +19,6 @@ Test script to test filtering.
 """
 import unittest
 import random
-import wc
 import wc.configuration
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 

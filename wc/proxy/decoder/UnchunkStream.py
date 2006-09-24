@@ -48,7 +48,6 @@ trailer        = *(entity-header CRLF)
 """
 
 import re
-import wc
 import wc.log
 import wc.http.header
 

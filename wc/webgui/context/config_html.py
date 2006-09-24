@@ -20,8 +20,8 @@ Parameters for config.html page.
 
 # be sure not to import something in the context namespace we do not want
 import base64
-import socket
 import os
+import socket
 from wc import AppName, Version, HasSsl
 from wc.configuration import config, filtermodules
 from wc.webgui.context import getval as _getval

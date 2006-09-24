@@ -19,7 +19,6 @@ Test rating routines.
 """
 
 import unittest
-import wc.rating
 import wc.rating.service.ratingformat
 
 

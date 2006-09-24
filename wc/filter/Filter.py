@@ -19,7 +19,6 @@ Basic filter class and routines.
 """
 
 import re
-import wc
 import wc.log
 
 

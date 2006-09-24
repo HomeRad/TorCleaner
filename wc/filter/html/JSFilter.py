@@ -21,17 +21,14 @@ Filter JavaScript.
 import re
 import urlparse
 
-import wc
 import wc.HtmlParser
 import wc.log
 import wc.filter
 import HtmlParser
 import wc.url
-import wc.proxy
 import wc.proxy.timer
 import wc.proxy.ClientServerMatchmaker
 import wc.proxy.Headers
-import wc.js
 import wc.js.jslib
 import wc.js.JSListener
 import wc.decorators

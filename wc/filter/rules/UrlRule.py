@@ -19,7 +19,6 @@ Apply rule to specific URLs.
 """
 
 import re
-import wc
 import MimeRule
 import wc.XmlUtils
 

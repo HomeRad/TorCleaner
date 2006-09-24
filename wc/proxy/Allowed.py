@@ -18,7 +18,6 @@
 Allowance classes to filter out invalid proxy requests.
 """
 
-import wc
 import wc.configuration
 
 

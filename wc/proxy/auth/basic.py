@@ -23,7 +23,6 @@ __all__ = ["get_basic_challenge", "parse_basic_challenge",
            "check_basic_credentials"]
 import base64
 
-import wc
 import wc.log
 # wc_realm is the default realm
 from wc.proxy.auth import wc_realm

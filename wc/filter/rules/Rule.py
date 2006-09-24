@@ -19,7 +19,6 @@ Basic rule class and routines.
 """
 
 import re
-import wc
 import wc.XmlUtils
 import wc.filter.rules
 

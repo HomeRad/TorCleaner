@@ -19,7 +19,6 @@ HTTP related utility functions.
 """
 
 import re
-import wc
 import wc.log
 import BaseHTTPServer
 

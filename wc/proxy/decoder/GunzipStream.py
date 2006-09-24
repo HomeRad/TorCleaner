@@ -36,7 +36,6 @@ but exports a proxy4 encoding interface:
  - flush()        => return everything else
 """
 
-import wc
 import wc.log
 import DeflateStream
 

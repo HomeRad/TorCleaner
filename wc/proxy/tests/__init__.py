@@ -48,7 +48,6 @@ import socket
 import sys
 import BaseHTTPServer
 import wc.dummy
-import wc.proxy
 import wc.proxy.decoder.UnchunkStream
 
 

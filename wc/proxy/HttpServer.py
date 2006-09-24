@@ -35,7 +35,6 @@ import re
 import urllib
 import cStringIO as StringIO
 
-import wc
 import wc.log
 import wc.strformat
 import wc.configuration
