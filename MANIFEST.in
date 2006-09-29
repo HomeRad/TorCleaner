@@ -1,6 +1,4 @@
-include README
-include CREDITS
-include TODO
+include README COPYING CREDITS TODO INSTALL ChangeLog
 include crossbuild.sh
 include webcleaner
 include install-webcleaner.py
