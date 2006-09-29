@@ -180,3 +180,9 @@ mailing list at the `subscription page`_ or read the `list archives`_.
    :width: 88
    :height: 31
 
+.. image:: http://sourceforge.net/images/project-support.jpg
+   :align: right
+   :target: http://sourceforge.net/donate/index.php?group_id=7692
+   :alt: Support This Project
+   :width: 88
+   :height: 32
