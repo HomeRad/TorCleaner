@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: calvin@users.sourceforge.net\n"
-"POT-Creation-Date: 2006-01-03 11:22+0100\n"
+"POT-Creation-Date: 2006-09-29 17:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,31 +18,31 @@ msgstr ""
 
 #. Type: string
 #. Default
-#: ../webcleaner.templates:3
+#: ../webcleaner.templates:1001
 msgid "8080"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../webcleaner.templates:4
-msgid "Default proxy port"
+#: ../webcleaner.templates:1002
+msgid "Default proxy port:"
 msgstr ""
 
 #. Type: string
 #. Description
-#: ../webcleaner.templates:4
+#: ../webcleaner.templates:1002
 msgid "This is the port number this proxy will listen on for requests."
 msgstr ""
 
 #. Type: password
 #. Description
-#: ../webcleaner.templates:9
-msgid "Administrator password"
+#: ../webcleaner.templates:2001
+msgid "Administrator password:"
 msgstr ""
 
 #. Type: password
 #. Description
-#: ../webcleaner.templates:9
+#: ../webcleaner.templates:2001
 msgid ""
 "The administrator password protects the web configuration frontend of "
 "WebCleaner."
@@ -50,12 +50,12 @@ msgstr ""
 
 #. Type: password
 #. Description
-#: ../webcleaner.templates:9
+#: ../webcleaner.templates:2001
 msgid "The default username is \"admin\" (without the quotes)."
 msgstr ""
 
 #. Type: password
 #. Description
-#: ../webcleaner.templates:9
+#: ../webcleaner.templates:2001
 msgid "You have to enter a non-empty password."
 msgstr ""

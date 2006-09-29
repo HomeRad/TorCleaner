@@ -1,12 +1,12 @@
 Template: webcleaner/port
 Type: string
 _Default: 8080
-_Description: Default proxy port
+_Description: Default proxy port:
  This is the port number this proxy will listen on for requests.
 
 Template: webcleaner/adminpass
 Type: password
-_Description: Administrator password
+_Description: Administrator password:
  The administrator password protects the web configuration frontend of
  WebCleaner.
  .
