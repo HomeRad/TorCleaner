@@ -1,4 +1,15 @@
-- Get the proxy to work with Opera and IE
+- use email.FeedParser instead of rfc822.Message()
+
+- Python 2.5 features
+  - The string and unicode methods startswith() and endswith() now accept
+    a tuple of prefixes/suffixes to look for. Implements RFE #1491485.
+  - Use Win32 API to implement os.{access,chdir,chmod,mkdir,remove,rename,rmdir,utime}.
+    As a result, these functions now raise WindowsError instead of OSError.
+
+- generic token split for header values of the form
+  val1;param, val2;param2, val3, ...
+
+- Get the proxy to work with IE
 
 - Preserve self.attr for HttpClient/HttpServer.py
 
@@ -15,15 +26,6 @@
     that Firefox is permitted to access the Web.
 
 - Think about using python-adns instead of the dnspython stuff.
-
-- Ajax-enabled web gui theme:
-  Since we require JavaScript for this theme, lots of goodies can be realized.
-  + no delete confirmation
-    http://www.d3eministry.net/wordpress/2006/03/23/147/
-  + inline editing
-    http://24ways.org/advent/edit-in-place-with-ajax
-  + zebra tables
-    http://www.alistapart.com/articles/zebratables/
 
 - Design improvments:
   + rounded corners
@@ -153,3 +155,4 @@
 - If the template system ever gets replaced, have a look at
   http://kid.lesscode.org/
 
+http://laurentszyster.be/blog/dns_client/
