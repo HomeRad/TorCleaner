@@ -2,14 +2,20 @@ Source: webcleaner
 Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@users.sourceforge.net>
+Build-Depends: python-all-dev (>= 2.3.5-11), debhelper (>= 5.0.37.2),
+ debconf (>= 1.2.9) | debconf-2.0, gettext, cdbs (>= 0.4.43),
+ python-central (>= 0.5), gcc (>= 4:4.1), libssp0-dev
+XS-Python-Standards-Version: 0.4
+XS-Python-Version: >= 2.4
 Standards-Version: 3.7.2.0
-Build-Depends: python2.4-dev, debhelper (>= 5), debconf (>= 1.2.9) | debconf-2.0, gettext, cdbs, python | python-dev | python-all-dev, gcc (>= 4:4.1), libssp0-dev
 
 Package: webcleaner
 Architecture: any
-Depends: python2.4, python2.4-pyopenssl, debconf (>= 1.2.9), runit (>= 1.3), webcleaner-common (>= ${Source-Version})
-Recommends: python2.4-imaging
-Suggests: python2.4-crypto, python2.4-psyco, clamav-daemon
+XB-Python-Version: ${python:Versions}
+Depends: ${python:Depends}, python-pyopenssl, debconf (>= 1.2.9), runit (>= 1.3), webcleaner-common (>= ${Source-Version})
+Provides: ${python:Provides}
+Recommends: python-imaging
+Suggests: python-crypto, python-psyco, clamav-daemon
 Description: a filtering HTTP proxy
  *** Unofficial package from calvin@users.sourceforge.net ***
  .

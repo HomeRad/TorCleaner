@@ -1,11 +1,12 @@
 #!/usr/bin/make -f
 # example debian/rules for cdbs packages
 
+DEB_PYTHON_SYSTEM=pycentral
+DEB_PYTHON_COMPILE_VERSION=2.4
+
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/class/python-distutils.mk
-
-DEB_PYTHON_COMPILE_VERSION=2.4
 
 PYTHON=python$(DEB_PYTHON_COMPILE_VERSION)
 BASE:=debian/webcleaner
@@ -14,7 +15,7 @@ SHAREDIR:=$(BASE)/usr/share/webcleaner
 ETCDIR:=$(BASE)/etc/webcleaner
 SERVICEDIR:=$(ETCDIR)/service
 
-DEB_CONFIGURE_EXTRA_FLAGS+=--enable-shared
+DEB_CONFIGURE_EXTRA_FLAGS+=--enable-shared --disable-static
 
 # exclude files with special permissions
 DEB_FIXPERMS_EXCLUDE+=/etc/webcleaner/webcleaner.conf /var/log/webcleaner
