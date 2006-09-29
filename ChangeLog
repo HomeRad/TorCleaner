@@ -1,4 +1,4 @@
-2.40 "Lucky Number Slevin" (released x.x.2006)
+2.40 "Lucky Number Slevin" (released 29.9.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
     modification date.
