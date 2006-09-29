@@ -15,7 +15,7 @@ $(wildcard *.png) \
 $(wildcard *.jpg) \
 $(wildcard *.ico)
 
-%.html: %.txt ../htmlnav.py ../bfknav.py
+%.html: %.txt ../htmlnav.py ../bfknav.py wc.css
 	$(DOCDIR)/rest2htmlnav --stylesheet-path=wc.css --time $< $@
 
 nav: all
