@@ -34,7 +34,7 @@ GPGKEY:=2DE589F5
 SVNBUILD:=/home/calvin/src/build-area
 DEB_ORIG_TARGET:=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
 
-MANIFEST: MANIFEST.in setup.py
+MANIFEST: setup.py
 	rm -f share
 	$(PYTHON) setup.py sdist --manifest-only
 
