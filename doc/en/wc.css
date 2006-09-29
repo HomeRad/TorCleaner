@@ -259,3 +259,7 @@ tt {
 
 ul.auto-toc {
   list-style-type: none }
+
+.align-right {
+  padding: 2px;
+}
