@@ -52,10 +52,14 @@ Direct download links are in brackets.
 
 1. Install Python >= 2.4 from http://www.python.org/
    [http://www.python.org/ftp/python/2.4.3/python-2.4.3.msi]
+   or
+   [http://www.python.org/ftp/python/2.5/python-2.5.msi]
 
 2. Install Python for Windows Extensions from
    http://starship.python.net/crew/mhammond/
-   [http://switch.dl.sourceforge.net/pywin32/pywin32-209.win32-py2.4.exe]
+   [http://switch.dl.sourceforge.net/pywin32/pywin32-210.win32-py2.4.exe]
+   or
+   [http://switch.dl.sourceforge.net/pywin32/pywin32-210.win32-py2.5.exe]
    
    To run Pythonwin, you may need a copy of the Microsoft MFC DLLs.
    You should only install these files if the install process tells you
@@ -69,6 +73,8 @@ Direct download links are in brackets.
    Install Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
    [http://effbot.org/downloads/PIL-1.1.5.win32-py2.4.exe]
+   or
+   [http://effbot.org/downloads/PIL-1.1.5.win32-py2.5.exe]
 
 4. *Optional but recommended (used for SSL connections)*
    Install OpenSSL and PyOpenSSL for Windows from
@@ -77,15 +83,21 @@ Direct download links are in brackets.
    and
    http://pyopenssl.sourceforge.net/
    [http://webcleaner.sourceforge.net/pyOpenSSL-0.6.win32-py2.4.exe]
+   or
+   [http://webcleaner.sourceforge.net/pyOpenSSL-0.6.win32-py2.5.exe]
 
 5. *Optional but recommended (speedup for i386 compatible PCs)*
    Psyco from
    http://psyco.sourceforge.net/
    [http://webcleaner.sourceforge.net/psyco-1.5.1.win32-py2.4.exe]
+   or
+   [http://webcleaner.sourceforge.net/psyco-1.5.1.win32-py2.5.exe]
 
 6. *Optional (used for NTLM authentication)*
    Download Python Crypto Module from
    http://www.amk.ca/python/code/crypto.html
+   [http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe]
+   or
    [http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.4.exe]
 
 7. *Optional (used by VirusFilter module)*
