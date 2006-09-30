@@ -715,6 +715,7 @@ setup (name = "webcleaner",
        packages = find_packages(exclude=("tests", "*.tests", "*.tests.*")),
        ext_modules = extensions,
        long_description = """WebCleaner features:
+
 * remove unwanted HTML (adverts, flash, etc.)
 * popup blocker
 * disable animated GIF images
