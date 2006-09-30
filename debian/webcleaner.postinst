@@ -37,6 +37,8 @@ if [ "$1" = "configure" ]; then
     rm -f /var/log/webcleaner.err
     rm -f /var/log/webcleaner-access.log
 fi
+#DEBHELPER#
+
 case "$1" in
 configure|reconfigure)
     # generate SSL certs
@@ -47,22 +49,6 @@ configure|reconfigure)
     fi
     ;;
 esac
-
-PYTHON=python2.4
-if which $PYTHON >/dev/null 2>&1; then
-    DIRLIST="/usr/lib/$PYTHON/site-packages/wc"
-    for i in $DIRLIST; do
-        $PYTHON -O /usr/lib/$PYTHON/compileall.py -q $i
-        $PYTHON /usr/lib/$PYTHON/compileall.py -q $i
-    done
-    FILELIST="/usr/lib/$PYTHON/site-packages/_webcleaner2_configdata.py"
-    for i in $FILELIST; do
-        $PYTHON -O /usr/lib/$PYTHON/py_compile.py $i
-        $PYTHON /usr/lib/$PYTHON/py_compile.py $i
-    done
-fi
-
-#DEBHELPER#
 
 # (re)start webcleaner
 invoke-rc.d webcleaner start || true
