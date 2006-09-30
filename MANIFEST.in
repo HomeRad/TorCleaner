@@ -13,7 +13,6 @@ include doc/de/webcleaner.conf.5
 include doc/de/webcleaner-certificates.1
 include config/Makefile
 include config/proxy.pac
-include config/pylintrc
 include config/*.txt
 include config/*.zap
 include config/*.conf
