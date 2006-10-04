@@ -1,3 +1,9 @@
+webcleaner (2.41-0calvin1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Wed,  4 Oct 2006 18:07:30 +0200
+
 webcleaner (2.40-0calvin2) unstable; urgency=low
 
   * Fix postinst script
