@@ -40,7 +40,7 @@ class XmlRewriter (Filter.Filter):
         """
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['xmlrewrite', 'htmlrewrite']
-        mimes = ['text/xml', 'application/((rss|atom)\+)?xml', ]
+        mimes = ['text/xml', 'application/((rss|atom|rdf)\+)?xml', ]
         super(XmlRewriter, self).__init__(stages=stages, rulenames=rulenames,
                                           mimes=mimes)
 
