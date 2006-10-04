@@ -17,7 +17,8 @@
 """
 Filter a XML stream.
 """
-
+import sys
+import re
 import xml.sax.handler
 from xml.sax import expatreader
 
@@ -26,6 +27,8 @@ import Filter
 import xmlfilt.XmlFilter
 
 DefaultCharset = 'iso-8859-1'
+
+unquoted_amp = re.compile(r"&(?!(gt|lt|amp))")
 
 class XmlRewriter (Filter.Filter):
     """
@@ -52,11 +55,13 @@ class XmlRewriter (Filter.Filter):
             return data
         p = attrs['xmlrewriter_parser']
         f = attrs['xmlrewriter_filter']
+        data2 = unquoted_amp.sub("&amp;", data)
         try:
-            p.feed(data)
-        except xml.sax.SAXException, msg:
+            p.feed(data2)
+        except xml.sax.SAXException:
+            evalue = sys.exc_info()[1]
             wc.log.error(wc.LOG_FILTER, "XML filter error at %s: %s",
-                         attrs['url'], str(msg))
+                         attrs['url'], str(evalue))
             return data
         return f.getoutput()
 
