@@ -1,6 +1,8 @@
 2.41 "Thank you for smoking" (released xx.xx.xxxx)
 
-  *
+  * The XML filter tries to fix unquoted ampersands.
+    Type: feature
+    Changed: wc/filter/XMLRewriter.py
 
 2.40 "Lucky Number Slevin" (released 29.9.2006)
 
