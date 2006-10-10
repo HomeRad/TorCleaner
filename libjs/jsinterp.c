@@ -480,7 +480,8 @@ js_GetScopeChain(JSContext *cx, JSStackFrame *fp)
      * the cloned child after we clone the parent. In the following loop when
      * clonedChild is null it indicates the first iteration when no special GC
      * rooting is necessary. On the second and the following iterations we
-     * have to protect clonedChild against the GC during cloning of the parent.
+     * have to protect cloned so far chain against the GC during cloning of
+     * the cursor object.
      */
     cursor = obj;
     clonedChild = NULL;
@@ -499,22 +500,25 @@ js_GetScopeChain(JSContext *cx, JSStackFrame *fp)
             return NULL;
         }
         if (!clonedChild) {
+            /*
+             * The first iteration. Check if other follow and root obj if so
+             * to protect the whole cloned chain against GC.
+             */
             obj = cursor;
-            if (parent)
-                JS_PUSH_SINGLE_TEMP_ROOT(cx, cursor, &tvr);
+            if (!parent)
+                break;
+            JS_PUSH_SINGLE_TEMP_ROOT(cx, obj, &tvr);
         } else {
             /*
              * Avoid OBJ_SET_PARENT overhead as clonedChild cannot escape to
              * other threads.
              */
             clonedChild->slots[JSSLOT_PARENT] = OBJECT_TO_JSVAL(cursor);
-            JS_ASSERT(tvr.u.value == OBJECT_TO_JSVAL(clonedChild));
-            tvr.u.value = OBJECT_TO_JSVAL(cursor);
-        }
-        if (!parent) {
-            if (clonedChild)
+            if (!parent) {
+                JS_ASSERT(tvr.u.value == OBJECT_TO_JSVAL(obj));
                 JS_POP_TEMP_ROOT(cx, &tvr);
-            break;
+                break;
+            }
         }
         clonedChild = cursor;
         cursor = parent;
@@ -1730,7 +1734,9 @@ ImportProperty(JSContext *cx, JSObject *obj, jsid id)
             ok = OBJ_SET_PROPERTY(cx, target, id, &value);
         } else {
             ok = OBJ_DEFINE_PROPERTY(cx, target, id, value, NULL, NULL,
-                                     attrs & ~JSPROP_EXPORTED,
+                                     attrs & ~(JSPROP_EXPORTED |
+                                               JSPROP_GETTER |
+                                               JSPROP_SETTER),
                                      NULL);
         }
         if (prop)
@@ -2318,7 +2324,10 @@ interrupt:
             goto out;
 
           EMPTY_CASE(JSOP_NOP)
-          EMPTY_CASE(JSOP_GROUP)
+
+          BEGIN_CASE(JSOP_GROUP)
+            obj = NULL;
+          END_CASE(JSOP_GROUP)
 
           BEGIN_CASE(JSOP_PUSH)
             PUSH_OPND(JSVAL_VOID);
@@ -2756,9 +2765,11 @@ interrupt:
 #ifdef DEBUG
             fid = JSVAL_NULL;
 #endif
+            JS_KEEP_ATOMS(rt);
             ok = js_CallIteratorNext(cx, iterobj, flags,
                                      (flags & JSITER_ENUMERATE) ? &fid : NULL,
                                      &rval);
+            JS_UNKEEP_ATOMS(rt);
             if (!ok) {
                 /* Nothing more to iterate in obj, or some other exception? */
                 if (!cx->throwing ||
@@ -5330,7 +5341,6 @@ interrupt:
              * Getters and setters are just like watchpoints from an access
              * control point of view.
              */
-            SAVE_SP_AND_PC(fp);
             ok = OBJ_CHECK_ACCESS(cx, obj, id, JSACC_WATCH, &rtmp, &attrs);
             if (!ok)
                 goto out;

@@ -178,7 +178,10 @@ obj_getSlot(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
     pobj = JSVAL_TO_OBJECT(*vp);
     if (pobj) {
         clasp = OBJ_GET_CLASS(cx, pobj);
-        if (clasp->flags & JSCLASS_IS_EXTENDED) {
+        if (clasp == &js_CallClass || clasp == &js_BlockClass) {
+            /* Censor activations and lexical scopes per ECMA-262. */
+            *vp = JSVAL_NULL;
+        } else if (clasp->flags & JSCLASS_IS_EXTENDED) {
             xclasp = (JSExtendedClass *) clasp;
             if (xclasp->outerObject) {
                 pobj = xclasp->outerObject(cx, pobj);
@@ -1713,9 +1716,6 @@ static JSFunctionSpec object_methods[] = {
     {js_defineSetter_str,         obj_defineSetter,   2,0,0},
     {js_lookupGetter_str,         obj_lookupGetter,   1,0,0},
     {js_lookupSetter_str,         obj_lookupSetter,   1,0,0},
-#endif
-#if JS_HAS_GENERATORS
-    {js_iterator_str,             js_DefaultIterator, 0,0,0},
 #endif
     {0,0,0,0,0}
 };
