@@ -28,7 +28,7 @@ import xmlfilt.XmlFilter
 
 DefaultCharset = 'iso-8859-1'
 
-unquoted_amp = re.compile(r"&(?!(gt|lt|amp))")
+unquoted_amp = re.compile(r"&(?!#?[a-zA-Z0-9]+;)")
 
 class XmlRewriter (Filter.Filter):
     """
