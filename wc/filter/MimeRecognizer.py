@@ -47,7 +47,11 @@ def is_preferred_mime (mime, origmime):
     if origmime.startswith(mime+";"):
         return False
     # Sometimes text/html is recognized as text/plain.
-    if origmime.startswith("text/html") and mime.startswith("text/plain"):
+    # And don't recognize html as xml
+    if origmime.startswith("text/html") and  \
+        (mime.startswith("text/plain") or
+         mime.startswith("application/rss+xml") or
+         mime.startswith("text/xml")):
         return False
     return True
 
