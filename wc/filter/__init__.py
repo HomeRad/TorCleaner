@@ -157,7 +157,8 @@ def applyfilter (filterstage, data, fun, attrs):
             assert None == wc.log.debug(wc.LOG_FILTER, "..applying")
             data = getattr(f, fun)(data, attrs)
         else:
-            assert None == wc.log.debug(wc.LOG_FILTER, "..not applying")
+            assert None == wc.log.debug(wc.LOG_FILTER,
+                                 "..not applying (mime %s)" % attrs['mime'])
     assert None == wc.log.debug(wc.LOG_FILTER, "..result %d bytes", len(data))
     return data
 
