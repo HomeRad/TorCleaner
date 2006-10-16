@@ -570,7 +570,9 @@ class HttpServer (Server.Server):
                                         self.statuscode, self.headers)
             if not self.client:
                 return
-        if data and self.statuscode != 407:
+        # note that self.client still could be a ClientServerMatchMaker
+        if data and self.statuscode != 407 and
+           hasattr(self.client, "server_content"):
             self.client.server_content(data)
         return True
 
