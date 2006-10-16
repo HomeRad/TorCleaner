@@ -12,6 +12,10 @@
     Type: bugfix
     Changed: wc/filter/MimeRecognizer.py
 
+  * Prevent attribute error if server connection closes prematurely
+    Type: bugfix
+    Changed: wc/proxy/HttpServer.py
+
 2.40 "Lucky Number Slevin" (released 29.9.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
