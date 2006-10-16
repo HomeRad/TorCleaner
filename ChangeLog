@@ -4,6 +4,14 @@
     Type: feature
     Changed: wc/filter/XMLRewriter.py
 
+  * Allow again absolute block URLs.
+    Type: bugfix
+    Changed: wc/filter/Blocker.py
+
+  * Don't recognize (X)HTML as XML.
+    Type: bugfix
+    Changed: wc/filter/MimeRecognizer.py
+
 2.40 "Lucky Number Slevin" (released 29.9.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
