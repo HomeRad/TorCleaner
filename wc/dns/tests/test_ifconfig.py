@@ -21,6 +21,8 @@ import wc.dns.ifconfig
 
 class TestIfconfig (unittest.TestCase):
 
+    needed_resources = ['posix']
+
     def test_interfaces (self):
         ifconf = wc.dns.ifconfig.IfConfig()
         iflist = ifconf.getInterfaceList()
