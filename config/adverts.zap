@@ -61,7 +61,7 @@
   <title lang="en">Links with 'ads'</title>
   <description lang="de">Entferne Verknüpfungen mit 'ads' im Rechnernamen.</description>
   <description lang="en">Remove links with 'ads' in the host name.</description>
-  <attr name="href">https?://(servedby\.)?ad(s|server(\d+)?|vertising)?\.</attr>
+  <attr name="href">https?://(servedby\.)?ad(s|serv(er)?(\d+)?|vertising)?\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
@@ -175,7 +175,7 @@
 </htmlrewrite>
 
 <block sid="wc.340"
- url="https?://(layer-)?ad(s|server)?\.">
+ url="https?://(layer-)?ad(s|serv(er)?)?\.">
   <title lang="de">Rechner mit 'ads'</title>
   <title lang="en">Ad servers with 'ads'</title>
   <description lang="de">Blockiert Rechner mit 'ads' im Namen.</description>
