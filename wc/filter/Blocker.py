@@ -218,9 +218,11 @@ class Blocker (Filter.Filter):
         if blocked:
             # XXX hmmm, make HTTP HEAD request to get content type???
             assert None == wc.log.debug(wc.LOG_FILTER,
-                                "blocked url %s by rule %s", url, sid)
-            if isinstance(blocked, basestring):
+                       "blocked url %s with %s by rule %s", url, blocked, sid)
+            if isinstance(blocked, str):
                 doc = blocked
+            elif isinstance(blocked, unicode):
+                doc = blocked.encode("ascii", "ignore")
             elif is_image_mime(mime) or is_image_url(url):
                 doc = self.block_image
                 attrs['mime'] = 'image/png'
@@ -246,13 +248,9 @@ class Blocker (Filter.Filter):
                 query = urllib.urlencode(form)
                 doc += "?%s" % query
             port = wc.configuration.config['port']
-            # XXX activate when https can be served locally
-            #if url.startswith("https://"):
-            #    scheme = "https"
-            #else:
-            #    scheme = "http"
-            scheme = "http"
-            return 'GET %s://localhost:%d%s HTTP/1.1' % (scheme, port, doc)
+            if not doc.startswith("http://"):
+                doc = "http://localhost:%d%s" % (port, doc)
+            return 'GET %s HTTP/1.1' % doc
         return data
 
     def blocked (self, url, parts):
