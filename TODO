@@ -1,3 +1,6 @@
+- Get the proxy to work with IE: it does not send Accept-Encoding, so
+  don't encode the content from proxy to client.
+
 - use email.FeedParser instead of rfc822.Message()
 
 - Python 2.5 features
@@ -5,11 +8,10 @@
     a tuple of prefixes/suffixes to look for. Implements RFE #1491485.
   - Use Win32 API to implement os.{access,chdir,chmod,mkdir,remove,rename,rmdir,utime}.
     As a result, these functions now raise WindowsError instead of OSError.
+  - new builtin function any and all
 
 - generic token split for header values of the form
   val1;param, val2;param2, val3, ...
-
-- Get the proxy to work with IE
 
 - Preserve self.attr for HttpClient/HttpServer.py
 
@@ -26,10 +28,6 @@
     that Firefox is permitted to access the Web.
 
 - Think about using python-adns instead of the dnspython stuff.
-
-- Design improvments:
-  + rounded corners
-    http://www.spiffycorners.com/
 
 - web gui authentication improvements:
   see http://www.berenddeboer.net/rest/authentication.html
@@ -120,37 +118,6 @@
 
 - Remove all comments from JavaScript: use spidermonkey scanner, and
   reconstruct the script with token data.
-
-- Traceback (most recent call last):
-  File "webcleaner", line 198, in ?
-    main(sys.argv[1:])
-  File "webcleaner", line 194, in main
-    return _main(configdir, filelogs, args)
-  File "webcleaner", line 159, in main_posix
-    wc.start.wstartfunc(confdir=configdir, filelogs=filelogs)
-  File "/home/calvin/src/webcleaner/wc/start.py", line 72, in wstartfunc
-    wc.proxy.mainloop(handle=handle, abort=abort)
-  File "/home/calvin/src/webcleaner/wc/proxy/__init__.py", line 166, in mainloop
-    proxy_poll(timeout=max(0, run_timers()))
-  File "/home/calvin/src/webcleaner/wc/proxy/__init__.py", line 136, in proxy_poll
-    x.handle_read_event()
-  File "/home/calvin/src/webcleaner/wc/proxy/Dispatcher.py", line 429, in handle_read_event
-    self.handle_read()
-  File "/home/calvin/src/webcleaner/wc/proxy/Connection.py", line 117, in handle_read
-    self.process_read()
-  File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 217, in process_read
-    if self.delegate_read():
-  File "/home/calvin/src/webcleaner/wc/proxy/StatefulConnection.py", line 63, in delegate_read
-    getattr(self, 'process_'+self.state)()
-  File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 538, in process_recycle
-    self.delayed_close()
-  File "/home/calvin/src/webcleaner/wc/proxy/Connection.py", line 211, in delayed_close
-    if not self.close_ready():
-  File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 617, in close_ready
-    if not self.flush():
-  File "/home/calvin/src/webcleaner/wc/proxy/HttpServer.py", line 569, in flush
-    self.client.server_content(data)
-  AttributeError: 'ClientServerMatchmaker' object has no attribute 'server_content'
 
 - If the template system ever gets replaced, have a look at
   http://kid.lesscode.org/
