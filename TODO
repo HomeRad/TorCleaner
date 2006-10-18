@@ -103,10 +103,6 @@
 - NTLM: reconnect to parent proxy after first 407 error (squid closes
   the connection)
 
-- unicode parsing for flex
-  the HTML parser (written with flex) does not support unicode, so
-  sometimes you'll see '?' chars in the HTML output.
-
 - IPv6 support (there are some stubs already, but untested, and DNS
   library is missing IPv6 support)
   Big problem: how do we decide when to send out IPv6 DNS queries?
@@ -119,7 +115,3 @@
 - Remove all comments from JavaScript: use spidermonkey scanner, and
   reconstruct the script with token data.
 
-- If the template system ever gets replaced, have a look at
-  http://kid.lesscode.org/
-
-http://laurentszyster.be/blog/dns_client/
