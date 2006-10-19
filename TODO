@@ -1,6 +1,9 @@
 - Get the proxy to work with IE: it does not send Accept-Encoding, so
   don't encode the content from proxy to client.
 
+- BUGFIX: Use Py_ssize_t for indizes, according to PEP 353:
+  http://www.python.org/dev/peps/pep-0353/#conversion-guidelines
+
 - use email.FeedParser instead of rfc822.Message()
 
 - Python 2.5 features
