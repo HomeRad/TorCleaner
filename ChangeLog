@@ -16,6 +16,11 @@
     Type: bugfix
     Changed: wc/proxy/HttpServer.py
 
+  * Add missing functions in ListDict container, fixing crash in
+    HtmlSecurity.
+    Type: bugfix
+    Changed: wc/containers.py
+
 2.40 "Lucky Number Slevin" (released 29.9.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
