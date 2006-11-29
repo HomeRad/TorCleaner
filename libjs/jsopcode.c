@@ -1534,7 +1534,6 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
 
     static const char exception_cookie[] = "/*EXCEPTION*/";
     static const char retsub_pc_cookie[] = "/*RETSUB_PC*/";
-    static const char iter_cookie[]      = "/*ITER*/";
     static const char forelem_cookie[]   = "/*FORELEM*/";
     static const char with_cookie[]      = "/*WITH*/";
     static const char dot_format[]       = "%s.%s";
@@ -1925,16 +1924,8 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                 break;
 
               case JSOP_STARTITER:
-                if (ss->inArrayInit) {
-                    ss->offsets[ss->top++] = ss->sprinter.offset;
-                    ss->offsets[ss->top++] = ss->sprinter.offset;
-                    ss->opcodes[ss->top-1] = ss->opcodes[ss->top-2] = op;
-                    break;
-                }
-                todo = Sprint(&ss->sprinter, iter_cookie);
-                if (todo < 0 || !PushOff(ss, todo, op))
-                    return NULL;
-                /* FALL THROUGH */
+                todo = -2;
+                break;
 
               case JSOP_PUSH:
 #if JS_HAS_DESTRUCTURING
@@ -2074,11 +2065,22 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                                 goto do_forloop;
                             }
                             if (SN_TYPE(sn) == SRC_DECL) {
-                                todo = SprintCString(&ss->sprinter, rval);
-                                if (todo < 0 ||
-                                    !PushOff(ss, todo, JSOP_NOP)) {
-                                    return NULL;
+                                if (ss->top == jp->script->depth) {
+                                    /*
+                                     * This must be an empty destructuring
+                                     * in the head of a let whose body block
+                                     * is also empty.
+                                     */
+                                    pc = pc2 + 1;
+                                    len = js_GetSrcNoteOffset(sn, 0);
+                                    LOCAL_ASSERT(pc[len] == JSOP_LEAVEBLOCK);
+                                    js_printf(jp, "\tlet (%s) {\n", rval);
+                                    js_printf(jp, "\t}\n");
+                                    goto end_setsp;
                                 }
+                                todo = SprintCString(&ss->sprinter, rval);
+                                if (todo < 0 || !PushOff(ss, todo, JSOP_NOP))
+                                    return NULL;
                                 op = JSOP_POP;
                                 pc = pc2 + 1;
                                 goto do_letheadbody;
@@ -2100,9 +2102,11 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
 
                     /*
                      * If control flow reaches this point with todo still -2,
+                     * just print rval as an expression statement.
                      */
                     if (todo == -2)
                         js_printf(jp, "\t%s;\n", rval);
+                  end_setsp:
                     break;
                 }
 #endif
@@ -2256,15 +2260,8 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                 if (sn && SN_TYPE(sn) == SRC_HIDDEN)
                     break;
                 (void) PopOff(ss, op);
-                if (ss->inArrayInit) {
-                    ss->top -= 2;
-                    break;
-                }
-                (void) PopOff(ss, op);
-                if (op == JSOP_ENDITER) {
-                    rval = POP_STR();
-                    LOCAL_ASSERT(!strcmp(rval, iter_cookie));
-                }
+                if (op == JSOP_POP2)
+                    (void) PopOff(ss, op);
                 break;
 
               case JSOP_ENTERWITH:
@@ -2508,12 +2505,15 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
 
                 rval = POP_STR();
                 pos = ss->top;
-                while (ss->opcodes[--pos] != JSOP_ENTERBLOCK)
+                while ((op = ss->opcodes[--pos]) != JSOP_ENTERBLOCK &&
+                       op != JSOP_NEWINIT) {
                     LOCAL_ASSERT(pos != 0);
+                }
                 blockpos = pos;
-                while (ss->opcodes[--pos] == JSOP_ENTERBLOCK) {
+                while (ss->opcodes[pos] == JSOP_ENTERBLOCK) {
                     if (pos == 0)
                         break;
+                    --pos;
                 }
                 LOCAL_ASSERT(ss->opcodes[pos] == JSOP_NEWINIT);
                 startpos = pos;
@@ -3850,17 +3850,27 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                               rval);
 #else
                 if (lastop == JSOP_GETTER || lastop == JSOP_SETTER) {
-                    LOCAL_ASSERT(strncmp(rval, js_function_str, 8) == 0 &&
-                                 rval[8] == ' ');
-                    rval += 8 + 1;
-                    LOCAL_ASSERT(rval[strlen(rval)-1] == '}');
-                    todo = Sprint(&ss->sprinter, "%s%s%s %s%s",
-                                  lval,
-                                  (lval[1] != '\0') ? ", " : "",
-                                  (lastop == JSOP_GETTER)
-                                  ? js_get_str : js_set_str,
-                                  xval,
-                                  rval);
+                    if (strncmp(rval, js_function_str, 8) || rval[8] != ' ') {
+                        todo = Sprint(&ss->sprinter, "%s%s%s%s%s:%s", lval,
+                                      (lval[1] != '\0') ? ", " : "", xval,
+                                      (lastop == JSOP_GETTER ||
+                                       lastop == JSOP_SETTER)
+                                        ? " " : "",
+                                      (lastop == JSOP_GETTER) ? js_getter_str :
+                                      (lastop == JSOP_SETTER) ? js_setter_str :
+                                      "",
+                                      rval);
+                    } else {
+                        rval += 8 + 1;
+                        LOCAL_ASSERT(rval[strlen(rval)-1] == '}');
+                        todo = Sprint(&ss->sprinter, "%s%s%s %s%s",
+                                      lval,
+                                      (lval[1] != '\0') ? ", " : "",
+                                      (lastop == JSOP_GETTER)
+                                      ? js_get_str : js_set_str,
+                                      xval,
+                                      rval);
+                    }
                 } else {
                     todo = Sprint(&ss->sprinter, "%s%s%s:%s",
                                   lval,

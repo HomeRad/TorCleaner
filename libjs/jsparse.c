@@ -59,6 +59,7 @@
 #include "jsarena.h" /* Added by JSIFY */
 #include "jsutil.h" /* Added by JSIFY */
 #include "jsapi.h"
+#include "jsarray.h"
 #include "jsatom.h"
 #include "jscntxt.h"
 #include "jsconfig.h"
@@ -403,7 +404,8 @@ MaybeSetupFrame(JSContext *cx, JSObject *chain, JSStackFrame *oldfp,
          * the real variables objects and function that our new stack frame is
          * going to use.
          */
-        newfp->flags = oldfp->flags & (JSFRAME_SPECIAL | JSFRAME_COMPILE_N_GO);
+        newfp->flags = oldfp->flags & (JSFRAME_SPECIAL | JSFRAME_COMPILE_N_GO |
+                                       JSFRAME_SCRIPT_OBJECT);
         while (oldfp->flags & JSFRAME_SPECIAL) {
             oldfp = oldfp->down;
             if (!oldfp)
@@ -756,9 +758,7 @@ FunctionBody(JSContext *cx, JSTokenStream *ts, JSFunction *fun,
             JSCodeGenerator *cg = (JSCodeGenerator *) tc;
 
             if (!js_FoldConstants(cx, pn, tc) ||
-                !js_AllocTryNotes(cx, cg) ||
-                !js_EmitTree(cx, cg, pn) ||
-                js_Emit1(cx, cg, JSOP_STOP) < 0) {
+                !js_EmitFunctionBytecode(cx, cg, pn)) {
                 pn = NULL;
             }
         }
@@ -820,14 +820,8 @@ js_CompileFunctionBody(JSContext *cx, JSTokenStream *ts, JSFunction *fun)
      */
     CURRENT_TOKEN(ts).type = TOK_LC;
     pn = FunctionBody(cx, ts, fun, &funcg.treeContext);
-    if (pn) {
-        if (!js_NewScriptFromCG(cx, &funcg, fun)) {
-            pn = NULL;
-        } else {
-            if (funcg.treeContext.flags & TCF_FUN_HEAVYWEIGHT)
-                fun->flags |= JSFUN_HEAVYWEIGHT;
-        }
-    }
+    if (pn && !js_NewScriptFromCG(cx, &funcg, fun))
+        pn = NULL;
 
     /* Restore saved state and release code generation arenas. */
     cx->fp = fp;
@@ -4181,12 +4175,6 @@ UnaryExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc)
         while (pn2->pn_type == TOK_RP)
             pn2 = pn2->pn_kid;
         pn->pn_kid = pn2;
-#if JS_HAS_LVALUE_RETURN
-        if (pn2->pn_type == TOK_LP) {
-            JS_ASSERT(pn2->pn_op == JSOP_CALL || pn2->pn_op == JSOP_EVAL);
-            pn2->pn_op = JSOP_SETCALL;
-        }
-#endif
         break;
 
       case TOK_ERROR:
@@ -4344,6 +4332,9 @@ MemberExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,
                     RecycleTree(group, tc);
                     pn2->pn_type = TOK_FILTER;
                     pn2->pn_op = JSOP_FILTER;
+
+                    /* A filtering predicate is like a with statement. */
+                    tc->flags |= TCF_FUN_HEAVYWEIGHT;
                 } else {
                     js_ReportCompileErrorNumber(cx, ts,
                                                 JSREPORT_TS | JSREPORT_ERROR,
@@ -5133,9 +5124,6 @@ js_ParseXMLTokenStream(JSContext *cx, JSObject *chain, JSTokenStream *ts,
 }
 
 #endif /* JS_HAS_XMLSUPPORT */
-
-/* Generous sanity-bound on length (in elements) of array initialiser. */
-#define ARRAY_INIT_LIMIT        JS_BIT(24)
 
 static JSParseNode *
 PrimaryExpr(JSContext *cx, JSTokenStream *ts, JSTreeContext *tc,

@@ -1,4 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set ts=8 sw=4 et tw=78:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -278,14 +279,18 @@ DropWatchPoint(JSContext *cx, JSWatchPoint *wp)
 }
 
 void
-js_MarkWatchPoints(JSRuntime *rt)
+js_MarkWatchPoints(JSContext *cx)
 {
+    JSRuntime *rt;
     JSWatchPoint *wp;
 
+    rt = cx->runtime;
     for (wp = (JSWatchPoint *)rt->watchPointList.next;
          wp != (JSWatchPoint *)&rt->watchPointList;
          wp = (JSWatchPoint *)wp->links.next) {
         MARK_SCOPE_PROPERTY(wp->sprop);
+        if (wp->sprop->attrs & JSPROP_SETTER)
+            JS_MarkGCThing(cx, wp->setter, "wp->setter", NULL);
     }
 }
 
@@ -360,18 +365,45 @@ js_watch_set(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
                              vp, wp->closure);
             if (ok) {
                 /*
-                 * Create pseudo-frame for call to setter so that any
-                 * stack-walking security code in the setter will correctly
-                 * identify the guilty party.
+                 * Create a pseudo-frame for the setter invocation so that any
+                 * stack-walking security code under the setter will correctly
+                 * identify the guilty party.  So that the watcher appears to
+                 * be active to obj_eval and other such code, point frame.pc
+                 * at the JSOP_STOP at the end of the script.
                  */
-                JSObject *funobj = (JSObject *) wp->closure;
-                JSFunction *fun = (JSFunction *) JS_GetPrivate(cx, funobj);
+                JSObject *closure;
+                JSClass *clasp;
+                JSFunction *fun;
+                JSScript *script;
+                jsval argv[2];
                 JSStackFrame frame;
 
+                closure = (JSObject *) wp->closure;
+                clasp = OBJ_GET_CLASS(cx, closure);
+                if (clasp == &js_FunctionClass) {
+                    fun = (JSFunction *) JS_GetPrivate(cx, closure);
+                    script = FUN_SCRIPT(fun);
+                } else if (clasp == &js_ScriptClass) {
+                    fun = NULL;
+                    script = (JSScript *) JS_GetPrivate(cx, closure);
+                } else {
+                    fun = NULL;
+                    script = NULL;
+                }
+                argv[0] = OBJECT_TO_JSVAL(closure);
+                argv[1] = JSVAL_NULL;
+
                 memset(&frame, 0, sizeof(frame));
-                frame.script = FUN_SCRIPT(fun);
+                frame.script = script;
+                if (script) {
+                    JS_ASSERT(script->length >= JSOP_STOP_LENGTH);
+                    frame.pc = script->code + script->length
+                             - JSOP_STOP_LENGTH;
+                }
                 frame.fun = fun;
+                frame.argv = argv + 2;
                 frame.down = cx->fp;
+
                 cx->fp = &frame;
                 ok = !wp->setter ||
                      ((sprop->attrs & JSPROP_SETTER)
@@ -380,7 +412,7 @@ js_watch_set(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
                       : wp->setter(cx, OBJ_THIS_OBJECT(cx, obj), userid, vp));
                 cx->fp = frame.down;
             }
-            return DropWatchPoint(cx, wp);
+            return DropWatchPoint(cx, wp) && ok;
         }
     }
     JS_ASSERT(0);       /* XXX can't happen */
@@ -396,6 +428,7 @@ js_watch_set_wrapper(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
     jsval userid;
 
     funobj = JSVAL_TO_OBJECT(argv[-2]);
+    JS_ASSERT(OBJ_GET_CLASS(cx, funobj) == &js_FunctionClass);
     wrapper = (JSFunction *) JS_GetPrivate(cx, funobj);
     userid = ATOM_KEY(wrapper->atom);
     *rval = argv[0];
@@ -535,10 +568,8 @@ JS_SetWatchPoint(JSContext *cx, JSObject *obj, jsval id,
             JS_free(cx, wp);
             goto out;
         }
-        JS_APPEND_LINK(&wp->links, &rt->watchPointList);
         wp->object = obj;
-        wp->sprop = sprop;
-        JS_ASSERT(sprop->setter != js_watch_set);
+        JS_ASSERT(sprop->setter != js_watch_set || pobj != obj);
         wp->setter = sprop->setter;
         wp->nrefs = 1;
 
@@ -546,10 +577,16 @@ JS_SetWatchPoint(JSContext *cx, JSObject *obj, jsval id,
         sprop = js_ChangeNativePropertyAttrs(cx, obj, sprop, 0, sprop->attrs,
                                              sprop->getter, watcher);
         if (!sprop) {
+            /* Self-link wp->links so DropWatchPoint can JS_REMOVE_LINK it. */
+            JS_INIT_CLIST(&wp->links);
             DropWatchPoint(cx, wp);
             ok = JS_FALSE;
             goto out;
         }
+        wp->sprop = sprop;
+
+        /* Now that wp is fully initialized, append it to rt's wp list. */
+        JS_APPEND_LINK(&wp->links, &rt->watchPointList);
     }
     wp->handler = handler;
     wp->closure = closure;
@@ -906,7 +943,7 @@ JS_EvaluateUCInStackFrame(JSContext *cx, JSStackFrame *fp,
     JSScript *script;
     JSBool ok;
 
-    scobj = js_GetScopeChain(cx, fp);
+    scobj = JS_GetFrameScopeChain(cx, fp);
     if (!scobj)
         return JS_FALSE;
 

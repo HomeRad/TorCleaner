@@ -236,7 +236,13 @@ js_GetArgsProperty(JSContext *cx, JSStackFrame *fp, jsid id,
 JSObject *
 js_GetArgsObject(JSContext *cx, JSStackFrame *fp)
 {
-    JSObject *argsobj;
+    JSObject *argsobj, *global, *parent;
+
+    /*
+     * We must be in a function activation; the function must be lightweight
+     * or else fp must have a variable object.
+     */
+    JS_ASSERT(fp->fun && (!(fp->fun->flags & JSFUN_HEAVYWEIGHT) || fp->varobj));
 
     /* Skip eval and debugger frames. */
     while (fp->flags & JSFRAME_SPECIAL)
@@ -253,6 +259,22 @@ js_GetArgsObject(JSContext *cx, JSStackFrame *fp)
         cx->newborn[GCX_OBJECT] = NULL;
         return NULL;
     }
+
+    /*
+     * Give arguments an intrinsic scope chain link to fp's global object.
+     * Since the arguments object lacks a prototype because js_ArgumentsClass
+     * is not initialized, js_NewObject won't assign a default parent to it.
+     *
+     * Therefore if arguments is used as the head of an eval scope chain (via
+     * a direct or indirect call to eval(program, arguments)), any reference
+     * to a standard class object in the program will fail to resolve due to
+     * js_GetClassPrototype not being able to find a global object containing
+     * the standard prototype by starting from arguments and following parent.
+     */
+    global = fp->scopeChain;
+    while ((parent = OBJ_GET_PARENT(cx, global)) != NULL)
+        global = parent;
+    argsobj->slots[JSSLOT_PARENT] = OBJECT_TO_JSVAL(global);
     fp->argsobj = argsobj;
     return argsobj;
 }
@@ -592,6 +614,7 @@ js_GetCallObject(JSContext *cx, JSStackFrame *fp, JSObject *parent)
     fp->callobj = callobj;
 
     /* Make callobj be the scope chain and the variables object. */
+    JS_ASSERT(fp->scopeChain == parent);
     fp->scopeChain = callobj;
     fp->varobj = callobj;
     return callobj;
@@ -1240,7 +1263,7 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
     }
 
     /* From here on, control flow must flow through label out. */
-    JS_PUSH_SINGLE_TEMP_ROOT(cx, fun->object, &tvr);
+    JS_PUSH_TEMP_ROOT_OBJECT(cx, fun->object, &tvr);
     ok = JS_TRUE;
 
     if (!JS_XDRUint32(xdr, &nullAtom))
@@ -1646,7 +1669,7 @@ fun_apply(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         return JS_FALSE;
 
     /* Allocate stack space for fval, obj, and the args. */
-    argc = (uintN)JS_MIN(length, ARGC_LIMIT - 1);
+    argc = (uintN)JS_MIN(length, ARRAY_INIT_LIMIT - 1);
     sp = js_AllocStack(cx, 2 + argc, &mark);
     if (!sp)
         return JS_FALSE;
@@ -1699,8 +1722,8 @@ fun_applyConstructor(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
     if (!js_GetLengthProperty(cx, aobj, &length))
         return JS_FALSE;
 
-    if (length >= ARGC_LIMIT)
-        length = ARGC_LIMIT - 1;
+    if (length >= ARRAY_INIT_LIMIT)
+        length = ARRAY_INIT_LIMIT - 1;
     newsp = sp = js_AllocStack(cx, 2 + length, &mark);
     if (!sp)
         return JS_FALSE;
@@ -1887,8 +1910,10 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
         mark = JS_ARENA_MARK(&cx->tempPool);
         JS_ARENA_ALLOCATE_CAST(cp, jschar *, &cx->tempPool,
                                (args_length+1) * sizeof(jschar));
-        if (!cp)
+        if (!cp) {
+            JS_ReportOutOfMemory(cx);
             return JS_FALSE;
+        }
         collected_args = cp;
 
         /*
@@ -2279,7 +2304,7 @@ js_ReportIsNotFunction(JSContext *cx, jsval *vp, uintN flags)
                                      *vp,
                                      NULL);
     if (str) {
-        JS_PUSH_SINGLE_TEMP_ROOT(cx, str, &tvr);
+        JS_PUSH_TEMP_ROOT_STRING(cx, str, &tvr);
         bytes = JS_GetStringBytes(str);
         if (flags & JSV2F_ITERATOR) {
             source = js_ValueToPrintableSource(cx, *vp);

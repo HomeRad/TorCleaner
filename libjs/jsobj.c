@@ -933,8 +933,9 @@ js_obj_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
              * Remove '(function ' from the beginning of valstr and ')' from the
              * end so that we can put "get" in front of the function definition.
              */
-            if (gsop[j]) {
-                int n = strlen(js_function_str) + 2;
+            if (gsop[j] && VALUE_IS_FUNCTION(cx, val[j])) {
+                size_t n = strlen(js_function_str) + 2;
+                JS_ASSERT(vlength > n);
                 vchars += n;
                 vlength -= n + 1;
             }
@@ -1022,8 +1023,7 @@ js_obj_toSource(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
             }
             js_strncpy(&chars[nchars], idstrchars, idstrlength);
             nchars += idstrlength;
-            if (!gsop[j])
-                chars[nchars++] = ':';
+            chars[nchars++] = gsop[j] ? ' ' : ':';
 #endif
             if (vsharplength) {
                 js_strncpy(&chars[nchars], vsharp, vsharplength);
@@ -1381,12 +1381,36 @@ static JSBool
 obj_watch_handler(JSContext *cx, JSObject *obj, jsval id, jsval old, jsval *nvp,
                   void *closure)
 {
+    JSObject *callable;
+    JSRuntime *rt;
+    JSStackFrame *caller;
+    JSPrincipals *subject, *watcher;
     JSResolvingKey key;
     JSResolvingEntry *entry;
     uint32 generation;
-    JSObject *funobj;
     jsval argv[3];
     JSBool ok;
+
+    callable = (JSObject *) closure;
+
+    rt = cx->runtime;
+    if (rt->findObjectPrincipals) {
+        /* Skip over any obj_watch_* frames between us and the real subject. */
+        caller = JS_GetScriptedCaller(cx, cx->fp);
+        if (caller) {
+            /*
+             * Only call the watch handler if the watcher is allowed to watch
+             * the currently executing script.
+             */
+            watcher = rt->findObjectPrincipals(cx, callable);
+            subject = JS_StackFramePrincipals(cx, caller);
+
+            if (watcher && subject && !watcher->subsume(watcher, subject)) {
+                /* Silently don't call the watch handler. */
+                return JS_TRUE;
+            }
+        }
+    }
 
     /* Avoid recursion on (obj, id) already being watched on cx. */
     key.obj = obj;
@@ -1397,11 +1421,10 @@ obj_watch_handler(JSContext *cx, JSObject *obj, jsval id, jsval old, jsval *nvp,
         return JS_TRUE;
     generation = cx->resolvingTable->generation;
 
-    funobj = (JSObject *) closure;
     argv[0] = id;
     argv[1] = old;
     argv[2] = *nvp;
-    ok = js_InternalCall(cx, obj, OBJECT_TO_JSVAL(funobj), 3, argv, nvp);
+    ok = js_InternalCall(cx, obj, OBJECT_TO_JSVAL(callable), 3, argv, nvp);
     js_StopResolving(cx, &key, JSRESFLAG_WATCH, entry, generation);
     return ok;
 }
@@ -2348,7 +2371,7 @@ js_NewObject(JSContext *cx, JSClass *clasp, JSObject *proto, JSObject *parent)
      * GC calling JS_ClearNewbornRoots. There's also the possibilty of things
      * happening under the objectHook call-out further below.
      */
-    JS_PUSH_SINGLE_TEMP_ROOT(cx, obj, &tvr);
+    JS_PUSH_TEMP_ROOT_OBJECT(cx, obj, &tvr);
 
     /*
      * Share proto's map only if it has the same JSObjectOps, and only if
@@ -2528,6 +2551,10 @@ js_FindClassObject(JSContext *cx, JSObject *start, jsid id, jsval *vp)
             return JS_TRUE;
         }
     }
+
+    OBJ_TO_INNER_OBJECT(cx, obj);
+    if (!obj)
+        return JS_FALSE;
 
     if (JSID_IS_INT(id)) {
         key = JSID_TO_INT(id);
@@ -2756,15 +2783,17 @@ js_FreeSlot(JSContext *cx, JSObject *obj, uint32 slot)
             const jschar *cp_ = str_->chars;                                  \
             JSBool negative_ = (*cp_ == '-');                                 \
             if (negative_) cp_++;                                             \
-            if (JS7_ISDEC(*cp_) &&                                            \
-                str_->length - negative_ <= sizeof(JSVAL_INT_MAX_STRING)-1) { \
-                id = CheckForStringIndex(id, cp_, negative_);                 \
+            if (JS7_ISDEC(*cp_)) {                                            \
+                size_t n_ = str_->length - negative_;                         \
+                if (n_ <= sizeof(JSVAL_INT_MAX_STRING) - 1)                   \
+                    id = CheckForStringIndex(id, cp_, cp_ + n_, negative_);   \
             }                                                                 \
         }                                                                     \
     JS_END_MACRO
 
 static jsid
-CheckForStringIndex(jsid id, const jschar *cp, JSBool negative)
+CheckForStringIndex(jsid id, const jschar *cp, const jschar *end,
+                    JSBool negative)
 {
     jsuint index = JS7_UNDEC(*cp++);
     jsuint oldIndex = 0;
@@ -2778,7 +2807,7 @@ CheckForStringIndex(jsid id, const jschar *cp, JSBool negative)
             cp++;
         }
     }
-    if (*cp == 0 &&
+    if (cp == end &&
         (oldIndex < (JSVAL_INT_MAX / 10) ||
          (oldIndex == (JSVAL_INT_MAX / 10) &&
           c <= (JSVAL_INT_MAX % 10)))) {
@@ -3394,6 +3423,13 @@ js_GetProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
                     (op != JSOP_GETPROP && op != JSOP_GETELEM)) {
                     return JS_TRUE;
                 }
+
+                /*
+                 * XXX do not warn about missing __iterator__ as the function
+                 * may be called from JS_GetMethodById. See bug 355145.
+                 */
+                if (id == ATOM_TO_JSID(cx->runtime->atomState.iteratorAtom))
+                    return JS_TRUE;
 
                 /* Kludge to allow (typeof foo == "undefined") tests. */
                 JS_ASSERT(cx->fp->script);
@@ -4532,10 +4568,10 @@ js_TryMethod(JSContext *cx, JSObject *obj, JSAtom *atom,
     }
     if (!ok)
         JS_ClearPendingException(cx);
-    ok = JSVAL_IS_PRIMITIVE(fval) ||
-         js_InternalCall(cx, obj, fval, argc, argv, rval);
     JS_SetErrorReporter(cx, older);
-    return ok;
+
+    return JSVAL_IS_PRIMITIVE(fval) ||
+           js_InternalCall(cx, obj, fval, argc, argv, rval);
 }
 
 #if JS_HAS_XDR

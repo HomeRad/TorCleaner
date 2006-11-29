@@ -591,6 +591,13 @@ js_ChangeExternalStringFinalizer(JSStringFinalizeOp oldop,
     return -1;
 }
 
+/* This is compatible with JSDHashEntryStub. */
+typedef struct JSGCRootHashEntry {
+    JSDHashEntryHdr hdr;
+    void            *root;
+    const char      *name;
+} JSGCRootHashEntry;
+
 /* Initial size of the gcRootsHash table (SWAG, small enough to amortize). */
 #define GC_ROOTS_SIZE   256
 #define GC_FINALIZE_LEN 1024
@@ -705,19 +712,8 @@ js_DumpGCStats(JSRuntime *rt, FILE *fp)
 #endif
 
 #ifdef DEBUG
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
-js_root_printer(JSDHashTable *table, JSDHashEntryHdr *hdr, uint32 i, void *arg)
-{
-    uint32 *leakedroots = (uint32 *)arg;
-    JSGCRootHashEntry *rhe = (JSGCRootHashEntry *)hdr;
-
-    (*leakedroots)++;
-    fprintf(stderr,
-            "JS engine warning: leaking GC root \'%s\' at %p\n",
-            rhe->name ? (char *)rhe->name : "", rhe->root);
-
-    return JS_DHASH_NEXT;
-}
+static void
+CheckLeakedRoots(JSRuntime *rt);
 #endif
 
 void
@@ -740,27 +736,8 @@ js_FinishGC(JSRuntime *rt)
 
     if (rt->gcRootsHash.ops) {
 #ifdef DEBUG
-        uint32 leakedroots = 0;
-
-        /* Warn (but don't assert) debug builds of any remaining roots. */
-        JS_DHashTableEnumerate(&rt->gcRootsHash, js_root_printer,
-                               &leakedroots);
-        if (leakedroots > 0) {
-            if (leakedroots == 1) {
-                fprintf(stderr,
-"JS engine warning: 1 GC root remains after destroying the JSRuntime.\n"
-"                   This root may point to freed memory. Objects reachable\n"
-"                   through it have not been finalized.\n");
-            } else {
-                fprintf(stderr,
-"JS engine warning: %lu GC roots remain after destroying the JSRuntime.\n"
-"                   These roots may point to freed memory. Objects reachable\n"
-"                   through them have not been finalized.\n",
-                        (unsigned long) leakedroots);
-            }
-        }
+        CheckLeakedRoots(rt);
 #endif
-
         JS_DHashTableFinish(&rt->gcRootsHash);
         rt->gcRootsHash.ops = NULL;
     }
@@ -840,6 +817,122 @@ js_RemoveRoot(JSRuntime *rt, void *rp)
     rt->gcPoke = JS_TRUE;
     JS_UNLOCK_GC(rt);
     return JS_TRUE;
+}
+
+#ifdef DEBUG
+
+JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+js_root_printer(JSDHashTable *table, JSDHashEntryHdr *hdr, uint32 i, void *arg)
+{
+    uint32 *leakedroots = (uint32 *)arg;
+    JSGCRootHashEntry *rhe = (JSGCRootHashEntry *)hdr;
+
+    (*leakedroots)++;
+    fprintf(stderr,
+            "JS engine warning: leaking GC root \'%s\' at %p\n",
+            rhe->name ? (char *)rhe->name : "", rhe->root);
+
+    return JS_DHASH_NEXT;
+}
+
+static void
+CheckLeakedRoots(JSRuntime *rt)
+{
+    uint32 leakedroots = 0;
+
+    /* Warn (but don't assert) debug builds of any remaining roots. */
+    JS_DHashTableEnumerate(&rt->gcRootsHash, js_root_printer,
+                           &leakedroots);
+    if (leakedroots > 0) {
+        if (leakedroots == 1) {
+            fprintf(stderr,
+"JS engine warning: 1 GC root remains after destroying the JSRuntime.\n"
+"                   This root may point to freed memory. Objects reachable\n"
+"                   through it have not been finalized.\n");
+        } else {
+            fprintf(stderr,
+"JS engine warning: %lu GC roots remain after destroying the JSRuntime.\n"
+"                   These roots may point to freed memory. Objects reachable\n"
+"                   through them have not been finalized.\n",
+                        (unsigned long) leakedroots);
+        }
+    }
+}
+
+typedef struct NamedRootDumpArgs {
+    void (*dump)(const char *name, void *rp, void *data);
+    void *data;
+} NamedRootDumpArgs;
+
+JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+js_named_root_dumper(JSDHashTable *table, JSDHashEntryHdr *hdr, uint32 number,
+                     void *arg)
+{
+    NamedRootDumpArgs *args = (NamedRootDumpArgs *) arg;
+    JSGCRootHashEntry *rhe = (JSGCRootHashEntry *)hdr;
+
+    if (rhe->name)
+        args->dump(rhe->name, rhe->root, args->data);
+    return JS_DHASH_NEXT;
+}
+
+void
+js_DumpNamedRoots(JSRuntime *rt,
+                  void (*dump)(const char *name, void *rp, void *data),
+                  void *data)
+{
+    NamedRootDumpArgs args;
+
+    args.dump = dump;
+    args.data = data;
+    JS_DHashTableEnumerate(&rt->gcRootsHash, js_named_root_dumper, &args);
+}
+
+#endif /* DEBUG */
+
+typedef struct GCRootMapArgs {
+    JSGCRootMapFun map;
+    void *data;
+} GCRootMapArgs;
+
+JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+js_gcroot_mapper(JSDHashTable *table, JSDHashEntryHdr *hdr, uint32 number,
+                 void *arg)
+{
+    GCRootMapArgs *args = (GCRootMapArgs *) arg;
+    JSGCRootHashEntry *rhe = (JSGCRootHashEntry *)hdr;
+    intN mapflags;
+    JSDHashOperator op;
+
+    mapflags = args->map(rhe->root, rhe->name, args->data);
+
+#if JS_MAP_GCROOT_NEXT == JS_DHASH_NEXT &&                                     \
+    JS_MAP_GCROOT_STOP == JS_DHASH_STOP &&                                     \
+    JS_MAP_GCROOT_REMOVE == JS_DHASH_REMOVE
+    op = (JSDHashOperator)mapflags;
+#else
+    op = JS_DHASH_NEXT;
+    if (mapflags & JS_MAP_GCROOT_STOP)
+        op |= JS_DHASH_STOP;
+    if (mapflags & JS_MAP_GCROOT_REMOVE)
+        op |= JS_DHASH_REMOVE;
+#endif
+
+    return op;
+}
+
+uint32
+js_MapGCRoots(JSRuntime *rt, JSGCRootMapFun map, void *data)
+{
+    GCRootMapArgs args;
+    uint32 rv;
+
+    args.map = map;
+    args.data = data;
+    JS_LOCK_GC(rt);
+    rv = JS_DHashTableEnumerate(&rt->gcRootsHash, js_gcroot_mapper, &args);
+    JS_UNLOCK_GC(rt);
+    return rv;
 }
 
 JSBool
@@ -1522,6 +1615,13 @@ js_LockGCThing(JSContext *cx, void *thing)
                                  JSSTRING_IS_DEPENDENT((JSString *)(o)))
 
 #define GC_THING_IS_DEEP(t,o)   (GC_TYPE_IS_DEEP(t) || IS_DEEP_STRING(t, o))
+
+/* This is compatible with JSDHashEntryStub. */
+typedef struct JSGCLockHashEntry {
+    JSDHashEntryHdr hdr;
+    const JSGCThing *thing;
+    uint32          count;
+} JSGCLockHashEntry;
 
 JSBool
 js_LockGCThingRT(JSRuntime *rt, void *thing)
@@ -2723,6 +2823,12 @@ js_GC(JSContext *cx, JSGCInvocationKind gckind)
      * Set all thread local freelists to NULL. We may visit a thread's
      * freelist more than once. To avoid redundant clearing we unroll the
      * current thread's step.
+     *
+     * Also, in case a JSScript wrapped within an object was finalized, we
+     * null acx->thread->gsnCache.script and finish the cache's hashtable.
+     * Note that js_DestroyScript, called from script_finalize, will have
+     * already cleared cx->thread->gsnCache above during finalization, so we
+     * don't have to here.
      */
     memset(cx->thread->gcFreeLists, 0, sizeof cx->thread->gcFreeLists);
     iter = NULL;
@@ -2730,7 +2836,11 @@ js_GC(JSContext *cx, JSGCInvocationKind gckind)
         if (!acx->thread || acx->thread == cx->thread)
             continue;
         memset(acx->thread->gcFreeLists, 0, sizeof acx->thread->gcFreeLists);
+        GSN_CACHE_CLEAR(&acx->thread->gsnCache);
     }
+#else
+    /* The thread-unsafe case just has to clear the runtime's GSN cache. */
+    GSN_CACHE_CLEAR(&rt->gsnCache);
 #endif
 
 restart:
@@ -2745,7 +2855,7 @@ restart:
     if (rt->gcLocksHash)
         JS_DHashTableEnumerate(rt->gcLocksHash, gc_lock_marker, cx);
     js_MarkAtomState(&rt->atomState, keepAtoms, gc_mark_atom_key_thing, cx);
-    js_MarkWatchPoints(rt);
+    js_MarkWatchPoints(cx);
     js_MarkScriptFilenames(rt, keepAtoms);
     js_MarkNativeIteratorStates(cx);
 
@@ -2794,7 +2904,7 @@ restart:
         if (acx->throwing && JSVAL_IS_GCTHING(acx->exception))
             GC_MARK(cx, JSVAL_TO_GCTHING(acx->exception), "exception");
 #if JS_HAS_LVALUE_RETURN
-        if (acx->rval2set == JS_RVAL2_VALUE && JSVAL_IS_GCTHING(acx->rval2))
+        if (acx->rval2set && JSVAL_IS_GCTHING(acx->rval2))
             GC_MARK(cx, JSVAL_TO_GCTHING(acx->rval2), "rval2");
 #endif
 
@@ -2816,14 +2926,13 @@ restart:
             } else if (tvr->count == -2) {
                 tvr->u.marker(cx, tvr);
             } else {
+                JS_ASSERT(tvr->count >= 0);
                 GC_MARK_JSVALS(cx, tvr->count, tvr->u.array, "tvr->u.array");
             }
         }
 
         if (acx->sharpObjectMap.depth > 0)
             js_GCMarkSharpMap(cx, &acx->sharpObjectMap);
-
-        acx->cachedIterObj = NULL;
     }
 
 #ifdef DUMP_CALL_TABLE
@@ -2868,11 +2977,7 @@ restart:
      * Finalize as we sweep, outside of rt->gcLock but with rt->gcRunning set
      * so that any attempt to allocate a GC-thing from a finalizer will fail,
      * rather than nest badly and leave the unmarked newborn to be swept.
-     */
-    js_SweepAtomState(&rt->atomState);
-    js_SweepScopeProperties(rt);
-
-    /*
+     *
      * Finalize smaller objects before larger, to guarantee finalization of
      * GC-allocated obj->slots after obj.  See FreeSlots in jsobj.c.
      */
@@ -2918,9 +3023,17 @@ restart:
     }
 
     /*
+     * Sweep the runtime's property tree after finalizing objects, in case any
+     * had watchpoints referencing tree nodes.  Then sweep atoms, which may be
+     * referenced from dead property ids.
+     */
+    js_SweepScopeProperties(rt);
+    js_SweepAtomState(&rt->atomState);
+
+    /*
      * Sweep script filenames after sweeping functions in the generic loop
-     * above. In this way when scripted function's finalizer destroys script
-     * triggering a call to rt->destroyScriptHook, the hook can still access
+     * above. In this way when a scripted function's finalizer destroys the
+     * script and calls rt->destroyScriptHook, the hook can still access the
      * script's filename. See bug 323267.
      */
     js_SweepScriptFilenames(rt);
