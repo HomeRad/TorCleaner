@@ -21,6 +21,10 @@ import wc.XmlUtils
 # global vars
 date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 line_re = re.compile(r"^[0-9\^a-zA-Z_\-/\\+?#.;%()\[\]\~|$=]+$")
+whitelist_re = re.compile(r"""(
+    thisisarandomentrythatdoesnotexist |
+    avantgo\.com/frontdoor)
+    """, re.VERBOSE)
 # <domain> --> <category> --> None
 domains = {}
 # <url> --> <category> --> None
@@ -77,8 +81,8 @@ def read_data (fname, name, data):
     line = f.readline()
     while line:
         line = line.strip()
-        if line and line[0]!='#' and line_re.match(line) and \
-           "thisisarandomentrythatdoesnotexist" not in line:
+        if line and line[0] != '#' and line_re.match(line) and not \
+           whitelist_re.match(line):
             categories.setdefault(cat, {})[name] = None
             if name=="expressions":
                 data.setdefault(cat, []).append(line)
