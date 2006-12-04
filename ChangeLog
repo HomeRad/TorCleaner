@@ -21,6 +21,10 @@
     Type: bugfix
     Changed: wc/containers.py
 
+  * Catch zlib deflate errors, and disable the deflation in this case.
+    Type: bugfix
+    Changed: wc/proxy/decoders/DeflateStream.py
+
 2.40 "Lucky Number Slevin" (released 29.9.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
