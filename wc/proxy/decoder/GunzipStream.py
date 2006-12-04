@@ -55,7 +55,6 @@ class GunzipStream (DeflateStream.DeflateStream):
         super(GunzipStream, self).__init__()
         self.buf = ''
         self.header_seen = False
-        self.error = False
 
     def __repr__ (self):
         """
