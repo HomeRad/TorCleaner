@@ -1,6 +1,3 @@
-- why is the DNS server not finding any ".sf.net" domains?
-  .sourceforge.net is ok...
-
 - Get the proxy to work with IE: it does not send Accept-Encoding, so
   don't encode the content from proxy to client.
 
