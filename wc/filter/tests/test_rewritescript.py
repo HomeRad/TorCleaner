@@ -19,6 +19,7 @@ Test javascript filtering.
 """
 
 import unittest
+import os
 import wc.configuration
 from wc.proxy.mainloop import proxy_poll
 from wc.proxy.timer import run_timers
@@ -29,12 +30,13 @@ from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 
 class TestRewriteScript (unittest.TestCase):
     """
-    All these tests work with a _default_ filter configuration.
+    All these tests work with the test filter configuration.
     If you change any of the *.zap filter configs, tests can fail...
     """
 
     def setUp (self):
-        wc.configuration.init()
+        confdir = os.path.join("test", "config")
+        wc.configuration.init(confdir=confdir)
         wc.configuration.config['filters'] = ['HtmlRewriter',]
         wc.configuration.config.init_filter_modules()
         wc.proxy.dns_lookups.init_resolver()

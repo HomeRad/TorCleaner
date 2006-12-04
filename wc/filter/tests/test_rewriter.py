@@ -35,7 +35,8 @@ class TestRewriter (unittest.TestCase):
     def setUp (self):
         logfile = os.path.join(wc.InstallData, "test", "logging.conf")
         wc.initlog(logfile, filelogs=False)
-        wc.configuration.init()
+        confdir = os.path.join("test", "config")
+        wc.configuration.init(confdir=confdir)
         wc.configuration.config['filters'] = ['HtmlRewriter']
         wc.configuration.config.init_filter_modules()
         self.headers = WcMessage()
