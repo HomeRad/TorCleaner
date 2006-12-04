@@ -1,7 +1,6 @@
 #!/bin/sh -e
 # network device, change as appropriate
-NETDEV=ppp0
-if ifconfig $NETDEV | grep RUNNING > /dev/null; then
+if dnsip www.fsf.org | grep -q \\.; then
     echo "--resource=network"
 fi
 
