@@ -3,8 +3,8 @@
 <folder sid="wc.17" oid="2" configversion="0.10">
 <title lang="en">Blacklist aggressive</title>
 <title lang="de">Filter für Aggression</title>
-<description lang="en">Automatically generated on 2006-05-05 20:19:05</description>
-<description lang="de">Automatisch generiert am 2006-05-05 20:19:05</description>
+<description lang="en">Automatically generated on 2006-12-04 21:22:07</description>
+<description lang="de">Automatisch generiert am 2006-12-04 21:22:07</description>
 <blockdomains sid="wc.15"
  filename="blacklists/aggressive/domains.gz">
   <title lang="en">Aggressive domain filter</title>
