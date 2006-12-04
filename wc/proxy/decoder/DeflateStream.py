@@ -66,6 +66,9 @@ class DeflateStream (object):
         try:
             return self.decompressor.decompress(s)
         except zlib.error:
+            import sys
+            import wc
+            import wc.log
             msg = str(sys.exc_info()[1])
             wc.log.warn(wc.LOG_PROXY,
                         _("zlib error: %s, disabling deflate"), msg)
