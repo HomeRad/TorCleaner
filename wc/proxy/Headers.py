@@ -28,7 +28,7 @@ import wc.log
 import wc.http.header
 import wc.http.date
 import wc.magic
-from encoder import ChunkStream
+#from encoder import ChunkStream
 from decoder import UnchunkStream, GunzipStream, DeflateStream
 
 
