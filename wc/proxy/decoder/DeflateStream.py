@@ -44,6 +44,7 @@ class DeflateStream (object):
         """
         self.decompressor = zlib.decompressobj(-zlib.MAX_WBITS)
         self.closed = False
+        self.error = False
 
     def __repr__ (self):
         """
@@ -59,10 +60,23 @@ class DeflateStream (object):
         """
         Unzip given data s and return decompressed data.
         """
-        return self.decompressor.decompress(s)
+        if self.error:
+            # don't decode whan an error has occured
+            return s
+        try:
+            return self.decompressor.decompress(s)
+        except zlib.error:
+            msg = str(sys.exc_info()[1])
+            wc.log.warn(wc.LOG_PROXY,
+                        _("zlib error: %s, disabling deflate"), msg)
+            self.error = True
+            return s
 
     def flush (self):
         """
         Flush all buffered data and return it.
         """
+        if self.error:
+            return ""
         return self.decompressor.flush()
+
