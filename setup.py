@@ -387,21 +387,16 @@ class MyBdistWininst (bdist_wininst, object):
 
 _cc_test_file = ".setup.test"
 _cc_test_file_c = ".setup.test.c"
-def cc_supports_option (cc, option):
-    """
-    Check if the given C compiler supports the given option by
-    compiling and linking a simple test program.
-
-    @return: True if the compiler supports the option, else False
-    @rtype: bool
-    """
-    if not os.path.exists(_cc_test_file_c):
-        f = open(_cc_test_file_c, "w")
-        try:
-            f.write("int main(){return 0;}\n")
-        finally:
-            f.close()
-    cmd_args = [cc[0], option, "-o", _cc_test_file,_cc_test_file_c]
+def cc_run (cc, args):
+    "Run C compiler with given args."
+    f = open(_cc_test_file_c, "w")
+    try:
+        f.write("int main(){return 0;}\n")
+    finally:
+        f.close()
+    cmd_args = [cc[0]]
+    cmd_args.extend(args)
+    cmd_args.extend(["-o", _cc_test_file, _cc_test_file_c])
     retcode = subprocess.call(cmd_args)
     # remove temp files
     for filename in (_cc_test_file, _cc_test_file_c):
@@ -410,6 +405,21 @@ def cc_supports_option (cc, option):
         except os.error:
             pass
     return retcode == 0
+
+
+def cc_supports_option (cc, option):
+    """
+    Check if the given C compiler supports the given option by
+    compiling and linking a simple test program.
+
+    @return: True if the compiler supports the option, else False
+    @rtype: bool
+    """
+    return cc_run(cc, [option])
+
+
+def cc_has_library (cc, lib):
+    return cc_run(cc, ["-l", lib])
 
 
 class MyBuildExt (build_ext, object):
@@ -429,7 +439,9 @@ class MyBuildExt (build_ext, object):
         if self.compiler.compiler_type == 'unix':
             if cc_supports_option(self.compiler.compiler, "-std=gnu99"):
                 extra.append("-std=gnu99")
-            if cc_supports_option(self.compiler.compiler, "-fstack-protector"):
+            if cc_supports_option(self.compiler.compiler, "-fstack-protector") and \
+               cc_has_library(self.compiler.compiler, "ssp_nonshared") and \
+               cc_has_library(self.compiler.compiler, "ssp"):
                 extra.append("-fstack-protector")
                 libs.append("ssp_nonshared")
                 libs.append("ssp")
