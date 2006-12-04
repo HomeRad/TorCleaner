@@ -1,0 +1,341 @@
+<!-- 
+ Document Type Definition (DTD) for WWW filters.
+ Current filters are at http://webcleaner.sourceforge.net/filter/
+ 
+ Changes:
+
+ 20060425 Bastian Kleineidam
+ * Fixed typo for xmlrewrite attribute decl
+ * Changed rating category to limit
+ 20050920 Bastian Kleineidam
+ * added action attribute to header element
+ 20050809 Bastian Kleineidam
+ * renamed rewrite to htmlrewrite
+ * added xmlrewrite
+ * added configversion to folder attrs
+ 20041227 Bastian Kleineidam
+ * added "antivirus" element
+ 20040308 Bastian Kleineidam
+ * added the "filterstage" attribute to header rules
+ 20040225 Bastian Kleineidam
+ * multi-language rule title and description
+ 20040219 Bastian Kleineidam
+ * added matchurl and nomatchurl as elements, and restructured the other
+   elements according to this
+ 20040106 Bastian Kleineidam
+ * removed pics, added rating stuff
+ 20031031 Bastian Kleineidam
+ * remove oid attr from all rules except folder
+ 20031029 Bastian Kleineidam
+ * replace attributes [scheme, host, port, path, query, parameters, fragment]
+   with url
+ 20030806 Bastian Kleineidam
+ * removed lang attribute, it was not used
+ 20030730 Bastian Kleineidam
+ * renamed file attribute to filename
+ * changed oid attribute from #IMPLIED to #REQUIRED
+ * added sid attribute
+ 20030705 Bastian Kleineidam
+ * renamed replacer to replace
+ * added pics element
+ 20030307 Bastian Kleineidam
+ * added javascript filter rule
+ 23.7.2002 Bastian Kleineidam
+ * added allowurls and allowdomains filters
+ 29.6.2002 Bastian Kleineidam
+ * added blockurls and blockdomains filters
+ 7.6.2002 Bastian Kleineidam
+ * added oid
+ 23.2.2002 Bastian Kleineidam
+ * added matchurl and dontmatchurl attributes
+ 10.8.2001 Bastian Kleineidam
+ * added Replacer
+ 
+ WWW filters are configuration files for eg. blocking URLs or rewriting
+ HTML, image data or HTTP headers.
+ Each file must have exactly one folder element.
+ Each folder can have any number of rules (including zero).
+ Filter files should have a .zap extension.
+ In DATA sections, the following characters must be XML-encoded:
+ Character	Code
+   <             &lt;
+   >             &gt;
+   &             &amp;
+   "             &quot;
+   '             &apos;
+
+-->
+
+
+<!--                      Folder
+
+   A folder holds a list of filter rules.
+   The folder and each rule has a "disable" attribute to disable it.
+   By default the folder or rule is enabled.
+   This way configuration tools can display the description of all
+   filters and rules and can enable/disable each of them separately.
+-->
+<!ELEMENT folder (title+,description*,(htmlrewrite|xmlrewrite|replace|javascript|block|blockurls|blockdomains|allow|header|image|nocomments|rating|antivirus)*)>
+<!ATTLIST folder
+ sid      CDATA #REQUIRED
+ oid      CDATA #REQUIRED
+ disable  CDATA "0"
+ configversion CDATA #REQUIRED
+>
+
+<!--                      Title and description
+
+    Rules have a title, and possibly a description. Title and
+    description can be specified in multiple languages with the "lang"
+    attribute.
+-->
+<!ELEMENT title (#PCDATA)>
+<!ATTLIST title
+ lang     CDATA #REQUIRED
+>
+<!ELEMENT description (#PCDATA)>
+<!ATTLIST description
+ lang     CDATA #REQUIRED
+>
+
+<!--                      URL matching
+
+    Rules can apply only to a selected list of urls. Matchurl and nomatchurl
+    specify regular expressions that have to match resp. not match an url
+    for rule application.
+-->
+<!ELEMENT matchurl (#PCDATA)>
+<!ELEMENT nomatchurl (#PCDATA)>
+
+<!--                      HTML Rewriter
+
+   The htmlrewrite tag applies to HTML tags and can replace (or delete if
+   the replacement data is empty) arbitrary HTML tag blocks.
+   The tag name is a case insensitive string.
+
+   If there is no <replace> tag the complete tag will be removed.
+-->
+<!ELEMENT htmlrewrite (title+,description*,matchurl*,nomatchurl*,attr*,enclosed?,replacement?)>
+<!ATTLIST htmlrewrite
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+ tag      CDATA "a"
+>
+
+<!--                      XML Rewriter
+
+   The xmlrewrite tag applies to XML tags matching the given selector.
+   Selectors are implementation specific, but should somewhat match
+   XPath expressions.
+   Once it matches the replacetype and value determine what and how
+   replacement is done.
+-->
+<!ELEMENT xmlrewrite (title+,description*,matchurl*,nomatchurl*)>
+<!ATTLIST xmlrewrite
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+ selector CDATA #REQUIRED
+ replacetype CDATA #REQUIRED
+ value    CDATA ""
+>
+
+<!--                      Attribute
+
+   We can specify attributes the tag must have.
+   The attribute name is a case insensitive string.
+   The attribute value is a regular expression.
+-->
+<!ELEMENT attr (#PCDATA)>
+<!ATTLIST attr
+ name CDATA "href"
+>
+
+<!--                       Enclosed
+
+   Specify a regular expression which matches the enclosed block of a 
+   tag.
+-->
+<!ELEMENT enclosed (#PCDATA)>
+
+<!--                    Replace
+
+   replace part   What it does when replacement is 'foo'
+   ==========================================================
+   tag            <blink>text</blink>  => footextfoo
+   tagname        <blink>text</blink>  => <foo>text</foo>
+   enclosed       <blink>text</blink>  => <blink>foo</blink>
+   attr           <a href="bla">..</a> => <a foo>..</a>
+   attrval        <a href="bla">..</a> => <a href="foo">..</a>
+   complete       <a href="bla">..</a> => foo
+   
+   If you specified zero or more than one attributes to match, 
+   'attr' and 'attrvalue' replace the first occuring or matching 
+   attribute or nothing.
+-->
+<!ELEMENT replacement (#PCDATA)>
+<!ATTLIST replacement
+ part     (tag|tagname|attr|attrval|enclosed|complete) "complete"
+>
+
+<!--                       Blocker
+
+    Here we can specify regular expressions for urls to block.
+
+    The element data specifies the URL to show when the block matches.
+    Applications should have a default URL.
+-->
+<!ELEMENT block (title+,description*,replacement?)>
+<!ATTLIST block
+ sid      CDATA #REQUIRED
+ url        CDATA #IMPLIED
+ disable    CDATA "0"
+>
+
+<!--                       Block Domains
+
+    The traditional way of a lot of filter proxies is to block a list
+    of domains. This filter specifies a filename with one domain per
+    line.
+    There is a bl2wc.py script to convert SquidGuard blacklists to
+    WebCleaner .zap rules.
+    The file can be gzip-compressed.
+-->
+<!ELEMENT blockdomains (title+,description*,replacement?)>
+<!ATTLIST blockdomains
+ sid      CDATA #REQUIRED
+ filename CDATA #IMPLIED
+>
+
+<!--                       Allow Domains
+
+    Same as block for allowing entire domains.
+-->
+<!ELEMENT allowdomains (title+,description*,replacement?)>
+<!ATTLIST allowdomains
+ sid      CDATA #REQUIRED
+ filename CDATA #IMPLIED
+>
+
+<!--                       Block Urls
+
+    SquidGuard as 'urls' files as blacklists specifying both host and
+    path information.
+    There is a bl2wc.py script to convert SquidGuard blacklists to
+    WebCleaner .zap rules.
+    The file can be gzip-compressed.
+-->
+<!ELEMENT blockurls (title+,description*,replacement?)>
+<!ATTLIST blockurls
+ sid      CDATA #REQUIRED
+ filename CDATA #IMPLIED
+>
+
+<!--                       Allow Urls
+
+    Same as block urls for allowing.
+-->
+<!ELEMENT allowurls (title+,description*,replacement?)>
+<!ATTLIST allowurls
+ sid      CDATA #REQUIRED
+ filename CDATA #IMPLIED
+>
+
+
+<!--                       Allow
+
+    Here we can specify urls to allow if they would be blocked
+    otherwise.
+-->
+<!ELEMENT allow (title+,description*)>
+<!ATTLIST allow
+ sid        CDATA #REQUIRED
+ url        CDATA #IMPLIED
+ disable    CDATA "0"
+>
+
+<!--                       Header
+     Modify HTTP headers. If the replacement value is missing, the header
+     gets deleted. Otherwise the specified header is added or replaced.
+-->
+<!ELEMENT header (title+,description*,matchurl*,nomatchurl*,replacement?)>
+<!ATTLIST header
+ sid      CDATA #REQUIRED
+ name     CDATA #REQUIRED
+ disable  CDATA "0"
+ filterstage (request|response|both) "request"
+ action   (add|replace|remove) "replace"
+>
+
+<!--                       Image
+
+    Block images with a certain size. A replacement url can be specified.
+-->
+<!ELEMENT image (title+,description*,matchurl*,nomatchurl*,replacement?)>
+<!ATTLIST image
+ sid      CDATA #REQUIRED
+ width    CDATA #IMPLIED
+ height   CDATA #IMPLIED
+ type     (gif|jpg|png) "gif"
+ disable  CDATA "0"
+>
+
+<!--                      No comments
+
+    Remove comments from HTML source
+-->
+<!ELEMENT nocomments (title+,description*,matchurl*,nomatchurl*)>
+<!ATTLIST nocomments
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+>
+
+<!--                      JavaScript
+
+    Execute and filter JavaScript in HTML source
+-->
+<!ELEMENT javascript (title+,description*,matchurl*,nomatchurl*)>
+<!ATTLIST javascript
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+>
+
+<!--                      Replace
+
+   Replace regular expressions in a data stream
+-->
+<!ELEMENT replace (title+,description*,matchurl*,nomatchurl*,replacement?)>
+<!ATTLIST replace
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+ search   CDATA #REQUIRED
+>
+
+<!--                        Rating
+
+   A rule enabling the rating system in WebCleaner.
+-->
+<!ELEMENT rating (title+,description*,matchurl*,nomatchurl*,url?,limit*)>
+<!ATTLIST rating
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+>
+
+<!--                      rating limit
+
+   a limit has a name and a rating value as content
+-->
+<!ELEMENT limit (#PCDATA)>
+<!ATTLIST limit
+ name     CDATA #REQUIRED
+>
+
+<!--                        Antivirus
+
+   A rule enabling virus scanning in WebCleaner.
+-->
+<!ELEMENT antivirus (title+,description*,matchurl*,nomatchurl*)>
+<!ATTLIST antivirus
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+>
+

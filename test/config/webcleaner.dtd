@@ -1,0 +1,34 @@
+<!-- Changes
+20040317 Bastian Kleineidam
+  - removed unused elements
+  - added sslport, sslgateway attributes
+20050808 Bastian Kleineidam
+  - changed filter name to CDATA, there are too many filters now
+20050809 Bastian Kleineidam
+  - renamed version to configversion
+-->
+<!ELEMENT webcleaner (filter+)>
+<!ATTLIST webcleaner
+ configversion   CDATA #REQUIRED
+ port        CDATA "8080"
+ sslport     CDATA "8443"
+ sslgateway  CDATA #IMPLIED
+ proxyuser   CDATA #IMPLIED
+ proxypass   CDATA #IMPLIED
+ parentproxyuser CDATA #IMPLIED
+ parentproxypass CDATA #IMPLIED
+ gui_theme   CDATA "classic"
+ timeout     CDATA "30"
+ development CDATA #IMPLIED
+ auth_ntlm   CDATA #IMPLIED
+ try_google  CDATA #IMPLIED
+ nofilterhosts   CDATA #IMPLIED
+ allowhosts      CDATA #IMPLIED
+ parentproxy     CDATA #IMPLIED
+ parentproxyport CDATA "8080"
+>
+
+<!ELEMENT filter EMPTY>
+<!ATTLIST filter
+ name CDATA #REQUIRED
+>
