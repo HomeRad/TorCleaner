@@ -25,6 +25,12 @@
   <description lang="de">Filter HTML in RSS item contents.</description>
 </xmlrewrite>
 
+<xmlrewrite sid="wc.86"
+ selector="/feed/entry/content"
+ replacetype="rsshtml">
+  <title lang="de">ATOM content</title>
+</xmlrewrite>
+
 <replace sid="wc.46"
  search="(?s)Advertisement.*&lt;/a&gt;">
   <title lang="en">Securityfocus ad</title>
@@ -44,6 +50,7 @@
   <title lang="de">Remove feedburner links</title>
   <description lang="de">At the bottom of some RSS contents there are feedburner links.</description>
   <matchurl>ajaxian</matchurl>
+  <matchurl>feedburner\.com</matchurl>
   <attr name="class">feedflare</attr>
   <replacement part="complete"/>
 </htmlrewrite>
