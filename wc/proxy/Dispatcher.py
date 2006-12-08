@@ -45,6 +45,9 @@ import wc.configuration
 import wc.log
 import timer
 
+def strerror (err):
+    return "%s (%s)" % (errno.errorcode.get(err, 'Unknown'),
+                        os.strerror(err))
 
 # map of sockets
 socket_map = {}
@@ -258,9 +261,8 @@ class Dispatcher (object):
         self.connect_checks = 0
         err = self.socket.connect_ex(addr)
         if err != 0:
-            strerr = os.strerror(err)
             assert None == wc.log.debug(wc.LOG_PROXY,
-                '%s connection error %d (%s)', self, err, strerr)
+                '%s connection error %d (%s)', self, err, strerror(err))
         if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             # Connection is in progress, check the connect condition later.
             def recheck ():
@@ -275,7 +277,7 @@ class Dispatcher (object):
         else:
             # Note that EALREADY is handled as an error. We don't want
             # to connect to an already-connected socket.
-            raise socket.error((err, errno.errorcode[err]))
+            raise socket.error((err, strerror(err)))
         return err
 
     def check_connect (self, addr):
@@ -316,8 +318,9 @@ class Dispatcher (object):
                 '%s connect status in progress/would block', self)
             timer.make_timer(0.2, recheck)
         else:
-            strerr = os.strerror(err)
-            wc.log.info(wc.LOG_PROXY, '%s connect error %s', self, strerr)
+            strerr = strerror(err)
+            wc.log.info(wc.LOG_PROXY, '%s final connect error %d (%s)',
+                        self, err, strerr)
             self.handle_error(_("Connect error %s.") % strerr)
 
     def accept (self):
