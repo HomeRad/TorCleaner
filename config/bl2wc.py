@@ -73,8 +73,9 @@ def read_blacklists (fname):
             read_data(fname, "expressions", expressions)
 
 
-def read_data (fname, name, data):
-    cat = os.path.basename(os.path.dirname(fname))
+def read_data (fname, name, data, cat=None):
+    if cat is None:
+        cat = os.path.basename(os.path.dirname(fname))
     if cat not in mycats:
         return
     f = file(fname)
@@ -275,7 +276,9 @@ def blacklist (fname, extract_to="extracted"):
         w.close()
         f.close()
         read_data(fname, "domains", domains)
-
+    else:
+        # assume file data is a list of ad domains
+        read_data(source, "domains", domains, cat="ads")
 
 # for now, only kids_and_teens
 def dmozlists (fname):
@@ -352,15 +355,20 @@ def download_and_merge ():
     if not os.path.isdir("downloads"):
         os.mkdir("downloads")
     # from Pål Baltzersen and Lars Erik Håland (Squidguard guys)
-    geturl("ftp://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/", "blacklists.tar.gz", blacklist)
+    geturl("ftp://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/",
+           "blacklists.tar.gz", blacklist)
     # from Stefan Furtmayr
     geturl("http://www.bn-paf.de/filter/", "de-blacklists.tar.gz", blacklist)
     # from Craig Baird
-    geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist, saveas="porn/domains.gz")
+    geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist,
+           saveas="porn/domains.gz")
     # from ?????
     geturl("http://squidguard.mesd.k12.or.us/", "blacklists.tgz", blacklist)
     # from fabrice Prigent
-    geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/", "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
+    geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/",
+           "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
+    geturl("http://pgl.yoyo.org/as/", "serverlist.php?showintro=0",
+           blacklist)
     # dmoz category dumps
     # Note: the dmoz content license is not GPL compatible, so you may not
     # distribute it with WebCleaner!
