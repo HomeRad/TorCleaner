@@ -29,6 +29,11 @@
     Type: bugfix
     Changed: setup.py
 
+  * Add http://pgl.yoyo.org/as/serverlist.php?showintro=0 to the
+    URL list of the blacklist downloader tool.
+    Type: feature
+    Changed: config/bl2wc.py
+
 2.40 "Lucky Number Slevin" (released 29.9.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
