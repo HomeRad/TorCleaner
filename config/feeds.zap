@@ -54,4 +54,11 @@
   <attr name="class">feedflare</attr>
   <replacement part="complete"/>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.87"
+ tag="a">
+  <title lang="de">Feeburner ads</title>
+  <attr name="href">feedburner\.com/~a/</attr>
+  <replacement part="complete"/>
+</htmlrewrite>
 </folder>
