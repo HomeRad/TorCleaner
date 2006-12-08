@@ -339,9 +339,6 @@ def server_set_encoding_headers (server, filename=None):
     remove_headers(server.headers, to_remove)
     if not server.headers.has_key('Content-Length'):
         server.headers['Connection'] = 'close\r'
-    if not rewrite:
-        # only decompress on rewrite
-        return bytes_remaining
     to_remove = sets.Set()
     #if server.protocol == "HTTP/1.1":
     #    # To make pipelining possible, enable chunked encoding.
@@ -373,6 +370,9 @@ def server_set_encoding_headers (server, filename=None):
             to_remove.add('Cache-Control')
         # add warning
         server.headers['Warning'] = "214 Transformation applied\r"
+        if server.headers.has_key("Content-Length"):
+            to_remove.add("Content-Length")
+        bytes_remaining = None
     remove_headers(server.headers, to_remove)
     return bytes_remaining
 
