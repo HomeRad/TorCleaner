@@ -22,6 +22,14 @@
 
 #include <Python.h>
 #include "structmember.h"
+
+/* See http://www.python.org/dev/peps/pep-0353/#conversion-guidelines */
+#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
+typedef int Py_ssize_t;
+#define PY_SSIZE_T_MAX INT_MAX
+#define PY_SSIZE_T_MIN INT_MIN
+#endif
+
 #ifdef WIN32
 #define XP_PC
 #else
@@ -227,8 +235,10 @@ static JSBool branchCallback (JSContext *cx, JSScript *script) {
 static JSBool cookieGetter (JSContext* cx, JSObject* obj, jsval id, jsval* vp) {
     JSEnvObject* env = get_environment(cx);
     if (env->document_cookie) {
-        JSString* cookie = JS_NewStringCopyN(cx, PyString_AsString(env->document_cookie),
-                                             PyString_Size(env->document_cookie));
+        Py_ssize_t strlen = PyString_Size(env->document_cookie);
+        JSString* cookie =
+            JS_NewStringCopyN(cx, PyString_AsString(env->document_cookie),
+                              Py_SAFE_DOWNCAST(strlen, Py_ssize_t, size_t));
         if (cookie) {
             *vp = STRING_TO_JSVAL(cookie);
             return JS_TRUE;
@@ -467,8 +477,8 @@ static void setJSVersion (JSContext* ctx, double vers) {
 
 static int executeScheduledActions (JSEnvObject* self) {
     jsval rval;
-    int len = PyList_Size(self->scheduled_actions);
-    int i;
+    Py_ssize_t len = PyList_Size(self->scheduled_actions);
+    Py_ssize_t i;
     for (i=0; i<len; i++) {
         PyObject* func;
         PyObject* tup = PyList_GetItem(self->scheduled_actions, i);
@@ -483,7 +493,8 @@ static int executeScheduledActions (JSEnvObject* self) {
         Py_INCREF(func);
         JS_EvaluateScript(self->ctx, self->global_obj,
                           PyString_AsString(func),
-                          PyString_Size(func), "[unknown]", 1, &rval);
+                          Py_SAFE_DOWNCAST(PyString_Size(func), Py_ssize_t, int),
+                          "[unknown]", 1, &rval);
         Py_DECREF(func);
         Py_DECREF(tup);
     }
@@ -1165,7 +1176,7 @@ static PyObject* JSEnv_executeScript (JSEnvObject* self, PyObject* args) {
     setJSVersion(self->ctx, version);
     res = JS_EvaluateScript(self->ctx, self->global_obj,
                             PyString_AsString(script),
-                            PyString_Size(script),
+                            Py_SAFE_DOWNCAST(PyString_Size(script), Py_ssize_t, int),
                             "[unknown]", 1, &rval);
     if (executeScheduledActions(self) < 0) {
         return NULL;
@@ -1190,9 +1201,9 @@ static PyObject* JSEnv_executeScriptAsFunction (JSEnvObject* self, PyObject* arg
     }
     setJSVersion(self->ctx, version);
     func = JS_CompileFunction(self->ctx, self->global_obj, 0, 0, 0,
-                                          PyString_AsString(script),
-                                          PyString_Size(script),
-                                          "[unknown]", 1);
+                              PyString_AsString(script),
+                              Py_SAFE_DOWNCAST(PyString_Size(script), Py_ssize_t, int),
+                              "[unknown]", 1);
     if (!func) {
 	PyErr_SetString(JSError, "JS_CompileFunction failed");
         return NULL;
@@ -1208,6 +1219,7 @@ static PyObject* JSEnv_addForm (JSEnvObject* self, PyObject* args) {
     PyObject* action;
     PyObject* target;
     JSObject* form_obj;
+    JSString* str;
     jsval form_jsval;
     jsuint nforms;
     if (!PyArg_ParseTuple(args, "SSS", &name, &action, &target)) {
@@ -1218,20 +1230,41 @@ static PyObject* JSEnv_addForm (JSEnvObject* self, PyObject* args) {
 	PyErr_SetString(JSError, "JS_NewObject failed");
         return NULL;
     }
+    if (!(str = JS_NewStringCopyN(self->ctx, PyString_AsString(name),
+                                  Py_SAFE_DOWNCAST(PyString_Size(name),
+                                                   Py_ssize_t, size_t)))) {
+	PyErr_SetString(JSError, "JS_NewStringCopyN failed");
+        return NULL;
+    }
     if (JS_DefineProperty(self->ctx, form_obj, "name",
-                          STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(name), PyString_Size(name))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
+                          STRING_TO_JSVAL(str), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-	PyErr_SetString(JSError, "Could not set form.name property");
+        PyErr_SetString(JSError, "Could not set form.name property");
+        return NULL;
+    }
+    if (!(str = JS_NewStringCopyN(self->ctx, PyString_AsString(action),
+                                  Py_SAFE_DOWNCAST(PyString_Size(action),
+                                                   Py_ssize_t, size_t)))) {
+        PyErr_SetString(JSError, "JS_NewStringCopyN failed");
         return NULL;
     }
     if (JS_DefineProperty(self->ctx, form_obj, "action",
-                          STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(action), PyString_Size(action))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
+                          STRING_TO_JSVAL(str), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
-	PyErr_SetString(JSError, "Could not set form.action property");
+        PyErr_SetString(JSError, "Could not set form.action property");
+        return NULL;
+    }
+    if (!(str = JS_NewStringCopyN(self->ctx, PyString_AsString(target),
+                                  Py_SAFE_DOWNCAST(PyString_Size(target),
+                                                   Py_ssize_t, size_t)))) {
+        PyErr_SetString(JSError, "JS_NewStringCopyN failed");
         return NULL;
     }
     if (JS_DefineProperty(self->ctx, form_obj, "target",
-                          STRING_TO_JSVAL(JS_NewStringCopyN(self->ctx, PyString_AsString(target), PyString_Size(target))), 0, 0, JSPROP_ENUMERATE|JSPROP_PERMANENT)
+                          STRING_TO_JSVAL(str), 0, 0,
+                          JSPROP_ENUMERATE|JSPROP_PERMANENT)
         ==JS_FALSE) {
 	PyErr_SetString(JSError, "Could not set form.target property");
         return NULL;
