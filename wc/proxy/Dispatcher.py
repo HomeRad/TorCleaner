@@ -262,7 +262,7 @@ class Dispatcher (object):
         err = self.socket.connect_ex(addr)
         if err != 0:
             assert None == wc.log.debug(wc.LOG_PROXY,
-                '%s connection error %d (%s)', self, err, strerror(err))
+                '%s connection error %d %s', self, err, strerror(err))
         if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             # Connection is in progress, check the connect condition later.
             def recheck ():
