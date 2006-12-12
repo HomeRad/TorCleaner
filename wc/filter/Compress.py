@@ -53,6 +53,7 @@ def get_compress_object ():
             'size': 0,
            }
 
+
 def compress (data, compobj):
     """
     Compress data and adjust CRC of the compressor.
@@ -72,6 +73,42 @@ def compress (data, compobj):
         compressed = compobj['header'] + compressed
         compobj['header'] = ''
     return compressed
+
+
+def set_encoding_header (attrs):
+    """
+    Fix headers for compression, and add a compression object
+    to the filter attrs. Since the headers are modified this cannot
+    be done in update_attrs() but only when it is clear that the content
+    is going to be compressed.
+    """
+    headers = attrs['headers']
+    accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])
+    encoding = headers['server'].get('Content-Encoding', '')
+    encoding = encoding.strip().lower()
+    if 'gzip' not in accepts:
+        # browser does not accept gzip encoding
+        assert 'compressobj' not in attrs, \
+            "unexpected gzip compress object: "+headers
+    elif encoding and encoding not in _compress_encs:
+        attrs['compressobj'] = get_compress_object()
+        headers['data']['Content-Encoding'] = encoding+', gzip\r'
+    else:
+        attrs['compressobj'] = get_compress_object()
+        headers['data']['Content-Encoding'] = 'gzip\r'
+
+
+AE_HEADER = "Accept-Encoding"
+def accept_encoding (attrs):
+    clientheaders = attrs['headers']['client']
+    if AE_HEADER not in clientheaders:
+        # IE does not accept compressed content when no accept-encoding
+        # header is found.
+        return False
+    for value in clientheaders[AE_HEADER].split(";"):
+        if value.startswith('gzip'):
+            return True
+    return False
 
 
 class Compress (Filter.Filter):
@@ -101,8 +138,10 @@ class Compress (Filter.Filter):
         Note that compression state is saved outside of this function
         in the compression object.
         """
+        if not accept_encoding(attrs):
+            return data
         if self.init_compressor:
-            self.set_encoding_header(attrs)
+            set_encoding_header(attrs)
             self.init_compressor = False
         if 'compressobj' not in attrs:
             assert None == wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
@@ -113,8 +152,10 @@ class Compress (Filter.Filter):
         """
         Final compression of data, flush gzip buffers.
         """
+        if not accept_encoding(attrs):
+            return data
         if self.init_compressor:
-            self.set_encoding_header(attrs)
+            set_encoding_header(attrs)
             self.init_compressor = False
         if 'compressobj' not in attrs:
             assert None == wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
@@ -128,25 +169,3 @@ class Compress (Filter.Filter):
                                   struct.pack('<l', compobj['crc']),
                                   struct.pack('<l', compobj['size']))
         return compressed
-
-    def set_encoding_header (self, attrs):
-        """
-        Fix headers for compression, and add a compression object
-        to the filter attrs. Since the headers are modified this cannot
-        be done in update_attrs() but only when it is clear that the content
-        is going to be compressed.
-        """
-        headers = attrs['headers']
-        accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])
-        encoding = headers['server'].get('Content-Encoding', '')
-        encoding = encoding.strip().lower()
-        if 'gzip' not in accepts:
-            # browser does not accept gzip encoding
-            assert 'compressobj' not in attrs, \
-                "unexpected gzip compress object: "+headers
-        elif encoding and encoding not in _compress_encs:
-            attrs['compressobj'] = get_compress_object()
-            headers['data']['Content-Encoding'] = encoding+', gzip\r'
-        else:
-            attrs['compressobj'] = get_compress_object()
-            headers['data']['Content-Encoding'] = 'gzip\r'
