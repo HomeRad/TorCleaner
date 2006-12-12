@@ -34,6 +34,11 @@
     Type: feature
     Changed: config/bl2wc.py
 
+  * Honor the Accept-Encoding header in the compressing filter,
+    fixing the incompatility with IE.
+    Type: bugfix
+    Changed: wc/filters/Compress.py
+
 2.40 "Lucky Number Slevin" (released 29.9.2006)
 
   * Regenerate the magic.mime cache when the text file has a newer
