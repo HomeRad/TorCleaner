@@ -1,14 +1,4 @@
-- Get the Compress filter to work with IE: honor Accept-Encoding,
-  especially when it is missing.
-
 - use email.FeedParser instead of rfc822.Message()
-
-- Python 2.5 features
-  - The string and unicode methods startswith() and endswith() now accept
-    a tuple of prefixes/suffixes to look for. Implements RFE #1491485.
-  - Use Win32 API to implement os.{access,chdir,chmod,mkdir,remove,rename,rmdir,utime}.
-    As a result, these functions now raise WindowsError instead of OSError.
-  - new builtin function any and all
 
 - generic token split for header values of the form
   val1;param, val2;param2, val3, ...
