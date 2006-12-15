@@ -372,7 +372,6 @@ def server_set_encoding_headers (server, filename=None):
         server.headers['Warning'] = "214 Transformation applied\r"
         if server.headers.has_key("Content-Length"):
             to_remove.add("Content-Length")
-        bytes_remaining = None
     remove_headers(server.headers, to_remove)
     return bytes_remaining
 
