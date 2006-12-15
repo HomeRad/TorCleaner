@@ -105,7 +105,7 @@ def accept_encoding (attrs):
         # IE does not accept compressed content when no accept-encoding
         # header is found.
         return False
-    for value in clientheaders[AE_HEADER].split(";"):
+    for value in clientheaders[AE_HEADER].split(","):
         if value.startswith('gzip'):
             return True
     return False
