@@ -1,4 +1,4 @@
-2.41 "Thank you for smoking" (released xx.xx.xxxx)
+2.41 "Thank you for smoking" (released 16.12.2006)
 
   * The XML filter tries to fix unquoted ampersands.
     Type: feature
