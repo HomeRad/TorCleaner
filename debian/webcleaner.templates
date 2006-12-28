@@ -1,6 +1,6 @@
 Template: webcleaner/port
 Type: string
-_Default: 8080
+Default: 8080
 _Description: Default proxy port:
  This is the port number this proxy will listen on for requests.
 
