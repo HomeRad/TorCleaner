@@ -39,6 +39,11 @@ include test/logging.conf
 include test/pycheckrc
 include test/rating/rating.txt
 include test/filter/misc.zap
+include test/config/*.zap
+include test/config/*.conf
+include test/config/*.mime
+recursive-include test/config/blacklists *.gz
+include test/config/blacklists/README
 include scripts/*.sh
 include scripts/*.bat
 include tests/*.py
