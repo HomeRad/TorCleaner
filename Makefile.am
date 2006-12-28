@@ -96,13 +96,14 @@ dist-stamp: dist
 .PHONY: deb_orig
 deb_orig:
 	if [ ! -e $(DEB_ORIG_TARGET) ]; then \
-	  $(MAKE) dist-stamp && cp webcleaner-$(VERSION).tar.gz $(DEB_ORIG_TARGET); \
+	  $(MAKE) dist-stamp && mv webcleaner-$(VERSION).tar.gz $(DEB_ORIG_TARGET) && rm -f dist-stamp; \
 	fi
 
 # ready for upload, signed with my GPG key
 .PHONY: deb_signed
 deb_signed: clean
-	(env -u LANG svn-buildpackage --svn-dont-clean --svn-verbose --svn-ignore \
+	(env -u LANG svn-buildpackage --svn-dont-clean --svn-verbose \
+	  --svn-ignore --svn-no-links \
 	  --svn-prebuild="$(MAKE) deb_orig" --svn-lintian --svn-linda \
 	  -sgpg -pgpg -k$(GPGKEY) -r"fakeroot --" 2>&1) | \
 	tee $(SVNBUILD)/webcleaner-$(VERSION).build
