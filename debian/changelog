@@ -1,3 +1,10 @@
+webcleaner (2.42-0calvin1) unstable; urgency=low
+
+  * New upstream release.
+  * Don't translate default debconf template entries.
+
+ -- Bastian Kleineidam <calvin@debian.org>  Thu, 28 Dec 2006 22:14:12 +0100
+
 webcleaner (2.41-0calvin1) unstable; urgency=low
 
   * New upstream release.
