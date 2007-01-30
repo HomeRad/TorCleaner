@@ -61,6 +61,7 @@
 #include "jsobj.h"
 #include "jsopcode.h"
 #include "jsscan.h"
+#include "jsscope.h"
 #include "jsscript.h"
 #include "jsstr.h"
 
@@ -77,8 +78,12 @@ js_ThreadDestructorCB(void *ptr)
 
     if (!thread)
         return;
-    while (!JS_CLIST_IS_EMPTY(&thread->contextList))
-        JS_REMOVE_AND_INIT_LINK(thread->contextList.next);
+    while (!JS_CLIST_IS_EMPTY(&thread->contextList)) {
+        /* NB: use a temporary, as the macro evaluates its args many times. */
+        JSCList *link = thread->contextList.next;
+
+        JS_REMOVE_AND_INIT_LINK(link);
+    }
     GSN_CACHE_CLEAR(&thread->gsnCache);
     free(thread);
 }
