@@ -214,3 +214,21 @@ various:
 
 .PHONY: test
 test:	check
+
+JSBASEDIR:=/home/calvin/src/mozilla
+JSSRCDIR:=$(JSBASEDIR)/js/src
+jsdiff:
+	(cd libjs && for f in *.c *.h *.tbl *.msg \
+	          fdlibm/*.h fdlibm/*.c; do \
+	   diff -u $$f $(JSSRCDIR)/$$f 2>/dev/null; \
+	 done) | less
+
+jsupdate:
+	cd libjs && for f in *.c *.h *.tbl *.msg \
+                 fdlibm/*.h fdlibm/*.c; do \
+	  if ! diff $$f $(JSSRCDIR)/$$f > /dev/null 2>&1; then \
+	      if [ -e $(JSSRCDIR)/$$f ]; then \
+	          /bin/cp -vf $(JSSRCDIR)/$$f $$f; \
+	      fi; \
+	  fi; \
+	done
