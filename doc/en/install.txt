@@ -78,7 +78,7 @@ Direct download links are in brackets.
 4. *Optional but recommended (used for SSL connections)*
    Install OpenSSL and PyOpenSSL for Windows from
    http://www.shininglightpro.com/products/Win32OpenSSL.html
-   [http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8d.exe]
+   [http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8e.exe]
    and
    http://pyopenssl.sourceforge.net/
    [http://webcleaner.sourceforge.net/pyOpenSSL-0.6.win32-py2.4.exe]
