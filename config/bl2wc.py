@@ -370,9 +370,13 @@ def download_and_merge ():
     geturl("http://pgl.yoyo.org/as/", "serverlist.php?showintro=0",
            blacklist)
     # dmoz category dumps
-    # Note: the dmoz content license is not GPL compatible, so you may not
-    # distribute it with WebCleaner!
+    # Note: the dmoz content license is not GPL compatible, so you
+    # may not distribute it with WebCleaner!
     #geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
+    # Shalla's Blacklists
+    # Note: the Shalla list content license is not GPL compatible, so you
+    # may not distribute it with WebCleaner!
+    #geturl("http://squidguard.shalla.de/Downloads/", "shallalist.tar.gz", blacklist)
 
 
 def write_lists ():
