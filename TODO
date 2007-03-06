@@ -1,5 +1,3 @@
-- http://microsoft.com/ is broken. Oh well...
-
 - see antivirus-bug.txt
 
 - use email.FeedParser instead of rfc822.Message()
