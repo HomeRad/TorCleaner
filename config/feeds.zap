@@ -61,4 +61,10 @@
   <attr name="href">feedburner\.com/~a/</attr>
   <replacement part="complete"/>
 </htmlrewrite>
+
+<replace sid="lc.1"
+ search="Copyright.*\.com&lt;/a&gt;">
+  <title lang="en">Delicious days</title>
+  <matchurl>deliciousdays\.com/feed</matchurl>
+</replace>
 </folder>

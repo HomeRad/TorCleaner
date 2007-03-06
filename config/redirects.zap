@@ -116,4 +116,11 @@
   <attr name="href">clicks\.salamu\.de/.*ref=(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
+
+<htmlrewrite sid="lc.2"
+ tag="a">
+  <title lang="de">salamu.de Weiterleitung 2</title>
+  <attr name="href">www\.deliciousdays\.com/wp-content/themes/dd/cc\.php\?(?P&lt;url&gt;.+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
 </folder>
