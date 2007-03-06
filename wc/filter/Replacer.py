@@ -35,8 +35,8 @@ class Replacer (Filter.Filter):
         """Initialize replacer flags."""
         stages = [wc.filter.STAGE_RESPONSE_MODIFY]
         rulenames = ['replace']
-        mimes = ['text/html',
-                 'text/xml', 'application/xml', 'application/atom+xml',
+        mimes = ['text/html', 'text/xml', 'application/xml',
+                 r'application/(atom|rss|rdf)\+xml',
                  'text/javascript', 'application/x-javascript',]
         super(Replacer, self).__init__(stages=stages, mimes=mimes,
                                        rulenames=rulenames)
@@ -78,9 +78,9 @@ class Replacer (Filter.Filter):
         attrs['replacer_buf'] = Buf(rules)
 
 
-# 2kB chunk, 256 Byte overlap
-CHUNK_SIZE = 1024L*2L
-CHUNK_OVERLAP = 256L
+# 4kB chunk, 1024 Byte overlap
+CHUNK_SIZE = 1024L*4L
+CHUNK_OVERLAP = 1024L
 
 class Buf (wc.fileutil.Buffer):
     """
