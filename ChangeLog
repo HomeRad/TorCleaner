@@ -1,6 +1,8 @@
 2.42 "" (released xx.xx.xxxx)
 
-  *
+  * Check that charset is not None before lowering it in set_encoding().
+    Type: bugfix
+    Changed: wc/HtmlParser/__init__.py
 
 2.41 "Thank you for smoking" (released 16.12.2006)
 
