@@ -337,7 +337,7 @@ js_GetXMLNamespaceObject(JSContext *cx, JSXMLNamespace *ns)
     }
     obj = js_NewObject(cx, &js_NamespaceClass.base, NULL, NULL);
     if (!obj || !JS_SetPrivate(cx, obj, ns)) {
-        cx->newborn[GCX_OBJECT] = NULL;
+        cx->weakRoots.newborn[GCX_OBJECT] = NULL;
         return NULL;
     }
     ns->object = obj;
@@ -606,7 +606,7 @@ js_GetXMLQNameObject(JSContext *cx, JSXMLQName *qn)
     }
     obj = js_NewObject(cx, &js_QNameClass.base, NULL, NULL);
     if (!obj || !JS_SetPrivate(cx, obj, qn)) {
-        cx->newborn[GCX_OBJECT] = NULL;
+        cx->weakRoots.newborn[GCX_OBJECT] = NULL;
         return NULL;
     }
     qn->object = obj;
@@ -631,7 +631,7 @@ js_GetAttributeNameObject(JSContext *cx, JSXMLQName *qn)
 
     obj = js_NewObject(cx, &js_AttributeNameClass, NULL, NULL);
     if (!obj || !JS_SetPrivate(cx, obj, qn)) {
-        cx->newborn[GCX_OBJECT] = NULL;
+        cx->weakRoots.newborn[GCX_OBJECT] = NULL;
         return NULL;
     }
 
@@ -1463,7 +1463,7 @@ ParseNodeToQName(JSContext *cx, JSParseNode *pn, JSXMLArray *inScopeNSes,
                     break;
                 }
             }
-            prefix = NULL;
+            prefix = IS_EMPTY(uri) ? cx->runtime->emptyString : NULL;
         }
         localName = str;
     }
@@ -4077,34 +4077,72 @@ SyncInScopeNamespaces(JSContext *cx, JSXML *xml)
     return JS_TRUE;
 }
 
+static JSBool
+GetNamedProperty(JSContext *cx, JSXML *xml, JSXMLQName* nameqn,
+                 JSBool attributes, JSXML *list)
+{
+    JSXMLArray *array;
+    JSXMLNameMatcher matcher;
+    JSXMLArrayCursor cursor;
+    JSXML *kid;
+    JSBool ok;
+
+    if (!JSXML_HAS_KIDS(xml))
+        return JS_TRUE;
+
+    if (attributes) {
+        array = &xml->xml_attrs;
+        matcher = MatchAttrName;
+    } else {
+        array = &xml->xml_kids;
+        matcher = MatchElemName;
+    }
+
+    XMLArrayCursorInit(&cursor, array);
+    while ((kid = (JSXML *) XMLArrayCursorNext(&cursor)) != NULL) {
+        if (matcher(nameqn, kid)) {
+            if (!attributes && kid->xml_class == JSXML_CLASS_ELEMENT) {
+                ok = SyncInScopeNamespaces(cx, kid);
+                if (!ok)
+                    goto out;
+            }
+            ok = Append(cx, list, kid);
+            if (!ok)
+                goto out;
+        }
+    }
+    ok = JS_TRUE;
+
+  out:
+    XMLArrayCursorFinish(&cursor);
+    return ok;
+}
+
 /* ECMA-357 9.1.1.1 XML [[Get]] and 9.2.1.1 XMLList [[Get]]. */
 static JSBool
 GetProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
     JSXML *xml, *list, *kid;
     uint32 index;
-    JSObject *kidobj, *listobj, *nameobj;
+    JSObject *kidobj, *listobj;
     JSXMLQName *nameqn;
     jsid funid;
-    JSBool ok;
+    jsval roots[2];
+    JSTempValueRooter tvr;
+    JSBool attributes;
     JSXMLArrayCursor cursor;
-    jsval kidval;
-    JSXMLArray *array;
-    JSXMLNameMatcher matcher;
 
     xml = (JSXML *) JS_GetInstancePrivate(cx, obj, &js_XMLClass, NULL);
     if (!xml)
         return JS_TRUE;
 
-#ifdef __GNUC__
-    list = NULL;    /* quell GCC overwarning */
-#endif
-
-retry:
-    if (xml->xml_class == JSXML_CLASS_LIST) {
-        /* ECMA-357 9.2.1.1 starts here. */
-        if (js_IdIsIndex(id, &index)) {
+    if (js_IdIsIndex(id, &index)) {
+        if (xml->xml_class != JSXML_CLASS_LIST) {
+            *vp = (index == 0) ? OBJECT_TO_JSVAL(obj) : JSVAL_VOID;
+        } else {
             /*
+             * ECMA-357 9.2.1.1 starts here.
+             *
              * Erratum: 9.2 is not completely clear that indexed properties
              * correspond to kids, but that's what it seems to say, and it's
              * what any sane user would want.
@@ -4123,133 +4161,61 @@ retry:
             } else {
                 *vp = JSVAL_VOID;
             }
-            return JS_TRUE;
         }
+        return JS_TRUE;
+    }
 
-        nameqn = ToXMLName(cx, id, &funid);
-        if (!nameqn)
-            return JS_FALSE;
-        if (funid)
-            return GetFunction(cx, obj, xml, funid, vp);
+    /*
+     * ECMA-357 9.2.1.1/9.1.1.1 qname case.
+     */
+    nameqn = ToXMLName(cx, id, &funid);
+    if (!nameqn)
+        return JS_FALSE;
+    if (funid)
+        return GetFunction(cx, obj, xml, funid, vp);
 
-        /*
-         * Recursion through GetProperty may allocate more list objects, so
-         * we make use of local root scopes here.  Each new allocation will
-         * push the newborn onto the local root stack.
-         */
-        ok = js_EnterLocalRootScope(cx);
-        if (!ok)
-            return JS_FALSE;
+    roots[0] = OBJECT_TO_JSVAL(nameqn->object);
+    JS_PUSH_TEMP_ROOT(cx, 1, roots, &tvr);
 
-        /*
-         * NB: nameqn is already protected from GC by cx->newborn[GCX_OBJECT]
-         * until listobj is created.  After that, a local root keeps listobj
-         * alive, and listobj's private keeps nameqn alive via targetprop.
-         */
-        listobj = js_NewXMLObject(cx, JSXML_CLASS_LIST);
-        if (!listobj) {
-            ok = JS_FALSE;
-        } else {
-            list = (JSXML *) JS_GetPrivate(cx, listobj);
-            list->xml_target = xml;
+    listobj = js_NewXMLObject(cx, JSXML_CLASS_LIST);
+    if (listobj) {
+        roots[1] = OBJECT_TO_JSVAL(listobj);
+        tvr.count++;
 
+        list = (JSXML *) JS_GetPrivate(cx, listobj);
+        attributes = (OBJ_GET_CLASS(cx, nameqn->object) ==
+                      &js_AttributeNameClass);
+
+        if (xml->xml_class == JSXML_CLASS_LIST) {
             XMLArrayCursorInit(&cursor, &xml->xml_kids);
             while ((kid = (JSXML *) XMLArrayCursorNext(&cursor)) != NULL) {
-                if (kid->xml_class == JSXML_CLASS_ELEMENT) {
-                    kidobj = js_GetXMLObject(cx, kid);
-                    if (!kidobj) {
-                        ok = JS_FALSE;
-                        break;
-                    }
-                    ok = GetProperty(cx, kidobj, id, &kidval);
-                    if (!ok)
-                        break;
-                    kidobj = JSVAL_TO_OBJECT(kidval);
-                    kid = (JSXML *) JS_GetPrivate(cx, kidobj);
-                    if (JSXML_LENGTH(kid) > 0) {
-                        ok = Append(cx, list, kid);
-                        if (!ok)
-                            break;
-                    }
+                if (kid->xml_class == JSXML_CLASS_ELEMENT &&
+                    !GetNamedProperty(cx, kid, nameqn, attributes, list)) {
+                    listobj = NULL;
+                    break;
                 }
             }
             XMLArrayCursorFinish(&cursor);
+        } else {
+            if (!GetNamedProperty(cx, xml, nameqn, attributes, list))
+                listobj = NULL;
         }
-    } else {
-        /* ECMA-357 9.1.1.1 starts here. */
-        if (js_IdIsIndex(id, &index)) {
-            obj = ToXMLList(cx, OBJECT_TO_JSVAL(obj));
-            if (!obj)
-                return JS_FALSE;
-            xml = (JSXML *) JS_GetPrivate(cx, obj);
-            goto retry;
-        }
-
-        nameqn = ToXMLName(cx, id, &funid);
-        if (!nameqn)
-            return JS_FALSE;
-        if (funid)
-            return GetFunction(cx, obj, xml, funid, vp);
-        nameobj = nameqn->object;
 
         /*
-         * Recursion through GetProperty may allocate more list objects, so
-         * we make use of local root scopes here.  Each new allocation will
-         * push the newborn onto the local root stack.
+         * Erratum: ECMA-357 9.1.1.1 misses that [[Append]] sets the given
+         * list's [[TargetProperty]] to the property that is being appended.
+         * This means that any use of the internal [[Get]] property returns
+         * a list which, when used by e.g. [[Insert]] duplicates the last
+         * element matched by id.
+         * See bug 336921.
          */
-        ok = js_EnterLocalRootScope(cx);
-        if (!ok)
-            return JS_FALSE;
-
-        listobj = js_NewXMLObject(cx, JSXML_CLASS_LIST);
-        if (!listobj) {
-            ok = JS_FALSE;
-        } else {
-            list = (JSXML *) JS_GetPrivate(cx, listobj);
-            list->xml_target = xml;
-
-            if (JSXML_HAS_KIDS(xml)) {
-                if (OBJ_GET_CLASS(cx, nameobj) == &js_AttributeNameClass) {
-                    array = &xml->xml_attrs;
-                    matcher = MatchAttrName;
-                } else {
-                    array = &xml->xml_kids;
-                    matcher = MatchElemName;
-                }
-                XMLArrayCursorInit(&cursor, array);
-                while ((kid = (JSXML *) XMLArrayCursorNext(&cursor)) != NULL) {
-                    if (matcher(nameqn, kid)) {
-                        if (array == &xml->xml_kids &&
-                            kid->xml_class == JSXML_CLASS_ELEMENT) {
-                            ok = SyncInScopeNamespaces(cx, kid);
-                            if (!ok)
-                                break;
-                        }
-                        ok = Append(cx, list, kid);
-                        if (!ok)
-                            break;
-                    }
-                }
-                XMLArrayCursorFinish(&cursor);
-            }
-        }
+        list->xml_target = xml;
+        list->xml_targetprop = nameqn;
+        *vp = OBJECT_TO_JSVAL(listobj);
     }
 
-    /* Common tail code for list and non-list cases. */
-    js_LeaveLocalRootScopeWithResult(cx, (jsval) listobj);
-    if (!ok)
-        return JS_FALSE;
-
-    /*
-     * Erratum: ECMA-357 9.1.1.1 misses that [[Append]] sets the given list's
-     * [[TargetProperty]] to the property that is being appended. This means
-     * that any use of the internal [[Get]] property returns a list which,
-     * when used by e.g. [[Insert]] duplicates the last element matched by id.
-     * See bug 336921.
-     */
-    list->xml_targetprop = nameqn;
-    *vp = OBJECT_TO_JSVAL(listobj);
-    return JS_TRUE;
+    JS_POP_TEMP_ROOT(cx, &tvr);
+    return listobj != NULL;
 }
 
 static JSXML *
@@ -4397,6 +4363,8 @@ PutProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
                         ok = GetProperty(cx, rxml->object, id, &attrval);
                         if (!ok)
                             goto out;
+                        if (JSVAL_IS_PRIMITIVE(attrval)) /* no such attribute */
+                            goto out;
                         attrobj = JSVAL_TO_OBJECT(attrval);
                         attr = (JSXML *) JS_GetPrivate(cx, attrobj);
                         if (JSXML_LENGTH(attr) != 0)
@@ -4488,7 +4456,9 @@ PutProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 
                 if (parent) {
                     /* 2(e)(i). */
-                    parentobj = parent->object;
+                    parentobj = js_GetXMLObject(cx, parent);
+                    if (!parentobj)
+                        goto bad;
                     ok = PutProperty(cx, parentobj, id, vp);
                     if (!ok)
                         goto out;
@@ -5455,8 +5425,8 @@ xml_getMethod(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
          * value of roots[FUNCTION] since getMethod callers have a bad habit
          * of passing a pointer to unrooted local value as vp.
          */
-        cx->newborn[GCX_OBJECT] = (JSGCThing *)obj;
-        cx->lastInternalResult = roots[FUN_ROOT];
+        cx->weakRoots.newborn[GCX_OBJECT] = (JSGCThing *)obj;
+        cx->weakRoots.lastInternalResult = roots[FUN_ROOT];
     }
     JS_POP_TEMP_ROOT(cx, &tvr);
     return obj;
@@ -6012,7 +5982,7 @@ xml_contains(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
                 break;
         }
         XMLArrayCursorFinish(&cursor);
-        if (kid)
+        if (kid && !eq)
             return JS_FALSE;
     } else {
         if (!xml_equality(cx, obj, value, &eq))
@@ -6454,10 +6424,7 @@ xml_namespace(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
     JSObject *nsobj;
 
     XML_METHOD_PROLOG;
-    if (argc == 0 &&
-        (xml->xml_class == JSXML_CLASS_TEXT ||
-         xml->xml_class == JSXML_CLASS_COMMENT ||
-         xml->xml_class == JSXML_CLASS_PROCESSING_INSTRUCTION)) {
+    if (argc == 0 && !JSXML_HAS_NAME(xml)) {
         *rval = JSVAL_NULL;
         return JS_TRUE;
     }
@@ -7650,7 +7617,7 @@ NewXMLObject(JSContext *cx, JSXML *xml)
 
     obj = js_NewObject(cx, &js_XMLClass, NULL, NULL);
     if (!obj || !JS_SetPrivate(cx, obj, xml)) {
-        cx->newborn[GCX_OBJECT] = NULL;
+        cx->weakRoots.newborn[GCX_OBJECT] = NULL;
         return NULL;
     }
     METER(xml_stats.xmlobj);
@@ -8079,7 +8046,7 @@ js_GetAnyName(JSContext *cx, jsval *vp)
 
                 obj = js_NewObject(cx, &js_AnyNameClass, NULL, NULL);
                 if (!obj || !JS_SetPrivate(cx, obj, qn)) {
-                    cx->newborn[GCX_OBJECT] = NULL;
+                    cx->weakRoots.newborn[GCX_OBJECT] = NULL;
                     ok = JS_FALSE;
                     break;
                 }

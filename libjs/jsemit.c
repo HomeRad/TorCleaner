@@ -1765,11 +1765,16 @@ EmitAtomIndexOp(JSContext *cx, JSOp op, jsatomid atomIndex, JSCodeGenerator *cg)
     if (atomIndex >= JS_BIT(16)) {
         mode = (js_CodeSpec[op].format & JOF_MODEMASK);
         if (op != JSOP_SETNAME) {
-            prefixOp = (mode == JOF_NAME)
+            prefixOp = ((mode != JOF_NAME && mode != JOF_PROP) ||
+#if JS_HAS_XML_SUPPORT
+                        op == JSOP_GETMETHOD ||
+                        op == JSOP_SETMETHOD ||
+#endif
+                        op == JSOP_SETCONST)
+                       ? JSOP_LITOPX
+                       : (mode == JOF_NAME)
                        ? JSOP_FINDNAME
-                       : (mode == JOF_PROP)
-                       ? JSOP_LITERAL
-                       : JSOP_LITOPX;
+                       : JSOP_LITERAL;
             off = js_EmitN(cx, cg, prefixOp, 3);
             if (off < 0)
                 return JS_FALSE;
@@ -1803,7 +1808,14 @@ EmitAtomIndexOp(JSContext *cx, JSOp op, jsatomid atomIndex, JSCodeGenerator *cg)
             ReportStatementTooLarge(cx, cg);
             return JS_FALSE;
 #endif
-          default:              JS_ASSERT(mode == 0); break;
+          default:
+#if JS_HAS_XML_SUPPORT
+            JS_ASSERT(mode == 0 || op == JSOP_SETCONST ||
+                      op == JSOP_GETMETHOD || op == JSOP_SETMETHOD);
+#else
+            JS_ASSERT(mode == 0 || op == JSOP_SETCONST);
+#endif
+            break;
         }
 
         return js_Emit1(cx, cg, op) >= 0;
@@ -3500,6 +3512,7 @@ EmitGroupAssignment(JSContext *cx, JSCodeGenerator *cg, JSOp declOp,
             if (js_Emit1(cx, cg, JSOP_PUSH) < 0)
                 return JS_FALSE;
         } else {
+            JS_ASSERT(pn->pn_type != TOK_DEFSHARP);
             if (!js_EmitTree(cx, cg, pn))
                 return JS_FALSE;
         }
@@ -3548,7 +3561,9 @@ MaybeEmitGroupAssignment(JSContext *cx, JSCodeGenerator *cg, JSOp declOp,
     lhs = pn->pn_left;
     rhs = pn->pn_right;
     if (lhs->pn_type == TOK_RB && rhs->pn_type == TOK_RB &&
-        lhs->pn_count <= rhs->pn_count) {
+        lhs->pn_count <= rhs->pn_count &&
+        (rhs->pn_count == 0 ||
+         rhs->pn_head->pn_type != TOK_DEFSHARP)) {
         if (!EmitGroupAssignment(cx, cg, declOp, lhs, rhs))
             return JS_FALSE;
         *pop = JSOP_NOP;
