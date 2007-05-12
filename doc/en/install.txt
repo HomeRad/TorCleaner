@@ -101,15 +101,15 @@ Direct download links are in brackets.
 
 7. *Optional (used by VirusFilter module)*
    ClamAv from
-   http://www.sosdg.org/clamav-win32/index.php
-   [http://www.sosdg.org/clamav-win32/clamav-devel.exe]
+   http://www.sosdg.org/clamav-win32/
+   [http://clamav-sosdg.googlecode.com/files/clamav-0.90.2-2.exe]
 
 8. *Only needed if you compile from source:*
    install the MinGW suite from http://mingw.sourceforge.net/.
    Be sure to install in the given order:
    
    a) MingGW (this installer downloads additional packages)
-      [http://switch.dl.sourceforge.net/sourceforge/mingw/MinGW-5.0.2.exe]
+      [http://downloads.sourceforge.net/mingw/MinGW-5.1.3.exe?modtime=1168794334&big_mirror=1]
    b) MSYS
       [http://switch.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe]
 
