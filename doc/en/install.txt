@@ -53,7 +53,7 @@ Direct download links are in brackets.
 1. Install Python >= 2.4 from http://www.python.org/
    [http://www.python.org/ftp/python/2.4.4/python-2.4.4.msi]
    or
-   [http://www.python.org/ftp/python/2.5/python-2.5.msi]
+   [http://www.python.org/ftp/python/2.5.1/python-2.5.1.msi]
 
 2. Install Python for Windows Extensions from
    http://sourceforge.net/projects/pywin32d/
@@ -88,9 +88,9 @@ Direct download links are in brackets.
 5. *Optional but recommended (speedup for i386 compatible PCs)*
    Psyco from
    http://psyco.sourceforge.net/
-   [http://webcleaner.sourceforge.net/psyco-1.5.1.win32-py2.4.exe]
+   [http://downloads.sourceforge.net/psyco/psyco-1.5.2.win32-py2.4.exe]
    or
-   [http://webcleaner.sourceforge.net/psyco-1.5.1.win32-py2.5.exe]
+   [http://downloads.sourceforge.net/psyco/psyco-1.5.2.win32-py2.5.exe]
 
 6. *Optional (used for NTLM authentication)*
    Download Python Crypto Module from
@@ -102,16 +102,16 @@ Direct download links are in brackets.
 7. *Optional (used by VirusFilter module)*
    ClamAv from
    http://www.sosdg.org/clamav-win32/
-   [http://clamav-sosdg.googlecode.com/files/clamav-0.90.2-2.exe]
+   [http://clamav-sosdg.googlecode.com/files/clamav-0.90.3-1.exe]
 
 8. *Only needed if you compile from source:*
    install the MinGW suite from http://mingw.sourceforge.net/.
    Be sure to install in the given order:
    
    a) MingGW (this installer downloads additional packages)
-      [http://downloads.sourceforge.net/mingw/MinGW-5.1.3.exe?modtime=1168794334&big_mirror=1]
+      [http://downloads.sourceforge.net/mingw/MinGW-5.1.3.exe]
    b) MSYS
-      [http://switch.dl.sourceforge.net/sourceforge/mingw/MSYS-1.0.10.exe]
+      [http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe]
 
 Setup for Unix/Linux:
 ---------------------
