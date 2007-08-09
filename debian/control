@@ -12,7 +12,7 @@ Standards-Version: 3.7.2.0
 Package: webcleaner
 Architecture: any
 XB-Python-Version: ${python:Versions}
-Depends: ${python:Depends}, python-pyopenssl, debconf (>= 1.2.9), runit (>= 1.3), webcleaner-common (>= ${Source-Version})
+Depends: ${python:Depends}, python-pyopenssl, debconf (>= 1.2.9), runit (>= 1.3), webcleaner-common (>= ${source:Version})
 Provides: ${python:Provides}
 Recommends: python-imaging
 Suggests: python-crypto, python-psyco, clamav-daemon
