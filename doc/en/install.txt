@@ -56,7 +56,7 @@ Direct download links are in brackets.
    [http://www.python.org/ftp/python/2.5.1/python-2.5.1.msi]
 
 2. Install Python for Windows Extensions from
-   http://sourceforge.net/projects/pywin32d/
+   http://sourceforge.net/projects/pywin32/
    [http://switch.dl.sourceforge.net/pywin32/pywin32-210.win32-py2.4.exe]
    or
    [http://switch.dl.sourceforge.net/pywin32/pywin32-210.win32-py2.5.exe]
