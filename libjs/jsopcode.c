@@ -375,15 +375,19 @@ typedef struct Sprinter {
 static JSBool
 SprintAlloc(Sprinter *sp, size_t nb)
 {
-    if (!sp->base) {
-        JS_ARENA_ALLOCATE_CAST(sp->base, char *, sp->pool, nb);
+    char *base;
+
+    base = sp->base;
+    if (!base) {
+        JS_ARENA_ALLOCATE_CAST(base, char *, sp->pool, nb);
     } else {
-        JS_ARENA_GROW_CAST(sp->base, char *, sp->pool, sp->size, nb);
+        JS_ARENA_GROW_CAST(base, char *, sp->pool, sp->size, nb);
     }
-    if (!sp->base) {
+    if (!base) {
         JS_ReportOutOfMemory(sp->context);
         return JS_FALSE;
     }
+    sp->base = base;
     sp->size += nb;
     return JS_TRUE;
 }
@@ -1556,6 +1560,9 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
  * common ATOM_TO_STRING(atom) here and near the call sites.
  */
 #define ATOM_IS_IDENTIFIER(atom) js_IsIdentifier(ATOM_TO_STRING(atom))
+#define ATOM_IS_KEYWORD(atom)                                                 \
+            (js_CheckKeyword(JSSTRING_CHARS(ATOM_TO_STRING(atom)),            \
+                             JSSTRING_LENGTH(ATOM_TO_STRING(atom))) != TOK_EOF)
 
 /*
  * Given an atom already fetched from jp->script's atom map, quote/escape its
@@ -2118,15 +2125,8 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
               }
 
               case JSOP_EXCEPTION:
-                /*
-                 * The only other JSOP_EXCEPTION cases occur as part of a code
-                 * sequence that follows a SRC_CATCH-annotated JSOP_ENTERBLOCK
-                 * or that precedes a SRC_HIDDEN-annotated JSOP_POP emitted
-                 * when returning from within a finally clause.
-                 */
-                sn = js_GetSrcNote(jp->script, pc);
-                LOCAL_ASSERT(sn && SN_TYPE(sn) == SRC_HIDDEN);
-                todo = -2;
+                /* The catch decompiler handles this op itself. */
+                LOCAL_ASSERT(JS_FALSE);
                 break;
 
               case JSOP_POP:
@@ -2340,7 +2340,18 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                     pc += oplen;
                     LOCAL_ASSERT(*pc == JSOP_EXCEPTION);
                     pc += JSOP_EXCEPTION_LENGTH;
-
+                    if (*pc == JSOP_DUP) {
+                        sn2 = js_GetSrcNote(jp->script, pc);
+                        if (sn2 && SN_TYPE(sn2) == SRC_HIDDEN) {
+                            /*
+                             * This is a hidden dup to save the exception for
+                             * later. It must exist only when the catch has
+                             * an exception guard.
+                             */
+                            LOCAL_ASSERT(js_GetSrcNoteOffset(sn, 0) != 0);
+                            pc += JSOP_DUP_LENGTH;
+                        }
+                    }
 #if JS_HAS_DESTRUCTURING
                     if (*pc == JSOP_DUP) {
                         pc = DecompileDestructuring(ss, pc, endpc);
@@ -3859,7 +3870,12 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                               rval);
 #else
                 if (lastop == JSOP_GETTER || lastop == JSOP_SETTER) {
-                    if (strncmp(rval, js_function_str, 8) || rval[8] != ' ') {
+                    if (!atom || !ATOM_IS_STRING(atom) ||
+                        !ATOM_IS_IDENTIFIER(atom) ||
+                        ATOM_IS_KEYWORD(atom) ||
+                        ((ss->opcodes[ss->top+1] != JSOP_ANONFUNOBJ ||
+                          strncmp(rval, js_function_str, 8) != 0) &&
+                         ss->opcodes[ss->top+1] != JSOP_NAMEDFUNOBJ)) {
                         todo = Sprint(&ss->sprinter, "%s%s%s%s%s:%s", lval,
                                       (lval[1] != '\0') ? ", " : "", xval,
                                       (lastop == JSOP_GETTER ||
@@ -3895,8 +3911,10 @@ Decompile(SprintStack *ss, jsbytecode *pc, intN nb)
                 xval = POP_STR();
                 lval = POP_STR();
                 sn = js_GetSrcNote(jp->script, pc);
-                if (sn && SN_TYPE(sn) == SRC_INITPROP)
+                if (sn && SN_TYPE(sn) == SRC_INITPROP) {
+                    atom = NULL;
                     goto do_initprop;
+                }
                 todo = Sprint(&ss->sprinter, "%s%s%s",
                               lval,
                               (lval[1] != '\0' || *xval != '0') ? ", " : "",

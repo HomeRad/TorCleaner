@@ -2585,10 +2585,6 @@ js_MarkStackFrame(JSContext *cx, JSStackFrame *fp)
      * stack tracked by a JSStackHeader, will not mark all the values stored
      * and addressable via fp->argv.
      *
-     * But note that fp->argv[-2] will be marked via the caller, even when the
-     * arg-vector moves.  And fp->argv[-1] will be marked as well, and we mark
-     * it redundantly just above this comment.
-     *
      * So in summary, solely for the hard case of moving argv due to missing
      * formals and extra roots, we must mark actuals, missing formals, and any
      * local roots arrayed at fp->argv here.
@@ -2607,7 +2603,7 @@ js_MarkStackFrame(JSContext *cx, JSStackFrame *fp)
             if (!FUN_INTERPRETED(fp->fun))
                 nslots += fp->fun->u.n.extra;
         }
-        GC_MARK_JSVALS(cx, nslots, fp->argv, "arg");
+        GC_MARK_JSVALS(cx, nslots + 2, fp->argv - 2, "arg");
     }
     if (JSVAL_IS_GCTHING(fp->rval))
         GC_MARK(cx, JSVAL_TO_GCTHING(fp->rval), "rval");
@@ -2905,8 +2901,13 @@ restart:
         /* Mark other roots-by-definition in acx. */
         GC_MARK(cx, acx->globalObject, "global object");
         MarkWeakRoots(cx, &acx->weakRoots);
-        if (acx->throwing && JSVAL_IS_GCTHING(acx->exception))
-            GC_MARK(cx, JSVAL_TO_GCTHING(acx->exception), "exception");
+        if (acx->throwing) {
+            if (JSVAL_IS_GCTHING(acx->exception))
+                GC_MARK(cx, JSVAL_TO_GCTHING(acx->exception), "exception");
+        } else {
+            /* Avoid keeping GC-ed junk stored in JSContext.exception. */
+            acx->exception = JSVAL_NULL;
+        }
 #if JS_HAS_LVALUE_RETURN
         if (acx->rval2set && JSVAL_IS_GCTHING(acx->rval2))
             GC_MARK(cx, JSVAL_TO_GCTHING(acx->rval2), "rval2");

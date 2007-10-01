@@ -1324,7 +1324,9 @@ EmitNonLocalJumpFixup(JSContext *cx, JSCodeGenerator *cg, JSStmtInfo *toStmt,
         JS_ASSERT(*returnop == JSOP_RETURN);
         for (stmt = cg->treeContext.topStmt; stmt != toStmt;
              stmt = stmt->down) {
-            if (stmt->type == STMT_FINALLY) {
+            if (stmt->type == STMT_FINALLY ||
+                ((cg->treeContext.flags & TCF_FUN_HEAVYWEIGHT) &&
+                 STMT_MAYBE_SCOPE(stmt))) {
                 if (js_Emit1(cx, cg, JSOP_SETRVAL) < 0)
                     return JS_FALSE;
                 *returnop = JSOP_RETRVAL;
@@ -3113,8 +3115,12 @@ js_EmitFunctionBytecode(JSContext *cx, JSCodeGenerator *cg, JSParseNode *body)
         return JS_FALSE;
 
     if (cg->treeContext.flags & TCF_FUN_IS_GENERATOR) {
+        /* JSOP_GENERATOR must be the first instruction. */
+        CG_SWITCH_TO_PROLOG(cg);
+        JS_ASSERT(CG_NEXT(cg) == CG_BASE(cg));
         if (js_Emit1(cx, cg, JSOP_GENERATOR) < 0)
             return JS_FALSE;
+        CG_SWITCH_TO_MAIN(cg);
     }
 
     return js_EmitTree(cx, cg, body) &&
@@ -4006,16 +4012,18 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
             OBJ_DROP_PROPERTY(cx, pobj, prop);
 
             /*
-             * If this local function is in a body block, flag cg so that any
-             * outer function will be flagged with JSFUN_BLOCKLOCALFUN, which
-             * helps JSOP_DEFLOCALFUN capture the body block including any let
-             * variables in the local function's scope chain.
+             * If this local function is declared in a body block induced by
+             * let declarations, reparent fun->object to the compiler-created
+             * body block object so that JSOP_DEFLOCALFUN can clone that block
+             * into the runtime scope chain.
              */
             stmt = cg->treeContext.topStmt;
             if (stmt && stmt->type == STMT_BLOCK &&
                 stmt->down && stmt->down->type == STMT_BLOCK &&
                 (stmt->down->flags & SIF_SCOPE)) {
-                cg->treeContext.flags |= TCF_HAS_BLOCKLOCALFUN;
+                obj = ATOM_TO_OBJECT(stmt->down->atom);
+                JS_ASSERT(LOCKED_OBJ_GET_CLASS(obj) == &js_BlockClass);
+                OBJ_SET_PARENT(cx, fun->object, obj);
             }
 
             if (atomIndex >= JS_BIT(16)) {
@@ -4751,12 +4759,15 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
             /*
              * The emitted code for a catch block looks like:
              *
-             * [ leaveblock ]                      only if 2nd+ catch block
+             * [throwing]                          only if 2nd+ catch block
+             * [leaveblock]                        only if 2nd+ catch block
              * enterblock                          with SRC_CATCH
              * exception
+             * [dup]                               only if catchguard
              * setlocalpop <slot>                  or destructuring code
              * [< catchguard code >]               if there's a catchguard
              * [ifeq <offset to next catch block>]         " "
+             * [pop]                               only if catchguard
              * < catch block contents >
              * leaveblock
              * goto <end of catch blocks>          non-local; finally applies
@@ -4776,14 +4787,26 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                     EMIT_UINT16_IMM_OP(JSOP_SETSP, (jsatomid)depth);
                     cg->stackDepth = depth;
                 } else {
-                    JS_ASSERT(cg->stackDepth == depth);
-
                     /* Fix up and clean up previous catch block. */
                     CHECK_AND_SET_JUMP_OFFSET_AT(cx, cg, guardJump);
 
-                    /* Set cx->throwing to protect cx->exception from the GC. */
-                    if (!js_Emit1(cx, cg, JSOP_THROWING) < 0)
+                    /*
+                     * Account for the pushed exception object that we still
+                     * have after the jumping from the previous guard.
+                     */
+                    JS_ASSERT(cg->stackDepth == depth);
+                    cg->stackDepth = depth + 1;
+
+                    /*
+                     * Move exception back to cx->exception to prepare for
+                     * the next catch. We hide [throwing] from the decompiler
+                     * since it compensates for the hidden JSOP_DUP at the
+                     * start of the previous guarded catch.
+                     */
+                    if (js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
+                        js_Emit1(cx, cg, JSOP_THROWING) < 0) {
                         return JS_FALSE;
+                    }
 
                     /*
                      * Emit an unbalanced [leaveblock] for the previous catch,
@@ -4845,69 +4868,53 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
         }
 
         /*
-         * We emit a [setsp][gosub] sequence for running finally code while
-         * letting an uncaught exception pass thrown from within the try in a
-         * try-finally.  The [gosub] and [retsub] opcodes will take care of
-         * stacking and rethrowing any exception pending across the finally.
-         *
-         * For rethrowing after a try-catch(guard)-finally, we have a problem:
-         * all the guards have mismatched, leaving cx->exception still set but
-         * cx->throwing clear, so that no exception appears to be pending for
-         * [gosub] to stack and [retsub] to rethrow.  We must emit a special
-         * [throwing] opcode in front of the [setsp][gosub] finally sequence.
-         * This opcode will restore cx->throwing to true before running the
-         * finally.
-         *
-         * For rethrowing after a try-catch(guard) without a finally, we emit
-         * [throwing] before the [setsp][exception][throw] rethrow sequence.
+         * Last catch guard jumps to the rethrow code sequence if none of the
+         * guards match. Target guardJump at the beginning of the rethrow
+         * sequence, just in case a guard expression throws and leaves the
+         * stack unbalanced.
          */
-        if (pn->pn_kid3 || (lastCatch && lastCatch->pn_kid2)) {
-            /*
-             * Last catch guard jumps to the rethrow code sequence if none
-             * of the guards match.  Target guardJump at the beginning of the
-             * rethrow sequence, just in case a guard expression throws and
-             * leaves the stack unbalanced.
-             */
-            if (lastCatch && lastCatch->pn_kid2) {
-                CHECK_AND_SET_JUMP_OFFSET_AT(cx, cg, GUARDJUMP(stmtInfo));
-                if (pn->pn_kid3 && !js_Emit1(cx, cg, JSOP_THROWING) < 0)
-                    return JS_FALSE;
-            }
+        if (lastCatch && lastCatch->pn_kid2) {
+            CHECK_AND_SET_JUMP_OFFSET_AT(cx, cg, GUARDJUMP(stmtInfo));
+
+            /* Sync the stack to take into account pushed exception. */
+            JS_ASSERT(cg->stackDepth == depth);
+            cg->stackDepth = depth + 1;
 
             /*
-             * Emit another stack fixup, because the catch could itself
-             * throw an exception in an unbalanced state, and the finally
-             * may need to call functions.  If there is no finally, only
-             * guarded catches, the rethrow code below nevertheless needs
-             * stack fixup.
+             * Rethrow the exception, delegating executing of finally if any
+             * to the exception handler.
              */
-            finallyCatch = CG_OFFSET(cg);
-            EMIT_UINT16_IMM_OP(JSOP_SETSP, (jsatomid)depth);
-            cg->stackDepth = depth;
-
-            if (pn->pn_kid3) {
-                jmp = EmitBackPatchOp(cx, cg, JSOP_BACKPATCH,
-                                      &GOSUBS(stmtInfo));
-                if (jmp < 0)
-                    return JS_FALSE;
-
-                JS_ASSERT(cg->stackDepth == depth);
-                JS_ASSERT((uintN)depth <= cg->maxStackDepth);
-            } else {
-                if (js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
-                    js_Emit1(cx, cg, JSOP_EXCEPTION) < 0 ||
-                    js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
-                    js_Emit1(cx, cg, JSOP_THROW) < 0) {
-                    return JS_FALSE;
-                }
+            if (js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
+                js_Emit1(cx, cg, JSOP_THROW) < 0) {
+                return JS_FALSE;
             }
         }
 
-        /*
-         * If we have a finally, it belongs here, and we have to fix up the
-         * gosubs that might have been emitted before non-local jumps.
-         */
+        JS_ASSERT(cg->stackDepth == depth);
+
+        /* Emit finally handler if any. */
         if (pn->pn_kid3) {
+            /*
+             * We emit [setsp][gosub] to call try-finally when an exception is
+             * thrown from try or try-catch blocks. The [gosub] and [retsub]
+             * opcodes will take care of stacking and rethrowing any exception
+             * pending across the finally.
+             */
+            finallyCatch = CG_OFFSET(cg);
+            EMIT_UINT16_IMM_OP(JSOP_SETSP, (jsatomid)depth);
+
+            jmp = EmitBackPatchOp(cx, cg, JSOP_BACKPATCH,
+                                  &GOSUBS(stmtInfo));
+            if (jmp < 0)
+                return JS_FALSE;
+
+            JS_ASSERT(cg->stackDepth == depth);
+            JS_ASSERT((uintN)depth <= cg->maxStackDepth);
+
+            /*
+             * Fix up the gosubs that might have been emitted before non-local
+             * jumps to the finally code.
+             */
             if (!BackPatch(cx, cg, GOSUBS(stmtInfo), CG_NEXT(cg), JSOP_GOSUB))
                 return JS_FALSE;
 
@@ -4992,6 +4999,18 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
         /* Pick up the pending exception and bind it to the catch variable. */
         if (js_Emit1(cx, cg, JSOP_EXCEPTION) < 0)
             return JS_FALSE;
+
+        /*
+         * Dup the exception object if there is a guard for rethrowing to use
+         * it later when rethrowing or in other catches.
+         */
+        if (pn->pn_kid2) {
+            if (js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
+                js_Emit1(cx, cg, JSOP_DUP) < 0) {
+                return JS_FALSE;
+            }
+        }
+
         pn2 = pn->pn_kid1;
         switch (pn2->pn_type) {
 #if JS_HAS_DESTRUCTURING
@@ -5027,6 +5046,12 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
             if (guardJump < 0)
                 return JS_FALSE;
             GUARDJUMP(*stmt) = guardJump;
+
+            /* Pop duplicated exception object as we no longer need it. */
+            if (js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
+                js_Emit1(cx, cg, JSOP_POP) < 0) {
+                return JS_FALSE;
+            }
         }
 
         /* Emit the catch body. */
@@ -5049,20 +5074,6 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
         break;
 
       case TOK_RETURN:
-        /*
-         * If we're in a finally clause, then returning must clear any pending
-         * exception state.  Failure to do so could cause a subsequent
-         * non-throwing API failure or native use of JS_IsPendingException to
-         * mislead.
-         */
-        if (js_InStatement(&cg->treeContext, STMT_SUBROUTINE) &&
-            (js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
-             js_Emit1(cx, cg, JSOP_EXCEPTION) < 0 ||
-             js_NewSrcNote(cx, cg, SRC_HIDDEN) < 0 ||
-             js_Emit1(cx, cg, JSOP_POP) < 0)) {
-            return JS_FALSE;
-        }
-
         /* Push a return value */
         pn2 = pn->pn_kid;
         if (pn2) {
@@ -6727,7 +6738,7 @@ js_FinishTakingSrcNotes(JSContext *cx, JSCodeGenerator *cg, jssrcnote *notes)
          */
         offset = CG_PROLOG_OFFSET(cg) - cg->prolog.lastNoteOffset;
         JS_ASSERT(offset >= 0);
-        if (offset > 0) {
+        if (offset > 0 && cg->main.noteCount != 0) {
             /* NB: Use as much of the first main note's delta as we can. */
             sn = cg->main.notes;
             delta = SN_IS_XDELTA(sn)
