@@ -208,15 +208,13 @@ reindent:
 # various python check scripts
 .PHONY: various
 various:
-	py-check-append $(CHECKFILES)
-	py-clean-future -r $(CHECKFILES)
 	py-find-nocoding $(CHECKFILES)
+	py-find-nosvneolstyle $(CHECKFILES)
 
 .PHONY: test
 test:	check
 
-JSBASEDIR:=/home/calvin/src/mozilla
-JSSRCDIR:=$(JSBASEDIR)/js/src
+JSSRCDIR:=/home/calvin/src/mozilla-js-cvs
 jsdiff:
 	(cd libjs && for f in *.c *.h *.tbl *.msg \
 	          fdlibm/*.h fdlibm/*.c; do \
