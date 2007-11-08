@@ -553,7 +553,7 @@ class HttpClient (CodingConnection.CodingConnection):
         assert None == wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         ClientServerMatchmaker.ClientServerMatchmaker(self,
-                              self.request, self.clientheaders, self.content)
+                              self.request, self.headers, self.content)
 
     def server_response (self, server, response, status, headers):
         """

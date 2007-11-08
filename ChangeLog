@@ -4,6 +4,11 @@
     Type: bugfix
     Changed: wc/HtmlParser/__init__.py
 
+  * Send the correct filtered headers to the server, not the unfiltered
+    ones.
+    Type: bugfix
+    Changed: wc/proxy/HttpClient.py
+
 2.41 "Thank you for smoking" (released 16.12.2006)
 
   * The XML filter tries to fix unquoted ampersands.
