@@ -14,6 +14,7 @@
   <matchurl>www\.heise\.de</matchurl>
   <matchurl>www\.hartware\.de</matchurl>
   <matchurl>\.imdb\.com</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.287"
@@ -23,6 +24,7 @@
   <description lang="de">Entferne alle mit &lt;embed&gt; eingebundenen Daten.</description>
   <description lang="en">Kill &lt;embed&gt; things.</description>
   <matchurl>www\.heise\.de</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.39"

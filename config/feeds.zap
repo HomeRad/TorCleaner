@@ -62,7 +62,7 @@
   <replacement part="complete"/>
 </htmlrewrite>
 
-<replace sid="lc.1"
+<replace sid="wc.90"
  search="Copyright.*\.com&lt;/a&gt;">
   <title lang="en">Delicious days</title>
   <matchurl>deliciousdays\.com/feed</matchurl>

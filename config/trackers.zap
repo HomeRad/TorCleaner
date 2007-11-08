@@ -18,6 +18,7 @@
   <title lang="de">Statistik Seiten 2</title>
   <title lang="en">Statistic sites 2</title>
   <attr name="href">^https?://[0-9a-z.]*(nedstatbasic\.net|nedstat\.nl|ivwbox\.de)</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.364"
@@ -28,6 +29,7 @@
   <description lang="en">Several sites use 1x1 images to track users.</description>
   <attr name="width">^1$</attr>
   <attr name="height">^1$</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <image sid="wc.365"
@@ -47,6 +49,7 @@
   <description lang="en">Several sites use 0x0 images to track users.</description>
   <attr name="width">^0$</attr>
   <attr name="height">^0$</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <image sid="wc.5">
@@ -68,6 +71,17 @@
   <description lang="de">CGI Skripte zur Zählung</description>
   <description lang="en">CGI scripts counting web hits</description>
   <attr name="href">/(count|track)(er|run)?\.(pl|cgi|exe|dll|asp|php[34]?)</attr>
+  <replacement part="complete"/>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.93"
+ tag="a">
+  <title lang="de">Verschiedene Zählskripte 2</title>
+  <title lang="en">Counter scripts 2</title>
+  <description lang="de">CGI Skripte zur Zählung</description>
+  <description lang="en">CGI scripts counting web hits</description>
+  <attr name="href">cqcounter\.com</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.406"
@@ -77,5 +91,14 @@
   <description lang="de">Zu finden auf Sourceforge.</description>
   <description lang="en">akamai tracker image at sourceforge</description>
   <attr name="src">e\.akamai\.net</attr>
+  <replacement part="complete"/>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.94"
+ tag="script">
+  <title lang="de">alexa.com Statistik</title>
+  <title lang="en">alexa.com statistics</title>
+  <attr name="src">xslt\.alexa\.com/site_stats</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 </folder>

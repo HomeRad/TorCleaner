@@ -11,7 +11,7 @@
   <title lang="en">Host with 'ad'</title>
   <description lang="de">Entferne Verknüpfungen mit dem Wort 'ad' im Rechnernamen.</description>
   <description lang="en">Remove links with 'ad' in the host name.</description>
-  <attr name="href">https?://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
+  <attr name="href">https?://([^/])*\.ad(force|farm\d*|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
@@ -61,7 +61,7 @@
   <title lang="en">Links with 'ads'</title>
   <description lang="de">Entferne Verknüpfungen mit 'ads' im Rechnernamen.</description>
   <description lang="en">Remove links with 'ads' in the host name.</description>
-  <attr name="href">https?://(servedby\.)?ad(s|serv(er)?(\d+)?|vertising)?\.</attr>
+  <attr name="href">https?://(www\.)?(servedby\.|sponsor|link|layer-|ext)?ad(s|server(\d+)?|vertising)?\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
@@ -175,7 +175,7 @@
 </htmlrewrite>
 
 <block sid="wc.340"
- url="https?://(layer-)?ad(s|serv(er)?)?\.">
+ url="https?://(layer-)?ad(s|server)?\.">
   <title lang="de">Rechner mit 'ads'</title>
   <title lang="en">Ad servers with 'ads'</title>
   <description lang="de">Blockiert Rechner mit 'ads' im Namen.</description>
@@ -188,7 +188,7 @@
   <title lang="en">Ad servers 10</title>
   <description lang="de">Blockiert Rechner mit 'click' im Namen.</description>
   <description lang="en">Remove links with 'click' words in the host name.</description>
-  <attr name="href">https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups|s\.totemcash))\.</attr>
+  <attr name="href">https?://[^/]*(fastclick|double(click|pimp)|click(it|finders|burst|here\.egroups|s\.totemcash))\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
@@ -322,7 +322,7 @@
   <title lang="en">Remove links with 'adlog'</title>
   <description lang="de">Entferne Verknüpfungen mit 'adlog' im Namen.</description>
   <description lang="en">Remove links with 'adlog' in the name.</description>
-  <attr name="href">adlog\.com\.|survey\.questionmarket\.com</attr>
+  <attr name="href">adlog\.com\.|survey\.questionmarket\.com|\.axelsfun\.com</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
@@ -337,17 +337,17 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.52"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Rechner mit 'ad'</title>
   <title lang="en">Host with 'ad'</title>
   <description lang="de">Entferne frames/scripts mit dem Wort 'ad' im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'ad' in the host name.</description>
-  <attr name="src">https?://([^/])*\.ad(force|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
+  <attr name="src">https?://([^/])*\.ad(force|farm\d*|runner|se?rve?|stream|\d*|view|s|log|vert(s|enties|is(ing|e?ments)?)?)\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.53"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'ad'</title>
   <title lang="en">frames/scripts with 'ad'</title>
   <description lang="de">Entferne frames/scripts mit 'ad' im Pfad.</description>
@@ -357,7 +357,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.54"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'adbouncer'</title>
   <title lang="en">frames/scripts with 'adbouncer'</title>
   <description lang="de">Entferne frames/scripts mit 'adbouncer' im Pfad.</description>
@@ -367,7 +367,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.55"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'easy-cash'</title>
   <title lang="en">frames/scripts with 'easy-cash'</title>
   <description lang="de">Entferne frames/scripts mit 'easy-cash' im Rechnernamen.</description>
@@ -377,7 +377,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.56"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Onmouseover Werbung</title>
   <title lang="en">Onmouseover ads</title>
   <description lang="de">Entfernt JavaScript Werbung.</description>
@@ -387,17 +387,17 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.57"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'ads'</title>
   <title lang="en">frames/scripts with 'ads'</title>
   <description lang="de">Entferne frames/scripts mit 'ads' im Rechnernamen.</description>
   <description lang="en">Remove frames/scripts with 'ads' in the host name.</description>
-  <attr name="src">https?://(servedby\.|layer-)?ad(s|server(\d+)?|vertising)?\.</attr>
+  <attr name="src">https?://(www\.)?(servedby\.|sponsor|link|layer-|ext)?ad(s|server(\d+)?|vertising)?\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.58"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'trade' u.a.</title>
   <title lang="en">frames/scripts with 'trade' etc.</title>
   <description lang="de">Entferne frames/scripts mit 'trade' und weiteren im Rechnernamen.</description>
@@ -407,7 +407,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.59"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'linkexchange' u.a.</title>
   <title lang="en">frames/scripts with 'linkexchange' etc.</title>
   <description lang="de">Entferne frames/scripts mit 'linkexchange' und weiteren im Rechnernamen.</description>
@@ -417,7 +417,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.60"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'adclick'</title>
   <title lang="en">frames/scripts with 'adclick'</title>
   <description lang="de">Entferne frames/scripts mit 'adclick' im Pfad.</description>
@@ -427,7 +427,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.61"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'banner' u.a.</title>
   <title lang="en">frames/scripts with 'banner' etc.</title>
   <description lang="de">Entferne frames/scripts mit 'banner' und weiteren im Pfad.</description>
@@ -437,7 +437,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.62"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'event.ng'</title>
   <title lang="en">frames/scripts with 'event.ng'</title>
   <description lang="de">Entferne frames/scripts mit 'event.ng' im Pfad.</description>
@@ -447,7 +447,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.63"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'eu-adcenter'</title>
   <title lang="en">frames/scripts with 'eu-adcenter'</title>
   <description lang="de">Lösche frames/scripts mit 'eu-adcenter' im Namen.</description>
@@ -457,7 +457,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.64"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'click'</title>
   <title lang="en">frames/scripts mit 'click'</title>
   <description lang="de">Remove frames/scripts with 'click' in the path.</description>
@@ -466,7 +466,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.65"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts mit 'werbung' u.a.</title>
   <title lang="en">frames/scripts with 'werbung' etc.</title>
   <description lang="de">Lösche frames/scripts mit 'werbung' und weiteren im Namen.</description>
@@ -476,7 +476,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.66"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts zu Werberechnern 1</title>
   <title lang="en">frames/scripts to ad servers 1</title>
   <description lang="de">Entferne frames/scripts zu verschiedenen Werberechnern.</description>
@@ -486,17 +486,17 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.67"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts zu Werberechnern 2</title>
   <title lang="en">frames/scripts to ad servers 2</title>
   <description lang="de">Entferne frames/scripts zu verschiedenen Werberechnern.</description>
   <description lang="en">Remove frames/scripts to some ad servers.</description>
-  <attr name="src">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com|\.adbrite\.com|\.adengage\.com)</attr>
+  <attr name="src">(a\.tribalfusion\.com|ads\.adcode\.de|www\.bethedealer\.com|\.adbrite\.com|\.adengage\.com|adengage\.jsp)</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.68"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">frames/scripts zu Werberechnern 3</title>
   <title lang="en">frames/scripts to ad servers 3</title>
   <description lang="de">Entferne frames/scripts zu verschiedenen Werberechnern.</description>
@@ -506,17 +506,17 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.69"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Rechner mit 'click'</title>
   <title lang="en">Ad servers 10</title>
   <description lang="de">Blockiert Rechner mit 'click' im Namen.</description>
   <description lang="en">Remove frames/scripts with 'click' words in the host name.</description>
-  <attr name="src">https?://[^/]*(fastclick|doubleclick|click(it|finders|burst|here\.egroups))\.</attr>
+  <attr name="src">https?://[^/]*(fastclick|double(click|pimp)|click(it|finders|burst|here\.egroups))\.</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.70"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">CGI Werbung mit 'ads'</title>
   <title lang="en">CGI adverts with 'ads'</title>
   <description lang="de">Lösche frames/scripts mit 'ads' im CGI Namen.</description>
@@ -526,7 +526,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.71"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">CGI Werbung mit 'clickthru'</title>
   <title lang="en">CGI adverts with 'clickthru'</title>
   <description lang="de">Lösche frames/scripts mit 'clickthru' im CGI Namen.</description>
@@ -536,7 +536,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.72"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Entferne verknüpfungen mit 'doubleclick'</title>
   <title lang="en">Remove frames/scripts with 'doubleclick'</title>
   <description lang="de">Entferne frames/scripts mit 'doubleclick' im Rechnernamen.</description>
@@ -546,7 +546,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.73"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Entferne frames/scripts mit 'buy_assets'</title>
   <title lang="en">Remove frames/scripts with 'buy_assets'</title>
   <description lang="de">Entferne frames/scripts mit 'buy_assets' im Namen.</description>
@@ -556,7 +556,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.74"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Entferne frames/scripts mit 'value'</title>
   <title lang="en">Remove frames/scripts with 'value'</title>
   <description lang="de">Entferne frames/scripts mit 'value' im Namen.</description>
@@ -566,7 +566,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.75"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Entferne frames/scripts mit 'banner'</title>
   <title lang="en">Remove frames/scripts with 'banner'</title>
   <description lang="de">Entferne frames/scripts mit 'banner' im Namen.</description>
@@ -576,7 +576,7 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.83"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Entferne frames/scripts mit 'dime'</title>
   <title lang="en">Remove frames/scripts with 'dime'</title>
   <description lang="de">Entferne frames/scripts mit 'dime' im Namen.</description>
@@ -586,12 +586,12 @@
 </htmlrewrite>
 
 <htmlrewrite sid="wc.84"
- tag="iframe|script">
+ tag="iframe|script|img">
   <title lang="de">Entferne frames/scripts mit 'adlog'</title>
   <title lang="en">Remove frames/scripts with 'adlog'</title>
   <description lang="de">Entferne frames/scripts mit 'adlog' im Namen.</description>
   <description lang="en">Remove frames/scripts with 'adlog' in the name.</description>
-  <attr name="src">adlog\.com\.|survey\.questionmarket\.com</attr>
+  <attr name="src">adlog\.com\.|survey\.questionmarket\.com|\.axelsfun\.com</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 </folder>
