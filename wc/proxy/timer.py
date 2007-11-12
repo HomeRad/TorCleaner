@@ -57,4 +57,5 @@ def run_timers ():
     if timers:
         return min(timers[0][0] - time.time(), MAX_TIMEOUT)
     else:
-        return MAX_TIMEOUT
+        # None means don't timeout
+        return None
