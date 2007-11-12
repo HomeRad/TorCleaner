@@ -36,7 +36,7 @@ import Listener
 import Dispatcher
 
 
-def proxy_poll (timeout=0.0):
+def proxy_poll (timeout=None):
     """
     Look for sockets with pending data and call the appropriate
     connection handlers.
@@ -46,7 +46,12 @@ def proxy_poll (timeout=0.0):
         e = Dispatcher.socket_map.values()
         r = [x for x in e if x.readable()]
         w = [x for x in e if x.writable()]
-        assert None == wc.log.debug(wc.LOG_PROXY, "select with %f timeout", timeout)
+        if timeout is None:
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "select without timeout")
+        else:
+            assert None == wc.log.debug(wc.LOG_PROXY,
+                "select with %f timeout", timeout)
         try:
             (r, w, e) = select.select(r, w, e, timeout)
         except select.error, why:
@@ -120,7 +125,7 @@ def mainloop (handle=None):
             # dealing with handlers, we come to the main loop, so we don't
             # have to worry about being in asyncore.poll when a timer goes
             # off.
-            proxy_poll(timeout=max(0, timer.run_timers()))
+            proxy_poll(timeout=timer.run_timers())
     except Abort:
         pass
     wc.log.info(wc.LOG_PROXY, "%s stopped", wc.AppName)
