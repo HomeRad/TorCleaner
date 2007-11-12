@@ -41,7 +41,10 @@ def _startout (out, item, start=u"<", end=u">"):
     out.write(start)
     out.write(quote(item[1]))
     for name, val in item[2].iteritems():
-        out.write(u' %s="%s"' % (quote(name), quoteattr(val)))
+        if val is None:
+            out.write(u' %s' % quote(name))
+        else:
+            out.write(u' %s="%s"' % (quote(name), quoteattr(val)))
     out.write(end)
 
 
