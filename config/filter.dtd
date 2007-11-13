@@ -1,18 +1,13 @@
 <!-- 
  Document Type Definition (DTD) for WWW filters.
- Current filters are at http://webcleaner.sourceforge.net/filter/
+ See http://webcleaner.sourceforge.net/filter.html
  
  Changes:
 
- 20060425 Bastian Kleineidam
- * Fixed typo for xmlrewrite attribute decl
- * Changed rating category to limit
- 20050920 Bastian Kleineidam
- * added action attribute to header element
- 20050809 Bastian Kleineidam
- * renamed rewrite to htmlrewrite
- * added xmlrewrite
- * added configversion to folder attrs
+ 20071107 Bastian Kleineidam
+ * introduce htmlrewrite and xmlrewrite, replacing the original rewrite rule
+ * rename <enclosed> child of htmlrewrite with <matchcontent>
+ * added match replacement part
  20041227 Bastian Kleineidam
  * added "antivirus" element
  20040308 Bastian Kleineidam
@@ -80,7 +75,6 @@
  sid      CDATA #REQUIRED
  oid      CDATA #REQUIRED
  disable  CDATA "0"
- configversion CDATA #REQUIRED
 >
 
 <!--                      Title and description
@@ -107,36 +101,19 @@
 <!ELEMENT matchurl (#PCDATA)>
 <!ELEMENT nomatchurl (#PCDATA)>
 
-<!--                      HTML Rewriter
+<!--                        HTMLRewriter
 
-   The htmlrewrite tag applies to HTML tags and can replace (or delete if
+   The rewrite tag applies to HTML tags and can replace (or delete if
    the replacement data is empty) arbitrary HTML tag blocks.
    The tag name is a case insensitive string.
 
    If there is no <replace> tag the complete tag will be removed.
 -->
-<!ELEMENT htmlrewrite (title+,description*,matchurl*,nomatchurl*,attr*,enclosed?,replacement?)>
+<!ELEMENT htmlrewrite (title+,description*,matchurl*,nomatchurl*,attr*,matchcontent?,replacement?)>
 <!ATTLIST htmlrewrite
  sid      CDATA #REQUIRED
  disable  CDATA "0"
  tag      CDATA "a"
->
-
-<!--                      XML Rewriter
-
-   The xmlrewrite tag applies to XML tags matching the given selector.
-   Selectors are implementation specific, but should somewhat match
-   XPath expressions.
-   Once it matches the replacetype and value determine what and how
-   replacement is done.
--->
-<!ELEMENT xmlrewrite (title+,description*,matchurl*,nomatchurl*)>
-<!ATTLIST xmlrewrite
- sid      CDATA #REQUIRED
- disable  CDATA "0"
- selector CDATA #REQUIRED
- replacetype CDATA #REQUIRED
- value    CDATA ""
 >
 
 <!--                      Attribute
@@ -150,31 +127,46 @@
  name CDATA "href"
 >
 
-<!--                       Enclosed
+<!--                       matchcontent
 
-   Specify a regular expression which matches the enclosed block of a 
+   Specify a regular expression which matches the inner content block of a
    tag.
 -->
-<!ELEMENT enclosed (#PCDATA)>
+<!ELEMENT matchcontent (#PCDATA)>
 
-<!--                    Replace
+<!--                    Replacement
 
-   replace part   What it does when replacement is 'foo'
+   replace part   Result with replacement='foo', contentmatch='ext'
    ==========================================================
    tag            <blink>text</blink>  => footextfoo
    tagname        <blink>text</blink>  => <foo>text</foo>
    enclosed       <blink>text</blink>  => <blink>foo</blink>
+   matched        <blink>text</blink>  => <blink>tfoo</blink>
    attr           <a href="bla">..</a> => <a foo>..</a>
    attrval        <a href="bla">..</a> => <a href="foo">..</a>
    complete       <a href="bla">..</a> => foo
    
-   If you specified zero or more than one attributes to match, 
-   'attr' and 'attrvalue' replace the first occuring or matching 
+   If you specified zero or more than one attributes to match,
+   'attr' and 'attrvalue' replace the first occuring or matching
    attribute or nothing.
 -->
 <!ELEMENT replacement (#PCDATA)>
 <!ATTLIST replacement
- part     (tag|tagname|attr|attrval|enclosed|complete) "complete"
+ part     (tag|tagname|attr|attrval|enclosed|matched|complete) "complete"
+>
+
+<!--                        XMLRewriter
+
+   The rewrite tag applies to XML tags and can replace or delete
+   arbitrary XML elements matched by an XPath expression.
+-->
+<!ELEMENT xmlrewrite (title+,description*,matchurl*,nomatchurl*)>
+<!ATTLIST xmlrewrite
+ sid      CDATA #REQUIRED
+ disable  CDATA "0"
+ selector    CDATA #REQUIRED
+ replacetype (rsshtml|remove) "rsshtml"
+ value       CDATA #IMPLIED
 >
 
 <!--                       Blocker
@@ -263,7 +255,6 @@
  name     CDATA #REQUIRED
  disable  CDATA "0"
  filterstage (request|response|both) "request"
- action   (add|replace|remove) "replace"
 >
 
 <!--                       Image
@@ -314,18 +305,18 @@
 
    A rule enabling the rating system in WebCleaner.
 -->
-<!ELEMENT rating (title+,description*,matchurl*,nomatchurl*,url?,limit*)>
+<!ELEMENT rating (title+,description*,matchurl*,nomatchurl*,url?,category*)>
 <!ATTLIST rating
  sid      CDATA #REQUIRED
  disable  CDATA "0"
 >
 
-<!--                      rating limit
+<!--                      rating category
 
-   a limit has a name and a rating value as content
+   a category has an identification label and a rating value as content
 -->
-<!ELEMENT limit (#PCDATA)>
-<!ATTLIST limit
+<!ELEMENT category (#PCDATA)>
+<!ATTLIST category
  name     CDATA #REQUIRED
 >
 
