@@ -301,6 +301,8 @@ class TestRewriter (unittest.TestCase):
                   """<script src="https://localhost/1.js" type="text/javascript"></script>""")
         self.filt("""<script type="text/javascript"></script>""",
                   """""")
+        self.filt("""<script type="text/javascript">window.status='';a=1</script>""",
+                  """<script type="text/javascript">a=1</script>""")
 
     def test_ie_jshandler_crash (self):
         # multiple attributes with same name should be merged

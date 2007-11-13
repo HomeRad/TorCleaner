@@ -38,6 +38,7 @@ ATTRVAL = 3    # attribute value
 ATTRNAME = 4   # attribute name
 COMPLETE = 5   # start/end tag and content
 ENCLOSED = 6   # only enclosed content
+MATCHED = 7    # only matched content
 
 
 def _startout (out, item, start=u"<", end=u">"):

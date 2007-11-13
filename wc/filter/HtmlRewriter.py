@@ -75,8 +75,8 @@ class HtmlRewriter (Filter.Filter):
         """
         if not self.applies_to_stages(stages):
             return
-        parent = super(HtmlRewriter, self)
-        parent.update_attrs(attrs, url, localhost, stages, headers)
+        super(HtmlRewriter, self).update_attrs(attrs, url, localhost,
+                                               stages, headers)
         rewrites = []
         ratings = []
         # look if headers already have rating info

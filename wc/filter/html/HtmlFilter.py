@@ -219,8 +219,8 @@ class HtmlFilter (JSFilter.JSFilter):
                 if rule.matches_starttag():
                     item = rule.filter_tag(tag, attrs, starttype)
                     filtered = True
-                elif not rule.enclosed:
-                    # If no enclosed string has to be matched, this rule
+                elif not rule.contentmatch:
+                    # If no contentmatch string has to be matched, this rule
                     # is a sure hit. Therefore set the filtered flag.
                     filtered = True
                 if rule.matches_endtag():
@@ -292,7 +292,8 @@ class HtmlFilter (JSFilter.JSFilter):
             del self.stackcount[-1]
             pos, rulelist = self.rulestack.pop()
             for rule in rulelist:
-                if rule.match_complete(pos, self.htmlparser.tagbuf):
-                    rule.filter_complete(pos, self.htmlparser.tagbuf, tag)
+                mo = rule.match_complete(pos, self.htmlparser.tagbuf)
+                if mo:
+                    rule.filter_complete(pos, self.htmlparser.tagbuf, tag, mo)
                     return True
         return False
