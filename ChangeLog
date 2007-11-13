@@ -9,6 +9,11 @@
     Type: bugfix
     Changed: wc/proxy/HttpClient.py
 
+  * Implement a new HTML filter type: 'matched'. It replaces the
+    matched part of the enclosed block content, not the whole content.
+    Type: feature
+    Changed: wc/filter/rules/HtmlRewriteRule.py
+
 2.41 "Thank you for smoking" (released 16.12.2006)
 
   * The XML filter tries to fix unquoted ampersands.
