@@ -217,7 +217,7 @@
 <htmlrewrite sid="wc.91"
  tag="script">
   <title lang="en">Disable window status removal</title>
-  <enclosed>window\.status\s*=\s*(''|"")</enclosed>
-  <replacement part="enclosed"/>
+  <enclosed>window\.status\s*=\s*(''|"");?</enclosed>
+  <replacement part="matched"/>
 </htmlrewrite>
 </folder>
