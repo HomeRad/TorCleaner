@@ -102,4 +102,32 @@
   <attr name="src">http://invis\.free\.anonymizer\.com/(?P&lt;url&gt;.+)</attr>
   <replacement part="attrval">\1</replacement>
 </htmlrewrite>
+
+<htmlrewrite sid="wc.88"
+ tag="embed">
+  <title lang="de">salamu.de Weiterleitung</title>
+  <attr name="src">clicks\.salamu\.de/.*ref=(?P&lt;url&gt;.+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.89"
+ tag="a">
+  <title lang="de">salamu.de Weiterleitung 2</title>
+  <attr name="href">clicks\.salamu\.de/.*ref=(?P&lt;url&gt;.+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.95"
+ tag="a">
+  <title lang="de">salamu.de Weiterleitung 2</title>
+  <attr name="href">www\.deliciousdays\.com/wp-content/themes/dd/cc\.php\?(?P&lt;url&gt;.+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
+
+<htmlrewrite sid="wc.96"
+ tag="a">
+  <title lang="en">ccbill referer</title>
+  <attr name="href">http://refer\.ccbill\.com/cgi-bin/clicks\.cgi\?(.*)HTML=(?P&lt;url&gt;[^"]+)</attr>
+  <replacement part="attrval">\1</replacement>
+</htmlrewrite>
 </folder>

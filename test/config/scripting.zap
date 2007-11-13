@@ -89,6 +89,7 @@
   <title lang="en">&lt;noscript&gt;</title>
   <description lang="de">Entferne das &lt;noscript&gt; tag. Aktivieren Sie diese Regel wenn sie JavaScript zulassen.</description>
   <description lang="en">Remove &lt;noscript&gt; tag (use if you allowed scripting)</description>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.300"
@@ -98,6 +99,7 @@
   <description lang="de">Deaktiviere Javascript für bestimmte Seiten.</description>
   <description lang="en">Remove Javascript for certain pages.</description>
   <matchurl>apnews\.excite\.com</matchurl>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.301" disable="1"
@@ -107,6 +109,7 @@
   <description lang="de">Aktivieren Sie diese Regel nur wenn Sie JavaScript in Ihrem Browser abgeschaltet haben.</description>
   <description lang="en">Only activate this rule if Javascript is disabled in your browser.</description>
   <attr name="href">javascript:.*</attr>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <htmlrewrite sid="wc.302" disable="1"
@@ -200,6 +203,7 @@
   <title lang="en">Prevent right-click disablement</title>
   <description lang="en">Good! Adaptation, improvisation, but your weakness is not your technique.</description>
   <enclosed>(?i)(window|document)\.onmousedown</enclosed>
+  <replacement part="complete"/>
 </htmlrewrite>
 
 <replace sid="wc.303"
@@ -209,4 +213,11 @@
   <description lang="de">Einige Seiten entfernen umgebende Frames und installieren sich selbst als Hauptframe.</description>
   <description lang="en">Some sites disable surrounding frames and install themselves as the top frame.</description>
 </replace>
+
+<htmlrewrite sid="wc.91"
+ tag="script">
+  <title lang="en">Disable window status removal</title>
+  <enclosed>window\.status\s*=\s*(''|"");?</enclosed>
+  <replacement part="matched"/>
+</htmlrewrite>
 </folder>

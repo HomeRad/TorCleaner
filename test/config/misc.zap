@@ -105,7 +105,7 @@
 <replace sid="wc.380" disable="1"
  search="Bastian">
   <title lang="en">The Dude</title>
-  <description lang="de">Nur ein kleines Bespiel</description>
+  <description lang="de">Nur ein kleines Beispiel</description>
   <description lang="en">Just a silly example.</description>
   <replacement>The Dude</replacement>
 </replace>
@@ -150,15 +150,5 @@
   <matchurl>groups\.google\.com</matchurl>
   <matchurl>diveintogreasemonkey\.org</matchurl>
   <replacement part="complete"/>
-</htmlrewrite>
-
-<htmlrewrite sid="wc.77"
- tag="iframe">
-  <title lang="de">Entferne &lt;iframe&gt; Inhalt</title>
-  <title lang="en">Remove &lt;iframe&gt; content</title>
-  <description lang="de">Lösche alles innerhalb von &lt;iframe&gt; weil es für Browser ohne Frame-Unterstützung verwendet wird.</description>
-  <description lang="en">Remove contents of &lt;iframe&gt; since it is intended for browsers without frame support.</description>
-  <enclosed>.</enclosed>
-  <replacement part="enclosed"/>
 </htmlrewrite>
 </folder>

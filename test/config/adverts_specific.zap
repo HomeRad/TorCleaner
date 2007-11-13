@@ -331,6 +331,16 @@
   <replacement part="complete"/>
 </htmlrewrite>
 
+<htmlrewrite sid="wc.92"
+ tag="script">
+  <title lang="de">Entferne Google ad script</title>
+  <title lang="en">Remove Google ad script</title>
+  <description lang="de">Entferne scripts mit urchinTracker() Aufrufen.</description>
+  <description lang="en">Remove scripts with urchinTracker() calls.</description>
+  <enclosed>urchinTracker</enclosed>
+  <replacement part="complete"/>
+</htmlrewrite>
+
 <htmlrewrite sid="wc.32"
  tag="a">
   <title lang="de">Blog Werbungen</title>
