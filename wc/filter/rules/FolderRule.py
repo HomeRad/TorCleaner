@@ -89,7 +89,7 @@ class FolderRule (Rule.Rule):
         """
         chg = super(FolderRule, self).update(rule, dryrun=dryrun, log=log)
         for child in rule.rules:
-            if not child.sid.startswith("wc"):
+            if child.sid is None or not child.sid.startswith("wc"):
                 # ignore local rules
                 continue
             oldrule = self.get_rule(child.sid)

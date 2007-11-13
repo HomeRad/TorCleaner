@@ -273,7 +273,9 @@ class Rule (object):
         """
         Rule data as XML for storing, must be overridden in subclass.
         """
-        s = u'<%s sid="%s"' % (self.name, wc.XmlUtils.xmlquoteattr(self.sid))
+        s = u'<%s'% self.name
+        if self.sid is not None:
+            s += u'sid="%s"' % wc.XmlUtils.xmlquoteattr(self.sid)
         if self.disable:
             s += u' disable="%d"' % self.disable
         return s
@@ -307,7 +309,10 @@ class Rule (object):
         """
         Short info for gui display.
         """
-        return u"%s #%s" % (self.name.capitalize(), self.sid)
+        s = u"%s" % self.name.capitalize()
+        if self.sid is not None:
+            s +=  u'#%s' % self.sid
+        return s
 
     def applies_to_url (self, url):
         """
