@@ -59,6 +59,8 @@ def proxy_poll (timeout=None):
                 # this occurs on UNIX systems with a sighup signal
                 return
             else:
+                wc.log.warn("Failed select with r=%s, w=%s, e=%s, timeout=%s",
+                    r, w, e, timeout)
                 raise
         assert None == wc.log.debug(wc.LOG_PROXY, "poll result %s", (r, w, e))
         # Make sure we only process one type of event at a time,

@@ -234,7 +234,7 @@ class Blocker (Filter.Filter):
                 attrs['mime'] = 'application/x-javascript'
             else:
                 if not is_html_mime(mime):
-                    wc.log.warn(wc.LOG_PROXY,
+                    wc.log.info(wc.LOG_PROXY,
                       "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
                 attrs['mime'] = 'text/html'

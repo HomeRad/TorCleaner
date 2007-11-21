@@ -244,14 +244,14 @@ class HttpClient (CodingConnection.CodingConnection):
         self.method, self.url, protocol = self.request.split()
         # enforce a maximum url length
         if len(self.url) > Allowed.MAX_URL_LEN:
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                          "%s request url length %d chars is too long",
                          self, len(self.url))
             self.error(414, _("URL too long"),
         txt=_('URL length limit is %d bytes.') % Allowed.MAX_URL_LEN)
             return False
         if len(self.url) > 1024:
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         "%s request url length %d chars is very long",
                         self, len(self.url))
         # unquote and norm url
@@ -363,7 +363,7 @@ class HttpClient (CodingConnection.CodingConnection):
             return
         # add missing host headers for HTTP/1.0
         if not self.headers.has_key('Host'):
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                  "%s HTTP/1.0 request without Host header encountered", self)
         if self.port != wc.url.default_ports[self.get_default_scheme()]:
             self.headers['Host'] = "%s:%d\r" % (self.hostname, self.port)
@@ -393,7 +393,7 @@ class HttpClient (CodingConnection.CodingConnection):
                            password_b64=wc.configuration.config['proxypass'],
                            uri=auth.get_auth_uri(self.url),
                            method=self.method, data=None):
-                wc.log.warn(wc.LOG_AUTH, "Bad proxy authentication from %s",
+                wc.log.info(wc.LOG_AUTH, "Bad proxy authentication from %s",
                             self.addr[0])
                 self.error(407, _("Proxy Authentication Required"),
                            auth_challenges=auth.get_challenges())
@@ -480,7 +480,7 @@ class HttpClient (CodingConnection.CodingConnection):
         underflow = self.bytes_remaining is not None and \
                     self.bytes_remaining < 0
         if underflow:
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         "client received %d bytes more than content-length",
                         -self.bytes_remaining)
         if is_closed or self.bytes_remaining <= 0:
@@ -492,7 +492,7 @@ class HttpClient (CodingConnection.CodingConnection):
             self.content += data
             if self.content:
                 if self.method in ['GET', 'HEAD']:
-                    wc.log.warn(wc.LOG_PROXY,
+                    wc.log.info(wc.LOG_PROXY,
                                 "Unexpected content in %s request: %r",
                                 self.method, self.content)
                     if self.headers.has_key('Content-Length'):
@@ -542,7 +542,7 @@ class HttpClient (CodingConnection.CodingConnection):
                          self, len(data), self.server)
                 self.server.write(data)
         else:
-            wc.log.warn(wc.LOG_PROXY, "%s invalid data", self)
+            wc.log.info(wc.LOG_PROXY, "%s invalid data", self)
 
     def server_request (self):
         """
@@ -673,7 +673,7 @@ class HttpClient (CodingConnection.CodingConnection):
                             password_b64=wc.configuration.config['adminpass'],
                             uri=auth.get_auth_uri(self.url),
                             method=self.method, data=None):
-                wc.log.warn(wc.LOG_AUTH, "Bad authentication from %s",
+                wc.log.info(wc.LOG_AUTH, "Bad authentication from %s",
                             self.addr[0])
                 self.error(401, _("Authentication Required"),
                            auth_challenges=auth.get_challenges())

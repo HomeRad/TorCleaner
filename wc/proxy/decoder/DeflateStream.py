@@ -70,7 +70,7 @@ class DeflateStream (object):
             import wc
             import wc.log
             msg = str(sys.exc_info()[1])
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         _("zlib error: %s, disabling deflate"), msg)
             self.error = True
             return s

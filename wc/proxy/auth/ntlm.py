@@ -215,7 +215,7 @@ def parse_ntlm_challenge (challenge):
         msg = base64.decodestring(chal)
         res = parse_message2(msg)
         if not res:
-            wc.log.warn(wc.LOG_AUTH, "invalid NTLM challenge %r", msg)
+            wc.log.info(wc.LOG_AUTH, "invalid NTLM challenge %r", msg)
     return res, remainder
 
 
@@ -263,7 +263,7 @@ def parse_ntlm_credentials (credentials):
             # invalid type, skip
             res = {}
     if not res:
-        wc.log.warn(wc.LOG_AUTH, "invalid NTLM credential %r", creds)
+        wc.log.info(wc.LOG_AUTH, "invalid NTLM credential %r", creds)
     return res, remainder
 
 
@@ -272,14 +272,14 @@ def check_ntlm_credentials (credentials, **attrs):
     Return True if given credentials validate with given attrs.
     """
     if credentials.has_key('host') and credentials['host'] != "UNKNOWN":
-        wc.log.warn(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
+        wc.log.info(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
         return False
     if credentials.has_key('domain') and credentials['domain'] != 'WORKGROUP':
-        wc.log.warn(wc.LOG_AUTH, "NTLM wrong domain %r",
+        wc.log.info(wc.LOG_AUTH, "NTLM wrong domain %r",
                     credentials['domain'])
         return False
     if credentials['username'] != attrs['username']:
-        wc.log.warn(wc.LOG_AUTH, "NTLM wrong username")
+        wc.log.info(wc.LOG_AUTH, "NTLM wrong username")
         return False
     nonce = attrs['nonce']
     password = base64.decodestring(attrs['password_b64'])
@@ -389,10 +389,10 @@ def parse_message2 (msg):
     """
     res = {}
     if not msg.startswith('%s\x00' % NTLMSSP_SIGNATURE):
-        wc.log.warn(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
+        wc.log.info(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
         return res
     if getint32(msg[8:12]) != NTLMSSP_CHALLENGE:
-        wc.log.warn(wc.LOG_AUTH, "NTLM challenge type not found %r", msg)
+        wc.log.info(wc.LOG_AUTH, "NTLM challenge type not found %r", msg)
         return res
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])

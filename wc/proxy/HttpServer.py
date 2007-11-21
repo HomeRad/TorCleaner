@@ -236,7 +236,7 @@ class HttpServer (Server.Server):
             ServerPool.serverpool.set_http_version(self.addr, version)
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
-            wc.log.warn(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
+            wc.log.info(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
             ServerPool.serverpool.set_http_version(self.addr, (0, 9))
             self.response = "%s 200 OK" % self.protocol
             self.statuscode = 200
@@ -244,7 +244,7 @@ class HttpServer (Server.Server):
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         'invalid or missing response from %r: %r',
                         self.url, self.response)
             ServerPool.serverpool.set_http_version(self.addr, (1, 0))
@@ -254,7 +254,7 @@ class HttpServer (Server.Server):
             # Example:
             # http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
             if not Headers.is_header(self.response):
-                wc.log.warn(wc.LOG_PROXY,
+                wc.log.info(wc.LOG_PROXY,
                             "missing headers in response from %r", self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
             # fix the response
@@ -456,7 +456,7 @@ class HttpServer (Server.Server):
                 "%s have run encoder %s", self, encoder)
         if self.bytes_remaining is not None and self.bytes_remaining < 0:
             # underflow
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                       _("server received %d bytes more than content-length"),
                       (-self.bytes_remaining))
         if self.statuscode != 407 and data:
@@ -542,7 +542,7 @@ class HttpServer (Server.Server):
         """
         assert None == wc.log.debug(wc.LOG_PROXY, "%s HttpServer.flush", self)
         if not self.statuscode and self.method != 'CONNECT':
-            wc.log.warn(wc.LOG_PROXY, "%s flush without status", self)
+            wc.log.info(wc.LOG_PROXY, "%s flush without status", self)
             return True
         data = self.flush_coders(self.decoders)
         try:

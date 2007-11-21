@@ -134,7 +134,7 @@ class ClientServerMatchmaker (object):
         assert None == wc.log.debug(wc.LOG_PROXY,
             "%s handle dns %r", self, hostname)
         if not self.client.connected:
-            wc.log.warn(wc.LOG_PROXY, "%s client closed after DNS", self)
+            wc.log.info(wc.LOG_PROXY, "%s client closed after DNS", self)
             # The browser has already closed this connection, so abort
             return
         if answer.isFound():
@@ -199,7 +199,7 @@ class ClientServerMatchmaker (object):
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
             if self.server_busy > BUSY_LIMIT:
-                wc.log.warn(wc.LOG_PROXY,
+                wc.log.info(wc.LOG_PROXY,
                     "Waited too long for available connection at %s" \
                     ", consider increasing the server pool connection limit" \
                     " (currently at %d)", addr, BUSY_LIMIT)

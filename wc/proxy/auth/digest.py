@@ -90,25 +90,25 @@ def check_digest_credentials (credentials, **attrs):
     Check digest credentials.
     """
     if not check_digest_values(credentials):
-        wc.log.warn(wc.LOG_AUTH, "digest wrong values")
+        wc.log.info(wc.LOG_AUTH, "digest wrong values")
         return False
     # note: opaque value _should_ be there, but is not in apache mod_digest
     opaque = credentials.get("opaque")
     if opaque != wc_opaque:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong opaque %s!=%s",
+        wc.log.info(wc.LOG_AUTH, "digest wrong opaque %s!=%s",
                     opaque, wc_opaque)
         return False
     realm = credentials["realm"]
     if realm != wc_realm:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
+        wc.log.info(wc.LOG_AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
         return False
     nonce = credentials["nonce"]
     if nonce not in nonces:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong nonce %s", nonce)
+        wc.log.info(wc.LOG_AUTH, "digest wrong nonce %s", nonce)
         return False
     uri = credentials['uri']
     if uri != attrs['uri']:
-        wc.log.warn(wc.LOG_AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
+        wc.log.info(wc.LOG_AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
         return False
     # compare responses
     response = credentials.get('response')
@@ -152,7 +152,7 @@ def get_digest_credentials (challenge, **attrs):
     try:
         password = base64.b64decode(attrs['password_b64'])
     except TypeError:
-        wc.log.warn(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
+        wc.log.info(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
         password = ""
     nc, cnonce, response_digest = get_response_digest(challenge, **attrs)
     # construct credentials
@@ -205,7 +205,7 @@ def get_response_digest (challenge, **attrs):
     try:
         password = base64.b64decode(attrs['password_b64'])
     except TypeError:
-        wc.log.warn(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
+        wc.log.info(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
         password = ""
     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
     HA1 = encode_digest(H(A1))

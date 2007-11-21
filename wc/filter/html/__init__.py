@@ -369,7 +369,7 @@ def check_spelling (tag, url):
             wc.log.info(wc.LOG_FILTER,
                       "HTML tag %r corrected to %r at %r", tag, htmltag, url)
             return htmltag
-    wc.log.warn(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
+    wc.log.info(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
     # filter possibly trailing garbage the parser accepted
     mo = filter_tag_garbage(tag)
     if mo:

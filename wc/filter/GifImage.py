@@ -268,7 +268,7 @@ class GifParser (object):
                 elif s == ',':
                     self.state = GifParser.IMAGE
                     continue
-                wc.log.warn(wc.LOG_FILTER,
+                wc.log.info(wc.LOG_FILTER,
                             "unknown GIF frame %r at %r", s, self.url)
             elif self.state == GifParser.IMAGE:
                 #extent

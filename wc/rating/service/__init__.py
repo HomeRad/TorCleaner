@@ -61,11 +61,11 @@ class WebCleanerService (wc.rating.RatingService):
         for name, value in limit.iteritems():
             format = self.get_ratingformat(name)
             if format is None:
-                wc.log.warn(wc.LOG_RATING,
+                wc.log.info(wc.LOG_RATING,
                             "Unknown rating %r in %s", name, limit)
                 continue
             if name not in rating:
-                wc.log.warn(wc.LOG_RATING,
+                wc.log.info(wc.LOG_RATING,
                             "Missing rating %r in %s", name, rating)
                 continue
             rvalue = rating[name]

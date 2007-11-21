@@ -58,7 +58,9 @@ class XmlFilter (object):
             self.encoding = encoding
         else:
             self.encoding = "UTF-8"
-            wc.log.warn(wc.LOG_XML, "%s: invalid encoding %r", self, encoding)
+            wc.log.info(wc.LOG_XML,
+                        "Invalid XML encoding %r at %r corrected to %r",
+                        encoding, self.url, self.encoding)
 
     # ErrorHandler methods
 
@@ -66,19 +68,19 @@ class XmlFilter (object):
         """
         Report a filter/parser error.
         """
-        wc.log.error(wc.LOG_FILTER, msg)
+        wc.log.error(wc.LOG_XML, msg)
 
     def fatalError (self, msg):
         """
         Report a fatal filter/parser error.
         """
-        wc.log.critical(wc.LOG_FILTER, msg)
+        wc.log.critical(wc.LOG_XML, msg)
 
     def warning (self, msg):
         """
         Report a filter/parser warning.
         """
-        wc.log.warn(wc.LOG_FILTER, msg)
+        wc.log.warn(wc.LOG_XML, msg)
 
     # ContentHandler methods
 
@@ -201,7 +203,7 @@ class XmlFilter (object):
         DTD content is ignored.
         """
         msg = "DTD notation ignored: %r %r %r" % (name, publicId, systemId)
-        wc.log.warn(wc.LOG_XML, "%s: %s", self, msg)
+        wc.log.info(wc.LOG_XML, "%s: %s", self, msg)
 
     def unparsedEntityDecl (self, name, publicId, systemId, ndata):
         """
@@ -209,7 +211,7 @@ class XmlFilter (object):
         """
         msg = "DTD entity ignored: %r %r %r %r" % \
               (name, publicId, systemId, ndata)
-        wc.log.warn(wc.LOG_XML, "%s: %s", self, msg)
+        wc.log.info(wc.LOG_XML, "%s: %s", self, msg)
 
     # other methods
 

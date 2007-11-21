@@ -574,12 +574,12 @@ class DnsLookupConnection (Connection.Connection):
             # See http://cr.yp.to/djbdns/notes.html
             if self.tcp:
                 # socket.error((84, ''))
-                wc.log.warn(wc.LOG_DNS,
+                wc.log.info(wc.LOG_DNS,
                             '%s truncated TCP DNS packet from %s',
                             self, self.nameserver)
                 self.handle_error("DNS error: truncated TCP packet")
             else:
-                wc.log.warn(wc.LOG_DNS,
+                wc.log.info(wc.LOG_DNS,
                             '%s truncated UDP DNS packet from %s',
                             self, self.nameserver,)
             # we ignore this read, and let the timeout take its course
@@ -599,7 +599,7 @@ class DnsLookupConnection (Connection.Connection):
             assert None == wc.log.debug(wc.LOG_DNS, "%s DNS answer %s",
                          self, wc.strformat.indent(answer))
         except wc.dns.resolver.NoAnswer:
-            wc.log.warn(wc.LOG_DNS, "%s no answer", self)
+            wc.log.info(wc.LOG_DNS, "%s no answer", self)
             callback, self.callback = self.callback, None
             callback(self.hostname,
                      DnsResponse('error', 'not found with %s' % self))

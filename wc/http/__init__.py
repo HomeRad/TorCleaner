@@ -54,11 +54,11 @@ def parse_http_response (response, url):
     if len(parts) == 2:
         parts += ['Bummer']
     elif len(parts) != 3:
-        wc.log.warn(wc.LOG_PROXY, "invalid response %r from %r",
+        wc.log.info(wc.LOG_PROXY, "invalid response %r from %r",
                     response, url)
         parts = ['HTTP/1.0', "200", 'OK']
     if not is_http_status(parts[1]):
-        wc.log.warn(wc.LOG_PROXY, "invalid http statuscode %r from %r",
+        wc.log.info(wc.LOG_PROXY, "invalid http statuscode %r from %r",
                     parts[1], url)
         parts[1] = "200"
     parts[1] = int(parts[1])

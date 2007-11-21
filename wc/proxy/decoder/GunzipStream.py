@@ -76,14 +76,14 @@ class GunzipStream (DeflateStream.DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         _("zlib error: not gzip format, disabling gunzip"))
             self.error = True
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                 _("zlib error: unknown compression method, disabling gunzip"))
             self.error = True
             return

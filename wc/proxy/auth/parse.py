@@ -24,16 +24,16 @@ separators = ("()<>@,;:\\\"/[]?={} \t")
 token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
                'ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`0123456789|~')
 
-def parse_token (s, tok="", relax=False, more_chars=""):
+def parse_token (s, tok="", more_chars=""):
     """
     Parse a token of data s, return tuple (tok, remaining data).
     If tok is empty, parse a default token.
     """
     if tok:
-        if not s.startswith(tok):
-            wc.log.warn(wc.LOG_AUTH, "expected %r start with %r", s, tok)
-        if not relax:
+        if s.startswith(tok):
             s = s[len(tok):]
+        else:
+            wc.log.info(wc.LOG_AUTH, "expected %r start with %r", s, tok)
     else:
         for i, c in enumerate(s):
             if c not in token_chars and c not in more_chars:

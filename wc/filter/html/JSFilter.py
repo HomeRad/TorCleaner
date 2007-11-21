@@ -235,7 +235,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             del self.htmlparser.tagbuf[-1]
             if len(self.htmlparser.tagbuf) < 2:
                 # syntax error, ignore
-                wc.log.warn(wc.LOG_JS,
+                wc.log.info(wc.LOG_JS,
                             "JS end, self.tagbuf %s", self.htmlparser.tagbuf)
                 return
             if len(self.htmlparser.tagbuf) > 2 and \
@@ -338,7 +338,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                "non-parse state %s" % self.htmlparser.state
         ver = wc.js.get_js_ver(language)
         if not wc.js.is_safe_js_url(self.url, url):
-            wc.log.warn(wc.LOG_JS,
+            wc.log.info(wc.LOG_JS,
                         "invalid script src url %r at %s (base %r)",
                         url, self.url, self.base_url)
             # returning here will look like a syntax error
@@ -370,7 +370,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             "%s jsScriptData %r", self, data)
         if data is None:
             if not self.js_script:
-                wc.log.warn(wc.LOG_JS, "empty JavaScript src %s", url)
+                wc.log.info(wc.LOG_JS, "empty JavaScript src %s", url)
                 msg = _("error fetching script from %r") % url
                 self.js_script = u"// " + msg
             else:

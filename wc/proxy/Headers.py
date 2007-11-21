@@ -43,7 +43,7 @@ def get_content_length (headers, default=None):
     try:
         return int(headers['Content-Length'])
     except ValueError:
-        wc.log.warn(wc.LOG_PROXY, "invalid Content-Length value %r",
+        wc.log.info(wc.LOG_PROXY, "invalid Content-Length value %r",
                     headers['Content-Length'])
     return None
 
@@ -118,7 +118,7 @@ def remove_warning_headers (headers):
     for warning in headers.getheaders("Warning"):
         parsed = wc.http.parse_http_warning(warning)
         if parsed is None:
-            wc.log.warn(wc.LOG_PROXY, "could not parse warning %r", warning)
+            wc.log.info(wc.LOG_PROXY, "could not parse warning %r", warning)
         else:
             warncode, warnagent, warntext, warndate = parsed
             if warndate is None or warndate == date:
@@ -164,7 +164,7 @@ def client_remove_multiple_headers (headers, url):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
         if headers.remove_multiple_headers(name):
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         "%r sent multiple %r client headers", url, name)
 
 
@@ -172,7 +172,7 @@ def server_remove_multiple_headers (headers, url):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
         if headers.remove_multiple_headers(name):
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         "%r sent multiple %r server headers", url, name)
 
 def client_remove_hop_by_hop_headers (headers):
@@ -221,7 +221,7 @@ def client_remove_encoding_headers (headers):
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
     if headers.has_key("Content-Length"):
-        wc.log.warn(wc.LOG_PROXY,
+        wc.log.info(wc.LOG_PROXY,
                     'chunked encoding should not have Content-Length')
         to_remove.append("Content-Length")
     remove_headers(headers, to_remove)
@@ -236,7 +236,7 @@ def client_get_max_forwards (headers):
     try:
         mf = int(headers.get('Max-Forwards', -1))
     except ValueError:
-        wc.log.warn(wc.LOG_PROXY, "invalid Max-Forwards header value %s",
+        wc.log.info(wc.LOG_PROXY, "invalid Max-Forwards header value %s",
                     headers.get('Max-Forwards', ''))
         mf = -1
     if mf > 0:
@@ -285,7 +285,7 @@ def server_set_content_headers (status, headers, mime_types, url):
     """
     origmime = headers.get('Content-Type', None)
     if not origmime:
-        wc.log.warn(wc.LOG_PROXY, "Missing content type in %r", url)
+        wc.log.info(wc.LOG_PROXY, "Missing content type in %r", url)
     if not mime_types:
         return
     matching_mimes = [m for m in mime_types
@@ -327,10 +327,10 @@ def server_set_encoding_headers (server, filename=None):
             elif tenc == 'deflate':
                 server.decoders.append(DeflateStream.DeflateStream(server))
             else:
-                wc.log.warn(wc.LOG_PROXY,
+                wc.log.info(wc.LOG_PROXY,
                             "unsupported transfer encoding in %r", tencs)
         if server.headers.has_key("Content-Length"):
-            wc.log.warn(wc.LOG_PROXY,
+            wc.log.info(wc.LOG_PROXY,
                         'Transfer-Encoding should not have Content-Length')
             to_remove.add("Content-Length")
         bytes_remaining = None
@@ -363,7 +363,7 @@ def server_set_encoding_headers (server, filename=None):
             elif cenc == 'deflate':
                 server.decoders.append(DeflateStream.DeflateStream())
             else:
-                wc.log.warn(wc.LOG_PROXY,
+                wc.log.info(wc.LOG_PROXY,
                             "unsupported content encoding in %r", cenc)
         # remove no-transform cache control
         if server.headers.get('Cache-Control', '').lower() == 'no-transform':

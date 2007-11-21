@@ -89,7 +89,7 @@ class ImageReducer (Filter.Filter):
             img.save(data, "JPEG", quality=quality, optimize=1)
         except IOError, msg:
             # return original image data on error
-            wc.log.warn(wc.LOG_FILTER,
+            wc.log.info(wc.LOG_FILTER,
                 "I/O error reading image data %r: %s", attrs['url'], str(msg))
             # XXX the content type is pretty sure wrong
             return p.getvalue()
@@ -116,7 +116,7 @@ class ImageReducer (Filter.Filter):
         rules = [ rule for rule in self.rules if rule.applies_to_url(url) ]
         if rules:
             if len(rules) > 1:
-                wc.log.warn(wc.LOG_FILTER,
+                wc.log.info(wc.LOG_FILTER,
                         "more than one rule matched %r: %s", url, str(rules))
             # first rule wins
             quality = rules[0].quality
@@ -127,13 +127,13 @@ class ImageReducer (Filter.Filter):
         try:
             length = int(headers['server'].get('Content-Length', 0))
         except ValueError:
-            wc.log.warn(wc.LOG_FILTER, "invalid content length at %r", url)
+            wc.log.info(wc.LOG_FILTER, "invalid content length at %r", url)
             return
         if length < 0:
-            wc.log.warn(wc.LOG_FILTER, "negative content length at %r", url)
+            wc.log.info(wc.LOG_FILTER, "negative content length at %r", url)
             return
         if length == 0:
-            wc.log.warn(wc.LOG_FILTER, "missing content length at %r", url)
+            wc.log.info(wc.LOG_FILTER, "missing content length at %r", url)
         elif 0 < length < minimal_size_bytes:
             return
         attrs['imgreducer_buf'] = StringIO.StringIO()

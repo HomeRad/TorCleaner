@@ -49,7 +49,7 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
     """
     expired = cert.has_expired()
     if expired:
-        wc.log.warn(wc.LOG_PROXY, "%s expired certificate %s", conn,
+        wc.log.info(wc.LOG_PROXY, "%s expired certificate %s", conn,
                     cert.get_subject())
     return not expired
 
@@ -80,7 +80,7 @@ def verify_client_cb (conn, cert, errnum, depth, ok):
     """
     expired = cert.has_expired()
     if expired:
-        wc.log.warn(wc.LOG_PROXY, "%s expired certificate %s", conn,
+        wc.log.info(wc.LOG_PROXY, "%s expired certificate %s", conn,
                     cert.get_subject())
     return not expired
 

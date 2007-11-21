@@ -278,7 +278,7 @@ class Configuration (dict):
         from wc.filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
             if os.stat(filename)[stat.ST_SIZE] == 0:
-                wc.log.warn(wc.LOG_PROXY, "Skipping empty file %r", filename)
+                wc.log.info(wc.LOG_PROXY, "Skipping empty file %r", filename)
                 continue
             p = confparse.ZapperParser(filename)
             p.parse()
