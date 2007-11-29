@@ -105,7 +105,7 @@ deb_signed: clean
 	(env -u LANG svn-buildpackage --svn-dont-clean --svn-verbose \
 	  --svn-ignore --svn-no-links \
 	  --svn-prebuild="$(MAKE) deb_orig" --svn-lintian --svn-linda \
-	  -sgpg -pgpg -k$(GPGKEY) -r"fakeroot --" 2>&1) | \
+	  -sgpg -pgpg -k$(GPGKEY) -rfakeroot 2>&1) | \
 	tee $(SVNBUILD)/webcleaner-$(VERSION).build
 
 # add setup.py generated files to $(distdir)
