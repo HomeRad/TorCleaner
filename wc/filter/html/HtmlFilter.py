@@ -31,15 +31,11 @@ import wc.configuration
 
 
 class HtmlFilter (JSFilter.JSFilter):
-    """
-    Filtering HTML parser handler. Has filter rules and a rule stack.
-    The callbacks modify parser state and buffers.
-    """
+    """Filtering HTML parser handler. Has filter rules and a rule stack.
+    The callbacks modify parser state and buffers."""
 
     def __init__ (self, rules, ratings, url, localhost, **opts):
-        """
-        Init rules and buffers.
-        """
+        """Init rules and buffers."""
         super(HtmlFilter, self).__init__(url, localhost, opts)
         self.rules = rules
         self.ratings = ratings
@@ -55,16 +51,12 @@ class HtmlFilter (JSFilter.JSFilter):
                             "%s with %d rules", self, len(self.rules))
 
     def new_instance (self, **opts):
-        """
-        Make a new instance of this filter, for recursive filtering.
-        """
+        """Make a new instance of this filter, for recursive filtering."""
         return HtmlFilter(self.rules, self.ratings, self.url,
                           self.localhost, **opts)
 
     def __repr__ (self):
-        """
-        Representation with recursion level and state.
-        """
+        """Representation with recursion level and state."""
         return "<HtmlFilter[%d] %s)>" % (self.level, self.url)
 
     def _is_waiting (self, item):
@@ -206,26 +198,20 @@ class HtmlFilter (JSFilter.JSFilter):
         return self.rule_tag_cache[tag]
 
     def filter_start_element (self, tag, attrs, starttype):
-        """
-        Filter the start element according to filter rules.
-        """
+        """Filter the start element according to filter rules."""
         rulelist = []
         filtered = False
         item = [starttype, tag, attrs]
         for rule in self.get_tag_rules(tag):
             if rule.match_attrs(attrs):
-                assert None == wc.log.debug(wc.LOG_HTML,
-                 "%s matched rule %r on tag %r", self, rule.titles['en'], tag)
-                if rule.matches_starttag():
+                if rule.matches_starttag(tag):
                     item = rule.filter_tag(tag, attrs, starttype)
                     filtered = True
                 elif not rule.contentmatch:
                     # If no contentmatch string has to be matched, this rule
                     # is a sure hit. Therefore set the filtered flag.
                     filtered = True
-                if rule.matches_endtag():
-                    assert None == wc.log.debug(wc.LOG_HTML,
-                          "%s put rule %r on buffer", self, rule.titles['en'])
+                if rule.matches_endtag(tag):
                     rulelist.append(rule)
                 if item[0] == starttype and item[1] == tag:
                     # If both tag type and name did not change, more than one
@@ -251,8 +237,7 @@ class HtmlFilter (JSFilter.JSFilter):
             self.htmlparser.tagbuf.append(item)
 
     def end_element (self, tag):
-        """
-        We know the following: if a rule matches, it must be
+        """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
         If it matches and the rule stack is now empty we can flush
@@ -281,9 +266,8 @@ class HtmlFilter (JSFilter.JSFilter):
             self.htmlparser.tagbuf2data()
 
     def filter_end_element (self, tag):
-        """
-        Filters an end tag, return True if tag was filtered, else False.
-        """
+        """Filters an end tag, return True if tag was filtered, else
+        False."""
         # remember: self.rulestack[-1][1] is the rulelist that
         # matched for a start tag. and if the first one ([0])
         # matches, all other match too

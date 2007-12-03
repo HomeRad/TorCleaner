@@ -158,26 +158,20 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         attrs = ['attrs', 'part', 'replacement', 'contentmatch']
         return self.update_attrs(attrs, rule, dryrun, log) or chg
 
-    def matches_starttag (self):
-        """
-        See if this rule matches start tags.
-        """
-        for tag in NO_CLOSE_TAGS:
-            if self.match_tag(tag):
-                return True
+    def matches_starttag (self, tag):
+        """See if this rule matches start tag."""
+        if tag in NO_CLOSE_TAGS:
+            return True
         return self.part not in [
             wc.filter.html.ENCLOSED,
             wc.filter.html.MATCHED,
             wc.filter.html.COMPLETE,
         ]
 
-    def matches_endtag (self):
-        """
-        See if this rule matches end tags.
-        """
-        for tag in NO_CLOSE_TAGS:
-            if self.match_tag(tag):
-                return False
+    def matches_endtag (self, tag):
+        """See if this rule matches end tags."""
+        if tag in NO_CLOSE_TAGS:
+            return True
         return self.part not in [
             wc.filter.html.ATTR,
             wc.filter.html.ATTRVAL,
@@ -232,9 +226,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         return self.contentmatch_ro.search(data)
 
     def filter_tag (self, tag, attrs, starttype):
-        """
-        Return filtered tag data for given tag and attributes.
-        """
+        """Return filtered tag data for given tag and attributes."""
         assert None == wc.log.debug(wc.LOG_HTML,
                             "rule %s filter_tag", self.titles['en'])
         assert None == wc.log.debug(wc.LOG_HTML,
@@ -287,9 +279,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         return [starttype, tag, newattrs]
 
     def filter_complete (self, i, buf, tag, mo):
-        """
-        Replace tag data in buf with replacement.
-        """
+        """Replace tag data in buf with replacement."""
         assert None == wc.log.debug(wc.LOG_HTML,
             "rule %s filter_complete", self.titles['en'])
         assert None == wc.log.debug(wc.LOG_HTML,

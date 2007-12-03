@@ -137,8 +137,6 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                 data = self.inbuf.getvalue() + data
                 self.inbuf.close()
                 self.inbuf = StringIO()
-            assert None == wc.log.debug(wc.LOG_HTML,
-                "%s parser feed %r", self, data)
             if data:
                 # only feed non-empty data
                 super(HtmlParser, self).feed(data)
