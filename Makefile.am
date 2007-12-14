@@ -11,27 +11,27 @@ EXTRA_DIST = tests scripts \
 	wc/rating/tests
 
 # python settings
-PYVER := 2.4
-PYTHON := python$(PYVER)
+PYVER=2.4
+PYTHON=python$(PYVER)
 # homepage directory
-HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
+HTMLDIR=/home/calvin/public_html/webcleaner.sf.net
 # source code checker settings
-SPLINTOPTS := +posixlib \
+SPLINTOPTS=+posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 # all Python files in the source
-PYFILES = $(wildcard webcleaner webcleaner-certificates *.py \
+PYFILES=$(wildcard webcleaner webcleaner-certificates *.py \
 	    test/*.py config/*.py) wc tests
-PYFLAKES:=python$(PYVER) /usr/bin/pyflakes
-CHECKFILES = *.py webcleaner webcleaner-certificates test tests wc config
+PYFLAKES=python$(PYVER) /usr/bin/pyflakes
+CHECKFILES=*.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
-SERVICEDIR := /etc/webcleaner/service
+SERVICEDIR=/etc/webcleaner/service
 # run unittests on check
-TESTS = scripts/test.sh
+TESTS=scripts/test.sh
 # GPG key for .deb package
-GPGKEY:=2DE589F5
+GPGKEY=2DE589F5
 # build dir for svn-buildpackage
-SVNBUILD:=/home/calvin/src/build-area
+SVNBUILD=/home/calvin/src/build-area
 DEB_ORIG_TARGET:=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
 
 MANIFEST: setup.py
@@ -126,6 +126,10 @@ md5sums:
 .PHONY: syntaxcheck
 syntaxcheck:
 	py-verify
+	py-find-nocoding
+	check-nosvneolstyle
+	check-pofiles
+	py24-tabnanny
 	$(MAKE) -C config xmlcheck
 
 
