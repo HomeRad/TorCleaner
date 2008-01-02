@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2005-2007 Bastian Kleineidam
+# Copyright (C) 2005-2008 Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,18 +31,18 @@ class TestDecorators (unittest.TestCase):
 
     def test_timeit (self):
         @wc.decorators.timed()
-	def f ():
-	    return 42
-	self.assertEquals(f(), 42)
+        def f ():
+            return 42
+        self.assertEquals(f(), 42)
 
     def test_timeit2 (self):
         log = StringIO.StringIO()
         @wc.decorators.timed(log=log, limit=0)
-	def f ():
-	    time.sleep(1)
-	    return 42
-	self.assertEquals(f(), 42)
-	self.assert_(log.getvalue())
+        def f ():
+            time.sleep(1)
+            return 42
+        self.assertEquals(f(), 42)
+        self.assert_(log.getvalue())
 
 
 def test_suite ():
@@ -54,3 +54,4 @@ def test_suite ():
 
 if __name__ == '__main__':
     unittest.main()
+
