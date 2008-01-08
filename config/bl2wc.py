@@ -9,6 +9,7 @@ The XYZ folder name is the blacklist folder.
 Required are the "tarfile" module and Python 2.2
 """
 
+import datetime
 import time
 import os
 import re
@@ -18,7 +19,18 @@ import tarfile
 import wc.configuration.confparse
 import wc.XmlUtils
 
-# global vars
+# Mapping of {'domains'|'urls' -> entry -> verification date}.
+# The entries (either domain names, IP numbers or URLs) are false positives,
+# verified by hand at the given date.
+FALSE_POSITIVES = {
+    'domains': {
+        '66.93.68.2': datetime.date(2008, 1, 8),
+    },
+    'urls': {
+    },
+}
+
+# global variables
 date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 line_re = re.compile(r"^[0-9\^a-zA-Z_\-/\\+?#.;%()\[\]\~|$=]+$")
 whitelist_re = re.compile(r"""(
@@ -349,34 +361,39 @@ def rm_rf (directory):
             os.remove(f)
 
 
-def download_and_merge ():
+def download_and_merge (get_nonfree=False):
     """Download all available filters and merge them"""
     # remove old files
     if not os.path.isdir("downloads"):
         os.mkdir("downloads")
-    # from Pål Baltzersen and Lars Erik Håland (Squidguard guys)
-    geturl("ftp://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/",
-           "blacklists.tar.gz", blacklist)
-    # from Stefan Furtmayr
-    geturl("http://www.bn-paf.de/filter/", "de-blacklists.tar.gz", blacklist)
-    # from Craig Baird
-    geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist,
-           saveas="porn/domains.gz")
-    # from ?????
+    # URLs are listed here:
+    # http://www.squidguard.org/blacklists.html
     geturl("http://squidguard.mesd.k12.or.us/", "blacklists.tgz", blacklist)
     # from fabrice Prigent
     geturl("ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/",
            "blacklists.tar.gz", blacklist, saveas="contrib-blacklists.tar.gz")
+    # from Pål Baltzersen and Lars Erik Håland (Squidguard guys)
+    geturl("ftp://ftp.teledanmark.no/pub/www/proxy/squidGuard/contrib/",
+           "blacklists.tar.gz", blacklist)
+    # from Craig Baird
+    geturl("http://www.xpressweb.com/sg/", "sites.domains.gz", blacklist,
+           saveas="porn/domains.gz")
     geturl("http://pgl.yoyo.org/as/", "serverlist.php?showintro=0",
            blacklist)
-    # dmoz category dumps
-    # Note: the dmoz content license is not GPL compatible, so you
-    # may not distribute it with WebCleaner!
-    #geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
-    # Shalla's Blacklists
-    # Note: the Shalla list content license is not GPL compatible, so you
-    # may not distribute it with WebCleaner!
-    #geturl("http://squidguard.shalla.de/Downloads/", "shallalist.tar.gz", blacklist)
+    if get_nonfree:
+        # NON-FREE: do not distribute
+        # from Shalla Secure Services (free for non-commercial use)
+        geturl("http://www.shallalist.de/Downloads/", "shallalist.tar.gz")
+        # from urlblacklist.com: only downloadable ONCE for testing, and the
+        # downloads are "monitored" (oh, really? you have log files? ;-)
+        geturl("http://urlblacklist.com/cgi-bin/commercialdownload.pl?type=download&file=bigblacklist",
+               "", blacklist, saveas="bigblacklist.tar.gz")
+        # dmoz category dumps
+        # Note: the dmoz content license is not GPL compatible
+        geturl("http://dmoz.org/rdf/", "content.rdf.u8.gz", dmozlists)
+        # Shalla's Blacklists
+        # Note: the Shalla content license is not GPL compatible
+        geturl("http://squidguard.shalla.de/Downloads/", "shallalist.tar.gz", blacklist)
 
 
 def write_lists ():
@@ -384,7 +401,7 @@ def write_lists ():
     for data, name in ((domains,"domains"),(urls,"urls")):
         print "writing", name
         for key,val in data.items():
-            if key=="thesimpsons.com":
+            if key in FALSE_POSITIVES[name]:
                 continue
             for cat in val.keys():
                 categories[cat][name].write(key+"\n")
