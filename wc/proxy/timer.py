@@ -25,7 +25,6 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
-
 import time
 import heapq
 import wc.log
@@ -42,7 +41,6 @@ def make_timer (delay, callback):
     heapq.heappush(timers, (time.time()+delay, callback))
 
 
-MAX_TIMEOUT = 60
 def run_timers ():
     """
     Run all timers ready to be run, and return seconds to the next timer.
@@ -55,7 +53,10 @@ def run_timers ():
         # This timeout handler should be called
         heapq.heappop(timers)[1]()
     if timers:
-        return min(timers[0][0] - time.time(), MAX_TIMEOUT)
+        timeout = timers[0][0] - time.time()
+        # Prevent the timeout from being both to small (even negative) or
+        # too large.
+        return max(min(timeout, 60), 0)
     else:
         # None means don't timeout
         return None
