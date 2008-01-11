@@ -14,6 +14,10 @@
     Type: feature
     Changed: wc/filter/rules/HtmlRewriteRule.py
 
+  * Ensure that the timeout argument to select() is not negative.
+    Type: bugfix
+    Changed: wc/proxy/timer.py
+
 2.41 "Thank you for smoking" (released 16.12.2006)
 
   * The XML filter tries to fix unquoted ampersands.
