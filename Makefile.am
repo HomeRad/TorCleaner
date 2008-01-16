@@ -20,8 +20,7 @@ SPLINTOPTS=+posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 # all Python files in the source
-PYFILES=$(wildcard webcleaner webcleaner-certificates *.py \
-	    test/*.py config/*.py) wc tests
+PYFILES=webcleaner webcleaner-certificates *.py test/*.py config/*.py wc tests
 PYFLAKES=python$(PYVER) /usr/bin/pyflakes
 CHECKFILES=*.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
@@ -32,7 +31,7 @@ TESTS=scripts/test.sh
 GPGKEY=2DE589F5
 # build dir for svn-buildpackage
 SVNBUILD=/home/calvin/src/build-area
-DEB_ORIG_TARGET:=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
+DEB_ORIG_TARGET=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
 
 MANIFEST: setup.py
 	rm -f share
@@ -125,11 +124,11 @@ md5sums:
 
 .PHONY: syntaxcheck
 syntaxcheck:
-	py-verify
-	py-find-nocoding
-	check-nosvneolstyle
-	check-copyright
-	check-pofiles
+	py-verify -v
+	py-find-nocoding -v
+	check-nosvneolstyle -v
+	check-copyright -v
+	check-pofiles -v
 	py24-tabnanny
 	$(MAKE) -C config xmlcheck
 
@@ -219,7 +218,7 @@ various:
 .PHONY: test
 test:	check
 
-JSSRCDIR:=/home/calvin/src/mozilla-js-cvs
+JSSRCDIR=/home/calvin/src/mozilla-js-cvs
 jsdiff:
 	(cd libjs && for f in *.c *.h *.tbl *.msg \
 	          fdlibm/*.h fdlibm/*.c; do \
