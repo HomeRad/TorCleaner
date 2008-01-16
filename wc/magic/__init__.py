@@ -111,7 +111,7 @@ class Magic (object):
         self._datadict = {}
         self._lengthdict = {}
         self._mimedict = {}
-	do_read = (not os.path.exists(cachename)) or \
+        do_read = (not os.path.exists(cachename)) or \
 	  (wc.fileutil.get_mtime(filename) > wc.fileutil.get_mtime(cachename))
         if do_read:
             self.read_magic(filename)

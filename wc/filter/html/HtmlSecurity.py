@@ -183,7 +183,7 @@ class HtmlSecurity (object):
         fun = "%s_start" % tag
         if hasattr(self, fun):
             if getattr(self, fun)(attrs, htmlfilter):
-	        return True
+                return True
         # generic length checking
         check_length(attrs, 'width', htmlfilter)
         check_length(attrs, 'height', htmlfilter)

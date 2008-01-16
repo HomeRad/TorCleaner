@@ -184,7 +184,7 @@ class HtmlFilter (JSFilter.JSFilter):
         # search for and prevent known security flaws in HTML
         if self.security.scan_start_tag(tag, attrs, self):
 	    # remove this tag
-	    return
+            return
         # look for filter rules which apply
         self.filter_start_element(tag, attrs, starttype)
         # if rule stack is empty, write out the buffered data
