@@ -4,7 +4,7 @@ RESTFILES = $(wildcard *.txt)
 HTMLFILES = $(patsubst %.txt, %.html, $(RESTFILES) )
 NAVFILES = $(patsubst %.txt, %.nav, $(RESTFILES) )
 DOCDIR = $(top_builddir)/doc
-HTMLDIR := /home/calvin/public_html/webcleaner.sf.net
+HTMLDIR = /home/calvin/public_html/webcleaner.sf.net
 
 htmldir = $(prefix)/html
 html_DATA = $(HTMLFILES)

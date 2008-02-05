@@ -1,16 +1,16 @@
-PYVER:=2.4
+PYVER=2.4
 PYTHON=env PYTHONPATH=$(top_srcdir) python$(PYVER)
-XGETTEXT:=xgettext
-MSGFMT:=msgfmt
-MSGMERGE:=msgmerge
+XGETTEXT=xgettext
+MSGFMT=msgfmt
+MSGMERGE=msgmerge
 TALGETTEXT=$(PYTHON) ../wc/webgui/TAL/talgettext.py
 POSOURCES=$(shell find ../wc -name \*.py) \
 	../webcleaner ../webcleaner-certificates ../install-webcleaner.py
 TEMPLATES=$(shell find ../templates -name \*.html)
 PACKAGE=webcleaner
 TEMPLATE=$(PACKAGE).pot
-MYMAIL:=calvin@users.sourceforge.net
-MYNAME:="Bastian Kleineidam <$(MYMAIL)>"
+MYMAIL=calvin@users.sourceforge.net
+MYNAME="Bastian Kleineidam <$(MYMAIL)>"
 # local share dir
 SHAREDIR=$(top_srcdir)/share/locale
 # defined language (add new languages here)
