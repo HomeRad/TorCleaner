@@ -519,118 +519,51 @@ typedef struct JSLocalRootStack {
 
 #define JSLRS_NULL_MARK ((uint32) -1)
 
-typedef struct JSTempValueRooter JSTempValueRooter;
-typedef void
-(* JS_DLL_CALLBACK JSTempValueMarker)(JSContext *cx, JSTempValueRooter *tvr);
-
-typedef union JSTempValueUnion {
-    jsval               value;
-    JSObject            *object;
-    JSString            *string;
-    void                *gcthing;
-    JSTempValueMarker   marker;
-    JSScopeProperty     *sprop;
-    JSWeakRoots         *weakRoots;
-    jsval               *array;
-} JSTempValueUnion;
+/*
+ * Macros to push/pop JSTempValueRooter instances to context-linked stack of
+ * temporary GC roots. If you need to protect a result value that flows out of
+ * a C function across several layers of other functions, use the
+ * js_LeaveLocalRootScopeWithResult internal API (see further below) instead.
+ *
+ * The macros also provide a simple way to get a single rooted pointer via
+ * JS_PUSH_TEMP_ROOT_<KIND>(cx, NULL, &tvr). Then &tvr.u.<kind> gives the
+ * necessary pointer.
+ *
+ * JSTempValueRooter.count defines the type of the rooted value referenced by
+ * JSTempValueRooter.u union of type JSTempValueUnion. When count is positive
+ * or zero, u.array points to a vector of jsvals. Otherwise it must be one of
+ * the following constants:
+ */
+#define JSTVU_SINGLE        (-1)    /* u.value or u.<gcthing> is single jsval
+                                       or GC-thing */
+#define JSTVU_MARKER        (-2)    /* u.marker is a hook to mark a custom
+                                     * structure */
+#define JSTVU_SPROP         (-3)    /* u.sprop roots property tree node */
+#define JSTVU_WEAK_ROOTS    (-4)    /* u.weakRoots points to saved weak roots */
+#define JSTVU_SCRIPT        (-5)    /* u.script roots JSScript* */
 
 /*
- * The following allows to reinterpret JSTempValueUnion.object as jsval using
- * the tagging property of a generic jsval described below.
+ * Here single JSTVU_SINGLE covers both jsval and pointers to any GC-thing via
+ * reinterpreting the thing as JSVAL_OBJECT. It works because the GC-thing is
+ * aligned on a 0 mod 8 boundary, and object has the 0 jsval tag. So any
+ * GC-thing may be tagged as if it were an object and untagged, if it's then
+ * used only as an opaque pointer until discriminated by other means than tag
+ * bits. This is how, for example, js_GetGCThingTraceKind uses its |thing|
+ * parameter -- it consults GC-thing flags stored separately from the thing to
+ * decide the kind of thing.
+ *
+ * The following checks that this type-punning is possible.
  */
 JS_STATIC_ASSERT(sizeof(JSTempValueUnion) == sizeof(jsval));
-JS_STATIC_ASSERT(sizeof(JSTempValueUnion) == sizeof(JSObject *));
+JS_STATIC_ASSERT(sizeof(JSTempValueUnion) == sizeof(void *));
 
-/*
- * Context-linked stack of temporary GC roots.
- *
- * If count is -1, then u.value contains the single value or GC-thing to root.
- * If count is -2, then u.marker holds a mark hook called to mark the values.
- * If count is -3, then u.sprop points to the property tree node to mark.
- * If count is -4, then u.weakRoots points to saved weak roots.
- * If count >= 0, then u.array points to a stack-allocated vector of jsvals.
- *
- * To root a single GC-thing pointer, which need not be tagged and stored as a
- * jsval, use JS_PUSH_TEMP_ROOT_GCTHING. The macro reinterprets an arbitrary
- * GC-thing as jsval. It works because a GC-thing is aligned on a 0 mod 8
- * boundary, and object has the 0 jsval tag. So any GC-thing may be tagged as
- * if it were an object and untagged, if it's then used only as an opaque
- * pointer until discriminated by other means than tag bits (this is how the
- * GC mark function uses its |thing| parameter -- it consults GC-thing flags
- * stored separately from the thing to decide the type of thing).
- *
- * JS_PUSH_TEMP_ROOT_OBJECT and JS_PUSH_TEMP_ROOT_STRING are type-safe
- * alternatives to JS_PUSH_TEMP_ROOT_GCTHING for JSObject and JSString. They
- * also provide a simple way to get a single pointer to rooted JSObject or
- * JSString via JS_PUSH_TEMP_ROOT_(OBJECT|STRTING)(cx, NULL, &tvr). Then
- * &tvr.u.object or tvr.u.string gives the necessary pointer, which puns
- * tvr.u.value safely because JSObject * and JSString * are GC-things and, as
- * such, their tag bits are all zeroes.
- *
- * If you need to protect a result value that flows out of a C function across
- * several layers of other functions, use the js_LeaveLocalRootScopeWithResult
- * internal API (see further below) instead.
- */
-struct JSTempValueRooter {
-    JSTempValueRooter   *down;
-    ptrdiff_t           count;
-    JSTempValueUnion    u;
-};
-
-#define JSTVU_SINGLE        (-1)
-#define JSTVU_MARKER        (-2)
-#define JSTVU_SPROP         (-3)
-#define JSTVU_WEAK_ROOTS    (-4)
-
-#define JS_PUSH_TEMP_ROOT_COMMON(cx,tvr)                                      \
+#define JS_PUSH_TEMP_ROOT_COMMON(cx,x,tvr,cnt,kind)                           \
     JS_BEGIN_MACRO                                                            \
         JS_ASSERT((cx)->tempValueRooters != (tvr));                           \
+        (tvr)->count = (cnt);                                                 \
+        (tvr)->u.kind = (x);                                                  \
         (tvr)->down = (cx)->tempValueRooters;                                 \
         (cx)->tempValueRooters = (tvr);                                       \
-    JS_END_MACRO
-
-#define JS_PUSH_SINGLE_TEMP_ROOT(cx,val,tvr)                                  \
-    JS_BEGIN_MACRO                                                            \
-        (tvr)->count = JSTVU_SINGLE;                                          \
-        (tvr)->u.value = val;                                                 \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
-    JS_END_MACRO
-
-#define JS_PUSH_TEMP_ROOT(cx,cnt,arr,tvr)                                     \
-    JS_BEGIN_MACRO                                                            \
-        JS_ASSERT((ptrdiff_t)(cnt) >= 0);                                     \
-        (tvr)->count = (ptrdiff_t)(cnt);                                      \
-        (tvr)->u.array = (arr);                                               \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
-    JS_END_MACRO
-
-#define JS_PUSH_TEMP_ROOT_MARKER(cx,marker_,tvr)                              \
-    JS_BEGIN_MACRO                                                            \
-        (tvr)->count = JSTVU_MARKER;                                          \
-        (tvr)->u.marker = (marker_);                                          \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
-    JS_END_MACRO
-
-#define JS_PUSH_TEMP_ROOT_OBJECT(cx,obj,tvr)                                  \
-    JS_BEGIN_MACRO                                                            \
-        (tvr)->count = JSTVU_SINGLE;                                          \
-        (tvr)->u.object = (obj);                                              \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
-    JS_END_MACRO
-
-#define JS_PUSH_TEMP_ROOT_STRING(cx,str,tvr)                                  \
-    JS_BEGIN_MACRO                                                            \
-        (tvr)->count = JSTVU_SINGLE;                                          \
-        (tvr)->u.string = (str);                                              \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
-    JS_END_MACRO
-
-#define JS_PUSH_TEMP_ROOT_GCTHING(cx,thing,tvr)                               \
-    JS_BEGIN_MACRO                                                            \
-        JS_ASSERT(JSVAL_IS_OBJECT((jsval)thing));                             \
-        (tvr)->count = JSTVU_SINGLE;                                          \
-        (tvr)->u.gcthing = (thing);                                           \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
     JS_END_MACRO
 
 #define JS_POP_TEMP_ROOT(cx,tvr)                                              \
@@ -639,27 +572,41 @@ struct JSTempValueRooter {
         (cx)->tempValueRooters = (tvr)->down;                                 \
     JS_END_MACRO
 
-#define JS_TEMP_ROOT_EVAL(cx,cnt,val,expr)                                    \
+#define JS_PUSH_TEMP_ROOT(cx,cnt,arr,tvr)                                     \
     JS_BEGIN_MACRO                                                            \
-        JSTempValueRooter tvr;                                                \
-        JS_PUSH_TEMP_ROOT(cx, cnt, val, &tvr);                                \
-        (expr);                                                               \
-        JS_POP_TEMP_ROOT(cx, &tvr);                                           \
+        JS_ASSERT((ptrdiff_t)(cnt) >= 0);                                     \
+        JS_PUSH_TEMP_ROOT_COMMON(cx, arr, tvr, (ptrdiff_t) (cnt), array);     \
     JS_END_MACRO
+
+#define JS_PUSH_SINGLE_TEMP_ROOT(cx,val,tvr)                                  \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, val, tvr, JSTVU_SINGLE, value)
+
+#define JS_PUSH_TEMP_ROOT_OBJECT(cx,obj,tvr)                                  \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, obj, tvr, JSTVU_SINGLE, object)
+
+#define JS_PUSH_TEMP_ROOT_STRING(cx,str,tvr)                                  \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, str, tvr, JSTVU_SINGLE, string)
+
+#define JS_PUSH_TEMP_ROOT_FUNCTION(cx,fun,tvr)                                \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, fun, tvr, JSTVU_SINGLE, function)
+
+#define JS_PUSH_TEMP_ROOT_QNAME(cx,qn,tvr)                                    \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, qn, tvr, JSTVU_SINGLE, qname)
+
+#define JS_PUSH_TEMP_ROOT_XML(cx,xml_,tvr)                                    \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, xml_, tvr, JSTVU_SINGLE, xml)
+
+#define JS_PUSH_TEMP_ROOT_MARKER(cx,marker_,tvr)                              \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, marker_, tvr, JSTVU_MARKER, marker)
 
 #define JS_PUSH_TEMP_ROOT_SPROP(cx,sprop_,tvr)                                \
-    JS_BEGIN_MACRO                                                            \
-        (tvr)->count = JSTVU_SPROP;                                           \
-        (tvr)->u.sprop = (sprop_);                                            \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
-    JS_END_MACRO
+    JS_PUSH_TEMP_ROOT_COMMON(cx, sprop_, tvr, JSTVU_SPROP, sprop)
 
 #define JS_PUSH_TEMP_ROOT_WEAK_COPY(cx,weakRoots_,tvr)                        \
-    JS_BEGIN_MACRO                                                            \
-        (tvr)->count = JSTVU_WEAK_ROOTS;                                      \
-        (tvr)->u.weakRoots = (weakRoots_);                                    \
-        JS_PUSH_TEMP_ROOT_COMMON(cx, tvr);                                    \
-    JS_END_MACRO
+    JS_PUSH_TEMP_ROOT_COMMON(cx, weakRoots_, tvr, JSTVU_WEAK_ROOTS, weakRoots)
+
+#define JS_PUSH_TEMP_ROOT_SCRIPT(cx,script_,tvr)                              \
+    JS_PUSH_TEMP_ROOT_COMMON(cx, script_, tvr, JSTVU_SCRIPT, script)
 
 struct JSContext {
     /* JSRuntime contextList linkage. */
