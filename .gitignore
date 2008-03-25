@@ -48,5 +48,5 @@
 *.so
 .deps
 .libs
-Makefile
-Makefile.in
+/Makefile
+/Makefile.in

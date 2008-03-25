@@ -3,4 +3,5 @@ jsautocfg.h
 jsautokw.h
 jscpucfg
 jskwgen
-
+Makefile
+Makefile.in
