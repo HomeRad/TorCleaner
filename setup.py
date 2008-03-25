@@ -397,7 +397,7 @@ def cc_run (cc, args):
     cmd_args = [cc[0]]
     cmd_args.extend(args)
     cmd_args.extend(["-o", _cc_test_file, _cc_test_file_c])
-    retcode = subprocess.call(cmd_args)
+    retcode = subprocess.call(cmd_args, stderr=subprocess.PIPE)
     # remove temp files
     for filename in (_cc_test_file, _cc_test_file_c):
         try:
