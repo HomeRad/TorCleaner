@@ -7,7 +7,7 @@ data_DATA = PYTHONPATH PATH LANG LC_ALL LC_CTYPE WC_DEVELOPMENT
 PYTHONPATH PATH:
 if BUILD_WINDOWS
 else
-	echo `realpath "$(top_builddir)"` > $@
+	echo `readlink -f "$(top_builddir)"` > $@
 endif
 
 
