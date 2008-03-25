@@ -41,7 +41,7 @@ import HttpServer
 from ServerPool import serverpool
 
 
-BUSY_LIMIT = 10
+BUSY_LIMIT = 15
 
 
 class ClientServerMatchmaker (object):
