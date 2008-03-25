@@ -99,8 +99,10 @@ class TestStrFormat (unittest.TestCase):
         self.assertEquals(wc.strformat.strsize(1024*25), "25.00KB")
         self.assertEquals(wc.strformat.strsize(1024*1024), "1.00MB")
         self.assertEquals(wc.strformat.strsize(1024*1024*11), "11.0MB")
-        self.assertEquals(wc.strformat.strsize(1024*1024*1024), "1.00GB")
-        self.assertEquals(wc.strformat.strsize(1024*1024*1024*14), "14.0GB")
+        self.assertEquals(wc.strformat.strsize(1024*1024*1024),
+            "1.00GB")
+        self.assertEquals(wc.strformat.strsize(1024*1024*1024*14),
+            "14.0GB")
 
     def test_is_ascii (self):
         self.assert_(wc.strformat.is_ascii("abcd./"))
