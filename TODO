@@ -1,4 +1,24 @@
-- see antivirus-bug.txt
+- A wrong regex input in the web interface crashes the server.
+  So catch regular expression errors and display an error message.
+
+- Updates over the web interface do not work:
+  "updating filters ...
+  updating filter adverts_specific.zap
+  Traceback (most recent call last):
+     File
+  "C:\Python25\Lib\site-packages\wc\webgui\context\update_doit_html.py",
+  line 53, in _updatezapper
+       doreload = _update_filter(config, log=log, dryrun=False)
+     File "C:\Python25\Lib\site-packages\wc\update.py", line 269, in
+  update_filter
+       if wconfig.merge_folder(p.folder, dryrun=dryrun, log=log):
+     File "C:\Python25\Lib\site-packages\wc\configuration\__init__.py",
+  line 323, in merge_folder
+       chg = f[0].update(folder, dryrun=dryrun, log=log)
+     File "C:\Python25\Lib\site-packages\wc\filter\rules\FolderRule.py",
+  line 92, in update
+       if not child.sid.startswith("wc"):
+  AttributeError: 'NoneType' object has no attribute 'startswith'
 
 - use email.FeedParser instead of rfc822.Message()
 
