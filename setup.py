@@ -202,7 +202,7 @@ class MyUninstall (Command):
 
     def finalize_options(self):
         pass
-        
+
     def get_command_name(self):
         return 'uninstall'
 
