@@ -21,7 +21,6 @@ SPLINTOPTS=+posixlib \
 	      -nestcomment -ifempty
 # all Python files in the source
 PYFILES=webcleaner webcleaner-certificates *.py test/*.py config/*.py wc tests
-PYFLAKES=python$(PYVER) /usr/bin/pyflakes
 CHECKFILES=*.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
 SERVICEDIR=/etc/webcleaner/service
@@ -180,7 +179,7 @@ homepage-zapper: md5sums
 
 .PHONY: pyflakes
 pyflakes:
-	$(PYFLAKES) $(CHECKFILES) | \
+	pyflakes $(CHECKFILES) 2>&1 | \
 	  grep -v "redefinition of unused 'wc'" | \
 	  grep -v "undefined name '_'" | \
 	  grep -v "undefined name '_n'"
