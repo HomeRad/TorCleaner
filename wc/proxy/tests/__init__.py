@@ -119,7 +119,7 @@ def decode_content (encoding, data):
     Decode data with given content-encoding.
     """
     if encoding == "gzip":
-        import gzip
+        from wc import gzip2 as gzip
         buf = StringIO.StringIO(data)
         fp = gzip.GzipFile("", "rb", 9, buf)
         data = fp.read()

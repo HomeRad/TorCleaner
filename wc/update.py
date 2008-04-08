@@ -58,8 +58,8 @@ import urllib2
 import re
 import socket
 import zlib
-import gzip
 import cStringIO as StringIO
+from wc import gzip2 as gzip
 
 UA_STR = '%s/%s' % (wc.Name, wc.Version)
 

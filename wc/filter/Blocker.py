@@ -20,7 +20,6 @@ Block specific requested URLs.
 
 import re
 import os
-import gzip
 import urllib
 
 import wc.log
@@ -28,6 +27,7 @@ import wc.configuration
 import wc.url
 import wc.filter
 import Filter
+from wc import gzip2 as gzip
 
 
 def is_flash_mime (mime):
