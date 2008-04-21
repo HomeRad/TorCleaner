@@ -11,7 +11,7 @@ EXTRA_DIST = tests scripts \
 	wc/rating/tests
 
 # python settings
-PYVER=2.4
+PYVER=2.5
 PYTHON=python$(PYVER)
 # homepage directory
 HTMLDIR=/home/calvin/public_html/webcleaner.sf.net
