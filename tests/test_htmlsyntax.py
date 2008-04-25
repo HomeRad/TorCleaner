@@ -87,16 +87,6 @@ class TestProxyHtml (CheckHtml):
     needed_resources = ['proxy']
 
     def test_html (self):
-        names = [
-            "index",
-            "config",
-            "filterconfig",
-            "update",
-            "rating",
-            "help",
-            "restart_ask",
-            "adminpass",
-        ]
         for name in glob.glob("templates/classic/*.html"):
             name = os.path.basename(name)
             url = "http://localhost:8081/%s" % name

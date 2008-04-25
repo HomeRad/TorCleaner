@@ -35,7 +35,6 @@ class WebCleanerService (wc.rating.RatingService):
         # service homepage
         self.url = '%s/rating/' % wc.Url,
         # rating formats
-        import ratingformat
         agerange = ratingformat.IntRange(minval=0)
         self.ratingformats = [
             ratingformat.RangeFormat("WC-Age", agerange),

@@ -447,7 +447,7 @@ class Magic (object):
 
     def _readlines (self, fp, number):
         lines = []
-        for i in xrange(number):
+        for dummy in xrange(number):
             data = fp.readline()
             if not data:
                 raise IOError("out of file access")
@@ -578,7 +578,6 @@ class Magic (object):
             direct = self._direct[i]
             offset_type = self._offset_type[i]
             offset_delta = self._offset_delta[i]
-            offset_relatif = self._offset_relatif[i]
             endian = self._endiandict[i]
             kind = self._kinddict[i]
             oper = self._oper[i]

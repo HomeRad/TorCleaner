@@ -120,7 +120,7 @@ def remove_warning_headers (headers):
         if parsed is None:
             wc.log.info(wc.LOG_PROXY, "could not parse warning %r", warning)
         else:
-            warncode, warnagent, warntext, warndate = parsed
+            warndate = parsed[3]
             if warndate is None or warndate == date:
                 tokeep.append(warning)
             else:

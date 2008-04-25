@@ -241,7 +241,7 @@ class HttpClient (CodingConnection.CodingConnection):
         """
         # Refresh with filtered request data.
         # Assumes that the request now has correct syntax.
-        self.method, self.url, protocol = self.request.split()
+        self.method, self.url, dummy = self.request.split()
         # enforce a maximum url length
         if len(self.url) > Allowed.MAX_URL_LEN:
             wc.log.info(wc.LOG_PROXY,

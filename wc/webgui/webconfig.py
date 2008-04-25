@@ -230,11 +230,11 @@ def add_default_context (context, filename, hostname, lang):
     Add context variables used by all templates.
     """
     # rule macros
-    path, dirs = wc.webgui.get_safe_template_path("macros/rules.html")
+    path = wc.webgui.get_safe_template_path("macros/rules.html")[0]
     rulemacros = templatecache.templates[path]
     context_add(context, "rulemacros", rulemacros.macros)
     # standard macros
-    path, dirs = wc.webgui.get_safe_template_path("macros/standard.html")
+    path = wc.webgui.get_safe_template_path("macros/standard.html")[0]
     macros = templatecache.templates[path]
     context_add(context, "macros", macros.macros)
     # used by navigation macro

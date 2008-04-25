@@ -240,7 +240,6 @@ class HtmlSecurity (object):
         if i != -1:
             # prevent CVE-2002-0022
             j = src.rfind('/')
-            l = len(src)
             if i > j and len(src[i:]) > 10:
                 msg = "%s %r\n Detected and prevented IE " \
                       "filename overflow crash"

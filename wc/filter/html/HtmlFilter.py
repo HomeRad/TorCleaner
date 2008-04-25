@@ -183,7 +183,7 @@ class HtmlFilter (JSFilter.JSFilter):
                     "%s using base url %r", self, self.base_url)
         # search for and prevent known security flaws in HTML
         if self.security.scan_start_tag(tag, attrs, self):
-	    # remove this tag
+        # remove this tag
             return
         # look for filter rules which apply
         self.filter_start_element(tag, attrs, starttype)
@@ -216,7 +216,7 @@ class HtmlFilter (JSFilter.JSFilter):
                 if item[0] == starttype and item[1] == tag:
                     # If both tag type and name did not change, more than one
                     # rule has a chance to replace data.
-                    foo, tag, attrs = item
+                    dummy, tag, attrs = item
                     continue
                 else:
                     # If tag type or name changed, it's over.

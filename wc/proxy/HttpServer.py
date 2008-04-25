@@ -447,7 +447,7 @@ class HttpServer (Server.Server):
                 "%s FilterRating from content %s", self, msg)
             self._show_rating_deny(str(msg))
             return
-        except wc.filter.FilterProxyError, e:
+        except wc.filter.FilterProxyError:
             self.handle_error("filter proxy error")
             return
         for encoder in self.encoders:

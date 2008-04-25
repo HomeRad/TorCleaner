@@ -127,8 +127,6 @@ class Filter (object):
         a list of tuples (applies, reason, rule)
         """
         applies = []
-        # get the lang setting here
-        lang = 'en'
         # resort rules by dynamic order
         rules = self.rules[:]
         rules.sort(key=lambda x: x.oid)
