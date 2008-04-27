@@ -31,7 +31,7 @@
   <title lang="en">Links with 'adbouncer'</title>
   <description lang="de">Entferne Verknüpfungen mit 'adbouncer' im Pfad.</description>
   <description lang="en">Remove links with 'adbouncer' in the path name.</description>
-  <attr name="href">/adbouncer\.phtml</attr>
+  <attr name="href">/adbouncer\.phtml|40ozbounce\.com</attr>
   <replacement part="complete"/>
 </htmlrewrite>
 
