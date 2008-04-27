@@ -20,10 +20,9 @@ Setup file for the distuils module.
 """
 
 import sys
-if not hasattr(sys, "version_info"):
-    raise SystemExit, "This program requires Python 2.4 or later."
-if sys.version_info < (2, 4, 0, 'final', 0):
-    raise SystemExit, "This program requires Python 2.4 or later."
+if not (hasattr(sys, 'version_info') or
+        sys.version_info < (2, 5, 0, 'final', 0)):
+    raise SystemExit("This program requires Python 2.5 or later.")
 import os
 import subprocess
 import stat
@@ -144,35 +143,12 @@ class MyInstall (install, object):
         outs.append(self.distribution.get_conf_filename(self.install_lib))
         return outs
 
-    # compatibility bugfix for Python << 2.5, << 2.4.1, << 2.3.5
-    # XXX remove this method when depending on one of the above versions
-    def dump_dirs (self, msg):
-        if DEBUG:
-            from distutils.fancy_getopt import longopt_xlate
-            print msg + ":"
-            for opt in self.user_options:
-                opt_name = opt[0]
-                if opt_name[-1] == "=":
-                    opt_name = opt_name[0:-1]
-                if self.negative_opt.has_key(opt_name):
-                    opt_name = string.translate(self.negative_opt[opt_name],
-                                                longopt_xlate)
-                    val = not getattr(self, opt_name)
-                else:
-                    opt_name = string.translate(opt_name, longopt_xlate)
-                    val = getattr(self, opt_name)
-                print "  %s: %s" % (opt_name, val)
-
 
 class MyInstallData (install_data, object):
-    """
-    My own data installer to handle permissions.
-    """
+    """My own data installer to handle permissions."""
 
     def run (self):
-        """
-        Install .mo files and adjust permissions on POSIX systems.
-        """
+        """Install .mo files and adjust permissions on POSIX systems."""
         # add .mo files to data files
         for (_src, _dst) in list_message_files(self.distribution.get_name()):
             _build_dst = os.path.join("build", _dst)
