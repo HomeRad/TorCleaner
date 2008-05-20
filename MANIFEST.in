@@ -49,7 +49,7 @@ include scripts/*.bat
 include tests/*.py
 include tests/magic/*.py tests/magic/*.html
 include tests/filter/*.py
-recursive-include tests/proxy/ *.py
+recursive-include tests/proxy *.py
 include tests/proxy/README
 include test*.py
 include po/*.po
