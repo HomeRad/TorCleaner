@@ -46,6 +46,8 @@
 *.la
 *~
 *.so
+*.mgc
+*.bak
 .deps
 .libs
 /Makefile
