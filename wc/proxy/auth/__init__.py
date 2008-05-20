@@ -21,9 +21,7 @@ Support for different HTTP proxy authentication schemes.
 # default realm for authentication
 wc_realm = "unknown"
 
-import wc.configuration
-import wc.log
-import wc.url
+from ... import log, LOG_AUTH, configuration, url as urlutil, HasCrypto
 
 from basic import parse_basic_challenge, get_basic_challenge
 from basic import parse_basic_credentials, get_basic_credentials
@@ -31,7 +29,7 @@ from basic import check_basic_credentials
 from digest import parse_digest_challenge, get_digest_challenge
 from digest import parse_digest_credentials, get_digest_credentials
 from digest import check_digest_credentials
-if wc.HasCrypto:
+if HasCrypto:
     from ntlm import parse_ntlm_challenge, get_ntlm_challenge
     from ntlm import parse_ntlm_credentials, get_ntlm_credentials
     from ntlm import check_ntlm_credentials
@@ -41,7 +39,7 @@ def get_auth_uri (url):
     """
     Return uri ready for authentication purposes.
     """
-    return wc.url.stripsite(url)[1]
+    return urlutil.stripsite(url)[1]
 
 
 def get_header_challenges (headers, key):
@@ -50,11 +48,10 @@ def get_header_challenges (headers, key):
     """
     auths = {}
     for auth in headers.getheaders(key):
-        assert None == wc.log.debug(wc.LOG_AUTH,
-            "%s header challenge: %s", key, auth)
+        log.debug(LOG_AUTH, "%s header challenge: %s", key, auth)
         for key, data in parse_challenges(auth).iteritems():
             auths.setdefault(key, []).extend(data)
-    assert None == wc.log.debug(wc.LOG_AUTH, "parsed challenges: %s", auths)
+    log.debug(LOG_AUTH, "parsed challenges: %s", auths)
     return auths
 
 
@@ -70,7 +67,7 @@ def parse_challenges (challenge):
         elif challenge.startswith('Digest'):
             auth, challenge = parse_digest_challenge(challenge[6:].strip())
             auths.setdefault('Digest', []).append(auth)
-        elif challenge.startswith('NTLM') and wc.HasCrypto:
+        elif challenge.startswith('NTLM') and HasCrypto:
             auth, challenge = parse_ntlm_challenge(challenge[4:].strip())
             auths.setdefault('NTLM', []).append(auth)
         else:
@@ -86,14 +83,14 @@ def get_challenges (**args):
     either as multiple headers with the same key, or as one single
     header whose value list is separated by commas.
     """
-    if wc.configuration.config['auth_ntlm'] and wc.HasCrypto:
+    if configuration.config['auth_ntlm'] and HasCrypto:
         chals = [get_ntlm_challenge(**args)]
     else:
         chals = [
             get_basic_challenge(),
             get_digest_challenge(),
         ]
-    assert None == wc.log.debug(wc.LOG_AUTH, "challenges %s", chals)
+    log.debug(LOG_AUTH, "challenges %s", chals)
     return chals
 
 
@@ -103,11 +100,10 @@ def get_header_credentials (headers, key):
     """
     creds = {}
     for cred in headers.getheaders(key):
-        assert None == wc.log.debug(wc.LOG_AUTH,
-            "%s header credential: %s", key, cred)
+        log.debug(LOG_AUTH, "%s header credential: %s", key, cred)
         for key, data in parse_credentials(cred).iteritems():
             creds.setdefault(key, []).extend(data)
-    assert None == wc.log.debug(wc.LOG_AUTH, "parsed credentials: %s", creds)
+    log.debug(LOG_AUTH, "parsed credentials: %s", creds)
     return creds
 
 
@@ -123,7 +119,7 @@ def parse_credentials (creds):
         elif creds.startswith('Digest'):
             auth, creds = parse_digest_credentials(creds[6:].strip())
             auths.setdefault('Digest', []).append(auth)
-        elif creds.startswith('NTLM') and wc.HasCrypto:
+        elif creds.startswith('NTLM') and HasCrypto:
             auth, creds = parse_ntlm_credentials(creds[4:].strip())
             auths.setdefault('NTLM', []).append(auth)
         else:
@@ -140,7 +136,7 @@ def get_credentials (challenges, **attrs):
              or None on error or if scheme is unsupported.
     """
     if 'NTLM' in challenges and \
-       wc.configuration.config['auth_ntlm'] and wc.HasCrypto:
+       configuration.config['auth_ntlm'] and HasCrypto:
         creds = get_ntlm_credentials(challenges['NTLM'][0], **attrs)
     elif 'Digest' in challenges:
         creds = get_digest_credentials(challenges['Digest'][0], **attrs)
@@ -148,7 +144,7 @@ def get_credentials (challenges, **attrs):
         creds = get_basic_credentials(challenges['Basic'][0], **attrs)
     else:
         creds = None
-    assert None == wc.log.debug(wc.LOG_AUTH, "credentials: %s", creds)
+    log.debug(LOG_AUTH, "credentials: %s", creds)
     return creds
 
 
@@ -156,21 +152,21 @@ def check_credentials (creds, **attrs):
     """
     Check credentials against given attributes.
     """
-    assert None == wc.log.debug(wc.LOG_AUTH,
+    log.debug(LOG_AUTH,
         "check credentials %s with attrs %s", creds, attrs)
     if not creds:
         res = False
-    elif wc.configuration.config['auth_ntlm'] and 'NTLM' not in creds:
+    elif configuration.config['auth_ntlm'] and 'NTLM' not in creds:
         # forced NTLM auth
         res = False
-    elif 'NTLM' in creds and wc.HasCrypto:
+    elif 'NTLM' in creds and HasCrypto:
         res = check_ntlm_credentials(creds['NTLM'][0], **attrs)
     elif 'Digest' in creds:
         res = check_digest_credentials(creds['Digest'][0], **attrs)
     elif 'Basic' in creds:
         res = check_basic_credentials(creds['Basic'][0], **attrs)
     else:
-        wc.log.error(wc.LOG_AUTH, "Unknown authentication credentials %s",
+        log.error(LOG_AUTH, "Unknown authentication credentials %s",
                      creds)
         res = False
     return res

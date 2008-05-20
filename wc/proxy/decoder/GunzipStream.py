@@ -36,8 +36,8 @@ but exports a proxy4 encoding interface:
  - flush()        => return everything else
 """
 
-import wc.log
-import DeflateStream
+from ... import log, LOG_PROXY
+from . import DeflateStream
 
 
 class GunzipStream (DeflateStream.DeflateStream):
@@ -76,14 +76,14 @@ class GunzipStream (DeflateStream.DeflateStream):
 
         magic = self.buf[:2]
         if magic != '\037\213':
-            wc.log.info(wc.LOG_PROXY,
+            log.info(LOG_PROXY,
                         _("zlib error: not gzip format, disabling gunzip"))
             self.error = True
             return
 
         method = ord(self.buf[2])
         if method != 8:
-            wc.log.info(wc.LOG_PROXY,
+            log.info(LOG_PROXY,
                 _("zlib error: unknown compression method, disabling gunzip"))
             self.error = True
             return

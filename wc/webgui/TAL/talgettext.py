@@ -33,15 +33,14 @@ Options:
 """
 
 import sys
-import time
+#import time
 import getopt
 import traceback
-
-from wc.webgui.TAL.HTMLTALParser import HTMLTALParser
-from wc.webgui.TAL.TALInterpreter import TALInterpreter
-from wc.webgui.TAL.DummyEngine import DummyEngine
-#from ITALES import ITALESEngine
-from wc.webgui.TAL.TALDefs import TALESError
+from .HTMLTALParser import HTMLTALParser
+from .TALInterpreter import TALInterpreter
+from .TAL.DummyEngine import DummyEngine
+#from .ITALES import ITALESEngine
+from .TALDefs import TALESError
 
 __version__ = "1.0"
 
@@ -286,7 +285,7 @@ def main ():
         outfile = file(outfile, update_mode and "a" or "w")
 
     catalog = {}
-    for domain in engine.catalog.iterkeys():
+    for domain in engine.catalog:
         catalog.update(engine.catalog[domain])
 
     messages = catalog.copy()

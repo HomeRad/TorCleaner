@@ -18,10 +18,9 @@
 Basic data types and routines for rating support.
 """
 
-import wc.decorators
-import wc.containers
+from .. import decorators, containers
 
-class Rating (wc.containers.CaselessSortedDict):
+class Rating (containers.CaselessSortedDict):
     """
     A rating is a dictionary filled with name/value items.
     Each name/value item is an instance of a defined rating format.
@@ -39,12 +38,12 @@ class RatingFormat (object):
         self.name = name
         self.values = values
 
-    @wc.decorators.notimplemented
+    @decorators.notimplemented
     def valid_value (self, value):
         """True if value is valid according to this format."""
         pass
 
-    @wc.decorators.notimplemented
+    @decorators.notimplemented
     def allowance (self, value, limit):
         """Check if value exceeds limit according to this format."""
         pass
@@ -81,10 +80,10 @@ class RatingService (object):
         self.url = url
         self.rating_formats = rating_formats
 
-    @wc.decorators.notimplemented
+    @decorators.notimplemented
     def get_url_rating (self, url):
         pass
 
-    @wc.decorators.notimplemented
+    @decorators.notimplemented
     def set_url_rating (self, url, rating, generic):
         pass

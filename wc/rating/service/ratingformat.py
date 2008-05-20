@@ -19,10 +19,10 @@ Rating formats.
 """
 
 import re
-import wc.rating
+from .. import RatingFormat
 
 
-class ValueFormat (wc.rating.RatingFormat):
+class ValueFormat (RatingFormat):
     """
     Base class for formats that have three-valued range of
     "none", "mild" and "heavy".
@@ -45,7 +45,7 @@ class ValueFormat (wc.rating.RatingFormat):
         return self.values.index(value) <= self.values.index(limit)
 
 
-class RangeFormat (wc.rating.RatingFormat):
+class RangeFormat (RatingFormat):
     """
     Rating format that can hold values in a range between a given
     minimum and maximum.

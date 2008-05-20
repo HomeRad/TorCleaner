@@ -18,8 +18,7 @@
 Hold a list of domains to block in external file, like those
 found in SquidGuard.
 """
-
-import ExternfileRule
+from . import ExternfileRule
 
 
 class BlockdomainsRule (ExternfileRule.ExternfileRule):

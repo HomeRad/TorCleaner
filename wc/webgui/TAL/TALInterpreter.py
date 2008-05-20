@@ -23,11 +23,11 @@ from cgi import escape
 #from DocumentTemplate.DT_Util import ustr
 ustr = unicode
 
-from TALDefs import TAL_VERSION, METALError, attrEscape
-from TALDefs import isCurrentVersion, getProgramVersion, getProgramMode
-from TALGenerator import TALGenerator
-from TranslationContext import TranslationContext
-from wc.webgui import ZTUtils
+from .TALDefs import (TAL_VERSION, METALError, attrEscape,
+    isCurrentVersion, getProgramVersion, getProgramMode)
+from .TALGenerator import TALGenerator
+from .TranslationContext import TranslationContext
+from .. import ZTUtils
 
 BOOLEAN_HTML_ATTRS = [
     # List of Boolean attributes in HTML that should be rendered in

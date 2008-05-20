@@ -33,34 +33,17 @@ import time
 import socket
 import re
 import urllib
-import cStringIO as StringIO
-
-import wc.log
-import wc.strformat
-import wc.configuration
-import wc.url
-import wc.magic
-import wc.filter
-import wc.http
-import timer
-import Server
-import auth
-import Headers
-import ServerPool
-import dns_lookups
-
+from cStringIO import StringIO
+from .. import (log, LOG_PROXY, configuration, strformat, magic,
+    url as urlutil, filter as webfilter)
+from ..http import parse_http_response
+from ..http.header import WcMessage
+from . import timer, Server, auth, Headers, ServerPool, dns_lookups
 
 # DEBUGGING
 PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
-
-FilterStages = [
-    wc.filter.STAGE_RESPONSE_DECODE,
-    wc.filter.STAGE_RESPONSE_MODIFY,
-    wc.filter.STAGE_RESPONSE_ENCODE,
-]
-
 
 class HttpServer (Server.Server):
     """
@@ -85,12 +68,12 @@ class HttpServer (Server.Server):
         Reset connection values.
         """
         super(HttpServer, self).reset()
-        assert None == wc.log.debug(wc.LOG_PROXY, '%s reset', self)
+        log.debug(LOG_PROXY, '%s reset', self)
         self.hostname = ''
         self.method = None
         self.document = ''
         self.response = ''
-        self.headers = wc.http.header.WcMessage()
+        self.headers = WcMessage()
         # for persistent connections
         self.persistent = False
         # initial filter attributes
@@ -105,9 +88,9 @@ class HttpServer (Server.Server):
         self.defer_data = False
         for f in ['MimeRecognizer', 'Compress']:
             # defer for all filters that change headers
-            if f in wc.configuration.config['filters']:
+            if f in configuration.config['filters']:
                 self.defer_data = True
-        assert None == wc.log.debug(wc.LOG_PROXY, "%s resetted", self)
+        log.debug(LOG_PROXY, "%s resetted", self)
 
     def __repr__ (self):
         """
@@ -125,7 +108,7 @@ class HttpServer (Server.Server):
         if hasaddr:
             extra += ":%d" % self.addr[1]
         if hasattr(self, "document"):
-            extra += wc.strformat.limit(self.document, 200)
+            extra += strformat.limit(self.document, 200)
         if hasattr(self, "client") and self.client:
             extra += " client"
         if hasattr(self.socket, "state_string"):
@@ -173,10 +156,10 @@ class HttpServer (Server.Server):
         """
         Modify request headers.
         """
-        if wc.configuration.config['parentproxycreds']:
+        if configuration.config['parentproxycreds']:
             # stored previous proxy authentication (for Basic and Digest auth)
             self.clientheaders['Proxy-Authorization'] = \
-                          "%s\r" % wc.configuration.config['parentproxycreds']
+                          "%s\r" % configuration.config['parentproxycreds']
 
     def send_request (self):
         """
@@ -185,15 +168,12 @@ class HttpServer (Server.Server):
         """
         assert self.method != 'CONNECT'
         request = '%s %s HTTP/1.1\r\n' % (self.method, self.document)
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            '%s write request\n%r', self, request)
+        log.debug(LOG_PROXY, '%s write request\n%r', self, request)
         self.write(request)
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s write headers\n%s", self, self.clientheaders)
+        log.debug(LOG_PROXY, "%s write headers\n%s", self, self.clientheaders)
         self.write("".join(self.clientheaders.headers))
         self.write('\r\n')
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s write content\n%r", self, self.content)
+        log.debug(LOG_PROXY, "%s write content\n%r", self, self.content)
         self.write(self.content)
         self.state = 'response'
 
@@ -227,7 +207,7 @@ class HttpServer (Server.Server):
         if self.response.lower().startswith('http/'):
             # Okay, we got a valid response line
             version, status, tail = \
-                   wc.http.parse_http_response(self.response, self.url)
+                   parse_http_response(self.response, self.url)
             # XXX reject invalid HTTP version
             # reconstruct cleaned response
             self.response = "%s %d %s" % (self.protocol, status, tail)
@@ -236,7 +216,7 @@ class HttpServer (Server.Server):
             ServerPool.serverpool.set_http_version(self.addr, version)
         elif not self.response:
             # It's a blank line, so assume HTTP/0.9
-            wc.log.info(wc.LOG_PROXY, "%s got HTTP/0.9 response", self)
+            log.info(LOG_PROXY, "%s got HTTP/0.9 response", self)
             ServerPool.serverpool.set_http_version(self.addr, (0, 9))
             self.response = "%s 200 OK" % self.protocol
             self.statuscode = 200
@@ -244,8 +224,7 @@ class HttpServer (Server.Server):
         else:
             # the HTTP line was missing, just assume that it was there
             # Example: http://ads.adcode.de/frame?11?3?10
-            wc.log.info(wc.LOG_PROXY,
-                        'invalid or missing response from %r: %r',
+            log.info(LOG_PROXY, 'invalid or missing response from %r: %r',
                         self.url, self.response)
             ServerPool.serverpool.set_http_version(self.addr, (1, 0))
             # put the read bytes back to the buffer
@@ -254,22 +233,21 @@ class HttpServer (Server.Server):
             # Example:
             # http://www.mail-archive.com/sqwebmail@inter7.com/msg03824.html
             if not Headers.is_header(self.response):
-                wc.log.info(wc.LOG_PROXY,
+                log.info(LOG_PROXY,
                             "missing headers in response from %r", self.url)
                 self.recv_buffer = '\r\n' + self.recv_buffer
             # fix the response
             self.response = "%s 200 OK" % self.protocol
             self.statuscode = 200
         self.state = 'headers'
-        stage = wc.filter.STAGE_RESPONSE
-        self.attrs = wc.filter.get_filterattrs(self.url,
+        stage = webfilter.STAGE_RESPONSE
+        self.attrs = webfilter.get_filterattrs(self.url,
                                                self.client.localhost, [])
-        self.response = wc.filter.applyfilter(stage, self.response,
+        self.response = webfilter.applyfilter(stage, self.response,
                               "finish", self.attrs).strip()
         if self.statuscode >= 400:
             self.mime_types = None
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s response %r", self, self.response)
+        log.debug(LOG_PROXY, "%s response %r", self, self.response)
 
     def process_headers (self):
         """
@@ -284,16 +262,15 @@ class HttpServer (Server.Server):
         if not m:
             return
         # get headers
-        fp = StringIO.StringIO(self.read(m.end()))
-        msg = wc.http.header.WcMessage(fp)
+        fp = StringIO(self.read(m.end()))
+        msg = WcMessage(fp)
         # put unparsed data (if any) back to the buffer
         msg.rewindbody()
         self.recv_buffer = fp.read() + self.recv_buffer
         fp.close()
         # make a copy for later
         self.serverheaders = msg.copy()
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s server headers\n%s", self, self.serverheaders)
+        log.debug(LOG_PROXY, "%s server headers\n%s", self, self.serverheaders)
         if self.statuscode == 100:
             # it's a Continue request, so go back to waiting for headers
             # XXX for HTTP/1.1 clients, forward this
@@ -303,10 +280,9 @@ class HttpServer (Server.Server):
                      ServerPool.serverpool.http_versions[self.addr])
         try:
             self.headers = self.filter_headers(msg)
-        except wc.filter.FilterRating, err:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "%s FilterRating from header: %s", self, err)
-            if err == wc.filter.rules.RatingRule.MISSING:
+        except webfilter.FilterRating, err:
+            log.debug(LOG_PROXY, "%s FilterRating from header: %s", self, err)
+            if err == webfilter.rules.RatingRule.MISSING:
                 # still have to look at content
                 self.defer_data = True
             else:
@@ -315,8 +291,9 @@ class HttpServer (Server.Server):
         if self.statuscode in (301, 302):
             location = self.headers.get('Location')
             if location:
-                host = wc.url.url_split(location)[1]
-                if host in dns_lookups.resolver.localhosts:
+                host = urlutil.url_split(location)[1]
+                if (host in dns_lookups.resolver.localhosts and
+                    self.hostname not in dns_lookups.resolver.localhosts):
                     self.handle_error(_('redirection to localhost'))
                     return
         self.mangle_response_headers()
@@ -325,8 +302,8 @@ class HttpServer (Server.Server):
             self.state = 'recycle'
         else:
             self.state = 'content'
-        self.attrs = wc.filter.get_filterattrs(self.url,
-                                     self.client.localhost, FilterStages,
+        self.attrs = webfilter.get_filterattrs(self.url,
+                                     self.client.localhost, webfilter.ServerFilterStages,
                                      clientheaders=self.client.headers,
                                      serverheaders=self.serverheaders,
                                      headers=self.headers)
@@ -334,24 +311,23 @@ class HttpServer (Server.Server):
         # a) a MIME type is enforced
         # b) the MIME type is not supported
         mime = self.serverheaders.get('Content-Type')
-        if self.mime_types or mime in wc.magic.unsupported_types:
+        if self.mime_types or mime in magic.unsupported_types:
             self.attrs['mimerecognizer_ignore'] = True
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s filtered headers %s", self, self.headers)
+        log.debug(LOG_PROXY, "%s filtered headers %s", self, self.headers)
         if self.defer_data:
-            assert None == wc.log.debug(wc.LOG_PROXY, "deferring header data")
+            log.debug(LOG_PROXY, "deferring header data")
         else:
             self.client.server_response(self, self.response, self.statuscode,
                                         self.headers)
             # note: self.client could be None here
 
     def filter_headers (self, msg):
-        stage = wc.filter.STAGE_RESPONSE_HEADER
-        self.attrs = wc.filter.get_filterattrs(self.url,
+        stage = webfilter.STAGE_RESPONSE_HEADER
+        self.attrs = webfilter.get_filterattrs(self.url,
                         self.client.localhost, [stage],
                         clientheaders=self.client.headers,
                         serverheaders=self.serverheaders)
-        return wc.filter.applyfilter(stage, msg, "finish", self.attrs)
+        return webfilter.applyfilter(stage, msg, "finish", self.attrs)
 
     def mangle_response_headers (self):
         """
@@ -385,7 +361,7 @@ class HttpServer (Server.Server):
         """
         Return True iff this server will modify content.
         """
-        for ro in wc.configuration.config['mime_content_rewriting']:
+        for ro in configuration.config['mime_content_rewriting']:
             if ro.match(self.headers.get('Content-Type', '')):
                 return True
         return False
@@ -397,14 +373,13 @@ class HttpServer (Server.Server):
         query = urllib.urlencode({"url":self.url, "reason":msg})
         self.statuscode = 302
         response = "%s 302 %s" % (self.protocol, _("Moved Temporarily"))
-        headers = wc.http.header.WcMessage()
+        headers = WcMessage()
         # XXX content type adaption?
         headers['Content-type'] = 'text/plain\r'
         headers['Location'] = 'http://%s:%d/rated.html?%s\r' % \
-               (self.client.localhost, wc.configuration.config['port'], query)
+               (self.client.localhost, configuration.config['port'], query)
         headers['Content-Length'] = '%d\r' % len(msg)
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s headers\n%s", self, headers)
+        log.debug(LOG_PROXY, "%s headers\n%s", self, headers)
         self.client.server_response(self, response, self.statuscode, headers)
         if not self.client:
             return
@@ -421,42 +396,39 @@ class HttpServer (Server.Server):
         Process server data: filter it and write it to client.
         """
         data = self.read(self.bytes_remaining)
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s process %d bytes", self, len(data))
+        log.debug(LOG_PROXY, "%s process %d bytes", self, len(data))
         if self.bytes_remaining is not None:
             # If we do know how many bytes we're dealing with,
             # we'll close the connection when we're done
             self.bytes_remaining -= len(data)
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            log.debug(LOG_PROXY,
                 "%s %d bytes remaining", self, self.bytes_remaining)
         is_closed = False
         for decoder in self.decoders:
             data = decoder.process(data)
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "%s have run decoder %s", self, decoder)
+            log.debug(LOG_PROXY, "%s have run decoder %s", self, decoder)
             if not is_closed and decoder.closed:
                 is_closed = True
         try:
-            for stage in FilterStages:
-                data = wc.filter.applyfilter(stage, data, "filter", self.attrs)
-        except wc.filter.FilterWait, msg:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "%s FilterWait %s", self, msg)
-        except wc.filter.FilterRating, msg:
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            for stage in webfilter.ServerFilterStages:
+                data = webfilter.applyfilter(stage, data, "filter", self.attrs)
+        except webfilter.FilterWait, msg:
+            log.debug(LOG_PROXY, "%s FilterWait %s", self, msg)
+        except webfilter.FilterRating, msg:
+            log.debug(LOG_PROXY,
                 "%s FilterRating from content %s", self, msg)
             self._show_rating_deny(str(msg))
             return
-        except wc.filter.FilterProxyError:
+        except webfilter.FilterProxyError:
             self.handle_error("filter proxy error")
             return
         for encoder in self.encoders:
             data = encoder.process(data)
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            log.debug(LOG_PROXY,
                 "%s have run encoder %s", self, encoder)
         if self.bytes_remaining is not None and self.bytes_remaining < 0:
             # underflow
-            wc.log.info(wc.LOG_PROXY,
+            log.info(LOG_PROXY,
                       _("server received %d bytes more than content-length"),
                       (-self.bytes_remaining))
         if self.statuscode != 407 and data:
@@ -484,7 +456,7 @@ class HttpServer (Server.Server):
             return
         data = self.read()
         if data:
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            log.debug(LOG_PROXY,
                 "%s send %d bytes SSL tunneled data to client %s",
                 self, len(data), self.client)
             self.client.write(data)
@@ -493,15 +465,15 @@ class HttpServer (Server.Server):
         """
         Recycle the server connection and put it in the server pool.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
-        if self.statuscode == 407 and wc.configuration.config['parentproxy']:
-            assert None == wc.log.debug(wc.LOG_PROXY,
+        log.debug(LOG_PROXY, "%s recycling", self)
+        if self.statuscode == 407 and configuration.config['parentproxy']:
+            log.debug(LOG_PROXY,
                 "%s need parent proxy authentication", self)
             if self.authtries:
                 # we failed twice, abort
                 self.authtries = 0
                 self.handle_error('authentication error')
-                wc.configuration.config['parentproxycreds'] = None
+                configuration.config['parentproxycreds'] = None
                 return
             self.authtries += 1
             challenges = auth.get_header_challenges(self.headers,
@@ -509,8 +481,8 @@ class HttpServer (Server.Server):
             Headers.remove_headers(self.headers,
                                                   ['Proxy-Authentication'])
             attrs = {
-                'password_b64': wc.configuration.config['parentproxypass'],
-                'username': wc.configuration.config['parentproxyuser'],
+                'password_b64': configuration.config['parentproxypass'],
+                'username': configuration.config['parentproxyuser'],
             }
             if 'NTLM' in challenges:
                 attrs['type'] = challenges['NTLM'][0]['type']+1
@@ -528,7 +500,7 @@ class HttpServer (Server.Server):
             creds = auth.get_credentials(challenges, **attrs)
             # resubmit the request with proxy credentials
             self.state = 'client'
-            wc.configuration.config['parentproxycreds'] = creds
+            configuration.config['parentproxycreds'] = creds
             self.clientheaders['Proxy-Authorization'] = "%s\r" % creds
             self.send_request()
         else:
@@ -540,23 +512,23 @@ class HttpServer (Server.Server):
         Flush data of decoders (if any) and filters and write it to
         the client. return True if flush was successful.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, "%s HttpServer.flush", self)
+        log.debug(LOG_PROXY, "%s HttpServer.flush", self)
         if not self.statuscode and self.method != 'CONNECT':
-            wc.log.info(wc.LOG_PROXY, "%s flush without status", self)
+            log.info(LOG_PROXY, "%s flush without status", self)
             return True
         data = self.flush_coders(self.decoders)
         try:
-            for stage in FilterStages:
-                data = wc.filter.applyfilter(stage, data, "finish", self.attrs)
-        except wc.filter.FilterWait, msg:
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            for stage in webfilter.ServerFilterStages:
+                data = webfilter.applyfilter(stage, data, "finish", self.attrs)
+        except webfilter.FilterWait, msg:
+            log.debug(LOG_PROXY,
                 "%s FilterWait %s", self, msg)
             # the filter still needs some data
             # to save CPU time make connection unreadable for a while
             self.set_unreadable(1.0)
             return False
-        except wc.filter.FilterRating, msg:
-            assert None == wc.log.debug(wc.LOG_PROXY,
+        except webfilter.FilterRating, msg:
+            log.debug(LOG_PROXY,
                 "%s FilterRating from content %s", self, msg)
             self._show_rating_deny(str(msg))
             return True
@@ -580,8 +552,7 @@ class HttpServer (Server.Server):
         """
         Make this connection unreadable for (secs) seconds.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s HttpServer.set_unreadable", self)
+        log.debug(LOG_PROXY, "%s HttpServer.set_unreadable", self)
         oldstate, self.state = self.state, 'unreadable'
         timer.make_timer(secs, lambda: self.set_readable(oldstate))
 
@@ -589,23 +560,20 @@ class HttpServer (Server.Server):
         """
         Make the connection readable again and close.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s HttpServer.set_readable", self)
+        log.debug(LOG_PROXY, "%s HttpServer.set_readable", self)
         # the client might already have closed
         if self.client:
             self.state = state
             self.handle_close()
         else:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "%s client is gone", self)
+            log.debug(LOG_PROXY, "%s client is gone", self)
 
     def close_reuse (self):
         """
         Reset connection data, but to not close() the socket. Put this
         connection in server pool.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s HttpServer.close_reuse", self)
+        log.debug(LOG_PROXY, "%s HttpServer.close_reuse", self)
         assert not self.client, "reuse with open client"
         super(HttpServer, self).close_reuse()
         self.state = 'client'
@@ -617,8 +585,7 @@ class HttpServer (Server.Server):
         """
         Return True if connection has all data sent and is ready for closing.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s HttpServer.close_ready", self)
+        log.debug(LOG_PROXY, "%s HttpServer.close_ready", self)
         if not (self.client and self.connected):
             # client has lost interest, or we closed already
             if self.client:
@@ -639,8 +606,7 @@ class HttpServer (Server.Server):
         Close the connection socket and remove this connection from
         the connection pool.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s HttpServer.close_close", self)
+        log.debug(LOG_PROXY, "%s HttpServer.close_close", self)
         # If a connect() failed, the handle_close has been called
         # directly. The client might still be open in this case.
         if self.client:
@@ -659,8 +625,7 @@ class HttpServer (Server.Server):
         Tell the client that connection had an error, and close the
         connection.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s HttpServer.handle_error %r", self, what)
+        log.debug(LOG_PROXY, "%s HttpServer.handle_error %r", self, what)
         if self.client:
             client, self.client = self.client, None
             client.server_abort(what)
@@ -670,8 +635,7 @@ class HttpServer (Server.Server):
         """
         Close the connection.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s HttpServer.handle_close", self)
+        log.debug(LOG_PROXY, "%s HttpServer.handle_close", self)
         self.persistent = False
         super(HttpServer, self).handle_close()
 
@@ -683,9 +647,7 @@ def speedcheck_print_status ():
     global SPEEDCHECK_BYTES, SPEEDCHECK_START
     elapsed = time.time() - SPEEDCHECK_START
     if elapsed > 0 and SPEEDCHECK_BYTES > 0:
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            'speed: %4d b/s', (SPEEDCHECK_BYTES/elapsed))
-        pass
+        log.debug(LOG_PROXY, 'speed: %4d b/s', (SPEEDCHECK_BYTES/elapsed))
     SPEEDCHECK_START = time.time()
     SPEEDCHECK_BYTES = 0
     timer.make_timer(5, speedcheck_print_status)

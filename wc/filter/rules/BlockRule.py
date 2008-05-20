@@ -17,8 +17,7 @@
 """
 Block URLs.
 """
-
-import AllowRule
+from . import AllowRule
 import wc.XmlUtils
 
 

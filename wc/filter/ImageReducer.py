@@ -19,11 +19,10 @@ Reduce big images to JPGs to save bandwidth.
 """
 
 import cStringIO as StringIO
-import wc.filter
-import Filter
-import wc.proxy.Headers
-import wc.log
-if wc.HasPil:
+from . import Filter, STAGE_RESPONSE_MODIFY
+from ..proxy import Headers
+from .. import log, LOG_FILTER, HasPil
+if HasPil:
     import Image
 
 
@@ -33,13 +32,13 @@ class ImageReducer (Filter.Filter):
     Reduce the image size by making low quality JPEGs.
     """
 
-    enable = wc.HasPil
+    enable = HasPil
 
     def __init__ (self):
         """
         Initialize image reducer flags.
         """
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         rulenames = ["imagereduce"]
         mimes = ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|'+
                  'x-xbitmap|x-xpixmap)']
@@ -89,7 +88,7 @@ class ImageReducer (Filter.Filter):
             img.save(data, "JPEG", quality=quality, optimize=1)
         except IOError, msg:
             # return original image data on error
-            wc.log.info(wc.LOG_FILTER,
+            log.info(LOG_FILTER,
                 "I/O error reading image data %r: %s", attrs['url'], str(msg))
             # XXX the content type is pretty sure wrong
             return p.getvalue()
@@ -101,7 +100,7 @@ class ImageReducer (Filter.Filter):
         """
         headers = attrs['headers']
         headers['data']['Content-Type'] = 'image/jpeg'
-        wc.proxy.Headers.remove_headers(headers['data'], ['Content-Length'])
+        Headers.remove_headers(headers['data'], ['Content-Length'])
 
     def update_attrs (self, attrs, url, localhost, stages, headers):
         """
@@ -116,7 +115,7 @@ class ImageReducer (Filter.Filter):
         rules = [ rule for rule in self.rules if rule.applies_to_url(url) ]
         if rules:
             if len(rules) > 1:
-                wc.log.info(wc.LOG_FILTER,
+                log.info(LOG_FILTER,
                         "more than one rule matched %r: %s", url, str(rules))
             # first rule wins
             quality = rules[0].quality
@@ -127,18 +126,18 @@ class ImageReducer (Filter.Filter):
         try:
             length = int(headers['server'].get('Content-Length', 0))
         except ValueError:
-            wc.log.info(wc.LOG_FILTER, "invalid content length at %r", url)
+            log.info(LOG_FILTER, "invalid content length at %r", url)
             return
         if length < 0:
-            wc.log.info(wc.LOG_FILTER, "negative content length at %r", url)
+            log.info(LOG_FILTER, "negative content length at %r", url)
             return
         if length == 0:
-            wc.log.info(wc.LOG_FILTER, "missing content length at %r", url)
+            log.info(LOG_FILTER, "missing content length at %r", url)
         elif 0 < length < minimal_size_bytes:
             return
         attrs['imgreducer_buf'] = StringIO.StringIO()
         attrs['imgreducer_quality'] = quality
         attrs['imgreducer_minsize'] = minimal_size_bytes
         # remember original content type in case of error
-        ctype = wc.proxy.Headers.get_content_type(headers['server'], url)
-        attrs['imgreducer_ctype'] = ctype
+        attrs['imgreducer_ctype'] = \
+            Headers.get_content_type(headers['server'], url)

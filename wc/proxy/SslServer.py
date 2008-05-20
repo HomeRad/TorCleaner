@@ -20,13 +20,9 @@ Connection handling WebCleaner SSL server <--> Remote SSL server.
 
 import socket
 
-import wc.configuration
-import HttpServer
-import Headers
-import SslConnection
-import ssl
-import wc.log
-import OpenSSL.SSL
+from . import HttpServer, Headers, SslConnection, ssl
+from .. import log, LOG_PROXY, configuration
+from OpenSSL import SSL
 
 class SslServer (HttpServer.HttpServer, SslConnection.SslConnection):
     """
@@ -43,8 +39,8 @@ class SslServer (HttpServer.HttpServer, SslConnection.SslConnection):
         # default values
         self.addr = (ipaddr, port)
         self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
-        sslctx = ssl.get_clientctx(wc.configuration.config.configdir)
-        self.socket = OpenSSL.SSL.Connection(sslctx, self.socket)
+        sslctx = ssl.get_clientctx(configuration.config.configdir)
+        self.socket = SSL.Connection(sslctx, self.socket)
         self.socket.set_connect_state()
         # attempt connect
         self.try_connect()
@@ -74,6 +70,6 @@ class SslServer (HttpServer.HttpServer, SslConnection.SslConnection):
         """
         Recycle this server connection into the connection pool.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, "%s recycling", self)
+        log.debug(LOG_PROXY, "%s recycling", self)
         # flush pending client data and try to reuse this connection
         self.delayed_close()

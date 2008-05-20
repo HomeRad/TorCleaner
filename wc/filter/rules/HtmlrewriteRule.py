@@ -17,17 +17,13 @@
 """
 Rule rewriting html tags.
 """
-
 import re
 import urllib
 from StringIO import StringIO
-
-import wc.log
-import wc.XmlUtils
-import UrlRule
-import Rule
-import wc.filter.html
-import wc.HtmlParser.htmllib
+from wc import log, LOG_HTML, XmlUtils
+from . import UrlRule, Rule
+from ..html import (COMPLETE, ENCLOSED, MATCHED, ATTR, ATTRVAL,
+    ATTRNAME, DATA, TAG, TAGNAME, ENDTAG, tagbuf2data)
 
 # a list
 partvalnames = [
@@ -83,7 +79,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
     """
     def __init__ (self, sid=None, titles=None, descriptions=None,
                   disable=0, tag=u"a", attrs=None, contentmatch=u"",
-                  part=wc.filter.html.COMPLETE, replacement=u""):
+                  part=COMPLETE, replacement=u""):
         """
         Initialize rule data.
         """
@@ -163,9 +159,9 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         if tag in NO_CLOSE_TAGS:
             return True
         return self.part not in [
-            wc.filter.html.ENCLOSED,
-            wc.filter.html.MATCHED,
-            wc.filter.html.COMPLETE,
+            ENCLOSED,
+            MATCHED,
+            COMPLETE,
         ]
 
     def matches_endtag (self, tag):
@@ -173,9 +169,9 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         if tag in NO_CLOSE_TAGS:
             return True
         return self.part not in [
-            wc.filter.html.ATTR,
-            wc.filter.html.ATTRVAL,
-            wc.filter.html.ATTRNAME,
+            ATTR,
+            ATTRVAL,
+            ATTRNAME,
         ]
 
     def _match_tag_ro (self, tag):
@@ -222,24 +218,22 @@ class HtmlrewriteRule (UrlRule.UrlRule):
             return True
         # put buf items together for matching, but without start tag
         items = tagbuf[pos+1:]
-        data = wc.filter.html.tagbuf2data(items, StringIO()).getvalue()
+        data = tagbuf2data(items, StringIO()).getvalue()
         return self.contentmatch_ro.search(data)
 
     def filter_tag (self, tag, attrs, starttype):
         """Return filtered tag data for given tag and attributes."""
-        assert None == wc.log.debug(wc.LOG_HTML,
-                            "rule %s filter_tag", self.titles['en'])
-        assert None == wc.log.debug(wc.LOG_HTML,
-                            "original tag %r attrs %s", tag, attrs)
-        assert None == wc.log.debug(wc.LOG_HTML,
+        log.debug(LOG_HTML, "rule %s filter_tag", self.titles['en'])
+        log.debug(LOG_HTML, "original tag %r attrs %s", tag, attrs)
+        log.debug(LOG_HTML,
                  "replace %s with %r", num_part(self.part), self.replacement)
-        if self.part == wc.filter.html.COMPLETE:
-            return [wc.filter.html.DATA, u""]
-        if self.part == wc.filter.html.TAGNAME:
+        if self.part == COMPLETE:
+            return [DATA, u""]
+        if self.part == TAGNAME:
             return [starttype, self.replacement, attrs]
-        if self.part == wc.filter.html.TAG:
-            return [wc.filter.html.DATA, self.replacement]
-        if self.part in (wc.filter.html.ENCLOSED, wc.filter.html.MATCHED):
+        if self.part == TAG:
+            return [DATA, self.replacement]
+        if self.part in (ENCLOSED, MATCHED):
             return [starttype, tag, attrs]
         newattrs = {}
         # look for matching tag attributes
@@ -248,7 +242,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
             if ro:
                 mo = ro.search(val)
                 if mo:
-                    if self.part == wc.filter.html.ATTR:
+                    if self.part == ATTR:
                         # replace complete attr, and make it possible
                         # for replacement to generate multiple attributes,
                         # eg "a=b c=d"
@@ -259,69 +253,65 @@ class HtmlrewriteRule (UrlRule.UrlRule):
                                 newattrs[k] = mo.expand(v)
                             else:
                                 newattrs[self.replacement] = None
-                    elif self.part == wc.filter.html.ATTRVAL:
+                    elif self.part == ATTRVAL:
                         # backreferences are replaced
                         val = mo.expand(self.replacement)
                         if "url" in mo.groupdict():
                             val = urllib.unquote(val)
                         newattrs[attr] = val
-                    elif self.part == wc.filter.html.ATTRNAME:
+                    elif self.part == ATTRNAME:
                         newattr = mo.expand(self.replacement)
                         newattrs[newattr] = val
                     else:
-                        wc.log.error(wc.LOG_HTML,
+                        log.error(LOG_HTML,
                                      "Invalid part value %s", self.part)
                     continue
             # nothing matched, just append the attribute as is
             newattrs[attr] = val
-        assert None == wc.log.debug(wc.LOG_HTML,
-                     "filtered tag %s attrs %s", tag, newattrs)
+        log.debug(LOG_HTML, "filtered tag %s attrs %s", tag, newattrs)
         return [starttype, tag, newattrs]
 
     def filter_complete (self, i, buf, tag, mo):
         """Replace tag data in buf with replacement."""
-        assert None == wc.log.debug(wc.LOG_HTML,
-            "rule %s filter_complete", self.titles['en'])
-        assert None == wc.log.debug(wc.LOG_HTML,
-            "original buffer %s", buf)
-        assert None == wc.log.debug(wc.LOG_HTML,
-            "part %s", num_part(self.part))
-        if self.part == wc.filter.html.COMPLETE:
-            buf[i:] = [[wc.filter.html.DATA, self.replacement]]
-        elif self.part == wc.filter.html.TAG:
-            buf.append([wc.filter.html.DATA, self.replacement])
-        elif self.part == wc.filter.html.TAGNAME:
-            buf.append([wc.filter.html.ENDTAG, self.replacement])
-        elif self.part == wc.filter.html.ENCLOSED:
-            buf[i+1:] = [[wc.filter.html.DATA, self.replacement]]
-            buf.append([wc.filter.html.ENDTAG, tag])
-        elif self.part == wc.filter.html.MATCHED:
+        log.debug(LOG_HTML, "rule %s filter_complete", self.titles['en'])
+        log.debug(LOG_HTML, "original buffer %s", buf)
+        log.debug(LOG_HTML, "part %s", num_part(self.part))
+        if self.part == COMPLETE:
+            buf[i:] = [[DATA, self.replacement]]
+        elif self.part == TAG:
+            buf.append([DATA, self.replacement])
+        elif self.part == TAGNAME:
+            buf.append([ENDTAG, self.replacement])
+        elif self.part == ENCLOSED:
+            buf[i+1:] = [[DATA, self.replacement]]
+            buf.append([ENDTAG, tag])
+        elif self.part == MATCHED:
             replacement = mo.string[:mo.start()] + mo.string[mo.end():]
-            buf[i+1:] = [[wc.filter.html.DATA, replacement]]
-            buf.append([wc.filter.html.ENDTAG, tag])
-        assert None == wc.log.debug(wc.LOG_HTML, "filtered buffer %s", buf)
+            buf[i+1:] = [[DATA, replacement]]
+            buf.append([ENDTAG, tag])
+        log.debug(LOG_HTML, "filtered buffer %s", buf)
 
     def toxml (self):
         """
         Rule data as XML for storing.
         """
         s = super(HtmlrewriteRule, self).toxml()
-        s += u'\n tag="%s"' % wc.XmlUtils.xmlquoteattr(self.tag)
+        s += u'\n tag="%s"' % XmlUtils.xmlquoteattr(self.tag)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         for key, val in self.attrs.iteritems():
-            s += u'\n  <attr name="%s"' % wc.XmlUtils.xmlquoteattr(key)
+            s += u'\n  <attr name="%s"' % XmlUtils.xmlquoteattr(key)
             if val:
-                s += u">%s</attr>" % wc.XmlUtils.xmlquote(val)
+                s += u">%s</attr>" % XmlUtils.xmlquote(val)
             else:
                 s += u"/>"
         if self.contentmatch:
             s += u"\n  <contentmatch>%s</contentmatch>" % \
-                 wc.XmlUtils.xmlquote(self.contentmatch)
+                 XmlUtils.xmlquote(self.contentmatch)
         s += u'\n  <replacement part="%s"' % num_part(self.part)
         if self.replacement:
-            s += u">%s</replacement>" % wc.XmlUtils.xmlquote(self.replacement)
+            s += u">%s</replacement>" % XmlUtils.xmlquote(self.replacement)
         else:
             s += u"/>"
         s += u"\n</%s>" % self.name

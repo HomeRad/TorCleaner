@@ -18,8 +18,8 @@
 Block URLs.
 """
 
-import UrlRule
-import wc.XmlUtils
+from . import UrlRule
+from ...XmlUtils import xmlquoteattr
 
 
 class AllowRule (UrlRule.UrlRule):
@@ -45,6 +45,6 @@ class AllowRule (UrlRule.UrlRule):
         Rule data as XML for storing.
         """
         s =  super(AllowRule, self).toxml() + \
-             u'\n url="%s"' % wc.XmlUtils.xmlquoteattr(self.url)
+             u'\n url="%s"' % xmlquoteattr(self.url)
         s += self.endxml()
         return s

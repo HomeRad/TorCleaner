@@ -1,4 +1,4 @@
-#!/usr/bin/python2.4 -O
+#!/usr/bin/python -O
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2008 Bastian Kleineidam
 #
@@ -19,9 +19,8 @@
 
 import sys
 import os
-# dummy translation to calm down source code checkers
-_ = lambda s: s
-# inits i18n and _() method
+import getopt
+# initializes i18n and _() method
 import wc
 
 nt_usage = _("""USAGE\twebcleaner [options] <command> [command options]
@@ -129,7 +128,6 @@ def parse_options (sysargs):
 
     @return: (configdir, args)
     """
-    import getopt
     configdir = wc.ConfigDir
     filelogs = True
     try:

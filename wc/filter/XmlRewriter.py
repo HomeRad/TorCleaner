@@ -21,10 +21,9 @@ import sys
 import re
 import xml.sax.handler
 from xml.sax import expatreader
-
-import wc.filter
-import Filter
-import xmlfilt.XmlFilter
+from . import Filter, STAGE_RESPONSE_MODIFY
+from .xmlfilt import XmlFilter
+from .. import log, LOG_FILTER
 
 DefaultCharset = 'iso-8859-1'
 
@@ -41,7 +40,7 @@ class XmlRewriter (Filter.Filter):
         """
         Init XML stages and mimes.
         """
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         rulenames = ['xmlrewrite', 'htmlrewrite']
         mimes = ['text/xml', 'application/((rss|atom|rdf)\+)?xml', ]
         super(XmlRewriter, self).__init__(stages=stages, rulenames=rulenames,
@@ -60,7 +59,7 @@ class XmlRewriter (Filter.Filter):
             p.feed(data2)
         except xml.sax.SAXException:
             evalue = sys.exc_info()[1]
-            wc.log.error(wc.LOG_FILTER, "XML filter error at %s: %s",
+            log.error(LOG_FILTER, "XML filter error at %s: %s",
                          attrs['url'], str(evalue))
             return data
         return f.getoutput()
@@ -78,7 +77,7 @@ class XmlRewriter (Filter.Filter):
                 p.feed(data)
             p.close()
         except xml.sax.SAXException, msg:
-            wc.log.error(wc.LOG_FILTER, "XML finish error at %s: %s",
+            log.error(LOG_FILTER, "XML finish error at %s: %s",
                          attrs['url'], str(msg))
             return data
         return f.getoutput()
@@ -101,8 +100,8 @@ class XmlRewriter (Filter.Filter):
             elif rule.name == u'htmlrewrite':
                 htmlrules.append(rule)
         encoding = attrs.get("charset", "UTF-8")
-        xfilt = xmlfilt.XmlFilter.XmlFilter
-        handler = xfilt(xmlrules, htmlrules, url, localhost, encoding)
+        handler = XmlFilter.XmlFilter(xmlrules, htmlrules, url,
+            localhost, encoding)
         p = expatreader.ExpatParser(namespaceHandling=1)
         p.setContentHandler(handler)
         p.setFeature(xml.sax.handler.feature_external_ges, 0)

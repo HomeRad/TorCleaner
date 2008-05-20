@@ -17,9 +17,8 @@
 """
 Filter images by size.
 """
-
-import UrlRule
-import wc.XmlUtils
+from . import UrlRule
+from wc.XmlUtils import xmlquoteattr
 
 
 class ImageRule (UrlRule.UrlRule):
@@ -58,8 +57,8 @@ class ImageRule (UrlRule.UrlRule):
             s += u'\n height="%d"' % self.height
         if self.formats:
             s += u'\n formats="%s"' % \
-                 wc.XmlUtils.xmlquoteattr(",".join(self.formats))
+                 xmlquoteattr(",".join(self.formats))
         if self.url:
-            s += u'\n url="%s"' % wc.XmlUtils.xmlquoteattr(self.url)
+            s += u'\n url="%s"' % xmlquoteattr(self.url)
         s += self.endxml()
         return s

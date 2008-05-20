@@ -19,9 +19,9 @@
 """
 Convert number and data type.
 """
-
 import sys
 import re
+
 
 #_oct = '01234567'
 #_dec = '0123456789'

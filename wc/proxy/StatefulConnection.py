@@ -29,7 +29,7 @@
 Stateful connections.
 """
 
-import Connection
+from . import Connection
 
 
 class StatefulConnection (Connection.Connection):

@@ -17,8 +17,7 @@
 """
 JavaScript filter rule.
 """
-
-import UrlRule
+from . import UrlRule
 
 
 class JavascriptRule (UrlRule.UrlRule):

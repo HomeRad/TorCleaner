@@ -31,8 +31,7 @@ except ImportError:
     # Ignore the error on non-windows platforms.
     service_klass = object
 
-from wc import AppName, ConfigDir
-import start
+from . import AppName, ConfigDir, start
 
 
 # copied from distutils

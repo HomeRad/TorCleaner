@@ -20,12 +20,9 @@ Filter images by size.
 
 import os
 import cStringIO as StringIO
-
-import wc.log
-import wc.configuration
-import wc.filter
-import Filter
-if wc.HasPil:
+from .. import log, LOG_FILTER, configuration, HasPil, TemplateDir
+from . import Filter, STAGE_RESPONSE_MODIFY
+if HasPil:
     import Image
 
 
@@ -35,13 +32,13 @@ class ImageSize (Filter.Filter):
     incoming GIF stream.
     """
 
-    enable = wc.HasPil
+    enable = HasPil
 
     def __init__ (self):
         """
         Initialize list of allowed sizes.
         """
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         rulenames = ['image']
         mimes = ['image/(jpeg|png|gif|bmp|x-ms-bmp|pcx|tiff|'+
                  'x-xbitmap|x-xpixmap)']
@@ -51,8 +48,7 @@ class ImageSize (Filter.Filter):
         # 4096 bytes is enough for most images; the value is increased
         # when it is not big enough
         self.min_bufsize = 4096
-        fname = os.path.join(wc.TemplateDir,
-                             wc.configuration.config['gui_theme'])
+        fname = os.path.join(TemplateDir, configuration.config['gui_theme'])
         fname = os.path.join(fname, "blocked.png")
         f = file(fname)
         self.blockdata = f.read()
@@ -142,16 +138,14 @@ class ImageSize (Filter.Filter):
                 if size == img.size:
                     # size matches, look for format restriction
                     if not formats:
-                        assert None == wc.log.debug(wc.LOG_FILTER,
-                                            "Blocking image size %s", size)
+                        log.debug(LOG_FILTER, "Blocking image size %s", size)
                         return False
                     elif img.format.lower() in formats:
-                        assert None == wc.log.debug(wc.LOG_FILTER,
-                                            "Blocking image size %s", size)
+                        log.debug(LOG_FILTER, "Blocking image size %s", size)
                         return False
         except IOError:
             if finish:
-                wc.log.exception(wc.LOG_FILTER,
+                log.exception(LOG_FILTER,
                                  "Could not get image size from %r", url)
             else:
                 assert pos > self.min_bufsize
@@ -170,7 +164,7 @@ class ImageSize (Filter.Filter):
         parent = super(ImageSize, self)
         parent.update_attrs(attrs, url, localhost, stages, headers)
         # check PIL support
-        if not wc.HasPil:
+        if not HasPil:
             return
         # weed out the rules that don't apply to this url
         rules = [rule for rule in self.rules if rule.applies_to_url(url)]

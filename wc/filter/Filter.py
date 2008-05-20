@@ -19,7 +19,7 @@ Basic filter class and routines.
 """
 
 import re
-import wc.log
+from .. import log, LOG_FILTER
 
 
 class Filter (object):
@@ -58,7 +58,7 @@ class Filter (object):
         """
         Append given rule to rule list.
         """
-        assert None == wc.log.debug(wc.LOG_FILTER, "enable %s ", rule)
+        log.debug(LOG_FILTER, "enable %s ", rule)
         for r in self.rules:
             assert r.sid != rule.sid
         self.rules.append(rule)

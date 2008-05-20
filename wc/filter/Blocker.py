@@ -21,13 +21,8 @@ Block specific requested URLs.
 import re
 import os
 import urllib
-
-import wc.log
-import wc.configuration
-import wc.url
-import wc.filter
-import Filter
-from wc import gzip2 as gzip
+from . import Filter, STAGE_REQUEST
+from .. import log, LOG_FILTER, gzip2 as gzip, configuration, url as urlutil
 
 
 def is_flash_mime (mime):
@@ -89,8 +84,8 @@ def get_file_data (filename):
     """
     Return plain file object, possible gunzipping the file.
     """
-    assert None == wc.log.debug(wc.LOG_FILTER, "reading %s", filename)
-    config = wc.configuration.config
+    log.debug(LOG_FILTER, "reading %s", filename)
+    config = configuration.config
     filename = os.path.join(config.configdir, filename)
     if filename.endswith(".gz"):
         f = gzip.GzipFile(filename, 'rb')
@@ -107,7 +102,7 @@ def try_append_lines (lst, rule):
         lines = get_file_data(rule.filename)
         append_lines(lines, lst, rule.sid)
     except IOError, msg:
-        wc.log.error(wc.LOG_FILTER, "could not read file %r: %s",
+        log.error(LOG_FILTER, "could not read file %r: %s",
                      rule.filename, str(msg))
 
 
@@ -130,7 +125,7 @@ class Blocker (Filter.Filter):
             'allowdomains',
             'allowurls',
         ]
-        stages = [wc.filter.STAGE_REQUEST]
+        stages = [STAGE_REQUEST]
         super(Blocker, self).__init__(rulenames=rulenames, stages=stages)
         # block and allow regular expressions
         self.block = []
@@ -206,19 +201,17 @@ class Blocker (Filter.Filter):
         mime = attrs['mime']
         if not mime:
             mime = "text/html"
-        parts = wc.url.url_split(url)
-        assert None == wc.log.debug(wc.LOG_FILTER,
-                            "block filter working on url %r", url)
+        parts = urlutil.url_split(url)
+        log.debug(LOG_FILTER, "block filter working on url %r", url)
         allowed, sid = self.allowed(url, parts)
         if allowed:
-            assert None == wc.log.debug(wc.LOG_FILTER,
-                                "allowed url %s by rule %s", url, sid)
+            log.debug(LOG_FILTER, "allowed url %s by rule %s", url, sid)
             return data
         blocked, sid = self.blocked(url, parts)
         if blocked:
             # XXX hmmm, make HTTP HEAD request to get content type???
-            assert None == wc.log.debug(wc.LOG_FILTER,
-                       "blocked url %s with %s by rule %s", url, blocked, sid)
+            log.debug(LOG_FILTER,
+                "blocked url %s with %s by rule %s", url, blocked, sid)
             if isinstance(blocked, str):
                 doc = blocked
             elif isinstance(blocked, unicode):
@@ -234,7 +227,7 @@ class Blocker (Filter.Filter):
                 attrs['mime'] = 'application/x-javascript'
             else:
                 if not is_html_mime(mime):
-                    wc.log.info(wc.LOG_PROXY,
+                    log.info(LOG_FILTER,
                       "%r is blocked as HTML but has mime type %r", url, mime)
                 doc = self.block_url
                 attrs['mime'] = 'text/html'
@@ -247,7 +240,7 @@ class Blocker (Filter.Filter):
                 }
                 query = urllib.urlencode(form)
                 doc += "?%s" % query
-            port = wc.configuration.config['port']
+            port = configuration.config['port']
             if not doc.startswith("http://"):
                 doc = "http://localhost:%d%s" % (port, doc)
             return 'GET %s HTTP/1.1' % doc
@@ -259,22 +252,21 @@ class Blocker (Filter.Filter):
         """
         # check blocked domains
         for blockdomain, sid in self.blocked_domains:
-            if blockdomain == parts[wc.url.DOMAIN]:
-                assert None == wc.log.debug(wc.LOG_FILTER,
+            if blockdomain == parts[urlutil.DOMAIN]:
+                log.debug(LOG_FILTER,
                              "blocked by blockdomain %s", blockdomain)
                 return True, sid
         # check blocked urls
         for blockurl, sid in self.blocked_urls:
             if blockurl in url:
-                assert None == wc.log.debug(wc.LOG_FILTER,
+                log.debug(LOG_FILTER,
                              "blocked by blockurl %r", blockurl)
                 return True, sid
         # check block patterns
         for ro, replacement, sid in self.block:
             mo = ro.search(url)
             if mo:
-                assert None == wc.log.debug(wc.LOG_FILTER,
-                             "blocked by pattern %s", ro.pattern)
+                log.debug(LOG_FILTER, "blocked by pattern %s", ro.pattern)
                 if replacement:
                     return mo.expand(replacement), sid
                 return True, sid
@@ -285,7 +277,7 @@ class Blocker (Filter.Filter):
         True if url is allowed. Parts are the splitted url parts.
         """
         for allowdomain, sid in self.allowed_domains:
-            if allowdomain == parts[wc.url.DOMAIN]:
+            if allowdomain == parts[urlutil.DOMAIN]:
                 return True, sid
         for allowurl, sid in self.allowed_urls:
             if allowurl in url:

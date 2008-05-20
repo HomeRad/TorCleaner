@@ -36,7 +36,7 @@ class TestVirusFilter (unittest.TestCase):
                'C:\\foo.mht!${PATH}/' + \
                'EXPLOIT.CHM::' + \
                '/exploit.htm">'
-        msg = 'stream: Exploit.HTML.MHT-7 FOUND\n'
+        msg = 'stream: Exploit.HTML.MHTRedir.2n FOUND\n'
         infected, errors = self._scan(data)
         self.assert_(msg in infected)
         self.assertFalse(errors)

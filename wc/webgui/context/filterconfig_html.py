@@ -40,7 +40,7 @@ from wc.filter import GetRuleFromName as _GetRuleFromName
 from wc.rating.service import ratingservice
 from wc.rating.service.ratingformat import parse_range as _parse_range
 
-xmlreplacetypenames = sorted(replacetypenums.iterkeys())
+xmlreplacetypenames = sorted(replacetypenums.keys())
 
 # config vars
 info = {

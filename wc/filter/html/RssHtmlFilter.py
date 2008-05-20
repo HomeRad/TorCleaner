@@ -20,8 +20,7 @@ in an RSS reader.
 """
 
 from StringIO import StringIO
-
-import wc.log
+from . import check_spelling
 import wc.HtmlParser.htmllib
 import wc.HtmlParser.htmlsax
 
@@ -126,7 +125,7 @@ class RssHtmlFilter (object):
         self._start_element(tag, attrs, True)
 
     def _start_element (self, tag, attrs, startend):
-        tag = wc.filter.html.check_spelling(tag, self.url)
+        tag = check_spelling(tag, self.url)
         self.stack.append(tag)
         if not self.valid:
             return
@@ -147,7 +146,7 @@ class RssHtmlFilter (object):
             self.stack = [tag]
 
     def end_element (self, tag):
-        tag = wc.filter.html.check_spelling(tag, self.url)
+        tag = check_spelling(tag, self.url)
         if self.stack and self.stack[-1] == tag:
             del self.stack[-1]
         if self.valid:

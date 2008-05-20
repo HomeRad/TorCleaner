@@ -39,13 +39,11 @@ __all__ = ["get_ntlm_challenge", "parse_ntlm_challenge",
            "NTLMSSP_INIT", "NTLMSSP_NEGOTIATE",
            "NTLMSSP_CHALLENGE", "NTLMSSP_AUTH",
  ]
-
 import base64
 import random
 import struct
 import time
-
-import wc.log
+from ... import log, LOG_AUTH
 from Crypto.Hash import MD4
 from Crypto.Cipher import DES
 
@@ -215,7 +213,7 @@ def parse_ntlm_challenge (challenge):
         msg = base64.decodestring(chal)
         res = parse_message2(msg)
         if not res:
-            wc.log.info(wc.LOG_AUTH, "invalid NTLM challenge %r", msg)
+            log.info(LOG_AUTH, "invalid NTLM challenge %r", msg)
     return res, remainder
 
 
@@ -263,7 +261,7 @@ def parse_ntlm_credentials (credentials):
             # invalid type, skip
             res = {}
     if not res:
-        wc.log.info(wc.LOG_AUTH, "invalid NTLM credential %r", creds)
+        log.info(LOG_AUTH, "invalid NTLM credential %r", creds)
     return res, remainder
 
 
@@ -272,14 +270,14 @@ def check_ntlm_credentials (credentials, **attrs):
     Return True if given credentials validate with given attrs.
     """
     if credentials.has_key('host') and credentials['host'] != "UNKNOWN":
-        wc.log.info(wc.LOG_AUTH, "NTLM wrong host %r", credentials['host'])
+        log.info(LOG_AUTH, "NTLM wrong host %r", credentials['host'])
         return False
     if credentials.has_key('domain') and credentials['domain'] != 'WORKGROUP':
-        wc.log.info(wc.LOG_AUTH, "NTLM wrong domain %r",
+        log.info(LOG_AUTH, "NTLM wrong domain %r",
                     credentials['domain'])
         return False
     if credentials['username'] != attrs['username']:
-        wc.log.info(wc.LOG_AUTH, "NTLM wrong username")
+        log.info(LOG_AUTH, "NTLM wrong username")
         return False
     nonce = attrs['nonce']
     password = base64.decodestring(attrs['password_b64'])
@@ -333,7 +331,7 @@ def parse_message1 (msg):
     """
     res = {'type': NTLMSSP_NEGOTIATE}
     res['flags'] = getint32(msg[12:16])
-    assert None == wc.log.debug(wc.LOG_AUTH, "msg1 flags %s",
+    log.debug(LOG_AUTH, "msg1 flags %s",
                  "\n".join(str_flags(res['flags'])))
     if res['flags'] & NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED:
         domain_offset = getint32(msg[20:24])
@@ -389,14 +387,14 @@ def parse_message2 (msg):
     """
     res = {}
     if not msg.startswith('%s\x00' % NTLMSSP_SIGNATURE):
-        wc.log.info(wc.LOG_AUTH, "NTLM challenge signature not found %r", msg)
+        log.info(LOG_AUTH, "NTLM challenge signature not found %r", msg)
         return res
     if getint32(msg[8:12]) != NTLMSSP_CHALLENGE:
-        wc.log.info(wc.LOG_AUTH, "NTLM challenge type not found %r", msg)
+        log.info(LOG_AUTH, "NTLM challenge type not found %r", msg)
         return res
     res['type'] = NTLMSSP_CHALLENGE
     res['flags'] = getint32(msg[20:24])
-    assert None == wc.log.debug(wc.LOG_AUTH, "msg2 flags %s",
+    log.debug(LOG_AUTH, "msg2 flags %s",
                  "\n".join(str_flags(res['flags'])))
     res['nonce'] = msg[24:32]
     if res['flags'] & NTLMSSP_TARGET_TYPE_DOMAIN:
@@ -477,7 +475,7 @@ def parse_message3 (msg):
     host_offset = getint32(msg[48:52])
     session_offset = getint32(msg[56:60])
     res['flags'] = getint16(msg[60:62])
-    assert None == wc.log.debug(wc.LOG_AUTH, "msg3 flags %s",
+    log.debug(LOG_AUTH, "msg3 flags %s",
                  "\n".join(str_flags(res['flags'])))
     res['domain'] = unicode2str(msg[domain_offset:username_offset])
     res['username'] = unicode2str(msg[username_offset:host_offset])
@@ -641,7 +639,7 @@ def create_nt_hashed_password (passwd):
     return nt_hpw
 
 
-from wc.proxy.timer import make_timer
+from ..timer import make_timer
 def init ():
     """
     Check for timed out nonces every 5 minutes.

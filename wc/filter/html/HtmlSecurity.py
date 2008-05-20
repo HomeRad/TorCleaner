@@ -25,9 +25,7 @@ by this module, you are encouraged to inform me with details.
 
 import re
 import urllib
-
-import wc.log
-import wc.url
+from ... import log, LOG_HTML, strformat, url as urlutil
 
 
 # helper methods to check/sanitize values
@@ -67,7 +65,7 @@ def check_javascript_url (attrs, name, htmlfilter):
     # to be sure catch all javascript: stuff
     if "javascript:" in url:
         msg = "%s\n Detected and prevented invalid JS URL reference"
-        wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+        log.info(LOG_HTML, msg, htmlfilter)
         del attrs[name]
 
 isfloat = re.compile(r"^[1-9][0-9]*\.[0-9]+$").search
@@ -103,7 +101,7 @@ def check_length (attrs, name, htmlfilter, maxlen=4):
             pass
     if not tvalue.isdigit() or len(tvalue) > maxlen:
         msg = "%s\n Detected invalid length format %r"
-        wc.log.info(wc.LOG_HTML, msg, htmlfilter, value)
+        log.info(LOG_HTML, msg, htmlfilter, value)
         del attrs[name]
 
 
@@ -120,7 +118,7 @@ def check_attr_size (attrs, name, htmlfilter, maxlen=4):
     if len(val) > maxlen:
         msg = "%s %r\n Detected a too large %s attribute value"
         msg += " (length %d > %d)" % (len(val), maxlen)
-        wc.log.info(wc.LOG_HTML, msg, htmlfilter, val, name)
+        log.info(LOG_HTML, msg, htmlfilter, val, name)
         del attrs[name]
 
 
@@ -132,7 +130,7 @@ def check_attr_number (attrs, htmlfilter, maxnum=200):
     l = len(attrs)
     if l > maxnum:
         msg = "%s\n  Too much attributes (%d > %d) in tag"
-        wc.log.info(wc.LOG_HTML, msg, htmlfilter, l, maxnum)
+        log.info(LOG_HTML, msg, htmlfilter, l, maxnum)
         attrs.popitem()
         while len(attrs) > maxnum:
             attrs.popitem()
@@ -149,13 +147,13 @@ def check_url (attrs, name, htmlfilter):
         # prevent CAN-2003-0870
         msg = "%s %r\n Detected and prevented Opera percent " \
               "encoding overflow crash"
-        wc.log.info(wc.LOG_HTML, msg, htmlfilter, url)
+        log.info(LOG_HTML, msg, htmlfilter, url)
         del attrs[name]
     if has_dashes_in_hostname(url):
         # prevent firefox crash
         msg = "%s %r\n Detected and prevented Firefox " \
               "dashes-in-hostname overflow crash"
-        wc.log.info(wc.LOG_HTML, msg, htmlfilter, url)
+        log.info(LOG_HTML, msg, htmlfilter, url)
         del attrs[name]
 
 
@@ -178,7 +176,7 @@ class HtmlSecurity (object):
         """
         Delegate to individual start tag handlers.
         """
-        assert wc.strformat.is_ascii(tag)
+        assert strformat.is_ascii(tag)
         check_attr_number(attrs, htmlfilter)
         fun = "%s_start" % tag
         if hasattr(self, fun):
@@ -192,7 +190,7 @@ class HtmlSecurity (object):
         """
         Delegate to individual end tag handlers.
         """
-        assert wc.strformat.is_ascii(tag)
+        assert strformat.is_ascii(tag)
         fun = "%s_end" % tag
         if hasattr(self, fun):
             getattr(self, fun)()
@@ -222,7 +220,7 @@ class HtmlSecurity (object):
         if re.compile(pattern).search(onload):
             del attrs['onload']
             msg = "%s\n Detected and prevented IE window() crash bug"
-            wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+            log.info(LOG_HTML, msg, htmlfilter)
 
     def embed_start (self, attrs, htmlfilter):
         """
@@ -243,7 +241,7 @@ class HtmlSecurity (object):
             if i > j and len(src[i:]) > 10:
                 msg = "%s %r\n Detected and prevented IE " \
                       "filename overflow crash"
-                wc.log.info(wc.LOG_HTML, msg, htmlfilter, src)
+                log.info(LOG_HTML, msg, htmlfilter, src)
                 del attrs['src']
 
     def fieldset_start (self, attrs, htmlfilter):
@@ -254,7 +252,7 @@ class HtmlSecurity (object):
         if "position" in attrs.get_true("style", u""):
             msg = "%s\n Detected and prevented Mozilla "\
                   "<fieldset style> crash bug"
-            wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+            log.info(LOG_HTML, msg, htmlfilter)
             del attrs['style']
 
     def font_start (self, attrs, htmlfilter):
@@ -302,7 +300,7 @@ class HtmlSecurity (object):
         if attrs.has_key('type') and not attrs['type']:
             # prevent IE crash bug on empty type attribute
             msg = "%s\n Detected and prevented IE <input type> crash bug"
-            wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+            log.info(LOG_HTML, msg, htmlfilter)
             del attrs['type']
 
     def link_start (self, attrs, htmlfilter):
@@ -322,18 +320,15 @@ class HtmlSecurity (object):
             if refresh.lower() == 'refresh':
                 # lowercase and strip all whitespace
                 url = attrs.get_true('content', u"").lower()
-                url = wc.strformat.stripall(url)
+                url = strformat.stripall(url)
                 # content can be "1;url=http://;url=javascript:alert('boo')"
                 # so be sure to check all urls
                 for url in url.split(";url="):
-                    url = wc.strformat.unquote(url, matching=True)
-                    url_ok = url.startswith("http://") or \
-                             url.startswith("https://") or \
-			     url.startswith("ftp://")
+                    url = strformat.unquote(url, matching=True)
+                    url_ok = url.startswith(("http://", "https://", "ftp://"))
                     if not url_ok and ":" in url:
                         msg = "%s %r\n Detected invalid redirection."
-                        wc.log.info(wc.LOG_HTML, msg, htmlfilter,
-                                    attrs['content'])
+                        log.info(LOG_HTML, msg, htmlfilter, attrs['content'])
                         del attrs['content']
                         break
 
@@ -351,14 +346,14 @@ class HtmlSecurity (object):
             c = t.count("/")
             if c > 1:
                 msg = "%s\n Detected and prevented IE <object type> bug"
-                wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+                log.info(LOG_HTML, msg, htmlfilter)
                 t = t.replace("/", "", c-1)
                 attrs['type'] = t
         if attrs.has_key('codebase'):
             self.in_winhelp = attrs.get_true('codebase', u"").lower().startswith('hhctrl.ocx')
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
         if attrs.has_key('data'):
-            url = wc.url.url_norm(attrs.get_true('data', u""))[0]
+            url = urlutil.url_norm(attrs.get_true('data', u""))[0]
             url = urllib.unquote(url)
             if url.startswith('its:') or \
                url.startswith('mk:') or \
@@ -370,13 +365,13 @@ class HtmlSecurity (object):
                     # url specifies alternate location
                     msg = "%s\n Detected and prevented Microsoft Internet " \
                           "Explorer ITS Protocol Zone Bypass Vulnerability"
-                    wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+                    log.info(LOG_HTML, msg, htmlfilter)
                     attrs['data'] = url[:i]
         if attrs.has_key('classid'):
             classid = attrs.get_true('classid', u"").upper()
             if 'EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F' in classid:
                 msg = "Detected IE msdds.dll overflow attack."
-                wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+                log.info(LOG_HTML, msg, htmlfilter)
                 del attrs['classid']
 
     def object_end (self):
@@ -396,7 +391,7 @@ class HtmlSecurity (object):
             # prevent CVE-2002-0823
             if len(attrs.get_true('value', u"")) > 50:
                 msg = "%s\n Detected and prevented WinHlp overflow bug"
-                wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+                log.info(LOG_HTML, msg, htmlfilter)
                 del attrs['value']
 
     def table_start (self, attrs, htmlfilter):
@@ -407,5 +402,5 @@ class HtmlSecurity (object):
             # prevent CAN-2003-0238, table width=-1 crashes ICQ client
             if attrs['width'] == '-1':
                 msg = "%s\n Detected and prevented ICQ table width crash bug"
-                wc.log.info(wc.LOG_HTML, msg, htmlfilter)
+                log.info(LOG_HTML, msg, htmlfilter)
                 del attrs['width']

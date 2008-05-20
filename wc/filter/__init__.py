@@ -46,18 +46,16 @@ To communicate with the proxy, filters can throw FilterExceptions.
 These must be handled in the appropriate proxy functions to work
 properly.
 """
-
+from __future__ import with_statement
 import cgi
 import os
-import wc.log
-import wc.configuration
-import wc.filter.rules
-import wc.http.header
-import wc.HtmlParser
+from .. import log, LOG_FILTER, configuration, HtmlParser, TemplateDir
+from ..http.header import WcMessage
 
 # filter stages
 
 # Filter complete request (eg. Block filter module)
+# XXX make enum
 STAGE_REQUEST = "Request"
 # Outgoing header manglers
 STAGE_REQUEST_HEADER = "Request header"
@@ -78,7 +76,7 @@ STAGE_RESPONSE_MODIFY = "Response modify"
 # May encode incoming content
 STAGE_RESPONSE_ENCODE = "Response encode"
 
-FilterStages = [
+FilterStages = (
     STAGE_REQUEST,
     STAGE_REQUEST_HEADER,
     STAGE_REQUEST_DECODE,
@@ -89,37 +87,34 @@ FilterStages = [
     STAGE_RESPONSE_DECODE,
     STAGE_RESPONSE_MODIFY,
     STAGE_RESPONSE_ENCODE,
-]
+)
+# shortcuts for decode/modify/encode
+ClientFilterStages = FilterStages[2:5]
+ServerFilterStages = FilterStages[7:10]
+
 
 class FilterException (StandardError):
-    """
-    Generic filter exception.
-    """
+    """Generic filter exception."""
     pass
 
 
 class FilterWait (FilterException):
-    """
-    Raised when a filter waits for more data. The filter should
+    """Raised when a filter waits for more data. The filter should
     buffer the already passed data until the next call (and until
-    it has enough data to proceed).
-    """
+    it has enough data to proceed)."""
     pass
 
 
 class FilterRating (FilterException):
-    """
-    Raised when a filter detected rated content.
-    The proxy must not have sent any content.
-    """
+    """Raised when a filter detected rated content.
+    The proxy must not have sent any content."""
     pass
 
 
 class FilterProxyError (FilterException):
-    """
-    Raised to signal a proxy error which should be delegated to
-    the HTTP client.
-    """
+    """Raised to signal a proxy error which should be delegated to
+    the HTTP client."""
+
     def __init__ (self, status, msg, text):
         self.status = status
         self.msg = msg
@@ -127,53 +122,47 @@ class FilterProxyError (FilterException):
 
 
 def GetRuleFromName (name):
-    """
-    Return new rule instance for given rule name.
-    """
+    """Return new rule instance for given rule name."""
+
     name = '%sRule' % name.capitalize()
     mod = __import__("wc.filter.rules.%s" % name, {}, {}, [name])
     return getattr(mod, name)()
 
 
 def applyfilter (filterstage, data, fun, attrs):
-    """
-    Apply all filters which are registered in the given filter stage.
+    """Apply all filters which are registered in the given filter stage.
     For different filter stages we have different data objects.
     Look at the filter examples.
     One can prevent all filtering with the 'nofilter' attribute,
     or deactivate single filter modules with 'nofilter-<name>',
-    for example 'nofilter-blocker'.
-    """
+    for example 'nofilter-blocker'."""
     attrs['filterstage'] = filterstage
-    assert None == wc.log.debug(wc.LOG_FILTER, "Filter (%s) %d bytes in %s..",
+    log.debug(LOG_FILTER, "Filter (%s) %d bytes in %s..",
                         fun, len(data), filterstage)
     if attrs.get('nofilter') or (fun != 'finish' and not data):
-        assert None == wc.log.debug(wc.LOG_FILTER, "..don't filter")
+        log.debug(LOG_FILTER, "..don't filter")
         return data
-    for f in wc.configuration.config['filterlist'][filterstage]:
-        assert None == wc.log.debug(wc.LOG_FILTER, "..filter with %s" % f)
+    for f in configuration.config['filterlist'][filterstage]:
+        log.debug(LOG_FILTER, "..filter with %s" % f)
         if f.applies_to_mime(attrs['mime']) and \
            not "nofilter-%s" % str(f).lower() in attrs:
-            assert None == wc.log.debug(wc.LOG_FILTER, "..applying")
+            log.debug(LOG_FILTER, "..applying")
             data = getattr(f, fun)(data, attrs)
         else:
-            assert None == wc.log.debug(wc.LOG_FILTER,
-                                 "..not applying (mime %s)" % attrs['mime'])
-    assert None == wc.log.debug(wc.LOG_FILTER, "..result %d bytes", len(data))
+            log.debug(LOG_FILTER, "..not applying (mime %s)" % attrs['mime'])
+    log.debug(LOG_FILTER, "..result %d bytes", len(data))
     return data
 
 
 def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
                      clientheaders=None, serverheaders=None, headers=None):
-    """
-    Init external state objects.
-    """
+    """Init external state objects."""
     if clientheaders is None:
-        clientheaders = wc.http.header.WcMessage()
+        clientheaders = WcMessage()
     if serverheaders is None:
-        serverheaders = wc.http.header.WcMessage()
+        serverheaders = WcMessage()
     if headers is None:
-        headers = wc.http.header.WcMessage()
+        headers = WcMessage()
     attrheaders = {
         'client': clientheaders,
         'server': serverheaders,
@@ -181,17 +170,17 @@ def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
     }
     attrs = {
         'url': url,
-        'nofilter': wc.configuration.config.nofilter(url),
+        'nofilter': configuration.config.nofilter(url),
         'mime' : headers.get('Content-Type'),
         'mime_types': None,
         'headers': attrheaders,
         'browser': browser,
     }
     if attrs['mime']:
-        charset = wc.HtmlParser.get_ctype_charset(attrs['mime'])
+        charset = HtmlParser.get_ctype_charset(attrs['mime'])
         if charset is not None:
             attrs['charset'] = charset
-    for f in wc.configuration.config['filtermodules']:
+    for f in configuration.config['filtermodules']:
         # note: get attributes of _all_ filters since the
         # mime type can change dynamically
         f.update_attrs(attrs, url, localhost, filterstages, attrheaders)
@@ -199,12 +188,10 @@ def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
 
 
 def which_filters (url, mime):
-    """
-    Deduce which filters apply to the given url/mime.
-    """
+    """Deduce which filters apply to the given url/mime."""
     filters_by_stage = {}
     for stage in FilterStages:
-        filters = wc.configuration.config['filterlist'][stage]
+        filters = configuration.config['filterlist'][stage]
         applies = []
         for filter in filters:
             rules = filter.which_rules(url, mime)
@@ -219,10 +206,8 @@ def which_filters (url, mime):
 
 
 def show_rules (url, mime):
-    """
-    Build an html document showing which rules are enabled for the given
-    url and mime type.
-    """
+    """Build an html document showing which rules are enabled for the given
+    url and mime type."""
     lang = 'en'
     filters_by_stage = which_filters(url, mime)
     s = ''
@@ -249,15 +234,11 @@ def show_rules (url, mime):
             s += '</ul></li>\n'
         s += '</ul>\n'
     ruleset = s
-    config = wc.configuration.config
-    theme = config["gui_theme"]
-    page_template = os.path.join(wc.TemplateDir, theme, 'show_rules.html')
-    proxy = config['bindaddress'], config['port']
+    theme = configuration.config["gui_theme"]
+    page_template = os.path.join(TemplateDir, theme, 'show_rules.html')
+    proxy = configuration.config['bindaddress'], configuration.config['port']
     enabled_img = 'http://%s:%s/rule_enabled.png' % proxy
     disabled_img = 'http://%s:%s/rule_disabled.png' % proxy
-    fd = open(page_template, 'r')
-    try:
+    with open(page_template, 'r') as fd:
         return fd.read() % locals()
-    finally:
-        fd.close()
 

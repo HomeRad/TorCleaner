@@ -25,11 +25,8 @@ if not (hasattr(sys, 'version_info') or
 import os
 import ConfigParser
 import logging.config
-
 import _webcleaner2_configdata as configdata
-import log
-import i18n
-import fileutil
+from . import log, i18n, fileutil
 
 def abspath (path):
     """

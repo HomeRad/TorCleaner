@@ -19,8 +19,7 @@ SSL related utility functions.
 """
 
 import os
-
-import wc.log
+from .. import log, LOG_PROXY, AppName
 from OpenSSL import SSL, crypto
 
 
@@ -49,7 +48,7 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
     """
     expired = cert.has_expired()
     if expired:
-        wc.log.info(wc.LOG_PROXY, "%s expired certificate %s", conn,
+        log.info(LOG_PROXY, "%s expired certificate %s", conn,
                     cert.get_subject())
     return not expired
 
@@ -80,7 +79,7 @@ def verify_client_cb (conn, cert, errnum, depth, ok):
     """
     expired = cert.has_expired()
     if expired:
-        wc.log.info(wc.LOG_PROXY, "%s expired certificate %s", conn,
+        log.info(LOG_PROXY, "%s expired certificate %s", conn,
                     cert.get_subject())
     return not expired
 
@@ -120,8 +119,8 @@ def create_certificates (configdir):
     f = file(os.path.join(configdir, 'CA.cert'), 'w')
     f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))
     f.close()
-    for (fname, cname) in [('client', '%s Client' % wc.AppName),
-                           ('server', '%s Server' % wc.AppName)]:
+    for (fname, cname) in [('client', '%s Client' % AppName),
+                           ('server', '%s Server' % AppName)]:
         pkey = create_key_pair(TYPE_RSA, 1024)
         req = create_cert_request(pkey, CN=cname)
         # five years

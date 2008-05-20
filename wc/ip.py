@@ -21,10 +21,7 @@ Ip number related utility functions.
 import re
 import socket
 import struct
-import sets
-
-import wc
-import log
+from . import log, LOG_NET
 
 
 # IP Adress regular expressions
@@ -197,29 +194,27 @@ def hosts2map (hosts):
     adresses).
     Only IPv4 host/netmasks are supported.
     """
-    hostset = sets.Set()
+    hostset = set()
     nets = []
     for host in hosts:
         if _host_cidrmask_re.match(host):
             host, mask = host.split("/")
             mask = int(mask)
             if not is_valid_cidrmask(mask):
-                log.error(wc.LOG_NET,
+                log.error(LOG_NET,
                           "CIDR mask %d is not a valid network mask", mask)
                 continue
             if not is_valid_ipv4(host):
-                log.error(wc.LOG_NET,
-                          "host %r is not a valid ip address", host)
+                log.error(LOG_NET, "host %r is not a valid ip address", host)
                 continue
             nets.append(dq2net(host, cidr2mask(mask)))
         elif _host_netmask_re.match(host):
             host, mask = host.split("/")
             if not is_valid_ipv4(host):
-                log.error(wc.LOG_NET,
-                          "host %r is not a valid ip address", host)
+                log.error(LOG_NET, "host %r is not a valid ip address", host)
                 continue
             if not is_valid_ipv4(mask):
-                log.error(wc.LOG_NET,
+                log.error(LOG_NET,
                           "mask %r is not a valid ip network mask", mask)
                 continue
             nets.append(dq2net(host, netmask2mask(mask)))
@@ -245,7 +240,7 @@ def lookup_ips (ips):
     """
     Return set of host names that resolve to given ips.
     """
-    hosts = sets.Set()
+    hosts = set()
     for ip in ips:
         try:
             hosts.add(socket.gethostbyaddr(ip)[0])
@@ -258,7 +253,7 @@ def resolve_host (host):
     """
     Return set of ip numbers for given host.
     """
-    ips = sets.Set()
+    ips = set()
     try:
         for res in socket.getaddrinfo(host, None, 0, socket.SOCK_STREAM):
             # res is a tuple (address family, socket type, protocol,
@@ -266,5 +261,5 @@ def resolve_host (host):
             # add first ip of socket address
             ips.add(res[4][0])
     except socket.error:
-        log.info(wc.LOG_NET, "Ignored invalid host %r", host)
+        log.info(LOG_NET, "Ignored invalid host %r", host)
     return ips

@@ -17,8 +17,7 @@
 """
 HTML comments filter rule.
 """
-
-import UrlRule
+from . import UrlRule
 
 
 class NocommentsRule (UrlRule.UrlRule):

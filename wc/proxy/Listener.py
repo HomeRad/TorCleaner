@@ -30,9 +30,8 @@ TCP socket listener.
 """
 
 import socket
-import wc.configuration
-import wc.log
-import Dispatcher
+from .. import log, LOG_PROXY, App
+from . import Dispatcher
 
 
 class Listener (Dispatcher.Dispatcher):
@@ -61,7 +60,7 @@ class Listener (Dispatcher.Dispatcher):
             host = "%s:%d" % self.addr
         else:
             host = "*:%d" % port
-        wc.log.info(wc.LOG_PROXY, "%s listening on %s tcp", wc.App, host)
+        log.info(LOG_PROXY, "%s listening on %s tcp", App, host)
 
     def __repr__ (self):
         """
@@ -85,6 +84,6 @@ class Listener (Dispatcher.Dispatcher):
         """
         Start the handler class with the new socket.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, '%s accept', self)
+        log.debug(LOG_PROXY, '%s accept', self)
         args = self.accept()
         self.handler(*args)

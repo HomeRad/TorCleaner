@@ -17,14 +17,9 @@
 """
 SSL client connection.
 """
-
-import wc.webgui.webconfig
-import HttpClient
-import ClientServerMatchmaker
-import SslConnection
-import Allowed
-import wc.log
-import wc.url
+from . import HttpClient, ClientServerMatchmaker, SslConnection, Allowed
+from .. import log, LOG_PROXY
+from ..webgui.webconfig import WebConfig
 
 
 class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
@@ -47,19 +42,18 @@ class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
     def server_request (self):
         assert self.state == 'receive', \
                       "%s server_request in non-receive state" % self
-        assert None == wc.log.debug(wc.LOG_PROXY, "%s server_request", self)
+        log.debug(LOG_PROXY, "%s server_request", self)
         # this object will call server_connected at some point
         ClientServerMatchmaker.ClientServerMatchmaker(
               self, self.request, self.headers, self.content, sslserver=True)
 
     def handle_local (self, is_public_doc=False):
         assert self.state == 'receive'
-        assert None == wc.log.debug(wc.LOG_PROXY, '%s handle_local', self)
+        log.debug(LOG_PROXY, '%s handle_local', self)
         form = None
         self.url = "/blocked.html"
         self.headers['Host'] = '%s\r' % self.socket.getsockname()[0]
-        wc.webgui.webconfig.WebConfig(self, self.url, form,
-                                      self.protocol, self.headers).send()
+        WebConfig(self, self.url, form, self.protocol, self.headers).send()
 
     def mangle_request_headers (self, headers):
         # nothing to do

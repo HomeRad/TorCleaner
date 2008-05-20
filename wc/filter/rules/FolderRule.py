@@ -17,9 +17,8 @@
 """
 Group filter rules into folders.
 """
-
-import wc
-import Rule
+from ... import fileutil, configuration
+from . import Rule
 
 
 def recalc_up_down (rules):
@@ -122,7 +121,7 @@ class FolderRule (Rule.Rule):
         s = u"""<?xml version="1.0" encoding="%s"?>
 <!DOCTYPE folder SYSTEM "filter.dtd">
 %s oid="%d" configversion="%s">""" % \
-      (wc.configuration.ConfigCharset, super(FolderRule, self).toxml(),
+      (configuration.ConfigCharset, super(FolderRule, self).toxml(),
        self.oid, self.configversion)
         s += u"\n"+self.title_desc_toxml()+u"\n"
         for r in self.rules:
@@ -136,7 +135,7 @@ class FolderRule (Rule.Rule):
         """
         s = self.toxml().encode("iso-8859-1", "replace")
         if fd is None:
-            wc.fileutil.write_file(self.filename, s)
+            fileutil.write_file(self.filename, s)
         else:
             fd.write(s)
 

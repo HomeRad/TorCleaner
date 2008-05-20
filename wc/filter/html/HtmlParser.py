@@ -20,8 +20,9 @@ Buffered HTML parser.
 
 from StringIO import StringIO
 import codecs
-import wc.log
-import wc.filter.html
+from . import tagbuf2data, DATA, STARTTAG, ENDTAG, STARTENDTAG, COMMENT
+from .. import FilterWait
+from ... import log, LOG_HTML
 import wc.HtmlParser.htmlsax
 
 BOMS = [
@@ -89,33 +90,29 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         return "%s in state %s" % (self.__class__.__name__, str(self.state))
 
-    def debugbuf (self, cat=wc.LOG_HTML):
+    def debugbuf (self, cat=LOG_HTML):
         """
         Print debugging information about buffered data.
         """
-        assert None == wc.log.debug(cat,
-            "self.outbuf %r", self.outbuf.getvalue())
-        assert None == wc.log.debug(cat,
-            "self.tagbuf %r", self.tagbuf)
-        assert None == wc.log.debug(cat,
-            "self.waitbuf %r", self.waitbuf)
-        assert None == wc.log.debug(cat,
-            "self.inbuf %r", self.inbuf.getvalue())
+        log.debug(cat, "self.outbuf %r", self.outbuf.getvalue())
+        log.debug(cat, "self.tagbuf %r", self.tagbuf)
+        log.debug(cat, "self.waitbuf %r", self.waitbuf)
+        log.debug(cat, "self.inbuf %r", self.inbuf.getvalue())
 
     def tagbuf2data (self):
         """
         Append serialized tag items of the tag buffer to the output buffer
         and clear the tag buffer.
         """
-        assert None == wc.log.debug(wc.LOG_HTML, "%s tagbuf2data", self)
-        wc.filter.html.tagbuf2data(self.tagbuf, self.outbuf)
+        log.debug(LOG_HTML, "%s tagbuf2data", self)
+        tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
     def feed (self, data):
         """
         Feed some data to the parser.
         """
-        assert None == wc.log.debug(wc.LOG_HTML, "%s feed %r", self, data)
+        log.debug(LOG_HTML, "%s feed %r", self, data)
         if self.initial:
             self.initial = False
             for bom in BOMS:
@@ -142,7 +139,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                 super(HtmlParser, self).feed(data)
         elif self.state[0] == 'wait':
             # wait state ==> put in input buffer
-            assert None == wc.log.debug(wc.LOG_HTML, "%s waits", self)
+            log.debug(LOG_HTML, "%s waits", self)
             self.inbuf.write(data)
         else:
             assert False, "parser %s has unknown parser state" % str(self)
@@ -151,12 +148,12 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         Flush pending data.
         """
-        assert None == wc.log.debug(wc.LOG_HTML, "%s flush", self)
+        log.debug(LOG_HTML, "%s flush", self)
         if self.state[0] == 'wait':
             # flushing in wait state raises a filter exception
             self.waited += 1
-            raise wc.filter.FilterWait("waited %d at parser %s" % \
-                                       (self.waited, str(self)))
+            raise FilterWait("waited %d at parser %s" %
+                (self.waited, str(self)))
         super(HtmlParser, self).flush()
 
     def getoutput (self):
@@ -172,21 +169,20 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         """
         Call the handler functions again with buffer data.
         """
-        assert None == wc.log.debug(wc.LOG_HTML,
-            "%s replays %r", self, waitbuf)
+        log.debug(LOG_HTML, "%s replays %r", self, waitbuf)
         for item in waitbuf:
             if self.state[0] == 'wait':
                 # the replaying itself can switch to wait state
                 self.waitbuf.append(item)
             else:
                 i = item[0]
-                if i == wc.filter.html.DATA:
+                if i == DATA:
                     self.handler.characters(item[1])
-                elif i == wc.filter.html.STARTTAG:
+                elif i == STARTTAG:
                     self.handler.start_element(item[1], item[2])
-                elif i == wc.filter.html.ENDTAG:
+                elif i == ENDTAG:
                     self.handler.end_element(item[1])
-                elif i == wc.filter.html.STARTENDTAG:
+                elif i == STARTENDTAG:
                     self.handler.start_end_element(item[1], item[2])
-                elif i == wc.filter.html.COMMENT:
+                elif i == COMMENT:
                     self.handler.comment(item[1])

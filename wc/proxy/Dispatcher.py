@@ -41,9 +41,8 @@ import socket
 import select
 import errno
 
-import wc.configuration
-import wc.log
-import timer
+from .. import log, LOG_PROXY, configuration
+from . import timer
 
 def strerror (err):
     return "%s (%s)" % (errno.errorcode.get(err, 'Unknown'),
@@ -73,8 +72,8 @@ def create_socket (family, socktype, proto=0):
     is given an SSL socket is created.
     """
     sock = socket.socket(family, socktype, proto=proto)
-    # XXX disable custom timeouts for now; enable in Python 2.5
-    #sock.settimeout(wc.configuration.config['timeout'])
+    # XXX todo custom timeout config
+    #sock.settimeout(configuration.config['timeout'])
     socktypes_inet = [socket.AF_INET]
     if has_ipv6:
         socktypes_inet.append(socket.AF_INET6)
@@ -256,12 +255,12 @@ class Dispatcher (object):
         @type addr: tuple (string, int)
         @raise: socket.error on error
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, '%s connecting', self)
+        log.debug(LOG_PROXY, '%s connecting', self)
         self.connected = False
         self.connect_checks = 0
         err = self.socket.connect_ex(addr)
         if err != 0:
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            log.debug(LOG_PROXY,
                 '%s connection error %d %s', self, err, strerror(err))
         if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             # Connection is in progress, check the connect condition later.
@@ -272,7 +271,7 @@ class Dispatcher (object):
             # Connected!
             self.addr = addr
             self.connected = True
-            assert None == wc.log.debug(wc.LOG_PROXY, '%s connected', self)
+            log.debug(LOG_PROXY, '%s connected', self)
             self.handle_connect()
         else:
             # Note that EALREADY is handled as an error. We don't want
@@ -285,11 +284,10 @@ class Dispatcher (object):
         Check if the connection is etablished.
         See also http://cr.yp.to/docs/connect.html and connect(2) manpage.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, '%s check connect', self)
+        log.debug(LOG_PROXY, '%s check connect', self)
         self.connect_checks += 1
         if self.connect_checks >= 50:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                '%s connect timed out', self)
+            log.debug(LOG_PROXY, '%s connect timed out', self)
             self.handle_close()
             return
         def recheck ():
@@ -298,28 +296,27 @@ class Dispatcher (object):
             (r, w, e) = select.select([], [self.fileno()], [], 0.2)
         except select.error, why:
             # not yet ready
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                         '%s connect not ready %s', self, str(why))
+            log.debug(LOG_PROXY, '%s connect not ready %s', self, str(why))
             timer.make_timer(0.2, recheck)
             return
         if self.fileno() not in w:
             # not yet ready
-            assert None == wc.log.debug(wc.LOG_PROXY, '%s not writable', self)
+            log.debug(LOG_PROXY, '%s not writable', self)
             timer.make_timer(0.2, recheck)
             return
         err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
         if err == 0:
             self.addr = addr
             self.connected = True
-            assert None == wc.log.debug(wc.LOG_PROXY, '%s connected', self)
+            log.debug(LOG_PROXY, '%s connected', self)
             self.handle_connect()
         elif err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            log.debug(LOG_PROXY,
                 '%s connect status in progress/would block', self)
             timer.make_timer(0.2, recheck)
         else:
             strerr = strerror(err)
-            wc.log.info(wc.LOG_PROXY, '%s final connect error %d (%s)',
+            log.info(LOG_PROXY, '%s final connect error %d (%s)',
                         self, err, strerr)
             self.handle_error(_("Connect error %s.") % strerr)
 
@@ -453,45 +450,45 @@ class Dispatcher (object):
         """
         Handle error. Default is to log an error message.
         """
-        wc.log.exception(wc.LOG_PROXY, "%s %s", self, what)
+        log.exception(LOG_PROXY, "%s %s", self, what)
 
     def handle_expt (self):
         """
         Handle socket exception. Default is to log a warning with the error.
         """
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled exception', self)
+        log.warn(LOG_PROXY, '%s unhandled exception', self)
 
     def handle_read (self):
         """
         Handle read event. Should be overridden in subclass.
         Logs a warning as default.
         """
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled read event', self)
+        log.warn(LOG_PROXY, '%s unhandled read event', self)
 
     def handle_write (self):
         """
         Handle write event. Should be overridden in subclass.
         Logs a warning as default.
         """
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled write event', self)
+        log.warn(LOG_PROXY, '%s unhandled write event', self)
 
     def handle_connect (self):
         """
         Handle connect event. Should be overridden in subclass.
         Logs a warning as default.
         """
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled connect event', self)
+        log.warn(LOG_PROXY, '%s unhandled connect event', self)
 
     def handle_accept (self):
         """
         Handle accept event. Should be overridden in subclass.
         Logs a warning as default.
         """
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled accept event', self)
+        log.warn(LOG_PROXY, '%s unhandled accept event', self)
 
     def handle_close (self):
         """
         Handle close event. Logs a warning and closes the socket as default.
         """
-        wc.log.warn(wc.LOG_PROXY, '%s unhandled close event', self)
+        log.warn(LOG_PROXY, '%s unhandled close event', self)
         self.close()

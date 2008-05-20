@@ -20,10 +20,9 @@ for Python expressions, string literals, and paths.
 
 import re
 import sys
-from TALES import Engine, CompilerError, _valid_name, NAME_RE, \
+from .TALES import Engine, CompilerError, _valid_name, NAME_RE, \
      Undefined, _parse_expr
-import wc
-import wc.log
+from ... import log, LOG_TALES
 
 _engine = None
 def getEngine ():
@@ -135,7 +134,7 @@ class SubPathExpr (object):
             ob = vars[base]
         if isinstance(ob, DeferWrapper):
             ob = ob()
-        #wc.log.debug(wc.LOG_TALES, "eval subpath %s (%s)", path, self._path)
+        #log.debug(LOG_TALES, "eval subpath %s (%s)", path, self._path)
         if path:
             ob = restrictedTraverse(ob, path, getSecurityManager())
         return ob
@@ -323,8 +322,7 @@ def restrictedTraverse (object, path, securityManager,
             object = o
             continue
 
-        assert None == wc.log.debug(wc.LOG_TALES,
-            "expressing %r/%r", object, name)
+        log.debug(LOG_TALES, "expressing %r/%r", object, name)
         # Try an attribute.
         o = guarded_getattr(object, name, M)
         if o is M:

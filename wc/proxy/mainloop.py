@@ -28,12 +28,8 @@
 
 import select
 
-import wc.log
-import wc.configuration
-import timer
-import HttpClient
-import Listener
-import Dispatcher
+from .. import log, LOG_PROXY, configuration, HasSsl, AppName
+from . import timer, HttpClient, Listener, Dispatcher
 
 
 def proxy_poll (timeout=None):
@@ -47,11 +43,9 @@ def proxy_poll (timeout=None):
         r = [x for x in e if x.readable()]
         w = [x for x in e if x.writable()]
         if timeout is None:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "select without timeout")
+            log.debug(LOG_PROXY, "select without timeout")
         else:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "select with %f timeout", timeout)
+            log.debug(LOG_PROXY, "select with %f timeout", timeout)
         try:
             (r, w, e) = select.select(r, w, e, timeout)
         except select.error, why:
@@ -59,36 +53,31 @@ def proxy_poll (timeout=None):
                 # this occurs on UNIX systems with a sighup signal
                 return
             else:
-                wc.log.warn(wc.LOG_PROXY,
+                log.warn(LOG_PROXY,
                     "Failed select with r=%s, w=%s, e=%s, timeout=%s",
                     str(r), str(w), str(e), str(timeout))
                 raise
-        assert None == wc.log.debug(wc.LOG_PROXY, "poll result %s", (r, w, e))
+        log.debug(LOG_PROXY, "poll result %s", (r, w, e))
         # Make sure we only process one type of event at a time,
         # because if something needs to close the connection we
         # don't want to call another handle_* on it
         for x in e:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "poll handle exception %s", x)
+            log.debug(LOG_PROXY, "poll handle exception %s", x)
             x.handle_expt_event()
             handlerCount += 1
         for x in w:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "poll handle write %s", x)
+            log.debug(LOG_PROXY, "poll handle write %s", x)
             # note: do not put the following "if" in a list filter
             if not x.writable():
-                assert None == wc.log.debug(wc.LOG_PROXY,
-                    "not writable %s", x)
+                log.debug(LOG_PROXY, "not writable %s", x)
                 continue
             x.handle_write_event()
             handlerCount += 1
         for x in r:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "poll handle read %s", x)
+            log.debug(LOG_PROXY, "poll handle read %s", x)
             # note: do not put the following "if" in a list filter
             if not x.readable():
-                assert None == wc.log.debug(wc.LOG_PROXY,
-                    "not readable %s", x)
+                log.debug(LOG_PROXY, "not readable %s", x)
                 continue
             x.handle_read_event()
             handlerCount += 1
@@ -99,16 +88,14 @@ def mainloop (handle=None):
     """
     Proxy main loop, handles requests forever.
     """
-    # XXX why do I have to import wc again - python bug?
-    import wc
-    host = str(wc.configuration.config['bindaddress'])
-    port = wc.configuration.config['port']
+    host = str(configuration.config['bindaddress'])
+    port = configuration.config['port']
     Listener.Listener(host, port, HttpClient.HttpClient)
-    if wc.configuration.config['sslgateway'] and wc.HasSsl:
+    if configuration.config['sslgateway'] and HasSsl:
         import SslClient
         import ssl
-        port = wc.configuration.config['sslport']
-        sslctx = ssl.get_serverctx(wc.configuration.config.configdir)
+        port = configuration.config['sslport']
+        sslctx = ssl.get_serverctx(configuration.config.configdir)
         Listener.Listener(host, port, SslClient.SslClient, sslctx=sslctx)
     class Abort (StandardError):
         pass
@@ -131,4 +118,4 @@ def mainloop (handle=None):
             proxy_poll(timeout=timer.run_timers())
     except Abort:
         pass
-    wc.log.info(wc.LOG_PROXY, "%s stopped", wc.AppName)
+    log.info(LOG_PROXY, "%s stopped", AppName)

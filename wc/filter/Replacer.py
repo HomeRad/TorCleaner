@@ -19,10 +19,8 @@ Replace expressions in a data stream. Use this for highlighting and
 removing/replacing certain strings.
 """
 
-import wc.fileutil
-import wc.filter
-import Filter
-
+from . import Filter, STAGE_RESPONSE_MODIFY
+from .. import fileutil
 
 DefaultCharset = 'iso-8859-1'
 
@@ -33,7 +31,7 @@ class Replacer (Filter.Filter):
 
     def __init__ (self):
         """Initialize replacer flags."""
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         rulenames = ['replace']
         mimes = ['text/html', 'text/xml', 'application/xml',
                  r'application/(atom|rss|rdf)\+xml',
@@ -82,7 +80,7 @@ class Replacer (Filter.Filter):
 CHUNK_SIZE = 1024L*4L
 CHUNK_OVERLAP = 1024L
 
-class Buf (wc.fileutil.Buffer):
+class Buf (fileutil.Buffer):
     """
     Holds buffer data ready for replacing, with overlapping scans.
     Strings must be unicode.

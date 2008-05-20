@@ -23,10 +23,8 @@ import mimetypes
 # add bzip encoding
 mimetypes.encodings_map['.bz2'] = 'x-bzip2'
 
-import wc.log
-import wc.filter
-import Filter
-import wc.magic
+from .. import log, LOG_FILTER, magic
+from . import Filter, STAGE_RESPONSE_DECODE
 
 
 def is_preferred_mime (mime, origmime):
@@ -67,7 +65,7 @@ class MimeRecognizer (Filter.Filter):
         """
         Initialize image reducer flags.
         """
-        stages = [wc.filter.STAGE_RESPONSE_DECODE]
+        stages = [STAGE_RESPONSE_DECODE]
         super(MimeRecognizer, self).__init__(stages=stages)
         # minimal number of bytes to start mime recognition
         self.minimal_size_bytes = 5
@@ -110,21 +108,18 @@ class MimeRecognizer (Filter.Filter):
         """Try to recognize MIME type and write Content-Type header."""
         # note: recognizing a mime type fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024
-        assert None == wc.log.debug(wc.LOG_FILTER,
-            "MIME recognize %d bytes of data", buf.tell())
+        log.debug(LOG_FILTER, "MIME recognize %d bytes of data", buf.tell())
         try:
-            mime = wc.magic.classify(buf)
-            assert None == wc.log.debug(wc.LOG_FILTER,
-                "MIME recognized %r", mime)
+            mime = magic.classify(buf)
+            log.debug(LOG_FILTER, "MIME recognized %r", mime)
             origmime = attrs['mime']
             if mime and origmime and is_preferred_mime(mime, origmime):
-                wc.log.info(wc.LOG_FILTER, "Adjusting MIME %r -> %r at %r",
+                log.info(LOG_FILTER, "Adjusting MIME %r -> %r at %r",
                             origmime, mime, attrs['url'])
                 attrs['mime'] = mime
                 attrs['headers']['data']['Content-Type'] = "%s\r" % mime
         except StandardError:
-            wc.log.warn(wc.LOG_FILTER,
-                        "Mime recognize error at %r (%r)",
+            log.warn(LOG_FILTER, "Mime recognize error at %r (%r)",
                         attrs['url'], buf.getvalue())
         data = buf.getvalue()
         buf.close()

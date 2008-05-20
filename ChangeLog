@@ -18,6 +18,10 @@
     Type: bugfix
     Changed: wc/proxy/timer.py
 
+  * Require and use Python 2.5
+    Type: feature
+    Changed: *
+
 2.41 "Thank you for smoking" (released 16.12.2006)
 
   * The XML filter tries to fix unquoted ampersands.

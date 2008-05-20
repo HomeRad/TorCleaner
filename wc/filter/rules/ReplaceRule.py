@@ -17,10 +17,8 @@
 """
 Rule replacing parts of text.
 """
-
-import UrlRule
-import Rule
-import wc.XmlUtils
+from . import UrlRule, Rule
+from wc.XmlUtils import xmlquote, xmlquoteattr
 
 
 class ReplaceRule (UrlRule.UrlRule):
@@ -67,12 +65,12 @@ class ReplaceRule (UrlRule.UrlRule):
         """
         s = super(ReplaceRule, self).toxml()
         if self.search:
-            s += u'\n search="%s"' % wc.XmlUtils.xmlquoteattr(self.search)
+            s += u'\n search="%s"' % xmlquoteattr(self.search)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.replacement:
             s += u'\n  <replacement>%s</replacement>' % \
-              wc.XmlUtils.xmlquote(self.replacement)
+              xmlquote(self.replacement)
         s += u"\n</%s>" % self.name
         return s

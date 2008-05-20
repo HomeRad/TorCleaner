@@ -19,15 +19,10 @@ Filter a HTML stream.
 """
 
 import urllib
-
-import wc.HtmlParser
-import wc.url
-import wc.log
-import wc.filter.html
-import JSFilter
-import HtmlSecurity
-import wc.rating
-import wc.configuration
+from . import (JSFilter, HtmlSecurity, DATA, COMMENT, STARTTAG, STARTENDTAG,
+    ENDTAG, check_spelling)
+from .. import FilterRating
+from ... import log, LOG_HTML, configuration, rating, url as urlutil
 
 
 class HtmlFilter (JSFilter.JSFilter):
@@ -39,7 +34,7 @@ class HtmlFilter (JSFilter.JSFilter):
         super(HtmlFilter, self).__init__(url, localhost, opts)
         self.rules = rules
         self.ratings = ratings
-        self.rating = wc.rating.Rating()
+        self.rating = rating.Rating()
         self.rulestack = []
         self.stackcount = []
         self.base_url = None
@@ -47,8 +42,7 @@ class HtmlFilter (JSFilter.JSFilter):
         self.security = HtmlSecurity.HtmlSecurity()
         # cache rule match_tag into {tag -> list of rules}
         self.rule_tag_cache = {}
-        assert None == wc.log.debug(wc.LOG_HTML,
-                            "%s with %d rules", self, len(self.rules))
+        log.debug(LOG_HTML, "%s with %d rules", self, len(self.rules))
 
     def new_instance (self, **opts):
         """Make a new instance of this filter, for recursive filtering."""
@@ -72,7 +66,7 @@ class HtmlFilter (JSFilter.JSFilter):
         """
         General handler for data.
         """
-        item = [wc.filter.html.DATA, data]
+        item = [DATA, data]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
@@ -81,15 +75,14 @@ class HtmlFilter (JSFilter.JSFilter):
         """
         Character data.
         """
-        assert None == wc.log.debug(wc.LOG_HTML, "%s cdata %r", self, data)
+        log.debug(LOG_HTML, "%s cdata %r", self, data)
         return self._data(data)
 
     def characters (self, data):
         """
         Characters.
         """
-        assert None == wc.log.debug(wc.LOG_HTML,
-            "%s characters %r", self, data)
+        log.debug(LOG_HTML, "%s characters %r", self, data)
         return self._data(data)
 
     def comment (self, data):
@@ -98,8 +91,8 @@ class HtmlFilter (JSFilter.JSFilter):
         """
         if not (self.comments and data):
             return
-        assert None == wc.log.debug(wc.LOG_HTML, "%s comment %r", self, data)
-        item = [wc.filter.html.COMMENT, data]
+        log.debug(LOG_HTML, "%s comment %r", self, data)
+        item = [COMMENT, data]
         if self._is_waiting(item):
             return
         self.htmlparser.tagbuf.append(item)
@@ -108,31 +101,29 @@ class HtmlFilter (JSFilter.JSFilter):
         """
         HTML doctype.
         """
-        assert None == wc.log.debug(wc.LOG_HTML, "%s doctype %r", self, data)
+        log.debug(LOG_HTML, "%s doctype %r", self, data)
         return self._data(u"<!DOCTYPE%s>" % data)
 
     def pi (self, data):
         """
         HTML pi.
         """
-        assert None == wc.log.debug(wc.LOG_HTML, "%s pi %r", self, data)
+        log.debug(LOG_HTML, "%s pi %r", self, data)
         return self._data(u"<?%s?>" % data)
 
     def start_element (self, tag, attrs):
         """
         HTML start element.
         """
-        assert None == wc.log.debug(wc.LOG_HTML,
-                     "%s start_element %r %s", self, tag, attrs)
-        self._start_element(tag, attrs, wc.filter.html.STARTTAG)
+        log.debug(LOG_HTML, "%s start_element %r %s", self, tag, attrs)
+        self._start_element(tag, attrs, STARTTAG)
 
     def start_end_element (self, tag, attrs):
         """
         HTML start-end element (<a/>).
         """
-        assert None == wc.log.debug(wc.LOG_HTML,
-                     "%s start_end_element %r %s", self, tag, attrs)
-        self._start_element(tag, attrs, wc.filter.html.STARTENDTAG)
+        log.debug(LOG_HTML, "%s start_end_element %r %s", self, tag, attrs)
+        self._start_element(tag, attrs, STARTENDTAG)
 
     def _start_element (self, tag, attrs, starttype):
         """
@@ -141,9 +132,9 @@ class HtmlFilter (JSFilter.JSFilter):
         """
         if self._is_waiting([starttype, tag, attrs]):
             return
-        tag = wc.filter.html.check_spelling(tag, self.url)
+        tag = check_spelling(tag, self.url)
         if self.stackcount and \
-           starttype == wc.filter.html.STARTTAG and \
+           starttype == STARTTAG and \
            self.stackcount[-1][0] == tag:
             self.stackcount[-1][1] += 1
         if tag == "img":
@@ -165,9 +156,9 @@ class HtmlFilter (JSFilter.JSFilter):
             if self.ratings:
                 # headers finished, check rating data
                 # XXX what about a missing body tag?
-                service = wc.configuration.config['rating_service']
+                service = configuration.config['rating_service']
                 if "" not in self.rating or self.rating[""] != service.url:
-                    raise wc.filter.FilterRating(_("No rating data found."))
+                    raise FilterRating(_("No rating data found."))
                 for rule in self.ratings:
                     service.rating_check(rule.rating, self.rating)
                 self.ratings = []
@@ -178,8 +169,8 @@ class HtmlFilter (JSFilter.JSFilter):
                 if not urllib.splittype(self.base_url)[0]:
                     self.base_url = "%s://%s" % \
                                (urllib.splittype(self.url)[0], self.base_url)
-                self.base_url = wc.url.url_norm(self.base_url)[0]
-                assert None == wc.log.debug(wc.LOG_HTML,
+                self.base_url = urlutil.url_norm(self.base_url)[0]
+                log.debug(LOG_HTML,
                     "%s using base url %r", self, self.base_url)
         # search for and prevent known security flaws in HTML
         if self.security.scan_start_tag(tag, attrs, self):
@@ -243,16 +234,15 @@ class HtmlFilter (JSFilter.JSFilter):
         If it matches and the rule stack is now empty we can flush
         the tag buffer (calling tagbuf2data).
         """
-        assert None == wc.log.debug(wc.LOG_HTML,
-            "%s end_element %r", self, tag)
-        if self._is_waiting([wc.filter.html.ENDTAG, tag]):
+        log.debug(LOG_HTML, "%s end_element %r", self, tag)
+        if self._is_waiting([ENDTAG, tag]):
             return
-        tag = wc.filter.html.check_spelling(tag, self.url)
+        tag = check_spelling(tag, self.url)
         if self.stackcount and self.stackcount[-1][0] == tag:
             self.stackcount[-1][1] -= 1
         # search for and prevent known security flaws in HTML
         self.security.scan_end_tag(tag)
-        item = [wc.filter.html.ENDTAG, tag]
+        item = [ENDTAG, tag]
         if not self.filter_end_element(tag):
             if self.javascript and tag == 'script':
                 self.js_end_element(item)

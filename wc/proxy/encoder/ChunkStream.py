@@ -35,7 +35,7 @@ chunk-data     = chunk-size(OCTET)
 trailer        = *(entity-header CRLF)
 """
 
-import wc.log
+from ... import log, LOG_NET
 
 
 def chunkenc (data):
@@ -82,8 +82,7 @@ class ChunkStream (object):
         Chunk given data s.
         """
         s = chunkenc(s)
-        assert None == wc.log.debug(wc.LOG_NET,
-            "chunked %d bytes: %r", len(s), s)
+        log.debug(LOG_NET, "chunked %d bytes: %r", len(s), s)
         return s
 
     def get_trailer (self):
@@ -102,6 +101,5 @@ class ChunkStream (object):
         s = "0\r\n"
         s += self.get_trailer()
         s += "\r\n"
-        assert None == wc.log.debug(wc.LOG_NET,
-                            "flush chunked %d bytes: %r", len(s), s)
+        log.debug(LOG_NET, "flush chunked %d bytes: %r", len(s), s)
         return s

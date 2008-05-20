@@ -15,12 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import wc.rating
-import wc.filter
-import ratingformat
+from ... import log, LOG_RATING, filter, AppName, Url
+from . import ratingformat
+from .. import RatingService
 
 
-class WebCleanerService (wc.rating.RatingService):
+class WebCleanerService (RatingService):
     """
     WebCleaner rating service supporting some basic categories:
     violence, sex, language, age.
@@ -31,9 +31,9 @@ class WebCleanerService (wc.rating.RatingService):
         Initialize service data and a submit and request CGI url.
         """
         # service name
-        self.name = "%s rating service" % wc.AppName
+        self.name = "%s rating service" % AppName
         # service homepage
-        self.url = '%s/rating/' % wc.Url,
+        self.url = '%s/rating/' % Url,
         # rating formats
         agerange = ratingformat.IntRange(minval=0)
         self.ratingformats = [
@@ -60,17 +60,15 @@ class WebCleanerService (wc.rating.RatingService):
         for name, value in limit.iteritems():
             format = self.get_ratingformat(name)
             if format is None:
-                wc.log.info(wc.LOG_RATING,
-                            "Unknown rating %r in %s", name, limit)
+                log.info(LOG_RATING, "Unknown rating %r in %s", name, limit)
                 continue
             if name not in rating:
-                wc.log.info(wc.LOG_RATING,
-                            "Missing rating %r in %s", name, rating)
+                log.info(LOG_RATING, "Missing rating %r in %s", name, rating)
                 continue
             rvalue = rating[name]
             if not format.allowance(rvalue, value):
                 msg = "%s limit %r exceeded by %r" % (format, rvalue, value)
-                raise wc.filter.FilterRating(msg)
+                raise filter.FilterRating(msg)
 
     def rating_compile (self, rating):
         """

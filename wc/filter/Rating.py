@@ -18,11 +18,9 @@
 Parse and filter ratings.
 """
 
-import wc.filter
-import Filter
-import wc.rating
-import wc.log
-from wc.rating.service.rating import rating_from_headers
+from . import Filter, STAGE_RESPONSE_HEADER, FilterRating
+from .. import configuration
+from ..rating.service.rating import rating_from_headers
 
 
 class Rating (Filter.Filter):
@@ -40,7 +38,7 @@ class Rating (Filter.Filter):
         """
         Initialize image reducer flags.
         """
-        stages = [wc.filter.STAGE_RESPONSE_HEADER]
+        stages = [STAGE_RESPONSE_HEADER]
         rulenames = ['rating']
         super(Rating, self).__init__(stages=stages, rulenames=rulenames)
 
@@ -56,9 +54,8 @@ class Rating (Filter.Filter):
         if not rules:
             return data
         url = attrs['url']
-        config = wc.configuration.config
-        storage = config['rating_storage']
-        service = config['rating_service']
+        storage = configuration.config['rating_storage']
+        service = configuration.config['rating_service']
         if url in storage:
             rating = storage[url].rating
             for rule in rules:
@@ -66,17 +63,17 @@ class Rating (Filter.Filter):
             return data
         erules = [r for r in rules if r.use_extern]
         if not erules:
-            raise wc.filter.FilterRating(_("No rating data found."))
+            raise FilterRating(_("No rating data found."))
         headers = attrs['headers']['server']
         if headers.has_key('X-Rating') and headers['X-Rating'] == service.url:
             rating = rating_from_headers(headers)
             for rule in rules:
                 service.rating_check(rule.rating, rating)
             return data
-        if "HtmlRewriter" in config['filters']:
+        if "HtmlRewriter" in configuration.config['filters']:
             # Wait for <meta> rating.
             return data
-        raise wc.filter.FilterRating(_("No rating data found."))
+        raise FilterRating(_("No rating data found."))
 
     def update_attrs (self, attrs, url, localhost, stages, headers):
         """

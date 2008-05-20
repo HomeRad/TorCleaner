@@ -17,10 +17,8 @@
 """
 Parse configuration data.
 """
-
-import sets
 import xml.parsers.expat
-import wc
+from .. import log, LOG_PROXY, LOG_FILTER, filter, ip
 
 ##### xml parsers #########
 
@@ -107,8 +105,7 @@ class BaseParser (object):
 
     def parse (self, fp=None):
         """Parse the stored filename, or another source given by fp."""
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "Parsing %s", self.filename)
+        log.debug(LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
             fp = file(self.filename)
         self._preparse()
@@ -116,8 +113,7 @@ class BaseParser (object):
             try:
                 self.xmlparser.ParseFile(fp)
             except (xml.parsers.expat.ExpatError, ParseException):
-                wc.log.exception(wc.LOG_PROXY, "Error parsing %s",
-                                 self.filename)
+                log.exception(LOG_PROXY, "Error parsing %s", self.filename)
                 raise SystemExit("parse error in %s" % self.filename)
         finally:
             self._postparse()
@@ -143,8 +139,7 @@ class ZapperParser (BaseParser):
     def __init__ (self, filename, compile_data=True):
         """Initialize filename, configuration and compile flag."""
         super(ZapperParser, self).__init__(filename)
-        from wc.filter.rules.FolderRule import FolderRule
-        self.folder = FolderRule(filename=filename)
+        self.folder = filter.rules.FolderRule.FolderRule(filename=filename)
         self.cmode = None
         self.rule = None
         self.compile_data = compile_data
@@ -158,7 +153,7 @@ class ZapperParser (BaseParser):
             return
         self.cmode = name
         if name in rulenames:
-            self.rule = wc.filter.GetRuleFromName(name)
+            self.rule = filter.GetRuleFromName(name)
             self.rule.fill_attrs(attrs, name)
             self.folder.append_rule(self.rule)
         # tag has character data
@@ -170,7 +165,7 @@ class ZapperParser (BaseParser):
         elif name == 'folder':
             self.folder.fill_attrs(attrs, name)
         else:
-            wc.log.warn(wc.LOG_FILTER, _("unknown tag name %r"), name)
+            log.warn(LOG_FILTER, _("unknown tag name %r"), name)
             self.error = name
             self.cmode = None
 
@@ -241,16 +236,15 @@ class WConfigParser (BaseParser):
             if self.config['allowedhosts'] is not None:
                 hosts = self.config['allowedhosts'].split(',')
                 self.config['allowedhosts'] = hosts
-                self.config['allowedhostset'] = wc.ip.hosts2map(hosts)
+                self.config['allowedhostset'] = ip.hosts2map(hosts)
             else:
                 self.config['allowedhosts'] = []
-                self.config['allowedhostset'] = [sets.Set(), []]
+                self.config['allowedhostset'] = [set(), []]
         elif name == 'filter':
-            assert None == wc.log.debug(wc.LOG_FILTER,
-                "enable filter module %s", attrs['name'])
+            log.debug(LOG_FILTER, "enable filter module %s", attrs['name'])
             self.config['filters'].append(attrs['name'])
         else:
-            wc.log.warn(wc.LOG_PROXY, _("unknown tag name %r"), name)
+            log.warn(LOG_FILTER, _("unknown tag name %r"), name)
             self.error = name
 
     def end_element (self, name):

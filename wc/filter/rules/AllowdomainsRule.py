@@ -19,7 +19,7 @@ Hold a list of domains to allow in external file, like those
 found in SquidGuard.
 """
 
-import ExternfileRule
+from . import ExternfileRule
 
 
 class AllowdomainsRule (ExternfileRule.ExternfileRule):

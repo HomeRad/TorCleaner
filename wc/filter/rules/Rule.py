@@ -17,10 +17,9 @@
 """
 Basic rule class and routines.
 """
-
 import re
-import wc.XmlUtils
-import wc.filter.rules
+from wc.XmlUtils import xmlquote, xmlquoteattr, xmlunquote
+from . import register_rule
 
 
 def compileRegex (obj, attr, fullmatch=False, flags=0):
@@ -52,7 +51,7 @@ class LangDict (dict):
             # default is english
             if 'en' in self:
                 return self['en']
-            for val in self.itervalues():
+            for val in self.values():
                 return val
             self[key] = ""
         return super(LangDict, self).__getitem__(key)
@@ -249,7 +248,7 @@ class Rule (object):
         if name == self.name:
             self._data = u""
         else:
-            self._data = wc.XmlUtils.xmlunquote(self._data)
+            self._data = xmlunquote(self._data)
         if name == 'title':
             self.titles[self._lang] = self._data
         elif name == 'description':
@@ -259,7 +258,7 @@ class Rule (object):
         """
         Register this rule. Called when all XML parsing of rule is finished.
         """
-        wc.filter.rules.register_rule(self)
+        register_rule(self)
         # some internal checks
         for name in self.intattrs:
             assert name in self.attrnames
@@ -275,7 +274,7 @@ class Rule (object):
         """
         s = u'<%s'% self.name
         if self.sid is not None:
-            s += u'sid="%s"' % wc.XmlUtils.xmlquoteattr(self.sid)
+            s += u'sid="%s"' % xmlquoteattr(self.sid)
         if self.disable:
             s += u' disable="%d"' % self.disable
         return s
@@ -285,12 +284,10 @@ class Rule (object):
         XML for rule title and description.
         """
         t = [u'%s<title lang="%s">%s</title>' % \
-             (prefix, wc.XmlUtils.xmlquoteattr(key),
-              wc.XmlUtils.xmlquote(value)) \
+             (prefix, xmlquoteattr(key), xmlquote(value)) \
              for key,value in self.titles.iteritems() if value]
         d = [u'%s<description lang="%s">%s</description>' % \
-             (prefix, wc.XmlUtils.xmlquoteattr(key),
-              wc.XmlUtils.xmlquote(value)) \
+             (prefix, xmlquoteattr(key), xmlquote(value)) \
              for key,value in self.descriptions.iteritems() if value]
         return u"\n".join(t+d)
 

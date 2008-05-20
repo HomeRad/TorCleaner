@@ -28,17 +28,12 @@
 """
 Mediator between client and server connection objects.
 """
-
 import socket
-import cStringIO as StringIO
-
-import wc.log
-import wc.configuration
-import wc.url
-import dns_lookups
-import ServerHandleDirectly
-import HttpServer
-from ServerPool import serverpool
+from cStringIO import StringIO
+from .. import log, LOG_PROXY, configuration, HasSsl
+from ..http.header import WcMessage
+from . import dns_lookups, ServerHandleDirectly, HttpServer
+from .ServerPool import serverpool
 
 
 BUSY_LIMIT = 15
@@ -84,7 +79,7 @@ class ClientServerMatchmaker (object):
         mime type, regardless of the Content-Type header value.
         This is useful for JavaScript fetching and blocked pages.
         """
-        self.do_ssl = wc.HasSsl and wc.configuration.config['sslgateway']
+        self.do_ssl = HasSsl and configuration.config['sslgateway']
         self.sslserver = sslserver
         self.client = client
         self.localhost = client.localhost
@@ -99,26 +94,25 @@ class ClientServerMatchmaker (object):
         self.server_busy = 0
         self.method, self.url, self.protocol = self.request.split()
         # prepare DNS lookup
-        if wc.configuration.config['parentproxy']:
-            self.hostname = wc.configuration.config['parentproxy']
-            self.port = wc.configuration.config['parentproxyport']
+        if configuration.config['parentproxy']:
+            self.hostname = configuration.config['parentproxy']
+            self.port = configuration.config['parentproxyport']
             self.document = self.url
-            if wc.configuration.config['parentproxycreds']:
-                auth = wc.configuration.config['parentproxycreds']
+            if configuration.config['parentproxycreds']:
+                auth = configuration.config['parentproxycreds']
                 self.headers['Proxy-Authorization'] = "%s\r" % auth
         else:
             if self.do_ssl and self.method == 'CONNECT':
                 # delegate to SSL gateway
                 self.hostname = 'localhost'
-                self.port = wc.configuration.config['sslport']
+                self.port = configuration.config['sslport']
             else:
                 self.hostname = client.hostname
                 self.port = client.port
             self.document = client.document
         assert self.hostname
         # start DNS lookup
-        assert None == wc.log.debug(wc.LOG_PROXY,
-                            "background dns lookup %r", self.hostname)
+        log.debug(LOG_PROXY, "background dns lookup %r", self.hostname)
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
     def get_ip_addr (self):
@@ -131,10 +125,9 @@ class ClientServerMatchmaker (object):
         Got dns answer, look for server.
         """
         assert self.state == 'dns'
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s handle dns %r", self, hostname)
+        log.debug(LOG_PROXY, "%s handle dns %r", self, hostname)
         if not self.client.connected:
-            wc.log.info(wc.LOG_PROXY, "%s client closed after DNS", self)
+            log.info(LOG_PROXY, "%s client closed after DNS", self)
             # The browser has already closed this connection, so abort
             return
         if answer.isFound():
@@ -154,14 +147,13 @@ class ClientServerMatchmaker (object):
                 new_url += ':%d' % self.port
             # XXX does not work with parent proxy
             new_url += self.document
-            wc.log.info(wc.LOG_PROXY, "%s redirecting %r", self, new_url)
+            log.info(LOG_PROXY, "%s redirecting %r", self, new_url)
             self.state = 'done'
             ServerHandleDirectly.ServerHandleDirectly(
               self.client,
               '%s 301 Moved Permanently' % self.protocol, 301,
-              wc.http.header.WcMessage(
-                    StringIO.StringIO('Content-type: text/plain\r\n'
-                                      'Location: %s\r\n\r\n' % new_url)),
+              WcMessage(StringIO('Content-type: text/plain\r\n'
+                                 'Location: %s\r\n\r\n' % new_url)),
                _('Host %s is an abbreviation for %s')%(hostname, answer.data))
         else:
             # Couldn't look up the host,
@@ -176,30 +168,24 @@ class ClientServerMatchmaker (object):
         """
         assert self.state == 'server'
         addr = (self.ipaddr, self.port)
-        # XXX why do I have to import wc again - python bug?
-        import wc
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s find server %s", self, addr)
+        log.debug(LOG_PROXY, "%s find server %s", self, addr)
         if not self.client.connected:
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "%s client not connected", self)
+            log.debug(LOG_PROXY, "%s client not connected", self)
             # The browser has already closed this connection, so abort
             return
         server = serverpool.reserve_server(addr)
         if server:
             # Let's reuse it
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                                '%s resurrecting %s', self, server)
+            log.debug(LOG_PROXY, '%s resurrecting %s', self, server)
             self.state = 'connect'
             self.server_connected(server)
         elif serverpool.count_servers(addr) >= \
              serverpool.connection_limit(addr):
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                '%s server %s busy', self, addr)
+            log.debug(LOG_PROXY, '%s server %s busy', self, addr)
             self.server_busy += 1
             # if we waited too long for a server to be available, abort
             if self.server_busy > BUSY_LIMIT:
-                wc.log.info(wc.LOG_PROXY,
+                log.info(LOG_PROXY,
                     "Waited too long for available connection at %s" \
                     ", consider increasing the server pool connection limit" \
                     " (currently at %d)", addr, BUSY_LIMIT)
@@ -209,7 +195,7 @@ class ClientServerMatchmaker (object):
             # as an interested party for getting a connection later
             serverpool.register_callback(addr, self.find_server)
         else:
-            assert None == wc.log.debug(wc.LOG_PROXY,
+            log.debug(LOG_PROXY,
                 "%s new connect to server", self)
             # Let's make a new one
             self.state = 'connect'
@@ -229,8 +215,7 @@ class ClientServerMatchmaker (object):
         """
         The server has connected.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s server_connected", self)
+        log.debug(LOG_PROXY, "%s server_connected", self)
         assert self.state == 'connect'
         assert server.connected
         if not self.client.connected:
@@ -240,9 +225,9 @@ class ClientServerMatchmaker (object):
             return
         if self.method == 'CONNECT':
             self.state = 'response'
-            headers = wc.http.header.WcMessage()
+            headers = WcMessage()
             self.server_response(server, 'HTTP/1.1 200 OK', 200, headers)
-            if wc.configuration.config['sslgateway']:
+            if configuration.config['sslgateway']:
                 server.client_send_request(self.method, self.protocol,
                                    self.hostname, self.port,
                                    self.document, self.headers,
@@ -289,8 +274,7 @@ class ClientServerMatchmaker (object):
                 self.ipaddrs.append(self.ipaddr)
                 # Get the next IP address in the list.
                 self.ipaddr = self.get_ip_addr()
-                wc.log.info(wc.LOG_PROXY, "%s try next IP %s",
-                            self, self.ipaddr)
+                log.info(LOG_PROXY, "%s try next IP %s", self, self.ipaddr)
                 self.state = "server"
                 self.find_server()
             else:
@@ -301,8 +285,7 @@ class ClientServerMatchmaker (object):
         """
         The server has closed.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            '%s resurrection failed %d %s',
+        log.debug(LOG_PROXY, '%s resurrection failed %d %s',
             self, server.sequence_number, server)
         # Look for a server again
         if server.sequence_number > 0:
@@ -319,8 +302,7 @@ class ClientServerMatchmaker (object):
         """
         The server got a response.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s server_response, match client/server", self)
+        log.debug(LOG_PROXY, "%s server_response, match client/server", self)
         # Okay, transfer control over to the real client
         if self.client.connected:
             server.client = self.client

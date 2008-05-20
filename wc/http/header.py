@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-import cStringIO as StringIO
+from cStringIO import StringIO
 import rfc822
 
 
@@ -30,7 +30,7 @@ class WcMessage (rfc822.Message, object):
         Initialize message reading from given optional file descriptor.
         """
         if fp is None:
-            fp = StringIO.StringIO()
+            fp = StringIO()
         super(WcMessage, self).__init__(fp, seekable=seekable)
 
     def remove_multiple_headers (self, name):
@@ -64,7 +64,7 @@ class WcMessage (rfc822.Message, object):
         """
         Copy these headers into a new WcHeaders object.
         """
-        return WcMessage(fp=StringIO.StringIO("".join(self.headers)))
+        return WcMessage(fp=StringIO("".join(self.headers)))
 
     def iterkeys (self):
         """Get all of a message's header field names."""

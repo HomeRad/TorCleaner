@@ -19,10 +19,10 @@ Hold a list of urls to allow in external file, like those
 found in SquidGuard.
 """
 
-import wc.filter.rules.ExternfileRule
+from . import ExternfileRule
 
 
-class AllowurlsRule (wc.filter.rules.ExternfileRule.ExternfileRule):
+class AllowurlsRule (ExternfileRule.ExternfileRule):
     """
     Specifies a list of url paths to allow, even if they would be blocked
     otherwise.

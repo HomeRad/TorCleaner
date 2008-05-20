@@ -19,11 +19,11 @@ Check for typos in HTML tags.
 """
 
 import re
-import wc.levenshtein
-import wc.HtmlParser.htmllib
-import wc.log
+from ... import log, LOG_FILTER, levenshtein
+from wc.HtmlParser.htmllib import quote_attrval
 
 # tag ids
+# XXX make enum
 STARTTAG = 0
 ENDTAG = 1
 DATA = 2
@@ -31,6 +31,7 @@ COMMENT = 3
 STARTENDTAG = 4
 
 # tag part ids
+# XXX make enum
 TAG = 0        # the tag inclusive the <>
 TAGNAME = 1    # the tag name
 ATTR = 2       # a complete attribute
@@ -50,7 +51,7 @@ def _startout (out, item, start=u"<", end=u">"):
     for name, val in item[2].iteritems():
         out.write(u' %s' % name)
         if val is not None:
-            out.write(u'="%s"' % wc.HtmlParser.htmllib.quote_attrval(val))
+            out.write(u'="%s"' % quote_attrval(val))
     out.write(end)
 
 
@@ -70,7 +71,7 @@ def tagbuf2data (tagbuf, out, entities=None):
         elif item[0] == COMMENT:
             out.write(u"<!--%s-->" % item[1])
         else:
-            wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
+            log.error(LOG_FILTER, "unknown buffer element %s", item[0])
     return out
 
 
@@ -365,11 +366,11 @@ def check_spelling (tag, url):
     # since tag names should be ascii anyway, ignore encoding errors
     enctag = tag.encode("ascii", "ignore")
     for htmltag in CheckTags:
-        if wc.levenshtein.distance(enctag, htmltag) == 1:
-            wc.log.info(wc.LOG_FILTER,
+        if levenshtein.distance(enctag, htmltag) == 1:
+            log.info(LOG_FILTER,
                       "HTML tag %r corrected to %r at %r", tag, htmltag, url)
             return htmltag
-    wc.log.info(wc.LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
+    log.info(LOG_FILTER, "unknown HTML tag %r at %r", tag, url)
     # filter possibly trailing garbage the parser accepted
     mo = filter_tag_garbage(tag)
     if mo:

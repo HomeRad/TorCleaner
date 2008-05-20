@@ -17,17 +17,11 @@
 """
 HTML configuration interface functions.
 """
-
 import mimetypes
-
-import wc.configuration
-import wc.i18n
-import wc.log
-import wc.proxy.auth
-import wc.proxy.Headers
-import wc.webgui
-import templatecache
-import TAL
+from .. import log, LOG_GUI, LOG_TAL, i18n, configuration, restart, get_translator
+from . import templatecache, TAL, get_template_url, get_safe_template_path
+from ..proxy import auth
+from ..http.header import WcMessage
 
 
 class WebConfig (object):
@@ -43,7 +37,7 @@ class WebConfig (object):
         """
         Store template configuration data in the object.
         """
-        assert None == wc.log.debug(wc.LOG_GUI, "WebConfig %s %s", url, form)
+        log.debug(LOG_GUI, "WebConfig %s %s", url, form)
         if isinstance(msg, unicode):
             msg = msg.encode("iso8859-1", "ignore")
         self.client = client
@@ -72,7 +66,7 @@ class WebConfig (object):
         try:
             self._load()
         except IOError:
-            wc.log.exception(wc.LOG_GUI, "Wrong path %r:", self.url)
+            log.exception(LOG_GUI, "Wrong path %r:", self.url)
             if self.status == 404:
                 raise
             self.status = 404
@@ -82,7 +76,7 @@ class WebConfig (object):
             self.load()
         except StandardError, msg:
             # catch standard exceptions and report internal error
-            wc.log.exception(wc.LOG_GUI, "Template error: %r", self.url)
+            log.exception(LOG_GUI, "Template error: %r", self.url)
             if self.status == 500:
                 raise
             self.status = 500
@@ -98,10 +92,10 @@ class WebConfig (object):
         Helper method to handle the raw template data retrieval,
         without catching errors.
         """
-        lang = wc.i18n.get_headers_lang(self.clientheaders)
+        lang = i18n.get_headers_lang(self.clientheaders)
         hostname = self.client.socket.getsockname()[0]
         # get the template filename
-        path, dirs, lang = wc.webgui.get_template_url(self.url, lang)
+        path, dirs, lang = get_template_url(self.url, lang)
         self.newstatus = None
         if path.endswith('.html'):
             # get TAL context
@@ -111,7 +105,7 @@ class WebConfig (object):
                 self.status = 401
                 self.msg = _("Authentication Required")
                 self.url = "/internal_401.html"
-                self.auth_challenges = wc.proxy.auth.get_challenges()
+                self.auth_challenges = auth.get_challenges()
                 self.load()
                 return
             # get (compiled) template
@@ -139,7 +133,7 @@ class WebConfig (object):
         self.client.server_close(self)
         # Check for restart.
         if self.newstatus == "restart":
-            wc.restart()
+            restart()
 
     def client_abort (self):
         """
@@ -161,11 +155,11 @@ def get_headers (url, status, auth_challenges, clientheaders):
     """
     Get proxy headers to send.
     """
-    headers = wc.http.header.WcMessage()
+    headers = WcMessage()
     headers['Server'] = 'Proxy\r'
     if auth_challenges:
         if status not in (401, 407):
-            wc.log.error(wc.LOG_GUI,
+            log.error(LOG_GUI,
                          "Authentication with wrong status %d", status)
         else:
             if status == 407:
@@ -209,7 +203,7 @@ def get_context (dirs, form, localcontext, hostname, lang):
         template_context._form_reset()
     if hasattr(template_context, "_exec_form") and form is not None:
         # handle form action
-        assert None == wc.log.debug(wc.LOG_GUI, "got form %s", form)
+        log.debug(LOG_GUI, "got form %s", form)
         status = template_context._exec_form(form, lang)
         # add form vars to context
         context_add(context, "form", form)
@@ -230,11 +224,11 @@ def add_default_context (context, filename, hostname, lang):
     Add context variables used by all templates.
     """
     # rule macros
-    path = wc.webgui.get_safe_template_path("macros/rules.html")[0]
+    path = get_safe_template_path("macros/rules.html")[0]
     rulemacros = templatecache.templates[path]
     context_add(context, "rulemacros", rulemacros.macros)
     # standard macros
-    path = wc.webgui.get_safe_template_path("macros/standard.html")[0]
+    path = get_safe_template_path("macros/standard.html")[0]
     macros = templatecache.templates[path]
     context_add(context, "macros", macros.macros)
     # used by navigation macro
@@ -242,9 +236,9 @@ def add_default_context (context, filename, hostname, lang):
     # page template name
     context_add(context, "filename", filename)
     # base url
-    port = wc.configuration.config['port']
+    port = configuration.config['port']
     context_add(context, "baseurl", "http://%s:%d/" % (hostname, port))
-    newport = wc.configuration.config.get('newport', port)
+    newport = configuration.config.get('newport', port)
     context_add(context, "newbaseurl", "http://%s:%d/" % (hostname, newport))
     add_i18n_context(context, lang)
     # XXX TODO referrer variables
@@ -279,15 +273,15 @@ def add_i18n_context (context, lang):
     """
     # language and i18n
     context_add(context, "lang", lang)
-    context_add(context, "i18n", TALTranslator(wc.get_translator(lang)))
+    context_add(context, "i18n", TALTranslator(get_translator(lang)))
     # other available languges
     otherlanguages = []
-    for la in wc.i18n.supported_languages:
+    for la in i18n.supported_languages:
         if lang == la:
             continue
         otherlanguages.append({'code': la,
-                               'name': wc.i18n.lang_name(la),
-                               'trans': wc.i18n.lang_trans(la, lang),
+                               'name': i18n.lang_name(la),
+                               'trans': i18n.lang_trans(la, lang),
                               })
     context_add(context, "otherlanguages", otherlanguages)
 
@@ -312,11 +306,8 @@ class TALTranslator (object):
 
     def translate (self, domain, msgid, mapping=None,
                    context=None, target_language=None, default=None):
-        """
-        Interpolates and translate TAL expression.
-        """
+        """Interpolates and translate TAL expression."""
         _msg = self.ugettext(msgid)
-        assert None == wc.log.debug(wc.LOG_TAL,
-            "TRANSLATED %r %r", msgid, _msg)
+        log.debug(LOG_TAL, "TRANSLATED %r %r", msgid, _msg)
         return TAL.TALInterpreter.interpolate(_msg, mapping)
 

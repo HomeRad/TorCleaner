@@ -29,7 +29,7 @@
 Direct request handling returning static data.
 """
 
-import Server
+from . import Server
 
 
 class ServerHandleDirectly (Server.Server):

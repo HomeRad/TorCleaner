@@ -17,10 +17,9 @@
 """
 Apply rule to specific MIME types.
 """
-
 import re
-import Rule
-import wc.XmlUtils
+from . import Rule
+from wc.XmlUtils import xmlquote
 
 
 class MimeRule (Rule.Rule):
@@ -77,9 +76,8 @@ class MimeRule (Rule.Rule):
         """
         Match url rule data as XML for storing.
         """
-        m = [u"%s<mime>%s</mime>" % \
-             (prefix, wc.XmlUtils.xmlquote(r)) for r in self.mimes]
-        return u"\n".join(m)
+        return u"\n".join(u"%s<mime>%s</mime>" % (prefix, xmlquote(r))
+                          for r in self.mimes)
 
     def endxml (self):
         """

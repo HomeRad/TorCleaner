@@ -18,7 +18,7 @@
 Allowance classes to filter out invalid proxy requests.
 """
 
-import wc.configuration
+from .. import log, LOG_PROXY, configuration
 
 
 MAX_URL_LEN = 8192
@@ -97,7 +97,7 @@ class AllowedHttpClient (object):
         """
         Return True iff host is allowed.
         """
-        return wc.configuration.config.allowed(host)
+        return configuration.config.allowed(host)
 
     def method (self, method):
         """
@@ -110,20 +110,20 @@ class AllowedHttpClient (object):
         Check if givem method, scheme and port are allowed.
         """
         if not self.method(method):
-            wc.log.warn(wc.LOG_PROXY, "illegal method %s", method)
+            log.warn(LOG_PROXY, "illegal method %s", method)
             return False
         if scheme not in self.schemes:
-            wc.log.warn(wc.LOG_PROXY, "illegal scheme %s", scheme)
+            log.warn(LOG_PROXY, "illegal scheme %s", scheme)
             return False
         if method == 'CONNECT':
             if scheme != 'https':
-                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT scheme %d", scheme)
+                log.warn(LOG_PROXY, "illegal CONNECT scheme %d", scheme)
                 return False
             if not allowed_connect_port(port):
-                wc.log.warn(wc.LOG_PROXY, "illegal CONNECT port %d", port)
+                log.warn(LOG_PROXY, "illegal CONNECT port %d", port)
                 return False
             if port not in (443, 563):
-                wc.log.warn(wc.LOG_PROXY, "Unusual CONNECT port %d", port)
+                log.warn(LOG_PROXY, "Unusual CONNECT port %d", port)
         return True
 
 

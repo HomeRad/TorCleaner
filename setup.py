@@ -1,4 +1,4 @@
-#!/usr/bin/python2.5
+#!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2008 Bastian Kleineidam
 #

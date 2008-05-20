@@ -18,7 +18,7 @@
 Rating import and export to various formats.
 """
 
-import wc.rating
+from .. import Rating
 
 
 def rating_from_headers (headers):
@@ -29,7 +29,7 @@ def rating_from_headers (headers):
     @return: parsed rating
     @rtype: wc.rating.Rating
     """
-    rating = wc.rating.Rating()
+    rating = Rating()
     for name, value in headers:
         if name.lower().startswith("x-rating-"):
             rating[name[9:]] = value

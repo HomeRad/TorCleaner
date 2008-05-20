@@ -17,11 +17,9 @@
 """
 Filter invalid binary chars from HTML.
 """
-
 import string
 import re
-import wc.filter
-import Filter
+from . import Filter, STAGE_RESPONSE_MODIFY
 
 # for utf charset check (see below)
 is_utf = re.compile(r"text/html;\s*charset=utf-8", re.I).search
@@ -53,7 +51,7 @@ class BinaryCharFilter (Filter.Filter):
         """
         Initialize stages and mime list.
         """
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         mimes = ['text/html']
         super(BinaryCharFilter, self).__init__(stages=stages, mimes=mimes)
         self.transe = string.maketrans(charmap_in, charmap_out)

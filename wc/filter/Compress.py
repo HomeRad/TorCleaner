@@ -17,14 +17,11 @@
 """
 Compress documents on-the-fly with zlib.
 """
-
 import struct
 import time
 import zlib
-import wc.log
-import wc.filter
-import Filter
-import wc.proxy.Headers
+from .. import log, LOG_FILTER, proxy
+from . import Filter, STAGE_RESPONSE_ENCODE
 
 
 _compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
@@ -63,13 +60,12 @@ def compress (data, compobj):
     """
     if not data:
         return ""
-    assert None == wc.log.debug(wc.LOG_FILTER,
-        "compressing %d bytes", len(data))
+    log.debug(LOG_FILTER, "compressing %d bytes", len(data))
     compobj['size'] += len(data)
     compobj['crc'] = zlib.crc32(data, compobj['crc'])
     compressed = compobj['compressor'].compress(data)
     if compobj['header']:
-        assert None == wc.log.debug(wc.LOG_FILTER, 'writing gzip header')
+        log.debug(LOG_FILTER, 'writing gzip header')
         compressed = compobj['header'] + compressed
         compobj['header'] = ''
     return compressed
@@ -83,7 +79,7 @@ def set_encoding_header (attrs):
     is going to be compressed.
     """
     headers = attrs['headers']
-    accepts = wc.proxy.Headers.get_encoding_dict(headers['client'])
+    accepts = proxy.Headers.get_encoding_dict(headers['client'])
     encoding = headers['server'].get('Content-Encoding', '')
     encoding = encoding.strip().lower()
     if 'gzip' not in accepts:
@@ -122,7 +118,7 @@ class Compress (Filter.Filter):
         """
         Set init compressor flag to True.
         """
-        stages = [wc.filter.STAGE_RESPONSE_ENCODE]
+        stages = [STAGE_RESPONSE_ENCODE]
         mimes = [r'text/[a-z.\-+]+',
                  r'application/(postscript|pdf|x-dvi)',
                  r'audio/(basic|midi|x-wav)',
@@ -144,7 +140,7 @@ class Compress (Filter.Filter):
             set_encoding_header(attrs)
             self.init_compressor = False
         if 'compressobj' not in attrs:
-            assert None == wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
+            log.debug(LOG_FILTER, 'nothing to compress')
             return data
         return compress(data, attrs['compressobj'])
 
@@ -158,11 +154,11 @@ class Compress (Filter.Filter):
             set_encoding_header(attrs)
             self.init_compressor = False
         if 'compressobj' not in attrs:
-            assert None == wc.log.debug(wc.LOG_FILTER, 'nothing to compress')
+            log.debug(LOG_FILTER, 'nothing to compress')
             return data
         compobj = attrs['compressobj']
         compressed = compress(data, compobj)
-        assert None == wc.log.debug(wc.LOG_FILTER, 'finishing compressor')
+        log.debug(LOG_FILTER, 'finishing compressor')
         assert compobj['size'] >= 0
         if compobj['size'] > 0:
             compressed += "%s%s%s" % (compobj['compressor'].flush(),

@@ -19,9 +19,8 @@ Deanimate GIF images.
 """
 
 import base64
-import wc.log
-import wc.filter
-import Filter
+from .. import log, LOG_FILTER
+from . import Filter, STAGE_RESPONSE_MODIFY
 
 
 def i16 (c):
@@ -50,7 +49,7 @@ class GifImage (Filter.Filter):
         """
         Init GIF stages and mimes.
         """
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         mimes = ['image/gif']
         super(GifImage, self).__init__(stages=stages, mimes=mimes)
 
@@ -174,7 +173,7 @@ class GifParser (object):
             return
         if len(self.data)<i:
             # rewind and stop filtering; wait for next data chunk
-            assert None == wc.log.debug(wc.LOG_FILTER, 'GIF rewinding')
+            log.debug(LOG_FILTER, 'GIF rewinding')
             self.data = self.consumed + self.data
             self.consumed = ''
             raise RewindException("GifImage data delay => rewinding")
@@ -209,8 +208,7 @@ class GifParser (object):
         @raise: RewindException if not enough data.
         """
         while 1:
-            assert None == wc.log.debug(wc.LOG_FILTER,
-                                'GifImage state %s', self.str_state())
+            log.debug(LOG_FILTER, 'GifImage state %s', self.str_state())
             self.flush()
             if self.state == GifParser.NOFILTER:
                 self.output += self.consumed + self.data
@@ -224,12 +222,12 @@ class GifParser (object):
                 # so ignore the version number here and check only for
                 # the GIF prefix
                 if not self.header.startswith('GIF'):
-                    assert None == wc.log.debug(wc.LOG_FILTER,
-                                 "No GIF file, switch to nofilter mode")
+                    log.debug(LOG_FILTER,
+                        "No GIF file, switch to nofilter mode")
                     self.state = GifParser.NOFILTER
                     continue
                 self.size = (i16(self.read(2)), i16(self.read(2)))
-                assert None == wc.log.debug(wc.LOG_FILTER,
+                log.debug(LOG_FILTER,
                         'GIF width=%d, height=%d', self.size[0], self.size[1])
                 if self.size in self.sizes:
                     self.output = base64.decodestring(_TINY_GIF)
@@ -242,10 +240,10 @@ class GifParser (object):
                 if (flags & 128)!=0:
                     # global palette
                     self.background = ord(misc[0])
-                    assert None == wc.log.debug(wc.LOG_FILTER,
-                                 'GIF background %s', self.background)
+                    log.debug(LOG_FILTER,
+                        'GIF background %s', self.background)
                     size = 3 << bits
-                    assert None == wc.log.debug(wc.LOG_FILTER,
+                    log.debug(LOG_FILTER,
                                  'GIF global palette size %d', size)
                     self.read(size)
                 self.state = GifParser.FRAME
@@ -257,7 +255,7 @@ class GifParser (object):
                 elif s == '!':
                     # extensions
                     s = self.read(1)
-                    assert None == wc.log.debug(wc.LOG_FILTER,
+                    log.debug(LOG_FILTER,
                                         'GIF extension %d', ord(s))
                     # remove all extensions except graphic controls (249)
                     self.removing = (ord(s) != 249)
@@ -268,7 +266,7 @@ class GifParser (object):
                 elif s == ',':
                     self.state = GifParser.IMAGE
                     continue
-                wc.log.info(wc.LOG_FILTER,
+                log.info(LOG_FILTER,
                             "unknown GIF frame %r at %r", s, self.url)
             elif self.state == GifParser.IMAGE:
                 #extent
@@ -276,16 +274,14 @@ class GifParser (object):
                 self.y0 = i16(self.read(2))
                 self.x1 = i16(self.read(2)) + self.x0
                 self.y1 = i16(self.read(2)) + self.y0
-                assert None == wc.log.debug(wc.LOG_FILTER,
-                             'GIF x0=%d, y0=%d, x1=%d, y1=%d',
-                             self.x0, self.y0, self.x1, self.y1)
+                log.debug(LOG_FILTER, 'GIF x0=%d, y0=%d, x1=%d, y1=%d',
+                    self.x0, self.y0, self.x1, self.y1)
                 flags = ord(self.read(1))
                 if (flags & 128) != 0:
                     # local color table
                     bits = (flags & 7) + 1
                     size = 3 << bits
-                    assert None == wc.log.debug(wc.LOG_FILTER,
-                                 'GIF local palette size %d', size)
+                    log.debug(LOG_FILTER, 'GIF local palette size %d', size)
                     self.read(size)
                 # image data
                 misc = ord(self.read(1))
@@ -293,8 +289,7 @@ class GifParser (object):
                 self.finish = True # not more than one image frame :)
             elif self.state == GifParser.DATA:
                 size = ord(self.read(1))
-                assert None == wc.log.debug(wc.LOG_FILTER,
-                    'GIF data size %d', size)
+                log.debug(LOG_FILTER, 'GIF data size %d', size)
                 if size:
                     self.read(size)
                     if self.removing:

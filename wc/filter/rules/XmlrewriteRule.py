@@ -20,9 +20,12 @@ Rule rewriting xml tags.
 
 import re
 import locale
-import UrlRule
-import wc.filter.html.RssHtmlFilter
-import wc.filter.html.HtmlFilter
+from . import UrlRule
+from ..xmlfilt import STARTTAG, DATA, CDATA, ENDTAG
+from ..html import RssHtmlFilter, HtmlFilter, HtmlParser
+from wc.XmlUtils import xmlquoteattr
+from ... import log, LOG_XML
+
 
 # valid replace types
 RSSHTML = 0
@@ -84,7 +87,7 @@ def match_stack (stack, selector):
     i = len(selector) - 1
     # compare from the end of the stack list
     for element in reversed(stack):
-        if element[0] != wc.filter.xmlfilt.STARTTAG:
+        if element[0] != STARTTAG:
             continue
         tag = element[1]
         attrs = element[2]
@@ -141,18 +144,17 @@ class XmlrewriteRule (UrlRule.UrlRule):
         self.selector_list = parse_xpath(self.selector)
         self.replacetypenum = replacetypenums.get(self.replacetype, RSSHTML)
         if self.replacetypenum == RSSHTML:
-            self.rsshtml = wc.filter.html.RssHtmlFilter.RssHtmlFilter()
+            self.rsshtml = RssHtmlFilter.RssHtmlFilter()
 
     def toxml (self):
         """
         Rule data as XML for storing.
         """
         s = super(XmlrewriteRule, self).toxml()
-        quote = wc.XmlUtils.xmlquoteattr
-        s += u'\n selector="%s"' % quote(self.selector)
-        s += u'\n replacetype="%s"' % quote(self.replacetype)
+        s += u'\n selector="%s"' % xmlquoteattr(self.selector)
+        s += u'\n replacetype="%s"' % xmlquoteattr(self.replacetype)
         if self.value:
-            s += u'\n value="%s"' % quote(self.value)
+            s += u'\n value="%s"' % xmlquoteattr(self.value)
         s += u">\n"+self.title_desc_toxml(prefix=u"  ")
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
@@ -183,18 +185,18 @@ class XmlrewriteRule (UrlRule.UrlRule):
         """
         if self.replacetypenum == RSSHTML:
             for item in tagbuf[pos:]:
-                if item[0] == wc.filter.xmlfilt.DATA:
+                if item[0] == DATA:
                     data = item[1]
                     data = self.filter_html(data, url, htmlrules)
                     data = self.rsshtml.filter(data, url, htmlrules)
                     item[1] = data
                     if "]]>" not in data:
-                        item[0] = wc.filter.xmlfilt.CDATA
-            tagbuf.append([wc.filter.xmlfilt.ENDTAG, tag])
+                        item[0] = CDATA
+            tagbuf.append([ENDTAG, tag])
         elif self.replacetypenum == REMOVE:
             del tagbuf[pos:]
         else:
-            wc.log.warn(wc.LOG_XML, "%s: unimplemented replace type", self)
+            log.warn(LOG_XML, "%s: unimplemented replace type", self)
 
     def filter_html (self, data, url, htmlrules):
         """
@@ -203,10 +205,10 @@ class XmlrewriteRule (UrlRule.UrlRule):
         # generate the HTML filter
         ratings = []
         localhost = "localhost"
-        filt = wc.filter.html.HtmlFilter.HtmlFilter
+        filt = HtmlFilter.HtmlFilter
         handler = filt(htmlrules, ratings, url, localhost,
                        comments=False, jscomments=False, javascript=False)
-        p = wc.filter.html.HtmlParser.HtmlParser(handler)
+        p = HtmlParser.HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = p

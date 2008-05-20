@@ -17,12 +17,10 @@
 """
 Filter according to rating rules.
 """
-
-import wc.log
-import UrlRule
-import wc.XmlUtils
-import wc.rating
+from wc.XmlUtils import xmlquote, xmlquoteattr
+from wc.rating import Rating
 from wc.rating.service import ratingservice
+from . import UrlRule
 
 
 MISSING = _("Unknown page")
@@ -43,7 +41,7 @@ class RatingRule (UrlRule.UrlRule):
         super(RatingRule, self).__init__(sid=sid, titles=titles,
                                 descriptions=descriptions, disable=disable,
                                 matchurls=matchurls, nomatchurls=nomatchurls)
-        self.rating = wc.rating.Rating()
+        self.rating = Rating()
         self.url = ""
         self.use_extern = use_extern
         self.attrnames.append('use_extern')
@@ -89,10 +87,10 @@ class RatingRule (UrlRule.UrlRule):
         if self.matchurls or self.nomatchurls:
             s += u"\n"+self.matchestoxml(prefix=u"  ")
         if self.url:
-            s += u"\n  <url>%s</url>" % wc.XmlUtils.xmlquote(self.url)
+            s += u"\n  <url>%s</url>" % xmlquote(self.url)
         for name, value in self.rating.iteritems():
-            value = wc.XmlUtils.xmlquote(str(value))
-            name = wc.XmlUtils.xmlquoteattr(name)
+            value = xmlquote(str(value))
+            name = xmlquoteattr(name)
             s += u"\n  <limit name=\"%s\">%s</limit>" % (name, value)
         s += u"\n</%s>" % self.name
         return s

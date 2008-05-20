@@ -31,9 +31,8 @@ Server connections.
 
 import socket
 
-import wc.decorators
-import wc.log
-import CodingConnection
+from .. import log, LOG_PROXY, decorators
+from . import CodingConnection
 
 
 class Server (CodingConnection.CodingConnection):
@@ -52,8 +51,7 @@ class Server (CodingConnection.CodingConnection):
         """
         The client has aborted the connection.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s Server.client_abort", self)
+        log.debug(LOG_PROXY, "%s Server.client_abort", self)
         self.client = None
         self.close()
 
@@ -73,17 +71,15 @@ class Server (CodingConnection.CodingConnection):
         """
         Make connection to remote server.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s Server.handle_connect", self)
+        log.debug(LOG_PROXY, "%s Server.handle_connect", self)
         if self.state != 'connect':
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                "%s client has closed", self)
+            log.debug(LOG_PROXY, "%s client has closed", self)
             # the client has closed, and thus this server has too
             self.connected = False
             return
         self.process_connect()
 
-    @wc.decorators.notimplemented
+    @decorators.notimplemented
     def process_connect (self):
         """
         Connect to remote server, must be implemented in subclass.

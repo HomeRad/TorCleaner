@@ -17,10 +17,10 @@
 """
 Filter a HTML stream.
 """
-
-import wc.filter
-import Filter
-from html import HtmlParser, HtmlFilter
+from . import Filter, STAGE_RESPONSE_MODIFY
+from .html.HtmlParser import HtmlParser
+from .html.HtmlFilter import HtmlFilter
+from .. import configuration
 
 
 DefaultCharset = 'iso-8859-1'
@@ -36,7 +36,7 @@ class HtmlRewriter (Filter.Filter):
         """
         Init HTML stages and mimes.
         """
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         rulenames = ['htmlrewrite', 'nocomments', 'javascript', 'rating']
         mimes = ['text/html']
         super(HtmlRewriter, self).__init__(stages=stages, rulenames=rulenames,
@@ -93,13 +93,12 @@ class HtmlRewriter (Filter.Filter):
             elif rule.name == 'javascript':
                 opts['javascript'] = True
             elif rule.name == 'rating' and rule.use_extern:
-                rating_storage = wc.configuration.config['rating_storage']
+                rating_storage = configuration.config['rating_storage']
                 if url not in rating_storage:
                     ratings.append(rule)
         # generate the HTML filter
-        handler = HtmlFilter.HtmlFilter(rewrites, ratings,
-                                        url, localhost, **opts)
-        p = HtmlParser.HtmlParser(handler)
+        handler = HtmlFilter(rewrites, ratings, url, localhost, **opts)
+        p = HtmlParser(handler)
         #htmlparser.debug(1)
         # the handler is modifying parser buffers and state
         handler.htmlparser = p

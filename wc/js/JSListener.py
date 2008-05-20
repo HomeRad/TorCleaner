@@ -18,8 +18,7 @@
 """
 JavaScript engine listener.
 """
-
-import wc.decorators
+from ..decorators import notimplemented
 
 
 class JSListener (object):
@@ -27,21 +26,21 @@ class JSListener (object):
     Define handler functions for javascript events.
     """
 
-    @wc.decorators.notimplemented
+    @notimplemented
     def js_process_data (self, data):
         """
         Handler for document.write content.
         """
         pass
 
-    @wc.decorators.notimplemented
+    @notimplemented
     def js_process_popup (self):
         """
         Handler for popup windows.
         """
         pass
 
-    @wc.decorators.notimplemented
+    @notimplemented
     def js_process_error (self, msg):
         """
         Handler for syntax errors.

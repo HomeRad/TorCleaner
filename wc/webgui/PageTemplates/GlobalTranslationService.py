@@ -17,8 +17,7 @@ Global Translation Service for providing I18n to Page Templates.
 """
 
 import re
-
-from wc.webgui.TAL.TALDefs import NAME_RE
+from ..TAL.TALDefs import NAME_RE
 
 ustr = unicode
 

@@ -27,7 +27,7 @@
 # SUCH DAMAGE.
 import time
 import heapq
-import wc.log
+from .. import log, LOG_PROXY
 
 
 timers = [] # list of (time, function)
@@ -36,8 +36,7 @@ def make_timer (delay, callback):
     """
     After DELAY seconds, run the CALLBACK function.
     """
-    assert None == wc.log.debug(wc.LOG_PROXY,
-                        "Adding %s to %d timers", callback, len(timers))
+    log.debug(LOG_PROXY, "Adding %s to %d timers", callback, len(timers))
     heapq.heappush(timers, (time.time()+delay, callback))
 
 

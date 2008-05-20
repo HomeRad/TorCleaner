@@ -17,10 +17,9 @@
 """
 JavaScript helper classes and a Spidermonkey wrapper module.
 """
-
 import re
-import wc.dns
-import wc.url
+from ..dns import resolver as dns_resolver
+from .. import url as urlutil
 
 
 def clean (script, jscomments=True):
@@ -148,14 +147,14 @@ def get_js_ver (language):
 
 def is_safe_js_url (source_url, target_url):
     """Test validity of a background JS download."""
-    source = wc.url.url_split(source_url)
-    target = wc.url.url_split(target_url)
+    source = urlutil.url_split(source_url)
+    target = urlutil.url_split(target_url)
     if target[0] and target[0].lower() not in ('http', 'https'):
         return False
     if not target[1]:
         return False
     # no redirects from external to local host
-    localhosts = wc.dns.resolver.get_default_resolver().localhosts
+    localhosts = dns_resolver.get_default_resolver().localhosts
     if source[1] not in localhosts and \
        target[1] in localhosts:
         return False

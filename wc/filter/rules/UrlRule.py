@@ -17,10 +17,9 @@
 """
 Apply rule to specific URLs.
 """
-
 import re
-import MimeRule
-import wc.XmlUtils
+from . import MimeRule
+from wc.XmlUtils import xmlquote
 
 
 class UrlRule (MimeRule.MimeRule):
@@ -95,9 +94,9 @@ class UrlRule (MimeRule.MimeRule):
         Match URL rule data as XML for storing.
         """
         m = [u"%s<matchurl>%s</matchurl>" % \
-             (prefix, wc.XmlUtils.xmlquote(r)) for r in self.matchurls]
+             (prefix, xmlquote(r)) for r in self.matchurls]
         n = [u"%s<nomatchurl>%s</nomatchurl>" % \
-             (prefix, wc.XmlUtils.xmlquote(r)) for r in self.nomatchurls]
+             (prefix, xmlquote(r)) for r in self.nomatchurls]
         return u"\n".join(m+n)
 
     def endxml (self):

@@ -17,12 +17,12 @@
 """
 URL rating storage.
 """
+from __future__ import with_statement
 import os
 import cPickle as pickle
 import urlparse
 
-import wc.log
-import wc.url
+from .. import log, LOG_FILTER, LOG_RATING, fileutil, url as urlutil
 
 
 def make_safe_url (url):
@@ -36,7 +36,7 @@ def make_safe_part (part):
     """Remove unsafe chars of url."""
     if part == '/':
         return part
-    return filter(wc.url.is_safe_char, part)
+    return filter(urlutil.is_safe_char, part)
 
 
 def split_url (url):
@@ -49,7 +49,7 @@ def split_url (url):
     # split into [scheme, host, path, query, fragment]
     parts = list(urlparse.urlsplit(url))
     if not (parts[0] and parts[1]):
-        wc.log.warn(wc.LOG_FILTER, "invalid url for rating split: %r", url)
+        log.warn(LOG_FILTER, "invalid url for rating split: %r", url)
         return []
     # fix scheme
     parts[0] += ":"
@@ -88,16 +88,13 @@ class UrlRatingStorage (object):
 
     def load (self):
         """Load pickled cache from disk."""
-        fp = file(self.filename, 'rb')
-        try:
+        with open(self.filename, 'rb') as fp:
             self.cache = pickle.load(fp)
-        finally:
-            fp.close()
         # remove invalid entries
         toremove = []
         for url in self.cache:
             if url != make_safe_url(url):
-                wc.log.warn(wc.LOG_RATING, "Invalid rating url %r", url)
+                log.warn(LOG_RATING, "Invalid rating url %r", url)
                 toremove.append(url)
         if toremove:
             for url in toremove:
@@ -108,7 +105,7 @@ class UrlRatingStorage (object):
         """Write pickled cache to disk."""
         def callback (fp, obj):
             pickle.dump(obj, fp, 1)
-        wc.fileutil.write_file(self.filename, self.cache, callback=callback)
+        fileutil.write_file(self.filename, self.cache, callback=callback)
 
     def __setitem__ (self, url, rating):
         """Add rating for given url."""

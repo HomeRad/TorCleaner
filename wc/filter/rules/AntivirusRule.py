@@ -17,8 +17,7 @@
 """
 Filter viruses.
 """
-
-import UrlRule
+from . import UrlRule
 
 
 class AntivirusRule (UrlRule.UrlRule):

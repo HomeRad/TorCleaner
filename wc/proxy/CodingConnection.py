@@ -18,31 +18,26 @@
 Handle encoding and decoding.
 """
 
-import cStringIO as StringIO
-import wc.log
-import StatefulConnection
-from wc.decorators import notimplemented
+from cStringIO import StringIO
+from .. import log, LOG_PROXY, decorators
+from . import StatefulConnection
+from ..http.header import WcMessage
 
 
 class CodingConnection (StatefulConnection.StatefulConnection):
-    """
-    Connection storing a list of decoders and encoders.
-    """
+    """Connection storing a list of decoders and encoders."""
 
     def reset (self):
-        """
-        Reset the connection data and status.
-        """
+        """Reset the connection data and status."""
         super(CodingConnection, self).reset()
         # Handle each of these, left to right
         self.decoders = []
         self.encoders = []
         # Chunk trailer store
-        self.chunktrailer = StringIO.StringIO()
+        self.chunktrailer = StringIO()
 
     def flush_coders (self, coders, data=""):
-        """
-        Flush given de- or encoders.
+        """Flush given de- or encoders.
 
         @param data: initial data to process (default: empty string)
         @ptype data: string
@@ -50,40 +45,34 @@ class CodingConnection (StatefulConnection.StatefulConnection):
         @rtype: string
         """
         while coders:
-            assert None == wc.log.debug(wc.LOG_PROXY, "flush %s", coders[0])
+            log.debug(LOG_PROXY, "flush %s", coders[0])
             data = coders[0].process(data)
             data += coders[0].flush()
             del coders[0]
         return data
 
-    @notimplemented
+    @decorators.notimplemented
     def filter_headers (self, headers):
-        """
-        Filter HTTP headers.
+        """Filter HTTP headers.
 
         @param headers: the headers to filter
-        @ptype headers: wc.http.header.WcMessage
+        @ptype headers: WcMessage
         @return: filtered headers
-        @rtype: wc.http.header.WcMessage
+        @rtype: WcMessage
         """
         pass
 
     def write_trailer (self, data):
-        """
-        Store data of a chunk trailer.
-        """
+        """Store data of a chunk trailer."""
         self.chunktrailer.write(data)
 
     def handle_trailer (self):
-        """
-        Process a completed chunk trailer. This method must be called
-        only once.
-        """
+        """Process a completed chunk trailer. This method must be called
+        only once."""
         self.chunktrailer.seek(0)
-        headers = wc.http.header.WcMessage(self.chunktrailer)
+        headers = WcMessage(self.chunktrailer)
         # filter headers
         headers = self.filter_headers(headers)
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "chunk trailer headers %s", headers)
+        log.debug(LOG_PROXY, "chunk trailer headers %s", headers)
         self.chunktrailer.close()
         return headers

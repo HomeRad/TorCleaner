@@ -18,8 +18,8 @@
 Numeric constants for XML/HTML document parts.
 """
 
-import wc.log
-import wc.XmlUtils
+from ... import log, LOG_XML
+from wc.XmlUtils import xmlquote, xmlquoteattr
 
 # tag ids
 STARTTAG = 0
@@ -36,15 +36,13 @@ def _startout (out, item, start=u"<", end=u">"):
     """
     Write given item data on output stream as HTML start tag.
     """
-    quote = wc.XmlUtils.xmlquote
-    quoteattr = wc.XmlUtils.xmlquoteattr
     out.write(start)
-    out.write(quote(item[1]))
+    out.write(xmlquote(item[1]))
     for name, val in item[2].iteritems():
         if val is None:
-            out.write(u' %s' % quote(name))
+            out.write(u' %s' % xmlquote(name))
         else:
-            out.write(u' %s="%s"' % (quote(name), quoteattr(val)))
+            out.write(u' %s="%s"' % (xmlquote(name), xmlquoteattr(val)))
     out.write(end)
 
 
@@ -54,7 +52,7 @@ def tagbuf2data (tagbuf, out, entities=None):
     """
     for item in tagbuf:
         if item[0] == DATA:
-            out.write(wc.XmlUtils.xmlquote(item[1]))
+            out.write(xmlquote(item[1]))
         elif item[0] == CDATA:
             # ']]>' must not occur in item[1]
             out.write(u"<![CDATA[%s]]>" % item[1])
@@ -71,5 +69,5 @@ def tagbuf2data (tagbuf, out, entities=None):
         elif item[0] == INSTRUCTION:
             out.write(u"<?%s %s?>\n" % (item[1], item[2]))
         else:
-            wc.log.error(wc.LOG_FILTER, "unknown buffer element %s", item[0])
+            log.error(LOG_XML, "unknown buffer element %s", item[0])
     return out

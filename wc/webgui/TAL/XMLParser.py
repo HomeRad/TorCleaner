@@ -16,8 +16,7 @@
 Generic expat-based XML parser base class.
 """
 
-import wc
-import wc.log
+from ... import log, LOG_TAL
 
 class XMLParser (object):
 
@@ -52,7 +51,7 @@ class XMLParser (object):
             try:
                 self.parser.ordered_attributes = self.ordered_attributes
             except AttributeError:
-                wc.log.info(wc.LOG_TAL, "Can't set ordered_attributes")
+                log.info(LOG_TAL, "Can't set ordered_attributes")
                 self.ordered_attributes = 0
         for name in self.handler_names:
             method = getattr(self, name, None)
@@ -60,8 +59,7 @@ class XMLParser (object):
                 try:
                     setattr(p, name, method)
                 except AttributeError:
-                    wc.log.error(wc.LOG_TAL,
-                                 "Can't set expat handler %s" % name)
+                    log.error(LOG_TAL, "Can't set expat handler %s" % name)
                     pass
 
     def createParser (self, encoding=None):

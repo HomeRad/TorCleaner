@@ -118,7 +118,7 @@ class TALGenerator (object):
                     output.append(("rawtextColumn", (text, i)))
                 else:
                     output.append(("rawtextOffset", (text, len(text))))
-            if opcode != None:
+            if opcode is not None:
                 output.append(self.optimizeArgsList(item))
             collect = []
         return self.optimizeCommonTriple(output)

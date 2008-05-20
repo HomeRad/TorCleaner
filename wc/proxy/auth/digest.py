@@ -27,12 +27,10 @@ import sha
 import random
 import base64
 import time
-
-from parse import parse_auth
-
-import wc.log
+from .parse import parse_auth
+from ... import log, LOG_AUTH
 # the default realm
-from wc.proxy.auth import wc_realm
+from . import wc_realm
 
 
 random.seed()
@@ -90,31 +88,31 @@ def check_digest_credentials (credentials, **attrs):
     Check digest credentials.
     """
     if not check_digest_values(credentials):
-        wc.log.info(wc.LOG_AUTH, "digest wrong values")
+        log.info(LOG_AUTH, "digest wrong values")
         return False
     # note: opaque value _should_ be there, but is not in apache mod_digest
     opaque = credentials.get("opaque")
     if opaque != wc_opaque:
-        wc.log.info(wc.LOG_AUTH, "digest wrong opaque %s!=%s",
+        log.info(LOG_AUTH, "digest wrong opaque %s!=%s",
                     opaque, wc_opaque)
         return False
     realm = credentials["realm"]
     if realm != wc_realm:
-        wc.log.info(wc.LOG_AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
+        log.info(LOG_AUTH, "digest wrong realm %s!=%s", realm, wc_realm)
         return False
     nonce = credentials["nonce"]
     if nonce not in nonces:
-        wc.log.info(wc.LOG_AUTH, "digest wrong nonce %s", nonce)
+        log.info(LOG_AUTH, "digest wrong nonce %s", nonce)
         return False
     uri = credentials['uri']
     if uri != attrs['uri']:
-        wc.log.info(wc.LOG_AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
+        log.info(LOG_AUTH, "digest wrong uri %s!=%s", uri, attrs['uri'])
         return False
     # compare responses
     response = credentials.get('response')
     our_response = get_response_digest(credentials, **attrs)[2]
     if response != our_response:
-        assert None == wc.log.debug(wc.LOG_AUTH,
+        log.debug(LOG_AUTH,
             "digest wrong response %s!=%s", response, our_response)
         return False
     return True
@@ -127,16 +125,16 @@ def check_digest_values (auth):
     """
     # check data
     if auth.get('algorithm') not in ("MD5", "MD5-sess", "SHA", None):
-        wc.log.error(wc.LOG_AUTH, "unsupported digest algorithm value %r",
+        log.error(LOG_AUTH, "unsupported digest algorithm value %r",
                      auth['algorithm'])
         return False
     if auth.get('qop') not in ("auth", "auth-int", None):
-        wc.log.error(wc.LOG_AUTH, "unsupported digest qop value %r",
+        log.error(LOG_AUTH, "unsupported digest qop value %r",
                      auth['qop'])
         return False
     for key in ('realm', 'nonce'):
         if key not in auth:
-            wc.log.error(wc.LOG_AUTH, "missing digest challenge value for %r",
+            log.error(LOG_AUTH, "missing digest challenge value for %r",
                          key)
             return False
     return True
@@ -152,7 +150,7 @@ def get_digest_credentials (challenge, **attrs):
     try:
         password = base64.b64decode(attrs['password_b64'])
     except TypeError:
-        wc.log.info(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
+        log.info(LOG_AUTH, "bad encoded password at %r", attrs['uri'])
         password = ""
     nc, cnonce, response_digest = get_response_digest(challenge, **attrs)
     # construct credentials
@@ -205,7 +203,7 @@ def get_response_digest (challenge, **attrs):
     try:
         password = base64.b64decode(attrs['password_b64'])
     except TypeError:
-        wc.log.info(wc.LOG_AUTH, "bad encoded password at %r", attrs['uri'])
+        log.info(LOG_AUTH, "bad encoded password at %r", attrs['uri'])
         password = ""
     A1 = "%s:%s:%s" % (username, challenge['realm'], password)
     HA1 = encode_digest(H(A1))

@@ -18,14 +18,13 @@ HTML- and XML-based template objects using TAL, TALES, and METAL.
 """
 
 import sys
-
-from wc.webgui.TAL.TALParser import TALParser
-from wc.webgui.TAL.HTMLTALParser import HTMLTALParser
-from wc.webgui.TAL.TALGenerator import TALGenerator
+from ..TAL.TALParser import TALParser
+from ..TAL.HTMLTALParser import HTMLTALParser
+from ..TAL.TALGenerator import TALGenerator
 # Do not use cStringIO here!  It's not unicode aware. :(
-from wc.webgui.TAL.TALInterpreter import TALInterpreter
-from wc.webgui import ZTUtils
-from Expressions import getEngine
+from ..TAL.TALInterpreter import TALInterpreter
+from .. import ZTUtils
+from .Expressions import getEngine
 
 
 class PageTemplate (object):

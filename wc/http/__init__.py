@@ -19,8 +19,9 @@ HTTP related utility functions.
 """
 
 import re
-import wc.log
 import BaseHTTPServer
+from .. import log, LOG_PROXY
+from .date import parse_http_date
 
 responses = BaseHTTPServer.BaseHTTPRequestHandler.responses
 
@@ -54,12 +55,11 @@ def parse_http_response (response, url):
     if len(parts) == 2:
         parts += ['Bummer']
     elif len(parts) != 3:
-        wc.log.info(wc.LOG_PROXY, "invalid response %r from %r",
-                    response, url)
+        log.info(LOG_PROXY, "invalid response %r from %r", response, url)
         parts = ['HTTP/1.0', "200", 'OK']
     if not is_http_status(parts[1]):
-        wc.log.info(wc.LOG_PROXY, "invalid http statuscode %r from %r",
-                    parts[1], url)
+        log.info(LOG_PROXY, "invalid http statuscode %r from %r",
+            parts[1], url)
         parts[1] = "200"
     parts[1] = int(parts[1])
     if parts[1] in responses:
@@ -118,7 +118,7 @@ def parse_http_warning (warning):
                 warndate, warning = split_quoted_string(warning)
             else:
                 warndate = warning
-            warndate = wc.http.date.parse_http_date(warndate)
+            warndate = parse_http_date(warndate)
         else:
             warndate = None
     except (ValueError, OverflowError):

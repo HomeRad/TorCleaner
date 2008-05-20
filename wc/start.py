@@ -19,15 +19,13 @@ Proxy start function.
 """
 
 import os
-import wc
-import configuration
-import log
-import fileutil
-from proxy import mainloop, timer, dns_lookups
-import filter.VirusFilter
+from . import (configuration, log, fileutil, ConfigDir, initlog,
+    HasProfile, HasPsyco, LOG_PROXY)
+from .proxy import mainloop, timer, dns_lookups
+from .filter import VirusFilter
 
 
-def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
+def wstartfunc (handle=None, confdir=ConfigDir, filelogs=True,
                 profiling=False):
     """
     Initalize configuration, start psyco compiling and the proxy loop.
@@ -37,16 +35,16 @@ def wstartfunc (handle=None, confdir=wc.ConfigDir, filelogs=True,
     logconf = os.path.join(confdir, "logging.conf")
     def checklog ():
         if fileutil.has_changed(logconf):
-            wc.initlog(filename=logconf, filelogs=filelogs)
+            initlog(filename=logconf, filelogs=filelogs)
         # check regularly for a changed logging configuration
         timer.make_timer(60, checklog)
     checklog()
     # read configuration
     config = configuration.init(confdir)
-    filter.VirusFilter.init_clamav_conf(config['clamavconf'])
+    VirusFilter.init_clamav_conf(config['clamavconf'])
     config.init_filter_modules()
     dns_lookups.init_resolver()
-    if profiling and wc.HasProfile:
+    if profiling and HasProfile:
         _profile = "webcleaner.prof"
         run = True
         if os.path.exists(_profile):
@@ -77,7 +75,7 @@ def load_psyco ():
     """
     Load psyco library for speedup.
     """
-    if wc.HasPsyco:
+    if HasPsyco:
         import psyco
         # psyco >= 1.4.0 final is needed
         if psyco.__version__ >= 0x10400f0:
@@ -85,7 +83,7 @@ def load_psyco ():
             psyco.profile(memory=10000, memorymax=100000)
         else:
             # warn about old psyco version
-            log.warn(wc.LOG_PROXY,
+            log.warn(LOG_PROXY,
          _("Psyco is installed but not used since the version is too old.\n"
            "Psyco >= 1.4 is needed."))
 
@@ -100,9 +98,9 @@ def restart ():
     start_cmd = "runsvctrl up %s" % service
     status = os.system(stop_cmd)
     if status != 0:
-        log.error(wc.LOG_PROXY,
+        log.error(LOG_PROXY,
                      "Stop command %r failed: %s", stop_cmd, str(status))
     status = os.system(start_cmd)
     if status != 0:
-        log.error(wc.LOG_PROXY,
+        log.error(LOG_PROXY,
                      "Start command %r failed: %s", start_cmd, str(status))

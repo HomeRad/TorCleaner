@@ -30,6 +30,7 @@ Implements the minimal amount of work needed to inflate an input stream.
 Example url is http://groups.yahoo.com/.
 """
 
+from ... import log, LOG_PROXY
 import zlib
 
 
@@ -67,10 +68,8 @@ class DeflateStream (object):
             return self.decompressor.decompress(s)
         except zlib.error:
             import sys
-            import wc
-            import wc.log
             msg = str(sys.exc_info()[1])
-            wc.log.info(wc.LOG_PROXY,
+            log.info(LOG_PROXY,
                         _("zlib error: %s, disabling deflate"), msg)
             self.error = True
             return s

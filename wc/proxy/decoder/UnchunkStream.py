@@ -48,8 +48,7 @@ trailer        = *(entity-header CRLF)
 """
 
 import re
-import wc.log
-import wc.http.header
+from ... import log, LOG_PROXY, LOG_NET
 
 
 match_bytes = re.compile(r"^(?P<bytes>[0-9a-fA-F]+)(;.+)?$").search
@@ -108,8 +107,7 @@ class UnchunkStream (object):
                             # chunklen is hex
                             self.bytes_remaining = int(mo.group('bytes'), 16)
                         else:
-                            wc.log.info(wc.LOG_PROXY,
-                                        "invalid chunk size %r", line)
+                            log.info(LOG_PROXY, "invalid chunk size %r", line)
                             self.bytes_remaining = 0
                         #print 'chunk len:', self.bytes_remaining
                         if self.bytes_remaining == 0:
@@ -129,8 +127,7 @@ class UnchunkStream (object):
                 if self.bytes_remaining == 0:
                     # We reached the end of the chunk
                     self.bytes_remaining = None
-        assert None == wc.log.debug(wc.LOG_NET,
-            "unchunked %d bytes: %r", len(s), s)
+        log.debug(LOG_NET, "unchunked %d bytes: %r", len(s), s)
         return s
 
     def read_trailer (self):
@@ -155,6 +152,5 @@ class UnchunkStream (object):
         """
         s = self.buf
         self.buf = ''
-        assert None == wc.log.debug(wc.LOG_NET,
-                            "flush unchunked %d bytes: %r", len(s), s)
+        log.debug(LOG_NET, "flush unchunked %d bytes: %r", len(s), s)
         return s

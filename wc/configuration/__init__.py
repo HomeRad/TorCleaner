@@ -24,16 +24,11 @@ import os
 import sets
 import stat
 import glob
-
-import wc.log
-import wc.ip
-import wc.decorators
-import wc.strformat
-import wc.fileutil
-import wc.rating.service
-import confparse
-import ratingstorage
-from wc.XmlUtils import xmlquoteattr
+from . import ratingstorage
+from ..XmlUtils import xmlquoteattr
+from ..url import match_url
+from .. import (log, LOG_PROXY, LOG_FILTER, decorators, strformat, fileutil,
+    ip, ConfigDir, HasSsl, Url, proxy)
 
 ConfigCharset = "iso-8859-1"
 
@@ -42,10 +37,8 @@ config = None
 # if config is about to be reloaded
 pending_reload = False
 
-def init (confdir=wc.ConfigDir):
-    """
-    Initialize and load the configuration.
-    """
+def init (confdir=ConfigDir):
+    """Initialize and load the configuration."""
     global config
     config = Configuration(confdir)
     return config
@@ -56,37 +49,32 @@ if os.name == 'posix':
     _signum = signal.SIGHUP
 else:
     _signum = signal.NSIG
-@wc.decorators.signal_handler(_signum)
+@decorators.signal_handler(_signum)
 def sighup_reload_config (signum, frame):
-    """
-    Support reload on posix systems.
-    Store timer for reloading configuration data.
-    """
+    """Support reload on posix systems.
+    Store timer for reloading configuration data."""
     global pending_reload
     if not pending_reload:
         pending_reload = True
-        import wc.proxy.timer
-        wc.proxy.timer.make_timer(1, reload_config)
+        from ..proxy import timer
+        timer.make_timer(1, reload_config)
 
 
 def reload_config ():
-    """
-    Reload configuration.
-    """
+    """Reload configuration."""
     global pending_reload
     config.reset()
     config.read_proxyconf()
     config.read_filterconf()
     config.init_filter_modules()
-    wc.proxy.dns_lookups.init_resolver()
-    wc.filter.VirusFilter.init_clamav_conf(config['clamavconf'])
+    proxy.dns_lookups.init_resolver()
+    from ..filter import VirusFilter
+    VirusFilter.init_clamav_conf(config['clamavconf'])
     pending_reload = False
 
 
 def proxyconf_file (confdir):
-    """
-    Return proxy configuration filename.
-    """
+    """Return proxy configuration filename."""
     return os.path.join(confdir, "webcleaner.conf")
 
 
@@ -138,9 +126,7 @@ rewriting_filter_modules = [
 ]
 
 class Configuration (dict):
-    """
-    Hold all configuration data, inclusive filter rules.
-    """
+    """Hold all configuration data, inclusive filter rules."""
 
     def __init__ (self, confdir):
         """
@@ -157,21 +143,16 @@ class Configuration (dict):
         self.read_filterconf()
 
     def check_ssl_certificates (self):
-        """
-        Check existance of SSL support and generate certificates if
+        """Check existance of SSL support and generate certificates if
         needed. This is necessary since SSL support can be installed
-        after WebCleaner.
-        """
-        import wc
-        if wc.HasSsl and self["sslgateway"]:
-            import wc.proxy.ssl
-            if not wc.proxy.ssl.exist_certificates(self.configdir):
-                wc.proxy.ssl.create_certificates(self.configdir)
+        after WebCleaner."""
+        if HasSsl and self["sslgateway"]:
+            from ..proxy import ssl
+            if not ssl.exist_certificates(self.configdir):
+                ssl.create_certificates(self.configdir)
 
     def reset (self):
-        """
-        Reset to default values.
-        """
+        """Reset to default values."""
         self['configversion'] = '0.10'
         # The bind address specifies on which address the socket should
         # listen.
@@ -210,30 +191,28 @@ class Configuration (dict):
         self['clamavconf'] = ""
         # in development mode some values have different defaults
         self['development'] = int(os.environ.get("WC_DEVELOPMENT", "0"))
-        self['baseurl'] = wc.Url
+        self['baseurl'] = Url
         self['try_google'] = 0
-        self['rating_service'] = wc.rating.service.WebCleanerService()
+        from ..rating import service
+        self['rating_service'] = service.WebCleanerService()
         self['rating_storage'] = ratingstorage.UrlRatingStorage(self.configdir)
         # delete all registered sids
-        from wc.filter.rules import delete_registered_sids
+        from ..filter.rules import delete_registered_sids
         delete_registered_sids()
 
     def read_proxyconf (self):
-        """
-        Read proxy configuration.
-        """
-        confparse.WConfigParser(self.configfile, self).parse()
+        """Read proxy configuration."""
+        from .confparse import WConfigParser
+        WConfigParser(self.configfile, self).parse()
         # make sure that usernames and passwords are ASCII, or there
         # can be encoding errors
         for name in ascii_values:
-            if not wc.strformat.is_ascii(self[name]):
+            if not strformat.is_ascii(self[name]):
                 msg = "The %r configuration value must be ASCII." % name
                 raise TypeError(msg)
 
     def write_proxyconf (self):
-        """
-        Write proxy configuration.
-        """
+        """Write proxy configuration."""
         lines = []
         lines.append('<?xml version="1.0" encoding="%s"?>' % ConfigCharset)
         lines.append('<!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">')
@@ -268,19 +247,18 @@ class Configuration (dict):
             lines.append('<filter name="%s"/>' % xmlquoteattr(key))
         lines.append('</webcleaner>')
         content = os.linesep.join(lines)
-        wc.fileutil.write_file(self.configfile, content)
+        fileutil.write_file(self.configfile, content)
 
     def read_filterconf (self):
-        """
-        Read filter rules.
-        """
-        from wc.filter.rules import generate_sids
-        from wc.filter.rules.FolderRule import recalc_up_down
+        """Read filter rules."""
+        from ..filter.rules import generate_sids
+        from ..filter.rules.FolderRule import recalc_up_down
         for filename in filterconf_files(self.filterdir):
             if os.stat(filename)[stat.ST_SIZE] == 0:
-                wc.log.info(wc.LOG_PROXY, "Skipping empty file %r", filename)
+                log.info(LOG_PROXY, "Skipping empty file %r", filename)
                 continue
-            p = confparse.ZapperParser(filename)
+            from .confparse import ZapperParser
+            p = ZapperParser(filename)
             p.parse()
             self['folderrules'].append(p.folder)
         # sort folders according to oid
@@ -303,14 +281,13 @@ class Configuration (dict):
                 key = rule.name
                 if key in single_rules:
                     if key in enabled:
-                        wc.log.warn(wc.LOG_FILTER,
-                                    "Duplicate %r rule:\n%s.", key, rule)
+                        log.warn(LOG_FILTER,
+                            "Duplicate %r rule:\n%s.", key, rule)
                     else:
                         enabled.add(rule.name)
 
     def merge_folder (self, folder, dryrun=False, log=None):
-        """
-        Merge given folder data into config
+        """Merge given folder data into config
 
         @return: True if something has changed
         """
@@ -330,28 +307,26 @@ class Configuration (dict):
         return chg
 
     def write_filterconf (self):
-        """
-        Write filter rules.
-        """
+        """Write filter rules."""
         for folder in self['folderrules']:
             folder.write()
 
     def init_filter_modules (self):
-        """
-        Go through list of rules and store them in the filter
+        """Go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects.
         """
         # reset filter lists
-        for stage in wc.filter.FilterStages:
+        from .. import filter
+        for stage in filter.FilterStages:
             self['filterlist'][stage] = []
         self['filtermodules'] = []
         self['mime_content_rewriting'] = sets.Set()
         for filtername in self['filters']:
             # import filter module
-            exec "from wc.filter import %s" % filtername
+            exec "from ..filter import %s" % filtername
             # Filter class has same name as module.
-            clazz = getattr(getattr(wc.filter, filtername), filtername)
+            clazz = getattr(getattr(filter, filtername), filtername)
             if not clazz.enable:
                 # The filter is not enabled, probably due to missing
                 # dependencies.
@@ -371,21 +346,18 @@ class Configuration (dict):
                         instance.addrule(rule)
             for stage in instance.stages:
                 self['filterlist'][stage].append(instance)
-        for filters in self['filterlist'].itervalues():
+        for filters in self['filterlist'].values():
             # see Filter.__cmp__ on how sorting is done
             filters.sort()
 
     def nofilter (self, url):
-        """
-        Decide whether to filter this url or not.
+        """Decide whether to filter this url or not.
 
         @return: True if the request must not be filtered, else False
         """
-        return wc.url.match_url(url, self['nofilterhosts'])
+        return match_url(url, self['nofilterhosts'])
 
     def allowed (self, host):
-        """
-        Return True if the host is allowed for proxying, else False.
-        """
+        """Return True if the host is allowed for proxying, else False."""
         hostset = self['allowedhostset']
-        return wc.ip.host_in_set(host, hostset[0], hostset[1])
+        return ip.host_in_set(host, hostset[0], hostset[1])

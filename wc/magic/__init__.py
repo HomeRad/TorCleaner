@@ -21,14 +21,13 @@ Magic - Python module to classify like the 'file' command using a
 'magic' file
 See: 'man 4 magic' and 'man file'
 """
-
+from __future__ import with_statement
 import os
 import re
 import cPickle
 import pickle
-
-import wc.configuration
-import convert
+from .. import configuration, fileutil
+from . import convert
 
 unsupported_types = ['text/css']
 
@@ -42,7 +41,7 @@ def classify (fp, magicdir=None):
     if _magic is None:
         # initialize mime data
         if magicdir is None:
-            magicdir = wc.configuration.config.configdir
+            magicdir = configuration.config.configdir
         magicfile = os.path.join(magicdir, "magic.mime")
         assert os.path.exists(magicfile)
         magiccache = magicfile + ".mgc"
@@ -112,7 +111,7 @@ class Magic (object):
         self._lengthdict = {}
         self._mimedict = {}
         do_read = (not os.path.exists(cachename)) or \
-	  (wc.fileutil.get_mtime(filename) > wc.fileutil.get_mtime(cachename))
+          (fileutil.get_mtime(filename) > fileutil.get_mtime(cachename))
         if do_read:
             self.read_magic(filename)
             self.write_cache(cachename)
@@ -173,11 +172,11 @@ class Magic (object):
             match_add = self.se_offset_add(text)
             if match_abs:
                 offset_relatif = convert.convert(match_abs.group(1))
-                if match_abs.group(2) != None:
+                if match_abs.group(2) is not None:
                     offset_type = match_abs.group(2)[1]
             elif match_add:
                 offset_relatif = convert.convert(match_add.group(1))
-                if match_add.group(2) != None:
+                if match_add.group(2) is not None:
                     offset_type = match_add.group(2)[1]
                 if match_add.group(3) == '-':
                     offset_delta = 0L - convert.convert(match_add.group(4))
@@ -321,11 +320,8 @@ class Magic (object):
     def read_magic (self, magic_file):
         self.magic = []
 
-        f = file(magic_file, 'rb')
-        try:
+        with open(magic_file, 'rb') as f:
             self.read_magic_file(f)
-        finally:
-            f.close()
 
     def read_magic_file (self, f):
         self.index = 0
@@ -381,8 +377,7 @@ class Magic (object):
         self.entries = self.index
 
     def write_cache (self, name):
-        f = file(name, 'wb')
-        try:
+        with open(name, 'wb') as f:
             dump(self._leveldict, f)
             dump(self._direct, f)
             dump(self._offset_relatif, f)
@@ -396,12 +391,9 @@ class Magic (object):
             dump(self._datadict, f)
             dump(self._lengthdict, f)
             dump(self._mimedict, f)
-        finally:
-            f.close()
 
     def read_cache (self, name):
-        f = file(name, 'rb')
-        try:
+        with open(name, 'rb') as f:
             self._leveldict = cPickle.load(f)
             self._direct = cPickle.load(f)
             self._offset_relatif = cPickle.load(f)
@@ -416,8 +408,6 @@ class Magic (object):
             self._lengthdict = cPickle.load(f)
             self._mimedict = cPickle.load(f)
             self.entries = len(self._leveldict)
-        finally:
-            f.close()
 
     # classify subfuntions
 

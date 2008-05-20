@@ -40,41 +40,33 @@ import struct
 import re
 import pprint
 
-import wc.log
-import wc.proxy
-import timer
-import Connection
-import wc.dns.resolver
-import wc.dns.rdataclass
-import wc.dns.rdatatype
-import wc.dns.message
+from .. import log, LOG_DNS, strformat, ip as iputil
+from ..dns import (resolver as dns_resolver, name as dns_name,
+    message as dns_message, exception as dns_exception,
+    rcode as dns_rcode, rdatatype as dns_rdatatype,
+    rdataclass as dns_rdataclass, flags as dns_flags)
+from . import timer, Connection
 
 
 resolver = None
 
 def init_resolver ():
-    """
-    Initialize DNS resolver config. Must be called on startup.
-    Should be called on SIGHUP (config reload).
-    """
+    """Initialize DNS resolver config. Must be called on startup.
+    Should be called on SIGHUP (config reload)."""
     global resolver
-    resolver = wc.dns.resolver.Resolver()
+    resolver = dns_resolver.Resolver()
 
 
 def background_lookup (hostname, callback):
-    """
-    Return immediately, but call callback with a DnsResponse object later.
+    """Return immediately, but call callback with a DnsResponse object later.
     """
     # Hostnames are case insensitive, so canonicalize for lookup purposes
-    assert None == wc.log.debug(wc.LOG_DNS,
-        'background_lookup %r', hostname.lower())
+    log.debug(LOG_DNS, 'background_lookup %r', hostname.lower())
     DnsExpandHostname(hostname.lower(), callback)
 
 
 def coerce_hostname (hostname):
-    """
-    Assure that hostname is a plain string.
-    """
+    """Assure that hostname is a plain string."""
     if isinstance(hostname, unicode):
         # XXX encode?
         hostname = str(hostname)
@@ -84,51 +76,38 @@ def coerce_hostname (hostname):
 
 
 class DnsResponse (object):
-    """
-    A DNS answer can be:
+    """A DNS answer can be:
      - ('found', [ipaddrs])
      - ('error', why-str)
      - ('redirect', new-hostname)
     """
 
     def __init__ (self, kind, data):
-        """
-        Initialize response data.
-        """
+        """Initialize response data."""
         self.kind = kind
         self.data = data
 
     def __repr__ (self):
-        """
-        Object representation.
-        """
+        """Object representation."""
         return "DnsResponse(%s, %s)" % (self.kind, self.data)
 
     def isError (self):
-        """
-        Return True if dns response is an error.
-        """
+        """Return True if dns response is an error."""
         return self.kind == 'error'
 
     def isFound (self):
-        """
-        Return True if dns response is found valid.
-        """
+        """Return True if dns response is found valid."""
         return self.kind == 'found'
 
     def isRedirect (self):
-        """
-        Return True if dns response is a redirection.
-        """
+        """Return True if dns response is a redirection."""
         return self.kind == 'redirect'
 
 
 has_whitespace = re.compile(r'\s').search
 
 class DnsExpandHostname (object):
-    """
-    Try looking up a hostname and its expansions.
-    """
+    """Try looking up a hostname and its expansions."""
 
     # This routine calls DnsCache to do the individual lookups
     def __init__ (self, hostname, callback):
@@ -140,7 +119,7 @@ class DnsExpandHostname (object):
         if ".." in hostname:
             # another possible typo
             hostname = re.sub(r'\.\.+', '.', hostname)
-        if wc.ip.is_valid_ip(hostname):
+        if iputil.is_valid_ip(hostname):
             # it is already an ip adress
             callback(hostname, DnsResponse('found', [hostname]))
             return
@@ -166,7 +145,7 @@ class DnsExpandHostname (object):
             timer.make_timer(self.delay, self.handle_issue_request)
 
     def handle_issue_request (self):
-        assert None == wc.log.debug(wc.LOG_DNS, 'issue_request')
+        log.debug(LOG_DNS, 'issue_request')
         # Issue one DNS request, and set up a timer to issue another
         if self.requests and self.callback:
             hostname = self.requests[0]
@@ -180,8 +159,7 @@ class DnsExpandHostname (object):
                 timer.make_timer(self.delay, self.handle_issue_request)
 
     def handle_dns (self, hostname, answer):
-        assert None == wc.log.debug(wc.LOG_DNS,
-            'handle_dns %r %s', hostname, answer)
+        log.debug(LOG_DNS, 'handle_dns %r %s', hostname, answer)
         if not self.callback:
             # Already handled this query
             return
@@ -218,10 +196,8 @@ class DnsExpandHostname (object):
 
 
 class DnsCache (object):
-    """
-    Provides a lookup function that will either get a value from the cache
-    or initiate a DNS lookup, fill the cache, and return that value.
-    """
+    """Provides a lookup function that will either get a value from the cache
+    or initiate a DNS lookup, fill the cache, and return that value."""
     # lookup() can create zero or one DnsLookupHostname objects
 
     ValidCacheEntryExpires = 1800
@@ -238,9 +214,7 @@ class DnsCache (object):
         return pprint.pformat(self.cache)
 
     def read_localhosts (self):
-        """
-        Fill DnsCache with /etc/hosts information.
-        """
+        """Fill DnsCache with /etc/hosts information."""
         if os.name == 'posix':
             filename = '/etc/hosts'
         elif os.name == 'nt':
@@ -274,8 +248,7 @@ class DnsCache (object):
                 self.expires[name] = sys.maxint
 
     def lookup (self, hostname, callback):
-        assert None == wc.log.debug(wc.LOG_DNS,
-            'dnscache lookup %r', hostname)
+        log.debug(LOG_DNS, 'dnscache lookup %r', hostname)
         if hostname[-1:] == '.':
             # We should just remove the trailing '.'
             DnsResponse('redirect', hostname[:-1])
@@ -284,8 +257,7 @@ class DnsCache (object):
         if self.cache.has_key(hostname):
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
-                assert None == wc.log.debug(wc.LOG_DNS,
-                    'cached! %r', hostname)
+                log.debug(LOG_DNS, 'cached! %r', hostname)
                 callback(hostname, self.cache[hostname])
                 return
             elif not self.cache[hostname].isError():
@@ -321,9 +293,7 @@ class DnsCache (object):
 
 
 class DnsLookupHostname (object):
-    """
-    Perform DNS lookup on many nameservers.
-    """
+    """Perform DNS lookup on many nameservers."""
     # Use a DnsLookupConnection per nameserver
 
     # We start working with one nameserver per second, as long as we
@@ -387,9 +357,7 @@ class DnsLookupHostname (object):
 dns_accepts_tcp = {}
 
 class DnsLookupConnection (Connection.Connection):
-    """
-    Look up a name by contacting a single nameserver..
-    """
+    """Look up a name by contacting a single nameserver."""
     # Switch from UDP to TCP after some time
     PORT = 53
     TIMEOUT = 2 # Resend the request every second
@@ -406,8 +374,7 @@ class DnsLookupConnection (Connection.Connection):
         except socket.error:
             # We couldn't even connect .. bah!
             e = sys.exc_info()[1]
-            assert None == wc.log.debug(wc.LOG_DNS,
-                                "%s connect error %s", self, str(e))
+            log.debug(LOG_DNS, "%s connect error %s", self, str(e))
             callback(hostname,
                      DnsResponse('error', 'could not connect to DNS server'))
             self.callback = None
@@ -447,11 +414,10 @@ class DnsLookupConnection (Connection.Connection):
             dns_accepts_tcp[self.nameserver] = True
         try:
             self.send_dns_request()
-        except wc.dns.exception.DNSException:
+        except dns_exception.DNSException:
             if self.callback:
                 e = sys.exc_info()[1]
-                assert None == wc.log.debug(wc.LOG_DNS,
-                                    "%s DNS error %s", self, str(e))
+                log.debug(LOG_DNS, "%s DNS error %s", self, str(e))
                 self.callback(self.hostname,
                               DnsResponse('error', 'DNS error %s' % str(e)))
                 self.callback = None
@@ -471,16 +437,16 @@ class DnsLookupConnection (Connection.Connection):
             # Only issue if we have someone waiting
             return
 
-        self.rdtype = wc.dns.rdatatype.A
-        self.rdclass = wc.dns.rdataclass.IN
-        self.query = wc.dns.message.make_query(
+        self.rdtype = dns_rdatatype.A
+        self.rdclass = dns_rdataclass.IN
+        self.query = dns_message.make_query(
                                     self.hostname, self.rdtype, self.rdclass)
         if resolver.keyname is not None:
             self.query.use_tsig(resolver.keyring, resolver.keyname)
         self.query.use_edns(resolver.edns, resolver.ednsflags,
                             resolver.payload)
-        assert None == wc.log.debug(wc.LOG_DNS, "%s sending DNS query %s",
-                     self, wc.strformat.indent(self.query))
+        log.debug(LOG_DNS, "%s sending DNS query %s",
+                     self, strformat.indent(self.query))
         wire = self.query.to_wire()
         if self.tcp:
             l = len(wire)
@@ -498,8 +464,7 @@ class DnsLookupConnection (Connection.Connection):
         if not self.callback:
             return # It's already handled, so ignore this
         if not self.connected:
-            assert None == wc.log.debug(wc.LOG_DNS,
-                "%s DNS connect timeout", self)
+            log.debug(LOG_DNS, "%s DNS connect timeout", self)
             self.callback(self.hostname,
                           DnsResponse('error', 'timed out connecting'))
             self.callback = None
@@ -508,8 +473,7 @@ class DnsLookupConnection (Connection.Connection):
         if (not self.tcp) and \
            dns_accepts_tcp.get(self.nameserver, True) and \
            self.retries == 2:
-            assert None == wc.log.debug(wc.LOG_DNS,
-                "%s switching to TCP", self)
+            log.debug(LOG_DNS, "%s switching to TCP", self)
             self.TIMEOUT = 20
             self.close()
             self.tcp = True
@@ -519,7 +483,7 @@ class DnsLookupConnection (Connection.Connection):
         elif not self.tcp and self.retries < 12:
             self.send_dns_request()
         else:
-            assert None == wc.log.debug(wc.LOG_DNS, "%s DNS timeout", self)
+            log.debug(LOG_DNS, "%s DNS timeout", self)
             if self.callback:
                 self.callback(self.hostname,
                               DnsResponse('error', 'timed out'))
@@ -547,11 +511,11 @@ class DnsLookupConnection (Connection.Connection):
         else:
             wire = self.read(1024)
         try:
-            response = wc.dns.message.from_wire(
+            response = dns_message.from_wire(
                  wire, keyring=self.query.keyring, request_mac=self.query.mac)
         except StandardError:
-            wc.log.exception(wc.LOG_DNS, "%s corrupt response %r to query %s",
-                             self, wire, wc.strformat.indent(self.query))
+            log.exception(LOG_DNS, "%s corrupt response %r to query %s",
+                          self, wire, strformat.indent(self.query))
             self.handle_error("DNS error: invalid DNS response")
             return
         if not self.query.is_response(response):
@@ -566,26 +530,24 @@ class DnsLookupConnection (Connection.Connection):
             # Anyway, if this is the answer to a different question,
             # we ignore this read, and let the timeout take its course
             return
-        assert None == wc.log.debug(wc.LOG_DNS, "%s got DNS response %s",
-                     self, wc.strformat.indent(response))
+        log.debug(LOG_DNS, "%s got DNS response %s",
+                  self, strformat.indent(response))
         # check truncate flag
-        if (response.flags & wc.dns.flags.TC) != 0:
+        if (response.flags & dns_flags.TC) != 0:
             # don't handle truncated packets; try to switch to TCP
             # See http://cr.yp.to/djbdns/notes.html
             if self.tcp:
                 # socket.error((84, ''))
-                wc.log.info(wc.LOG_DNS,
-                            '%s truncated TCP DNS packet from %s',
-                            self, self.nameserver)
+                log.info(LOG_DNS, '%s truncated TCP DNS packet from %s',
+                    self, self.nameserver)
                 self.handle_error("DNS error: truncated TCP packet")
             else:
-                wc.log.info(wc.LOG_DNS,
-                            '%s truncated UDP DNS packet from %s',
-                            self, self.nameserver,)
+                log.info(LOG_DNS, '%s truncated UDP DNS packet from %s',
+                    self, self.nameserver,)
             # we ignore this read, and let the timeout take its course
             return
 
-        if response.rcode() != wc.dns.rcode.NOERROR:
+        if response.rcode() != dns_rcode.NOERROR:
             callback, self.callback = self.callback, None
             msg = 'not found in response %s' % response
             callback(self.hostname, DnsResponse('error', msg))
@@ -593,13 +555,13 @@ class DnsLookupConnection (Connection.Connection):
             return
         try:
             # construct answer
-            name = wc.dns.name.from_text(self.hostname)
-            answer = wc.dns.resolver.Answer(
+            name = dns_name.from_text(self.hostname)
+            answer = dns_resolver.Answer(
                                    name, self.rdtype, self.rdclass, response)
-            assert None == wc.log.debug(wc.LOG_DNS, "%s DNS answer %s",
-                         self, wc.strformat.indent(answer))
-        except wc.dns.resolver.NoAnswer:
-            wc.log.info(wc.LOG_DNS, "%s no answer", self)
+            log.debug(LOG_DNS, "%s DNS answer %s",
+                         self, strformat.indent(answer))
+        except dns_resolver.NoAnswer:
+            log.info(LOG_DNS, "%s no answer", self)
             callback, self.callback = self.callback, None
             callback(self.hostname,
                      DnsResponse('error', 'not found with %s' % self))

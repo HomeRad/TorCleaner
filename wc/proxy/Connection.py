@@ -37,9 +37,8 @@ import socket
 import errno
 import os
 
-import wc.decorators
-import wc.log
-import Dispatcher
+from .. import log, LOG_PROXY, LOG_NET, decorators
+from . import Dispatcher
 
 # to prevent DoS attacks, specify a maximum buffer size of 10MB
 MAX_BUFSIZE = 10*1024*1024
@@ -63,7 +62,7 @@ class Connection (Dispatcher.Dispatcher):
         """
         Reset send and receive buffers.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, '%s buffer reset', self)
+        log.debug(LOG_PROXY, '%s buffer reset', self)
         self.recv_buffer = ''
         self.send_buffer = ''
         # True if data has still to be written before closing
@@ -93,8 +92,7 @@ class Connection (Dispatcher.Dispatcher):
         process_read.
         """
         assert self.connected
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            '%s Connection.handle_read', self)
+        log.debug(LOG_PROXY, '%s Connection.handle_read', self)
         if len(self.recv_buffer) > MAX_BUFSIZE:
             self.handle_error('read buffer full')
             return
@@ -107,17 +105,15 @@ class Connection (Dispatcher.Dispatcher):
             self.handle_error('read error')
             return
         if not data: # It's been closed, and handle_close has been called
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                                "%s closed, got empty data", self)
+            log.debug(LOG_PROXY, "%s closed, got empty data", self)
             self.persistent = False
             return
-        assert None == wc.log.debug(wc.LOG_NET,
-            '%s <= read %d', self, len(data))
-        assert None == wc.log.debug(wc.LOG_NET, 'data %r', data)
+        log.debug(LOG_NET, '%s <= read %d', self, len(data))
+        log.debug(LOG_NET, 'data %r', data)
         self.recv_buffer += data
         self.process_read()
 
-    @wc.decorators.notimplemented
+    @decorators.notimplemented
     def process_read (self):
         """
         Handle read event.
@@ -143,7 +139,7 @@ class Connection (Dispatcher.Dispatcher):
         """
         assert self.connected
         assert self.send_buffer
-        assert None == wc.log.debug(wc.LOG_PROXY, '%s handle_write', self)
+        log.debug(LOG_PROXY, '%s handle_write', self)
         num_sent = 0
         data = self.send_buffer[:self.socket_sndbuf]
         try:
@@ -154,9 +150,8 @@ class Connection (Dispatcher.Dispatcher):
                 return
             self.handle_error("write error")
             return
-        assert None == wc.log.debug(wc.LOG_NET,
-            '%s => wrote %d', self, num_sent)
-        assert None == wc.log.debug(wc.LOG_NET, 'data %r', data)
+        log.debug(LOG_NET, '%s => wrote %d', self, num_sent)
+        log.debug(LOG_NET, 'data %r', data)
         self.send_buffer = self.send_buffer[num_sent:]
         if self.close_pending and self.close_ready():
             self.close()
@@ -171,8 +166,7 @@ class Connection (Dispatcher.Dispatcher):
         """
         Close connection.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            '%s Connection.close', self)
+        log.debug(LOG_PROXY, '%s Connection.close', self)
         self.close_pending = False
         if self.persistent:
             self.close_reuse()
@@ -183,8 +177,7 @@ class Connection (Dispatcher.Dispatcher):
         """
         Close the connection socket.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            '%s Connection.close_close', self)
+        log.debug(LOG_PROXY, '%s Connection.close_close', self)
         if self.connected:
             self.connected = False
         super(Connection, self).close()
@@ -194,8 +187,7 @@ class Connection (Dispatcher.Dispatcher):
         If we are still connected, wait until all data is sent, then close.
         Otherwise just close.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            "%s Connection.handle_close", self)
+        log.debug(LOG_PROXY, "%s Connection.handle_close", self)
         if self.connected:
             self.delayed_close()
         else:
@@ -212,14 +204,12 @@ class Connection (Dispatcher.Dispatcher):
         Close whenever the data has been sent.
         """
         assert self.connected
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            '%s Connection.delayed_close', self)
+        log.debug(LOG_PROXY, '%s Connection.delayed_close', self)
         if self.close_ready():
             self.close()
         else:
             # Do not close yet because there is still data to send
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                '%s close ready channel', self)
+            log.debug(LOG_PROXY, '%s close ready channel', self)
             self.close_pending = True
 
     def close_reuse (self):
@@ -229,7 +219,7 @@ class Connection (Dispatcher.Dispatcher):
         """
         assert self.persistent
         assert self.connected
-        assert None == wc.log.debug(wc.LOG_PROXY,
+        log.debug(LOG_PROXY,
             '%s Connection.close_reuse %d', self, self.sequence_number)
         self.sequence_number += 1
 
@@ -237,7 +227,7 @@ class Connection (Dispatcher.Dispatcher):
         """
         Print error and close the connection.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY, "%s error %s", self, what)
+        log.debug(LOG_PROXY, "%s error %s", self, what)
         super(Connection, self).handle_error(what)
         self.close()
 
@@ -245,16 +235,15 @@ class Connection (Dispatcher.Dispatcher):
         """
         Handle socket exception.
         """
-        assert None == wc.log.debug(wc.LOG_PROXY,
-            '%s Connection.handle_expt', self)
+        log.debug(LOG_PROXY, '%s Connection.handle_expt', self)
         try:
             # Get the socket error and report it. Note that SO_ERROR
             # clears the error.
             err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
-            wc.log.warn(wc.LOG_PROXY,
+            log.warn(LOG_PROXY,
                     "%s socket exception error %s", self, os.strerror(err))
         except socket.error:
-            wc.log.exception(wc.LOG_PROXY,
+            log.exception(LOG_PROXY,
                              "%s could not get socket exception error", self)
         if not self.connected:
             # The non-blocking socket connect() had an error. This is
@@ -278,10 +267,8 @@ class Connection (Dispatcher.Dispatcher):
         if not data:
             # Out-of-band data might just not have been arrived, even
             # if the error condition is set.
-            assert None == wc.log.debug(wc.LOG_PROXY,
-                                "%s got empty out-of-band data", self)
+            log.debug(LOG_PROXY, "%s got empty out-of-band data", self)
             return
-        assert None == wc.log.debug(wc.LOG_NET,
-            '%s <= read %d', self, len(data))
-        assert None == wc.log.debug(wc.LOG_NET, 'data %r', data)
+        log.debug(LOG_NET, '%s <= read %d', self, len(data))
+        log.debug(LOG_NET, 'data %r', data)
         self.recv_buffer += data

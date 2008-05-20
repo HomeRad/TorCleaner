@@ -19,14 +19,13 @@ Filter XML tags.
 """
 
 from StringIO import StringIO
-import wc.url
-import wc.log
-import wc.filter
-import wc.containers
+from ... import log, LOG_XML, containers, strformat
+from . import (STARTDOCUMENT, ENDDOCUMENT, INSTRUCTION, STARTTAG, ENDTAG,
+    DATA, tagbuf2data)
 
 
 def dict_attrs (attrs):
-    _attrs = wc.containers.ListDict()
+    _attrs = containers.ListDict()
     for name in attrs.getQNames():
         _attrs[name] = attrs.getValueByQName(name)
     return _attrs
@@ -54,12 +53,11 @@ class XmlFilter (object):
         self.tagbuf = []
         self.rulestack = []
         self.stack = []
-        if wc.strformat.is_encoding(encoding):
+        if strformat.is_encoding(encoding):
             self.encoding = encoding
         else:
             self.encoding = "UTF-8"
-            wc.log.info(wc.LOG_XML,
-                        "Invalid XML encoding %r at %r corrected to %r",
+            log.info(LOG_XML, "Invalid XML encoding %r at %r corrected to %r",
                         encoding, self.url, self.encoding)
 
     # ErrorHandler methods
@@ -68,19 +66,19 @@ class XmlFilter (object):
         """
         Report a filter/parser error.
         """
-        wc.log.error(wc.LOG_XML, msg)
+        log.error(LOG_XML, msg)
 
     def fatalError (self, msg):
         """
         Report a fatal filter/parser error.
         """
-        wc.log.critical(wc.LOG_XML, msg)
+        log.critical(LOG_XML, msg)
 
     def warning (self, msg):
         """
         Report a filter/parser warning.
         """
-        wc.log.warn(wc.LOG_XML, msg)
+        log.warn(LOG_XML, msg)
 
     # ContentHandler methods
 
@@ -97,14 +95,14 @@ class XmlFilter (object):
             u"encoding": self.encoding,
             # XXX no info about 'standalone'
         }
-        item = [wc.filter.xmlfilt.STARTDOCUMENT, u"xml", attrs]
+        item = [STARTDOCUMENT, u"xml", attrs]
         self.tagbuf.append(item)
 
     def endDocument (self):
         """
         Nothing to do here.
         """
-        item = [wc.filter.xmlfilt.ENDDOCUMENT]
+        item = [ENDDOCUMENT]
         self.tagbuf.append(item)
 
     def startPrefixMapping (self, prefix, uri):
@@ -131,8 +129,8 @@ class XmlFilter (object):
             else:
                 attrs["xmlns"] = uri
         self.ns_current = []
-        self.stack.append((wc.filter.xmlfilt.STARTTAG, name, attrs))
-        item = [wc.filter.xmlfilt.STARTTAG, name, attrs]
+        self.stack.append((STARTTAG, name, attrs))
+        item = [STARTTAG, name, attrs]
         self.tagbuf.append(item)
         rulelist = [rule for rule in self.xmlrules \
                     if rule.match_tag(self.stack)]
@@ -141,7 +139,7 @@ class XmlFilter (object):
             self.rulestack.append((pos, rulelist))
 
     def endElement (self, name):
-        item = [wc.filter.xmlfilt.ENDTAG, name]
+        item = [ENDTAG, name]
         if not self.filter_end_element(name):
             self.tagbuf.append(item)
         if not self.rulestack:
@@ -178,23 +176,23 @@ class XmlFilter (object):
         self.endElement(tag)
 
     def characters (self, content):
-        if self.tagbuf and self.tagbuf[-1][0] == wc.filter.xmlfilt.DATA:
+        if self.tagbuf and self.tagbuf[-1][0] == DATA:
             self.tagbuf[-1][1] += content
         else:
-            self.tagbuf.append([wc.filter.xmlfilt.DATA, content])
+            self.tagbuf.append([DATA, content])
 
     def ignorableWhitespace (self, chars):
         pass
 
     def processingInstruction (self, target, data):
-        item = [wc.filter.xmlfilt.INSTRUCTION, target, data]
+        item = [INSTRUCTION, target, data]
         self.tagbuf.append(item)
 
     def skippedEntity (self, name):
         """
         An unknown entity was found, for example '&foo;'.
         """
-        self.tagbuf.append([wc.filter.xmlfilt.DATA, u"&%s;" % name])
+        self.tagbuf.append([DATA, u"&%s;" % name])
 
     # DTDHandler methods
 
@@ -202,16 +200,15 @@ class XmlFilter (object):
         """
         DTD content is ignored.
         """
-        msg = "DTD notation ignored: %r %r %r" % (name, publicId, systemId)
-        wc.log.info(wc.LOG_XML, "%s: %s", self, msg)
+        log.info(LOG_XML, "%s: DTD notation ignored: %r %r %r",
+            self, name, publicId, systemId)
 
     def unparsedEntityDecl (self, name, publicId, systemId, ndata):
         """
         DTD content is ignored.
         """
-        msg = "DTD entity ignored: %r %r %r %r" % \
-              (name, publicId, systemId, ndata)
-        wc.log.info(wc.LOG_XML, "%s: %s", self, msg)
+        log.info(LOG_XML, "%s: DTD entity ignored: %r %r %r %r",
+              self, name, publicId, systemId, ndata)
 
     # other methods
 
@@ -220,7 +217,7 @@ class XmlFilter (object):
         Append serialized tag items of the tag buffer to the output buffer
         and clear the tag buffer.
         """
-        wc.filter.xmlfilt.tagbuf2data(self.tagbuf, self.outbuf)
+        tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
     def getoutput (self):

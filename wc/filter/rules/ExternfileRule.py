@@ -18,8 +18,7 @@
 Hold a list of urls/domains to filter in external files, like those
 found in SquidGuard.
 """
-
-import Rule
+from . import Rule
 import wc.XmlUtils
 
 

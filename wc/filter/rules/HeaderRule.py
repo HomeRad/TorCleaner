@@ -17,8 +17,7 @@
 """
 Filter HTTP headers.
 """
-
-import UrlRule
+from . import UrlRule
 import wc.XmlUtils
 
 

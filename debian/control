@@ -2,17 +2,18 @@ Source: webcleaner
 Section: web
 Priority: optional
 Maintainer: Bastian Kleineidam <calvin@users.sourceforge.net>
-Build-Depends: python-all-dev (>= 2.3.5-11), debhelper (>= 5.0.37.2),
+Build-Depends: python-all-dev (>= 2.5-1), debhelper (>= 7),
  debconf (>= 1.2.9) | debconf-2.0, gettext, cdbs (>= 0.4.43),
  python-central (>= 0.5), gcc (>= 4:4.1), libssp0-dev
 XS-Python-Standards-Version: 0.4
-XS-Python-Version: >= 2.4
-Standards-Version: 3.7.2.0
+XS-Python-Version: >= 2.5
+Standards-Version: 3.7.3
 
 Package: webcleaner
 Architecture: any
 XB-Python-Version: ${python:Versions}
-Depends: ${python:Depends}, python-pyopenssl, debconf (>= 1.2.9), runit (>= 1.3), webcleaner-common (>= ${source:Version})
+Depends: ${python:Depends}, python-pyopenssl, debconf (>= 1.2.9),
+ runit (>= 1.3), webcleaner-common (>= ${source:Version})
 Provides: ${python:Provides}
 Recommends: python-imaging
 Suggests: python-crypto, python-psyco, clamav-daemon

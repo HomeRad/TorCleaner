@@ -17,8 +17,7 @@
 """
 Image reducer config rule.
 """
-
-import UrlRule
+from . import UrlRule
 
 
 class ImagereduceRule (UrlRule.UrlRule):

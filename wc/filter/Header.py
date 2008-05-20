@@ -21,11 +21,8 @@ Add or delete HTTP headers.
 import re
 import string
 import sets
-
-import wc.log
-import wc.proxy.Headers
-import wc.filter
-import Filter
+from .. import log, LOG_FILTER, proxy, filter
+from . import Filter
 
 
 class Header (Filter.Filter):
@@ -39,8 +36,8 @@ class Header (Filter.Filter):
         """
         Init stages and rulenames.
         """
-        stages = [wc.filter.STAGE_REQUEST_HEADER,
-                  wc.filter.STAGE_RESPONSE_HEADER]
+        stages = [filter.STAGE_REQUEST_HEADER,
+                  filter.STAGE_RESPONSE_HEADER]
         rulenames = ['header']
         super(Header, self).__init__(stages=stages, rulenames=rulenames)
 
@@ -53,16 +50,16 @@ class Header (Filter.Filter):
         parent = super(Header, self)
         parent.update_attrs(attrs, url, localhost, stages, headers)
         delete = {
-            wc.filter.STAGE_REQUEST_HEADER: [],
-            wc.filter.STAGE_RESPONSE_HEADER: [],
+            filter.STAGE_REQUEST_HEADER: [],
+            filter.STAGE_RESPONSE_HEADER: [],
         }
         replace = {
-            wc.filter.STAGE_REQUEST_HEADER: [],
-            wc.filter.STAGE_RESPONSE_HEADER: [],
+            filter.STAGE_REQUEST_HEADER: [],
+            filter.STAGE_RESPONSE_HEADER: [],
         }
         add = {
-            wc.filter.STAGE_REQUEST_HEADER: [],
-            wc.filter.STAGE_RESPONSE_HEADER: [],
+            filter.STAGE_REQUEST_HEADER: [],
+            filter.STAGE_RESPONSE_HEADER: [],
         }
         for rule in self.rules:
             # filter out unwanted rules
@@ -74,9 +71,9 @@ class Header (Filter.Filter):
                 # a regular expression.
                 matcher = re.compile(rule.header, re.I).match
                 if rule.filterstage in ('both', 'request'):
-                    delete[wc.filter.STAGE_REQUEST_HEADER].append(matcher)
+                    delete[filter.STAGE_REQUEST_HEADER].append(matcher)
                 if rule.filterstage in ('both', 'response'):
-                    delete[wc.filter.STAGE_RESPONSE_HEADER].append(matcher)
+                    delete[filter.STAGE_RESPONSE_HEADER].append(matcher)
             else:
                 # name, value must be ASCII strings
                 name = str(rule.header)
@@ -88,9 +85,9 @@ class Header (Filter.Filter):
                 else:
                     raise ValueError("Invalid rule action %r" % rule.action)
                 if rule.filterstage in ('both', 'request'):
-                    d[wc.filter.STAGE_REQUEST_HEADER].append((name, val))
+                    d[filter.STAGE_REQUEST_HEADER].append((name, val))
                 if rule.filterstage in ('both', 'response'):
-                    d[wc.filter.STAGE_RESPONSE_HEADER].append((name, val))
+                    d[filter.STAGE_RESPONSE_HEADER].append((name, val))
         attrs['header_add'] = add
         attrs['header_replace'] = replace
         attrs['header_delete'] = delete
@@ -102,22 +99,21 @@ class Header (Filter.Filter):
         delete = sets.Set()
         # stage is STAGE_REQUEST_HEADER or STAGE_RESPONSE_HEADER
         stage = attrs['filterstage']
-        for h in data.iterkeys():
+        for h in data.keys():
             for name_match in attrs['header_delete'][stage]:
                 if name_match(h):
-                    assert None == wc.log.debug(wc.LOG_FILTER,
-                                 "%s removing header %r", self, h)
+                    log.debug(LOG_FILTER, "%s removing header %r", self, h)
                     delete.add(h.lower())
                     # go to next header name
                     break
         if delete:
-            wc.proxy.Headers.remove_headers(data, delete)
+            proxy.Headers.remove_headers(data, delete)
         for name, val in attrs['header_add'][stage]:
             if "$" in val:
                 # substitute template
                 d = {"host": attrs['headers']['client'].get('Host', '')}
                 val = string.Template(val).safe_substitute(d)
-            assert None == wc.log.debug(wc.LOG_FILTER,
+            log.debug(LOG_FILTER,
                          "%s adding header %r: %r", self, name, val)
             data[name] = val+"\r"
         for name, val in attrs['header_replace'][stage]:
@@ -127,7 +123,7 @@ class Header (Filter.Filter):
                 # substitute template
                 d = {"host": attrs['headers']['client'].get('Host', '')}
                 val = string.Template(val).safe_substitute(d)
-            assert None == wc.log.debug(wc.LOG_FILTER,
+            log.debug(LOG_FILTER,
                          "%s replacing header %r: %r", self, name, val)
             data[name] = val+"\r"
         return data

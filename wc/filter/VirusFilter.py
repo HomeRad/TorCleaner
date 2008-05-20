@@ -17,18 +17,12 @@
 """
 Search data stream for virus signatures.
 """
-
 import socket
 import os
 import sys
-
-import wc.configuration
-import wc.fileutil
-import wc.strformat
-import wc.log
-import wc.filter
-import Filter
-from wc.proxy.Dispatcher import create_socket
+from .. import log, LOG_FILTER, fileutil
+from . import Filter, STAGE_RESPONSE_MODIFY
+from ..proxy.Dispatcher import create_socket
 
 
 class VirusFilter (Filter.Filter):
@@ -45,11 +39,11 @@ class VirusFilter (Filter.Filter):
         """
         Init antivirus stages and mimes, read clamav config.
         """
-        stages = [wc.filter.STAGE_RESPONSE_MODIFY]
+        stages = [STAGE_RESPONSE_MODIFY]
         rulenames = ['antivirus']
         super(VirusFilter, self).__init__(stages=stages, rulenames=rulenames)
         if get_clamav_conf() is None:
-            wc.log.warn(wc.LOG_FILTER, "Virus filter is enabled but " \
+            log.warn(LOG_FILTER, "Virus filter is enabled but " \
                         "not configured. Set the clamav configuration file.")
 
     def filter (self, data, attrs):
@@ -91,7 +85,7 @@ class VirusFilter (Filter.Filter):
 CHUNK_SIZE = 1024L*200L
 CHUNK_OVERLAP = 1024L*50L
 
-class Buf (wc.fileutil.Buffer):
+class Buf (fileutil.Buffer):
     """
     Holds buffer data ready for replacing, with overlapping scans.
     Strings must be unicode.
@@ -127,15 +121,15 @@ class Buf (wc.fileutil.Buffer):
             scanner.scan(data)
         except socket.error:
             msg = sys.exc_info()[1]
-            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
+            log.warn(LOG_FILTER, "Virus scanner error %r", msg)
         scanner.close()
         for msg in scanner.errors:
-            wc.log.warn(wc.LOG_FILTER, "Virus scanner error %r", msg)
+            log.warn(LOG_FILTER, "Virus scanner error %r", msg)
         if scanner.infected:
             # XXX
             data = ""
             for msg in scanner.infected:
-                wc.log.warn(wc.LOG_FILTER, "Found virus %r in %r",
+                log.warn(LOG_FILTER, "Found virus %r in %r",
                             msg, self.url)
         return data
 
@@ -231,7 +225,7 @@ def init_clamav_conf (conf):
         global _clamav_conf
         _clamav_conf = ClamavConfig(conf)
     else:
-        wc.log.warn(wc.LOG_FILTER, "No ClamAV config file found at %r.", conf)
+        log.warn(LOG_FILTER, "No ClamAV config file found at %r.", conf)
 
 
 def get_clamav_conf ():

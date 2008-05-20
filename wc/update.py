@@ -20,10 +20,8 @@ Routines for updating filter and rating configuration.
 
 import os
 import md5
+from . import log, LOG_GUI, Name, Version, configuration
 
-import wc
-import log
-import configuration
 #XXXfrom filter.Rating import rating_cache_merge, rating_cache_parse
 
 #
@@ -59,9 +57,9 @@ import re
 import socket
 import zlib
 import cStringIO as StringIO
-from wc import gzip2 as gzip
+from . import gzip2 as gzip
 
-UA_STR = '%s/%s' % (wc.Name, wc.Version)
+UA_STR = '%s/%s' % (Name, Version)
 
 def decode (page):
     """
@@ -81,7 +79,7 @@ def decode (page):
         # remove content-encoding header
         headers = {}
         ceheader = re.compile(r"(?i)content-encoding:")
-        for h in page.info().iterkeys():
+        for h in page.info().keys():
             if not ceheader.match(h):
                 headers[h] = page.info()[h]
         newpage = urllib.addinfourl(fp, headers, page.geturl())
@@ -191,13 +189,13 @@ def open_url (url, proxies=None):
     try:
         page = urlopen(url, proxies=proxies)
     except urllib2.HTTPError, x:
-        log.error(wc.LOG_GUI, "could not open url %r", url)
+        log.error(LOG_GUI, "could not open url %r", url)
         raise IOError(x)
     except (socket.gaierror, socket.error, urllib2.URLError), x:
-        log.error(wc.LOG_GUI, "could not open url %r", url)
+        log.error(LOG_GUI, "could not open url %r", url)
         raise IOError("no network access available")
     except IOError, data:
-        log.error(wc.LOG_GUI, "could not open url %r", url)
+        log.error(LOG_GUI, "could not open url %r", url)
         if data and data[0] == 'http error' and data[1] == 404:
             raise IOError(data)
         else:

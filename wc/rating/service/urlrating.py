@@ -14,12 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-import wc.rating
-
 import time
+from .. import UrlRating
 
 
-class WcUrlRating (wc.rating.UrlRating):
+class WcUrlRating (UrlRating):
 
     def __init__ (self, url, rating, generic=False, comment=None):
         super(WcUrlRating, self).__init__(url, rating, generic=generic)

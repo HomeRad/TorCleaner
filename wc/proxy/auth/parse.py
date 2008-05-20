@@ -18,7 +18,7 @@
 Parse basic and digest HTTP auth strings into key/value tokens.
 """
 
-import wc.log
+from ... import log, LOG_AUTH
 
 separators = ("()<>@,;:\\\"/[]?={} \t")
 token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
@@ -33,7 +33,7 @@ def parse_token (s, tok="", more_chars=""):
         if s.startswith(tok):
             s = s[len(tok):]
         else:
-            wc.log.info(wc.LOG_AUTH, "expected %r start with %r", s, tok)
+            log.info(LOG_AUTH, "expected %r start with %r", s, tok)
     else:
         for i, c in enumerate(s):
             if c not in token_chars and c not in more_chars:
@@ -76,7 +76,7 @@ def parse_auth (auth, data):
     @param data: string data to parse
     @return: augmented auth dict and unparsed data
     """
-    assert None == wc.log.debug(wc.LOG_AUTH, "parse authentication %r", data)
+    log.debug(LOG_AUTH, "parse authentication %r", data)
     while data:
         key, data = parse_token(data)
         if not data.startswith("="):
