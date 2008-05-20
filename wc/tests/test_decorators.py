@@ -20,7 +20,7 @@ Test decorators.
 
 import unittest
 import time
-import cStringIO as StringIO
+from cStringIO import StringIO
 import wc.decorators
 
 
@@ -36,7 +36,7 @@ class TestDecorators (unittest.TestCase):
         self.assertEquals(f(), 42)
 
     def test_timeit2 (self):
-        log = StringIO.StringIO()
+        log = StringIO()
         @wc.decorators.timed(log=log, limit=0)
         def f ():
             time.sleep(1)
