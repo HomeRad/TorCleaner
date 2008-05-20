@@ -1,3 +1,5 @@
+- import proxomitron filter lists
+
 - A wrong regex input in the web interface crashes the server.
   So catch regular expression errors and display an error message.
 
