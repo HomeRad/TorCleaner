@@ -19,7 +19,7 @@ Test HTTP request version compatibility.
 """
 
 from tests import make_suite
-from wc.proxy.tests import ProxyTest
+from .. import ProxyTest
 
 class HighverTest (ProxyTest):
 

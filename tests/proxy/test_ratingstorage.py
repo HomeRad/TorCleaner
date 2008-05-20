@@ -17,6 +17,7 @@
 import unittest
 import wc.configuration.ratingstorage
 
+
 class TestRating (unittest.TestCase):
 
     def test_split_url (self):

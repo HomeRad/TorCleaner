@@ -19,7 +19,7 @@ Test end-to-end and unrecognized headers
 """
 
 from tests import make_suite
-from wc.proxy.tests import ProxyTest
+from .. import ProxyTest
 
 class test_endhdr_fwd_atom_Expect_100_continue_toSrv (ProxyTest):
     """

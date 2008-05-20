@@ -19,7 +19,8 @@ Test localhost detection.
 """
 
 from tests import make_suite
-from wc.proxy.tests import ProxyTest
+from .. import ProxyTest
+
 
 class LoopTest (ProxyTest):
 

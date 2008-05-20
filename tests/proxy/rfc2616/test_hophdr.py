@@ -19,7 +19,7 @@ Test hop-by-hop headers
 """
 
 from tests import make_suite
-from wc.proxy.tests import ProxyTest
+from .. import ProxyTest
 
 class test_hophdr_connection_toSrv (ProxyTest):
     """

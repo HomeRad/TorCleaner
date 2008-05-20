@@ -19,7 +19,8 @@ Test optional methods.
 """
 
 from tests import make_suite
-from wc.proxy.tests import ProxyTest
+from .. import ProxyTest
+
 
 class MethodTest (ProxyTest):
 

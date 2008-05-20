@@ -27,7 +27,7 @@ import wc.dns.rdatatype
 import wc.dns.rrset
 import wc.dns.zone
 
-_paths = ["wc", "dns", "tests"]
+_paths = ["tests", "dns"]
 
 def fname (name, sep=None):
     args = tuple(_paths + [name])

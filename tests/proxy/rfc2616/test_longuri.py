@@ -15,34 +15,58 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
-Test required methods.
+Test long URIs.
 """
 
 from tests import make_suite
-from wc.proxy.tests import ProxyTest
+from .. import ProxyTest
 
-class test_reqmethod_head (ProxyTest):
+
+class LonguriTest (ProxyTest):
+
+    def longuri (self, bytes):
+        octets = int(bytes / 8)
+        remainder = max(0, (bytes % 8) - 1)
+        return "/%s%s" % ("01234567" * octets, "x"*remainder)
+
+    def check_response_status (self, response):
+        self.assert_(response.status in (200, 414))
+
+
+class test_longuri_1024 (LonguriTest):
     """
-    Proxy must support HEAD request.
+    Test 1024 byte URI.
     """
 
-    def test_reqmethod_head (self):
+    def test_longuri_1024 (self):
         self.start_test()
 
-    def get_request_method (self):
-        return "HEAD"
-
-    def check_response_content (self, response):
-        self.assert_(not response.content)
+    def get_request_uri (self):
+        return self.longuri(1024)
 
 
-class test_reqmethod_get (ProxyTest):
+class test_longuri_8192 (LonguriTest):
     """
-    Proxy must support GET request.
+    Test 8192 byte URI.
     """
 
-    def test_reqmethod_get (self):
+    def test_longuri_8192 (self):
         self.start_test()
+
+    def get_request_uri (self):
+        return self.longuri(8192)
+
+
+class test_longuri_65536 (LonguriTest):
+    """
+    Test 65536 byte URI.
+    """
+
+    def test_longuri_65536 (self):
+        self.start_test()
+
+    def get_request_uri (self):
+        return self.longuri(65536)
 
 
 def test_suite ():

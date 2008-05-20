@@ -47,16 +47,14 @@ include test/config/blacklists/README
 include scripts/*.sh
 include scripts/*.bat
 include tests/*.py
-include wc/magic/tests/*.py
-include wc/magic/tests/*.html
-include wc/filter/tests/*.py
-recursive-include wc/proxy/tests *.py
-include wc/proxy/tests/README
-include wc/proxy/auth/tests/*.py
+include tests/magic/*.py tests/magic/*.html
+include tests/filter/*.py
+recursive-include tests/proxy/ *.py
+include tests/proxy/README
 include test*.py
 include po/*.po
 include po/*.pot
-include wc/dns/tests/example*
+include tests/dns/example*
 include wc/dns/ChangeLog
 include wc/HtmlParser/*.h
 include wc/HtmlParser/htmllex.l
