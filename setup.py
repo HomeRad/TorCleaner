@@ -592,7 +592,6 @@ extensions.append(Extension('wc.HtmlParser.htmlsax',
               library_dirs = library_dirs,
               libraries = libraries,
              ))
-
 # levenshtein distance method
 extensions.append(Extension('wc.levenshtein',
               sources = [normpath('wc/levenshtein.c'),],
@@ -602,6 +601,16 @@ extensions.append(Extension('wc.levenshtein',
               library_dirs = library_dirs,
               libraries = libraries,
              ))
+
+# network module
+extensions.append(Extension("wc.network._network",
+                  sources = [normpath("wc/network/_network.c"),],
+                  include_dirs = include_dirs,
+                  define_macros = define_macros,
+                  extra_compile_args = extra_compile_args,
+                  library_dirs = library_dirs,
+                  libraries = libraries,
+                  ))
 
 # javascript extension
 if win_compiling:

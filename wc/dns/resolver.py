@@ -22,6 +22,7 @@
 import socket
 import sets
 import sys
+import os
 import time
 import encodings.idna
 
@@ -377,11 +378,11 @@ class Resolver(object):
         @return: list of IP addresses
         @rtype: list of strings
         """
-        if not sys.platform.startswith('linux'):
-            # only Linux is supported right now
+        if os.name != 'posix':
+            # only POSIX is supported right now
             return []
-        import wc.dns.ifconfig
-        ifc = wc.dns.ifconfig.IfConfig()
+        from wc.network import IfConfig
+        ifc = IfConfig()
         return [ifc.getAddr(iface) for iface in ifc.getInterfaceList() \
                 if ifc.isUp(iface)]
 

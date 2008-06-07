@@ -28,7 +28,8 @@ from . import ratingstorage
 from ..XmlUtils import xmlquoteattr
 from ..url import match_url
 from .. import (log, LOG_PROXY, LOG_FILTER, decorators, strformat, fileutil,
-    ip, ConfigDir, HasSsl, Url, proxy)
+    ConfigDir, HasSsl, Url, proxy)
+from ..network import iputil
 
 ConfigCharset = "iso-8859-1"
 
@@ -360,4 +361,4 @@ class Configuration (dict):
     def allowed (self, host):
         """Return True if the host is allowed for proxying, else False."""
         hostset = self['allowedhostset']
-        return ip.host_in_set(host, hostset[0], hostset[1])
+        return iputil.host_in_set(host, hostset[0], hostset[1])

@@ -21,7 +21,7 @@ Ip number related utility functions.
 import re
 import socket
 import struct
-from . import log, LOG_NET
+from .. import log, LOG_NET
 
 
 # IP Adress regular expressions

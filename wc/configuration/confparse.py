@@ -18,7 +18,8 @@
 Parse configuration data.
 """
 import xml.parsers.expat
-from .. import log, LOG_PROXY, LOG_FILTER, filter, ip
+from .. import log, LOG_PROXY, LOG_FILTER, filter
+from ..network import iputil
 
 ##### xml parsers #########
 
@@ -236,7 +237,7 @@ class WConfigParser (BaseParser):
             if self.config['allowedhosts'] is not None:
                 hosts = self.config['allowedhosts'].split(',')
                 self.config['allowedhosts'] = hosts
-                self.config['allowedhostset'] = ip.hosts2map(hosts)
+                self.config['allowedhostset'] = iputil.hosts2map(hosts)
             else:
                 self.config['allowedhosts'] = []
                 self.config['allowedhostset'] = [set(), []]

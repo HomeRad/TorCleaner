@@ -63,6 +63,7 @@ localbuild: MANIFEST all
 	cp -f build/lib.linux-$(MACHINE)-$(PYVER)/wc/HtmlParser/htmlsax.so wc/HtmlParser/
 	cp -f build/lib.linux-$(MACHINE)-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-$(MACHINE)-$(PYVER)/wc/js/jslib.so wc/js/
+	cp -f build/lib.linux-$(MACHINE)-$(PYVER)/wc/network/_network.so wc/network/
 
 .PHONY: crossdist
 crossdist: distclean

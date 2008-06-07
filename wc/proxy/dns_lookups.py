@@ -40,11 +40,12 @@ import struct
 import re
 import pprint
 
-from .. import log, LOG_DNS, strformat, ip as iputil
+from .. import log, LOG_DNS, strformat
 from ..dns import (resolver as dns_resolver, name as dns_name,
     message as dns_message, exception as dns_exception,
     rcode as dns_rcode, rdatatype as dns_rdatatype,
     rdataclass as dns_rdataclass, flags as dns_flags)
+from ..network import iputil
 from . import timer, Connection
 
 
