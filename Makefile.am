@@ -39,7 +39,7 @@ MANIFEST: setup.py
 clean-local: clean-log
 # ignore errors for python clean
 	-$(PYTHON) setup.py clean --all
-	rm -f wc/HtmlParser/htmlsax.so wc/js/jslib.so wc/levenshtein.so
+	rm -f wc/HtmlParser/htmlsax.so wc/js/jslib.so wc/levenshtein.so wc/network/_network.so
 	find . -name '*.py[co]' | xargs rm -f
 	rm -f index.html* test.gif
 	rm -f config/magic.mime.mgc
