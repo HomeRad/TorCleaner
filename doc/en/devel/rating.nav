@@ -2,4 +2,4 @@
 name = u'Ratings'
 level = 0
 visible = False
-order = 2147483647
+order = 9223372036854775807

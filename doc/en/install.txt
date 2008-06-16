@@ -55,7 +55,7 @@ Direct download links are in brackets.
 
 2. Install Python for Windows Extensions from
    http://sourceforge.net/projects/pywin32/
-   [http://switch.dl.sourceforge.net/pywin32/pywin32-210.win32-py2.5.exe]
+   [http://switch.dl.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe]
    
    To run Pythonwin, you may need a copy of the Microsoft MFC DLLs.
    You should only install these files if the install process tells you
@@ -90,7 +90,7 @@ Direct download links are in brackets.
 7. *Optional (used by VirusFilter module)*
    ClamAv from
    http://www.sosdg.org/clamav-win32/
-   [http://clamav-sosdg.googlecode.com/files/clamav-0.93-1.exe]
+   [http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe]
 
 8. *Only needed if you compile from source:*
    install the MinGW suite from http://mingw.sourceforge.net/.
