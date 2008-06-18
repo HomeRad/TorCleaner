@@ -100,6 +100,8 @@ Direct download links are in brackets.
       [http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe]
    b) MSYS
       [http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe]
+   c) MSYS Developer Toolkit
+      [http://downloads.sourceforge.net/mingw/msysDTK-1.0.1.exe]
 
 Setup for Unix/Linux:
 ---------------------
