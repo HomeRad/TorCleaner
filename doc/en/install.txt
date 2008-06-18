@@ -36,7 +36,7 @@ Requirements for Unix/Linux or Max OS X
 6. *Optional but recommended (speedup for i386 compatible PCs)*
    Psyco from
    http://psyco.sourceforge.net/
-   [http://switch.dl.sourceforge.net/sourceforge/psyco/psyco-1.5.2-src.tar.gz]
+   [http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz]
 
 7. *Optional (used by VirusFilter module)*
    ClamAv from
