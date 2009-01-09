@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.4.1: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
 <title></title>
 <meta content="2" name="navigation.order" />
 <meta content="Installation" name="navigation.name" />
@@ -290,22 +290,15 @@ window.onload = function() {
 </head>
 <body>
 <!-- bfknav -->
-<div class="navigation">
-<div class="navrow" style="padding: 0em 0em 0em 1em;">
-<a href="index.html">WebCleaner</a>
-<a href="faq.html">FAQ</a>
-<span>Installation</span>
-<a href="misc/squid.html">Example Squid configuration &gt;</a>
-<a href="devel/rating.html">Ratings &gt;</a>
-
-</div>
-</div>
+Imagine a navigation
 <!-- /bfknav -->
 <div class="document">
-<div class="section">
-<h1><a id="installation" name="installation">Installation</a></h1>
-<div class="section">
-<h2><a id="requirements-for-unix-linux-or-max-os-x" name="requirements-for-unix-linux-or-max-os-x">Requirements for Unix/Linux or Max OS X</a></h2>
+
+
+<div class="section" id="installation">
+<h1>Installation</h1>
+<div class="section" id="requirements-for-unix-linux-or-max-os-x">
+<h2>Requirements for Unix/Linux or Max OS X</h2>
 <ol class="arabic">
 <li><p class="first">You need a standard GNU development environment with</p>
 <ul>
@@ -319,93 +312,95 @@ environment.</p>
 from the source files, you will need xgettext with Python support.
 This is available in gettext &gt;= 0.12.</p>
 </li>
-<li><p class="first">Python &gt;= 2.5 from <a class="reference" href="http://www.python.org/">http://www.python.org/</a> with zlib support</p>
+<li><p class="first">Python &gt;= 2.5 from <a class="reference external" href="http://www.python.org/">http://www.python.org/</a> with zlib support</p>
 </li>
-<li><p class="first">runit &gt;= 1.3 from <a class="reference" href="http://smarden.org/runit/">http://smarden.org/runit/</a></p>
+<li><p class="first">runit &gt;= 1.3 from <a class="reference external" href="http://smarden.org/runit/">http://smarden.org/runit/</a></p>
 </li>
 <li><p class="first"><em>Optional but recommended (used by ImageSize and ImageReducer modules)</em>
 Python Imaging Library (PIL) from
-<a class="reference" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a></p>
+<a class="reference external" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a></p>
 </li>
 <li><p class="first"><em>Optional but recommended (used for SSL connections)</em>
 OpenSSL and PyOpenSSL from
-<a class="reference" href="http://www.openssl.org/">http://www.openssl.org/</a> and
-<a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a></p>
+<a class="reference external" href="http://www.openssl.org/">http://www.openssl.org/</a> and
+<a class="reference external" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a></p>
 </li>
 <li><p class="first"><em>Optional but recommended (speedup for i386 compatible PCs)</em>
 Psyco from
-<a class="reference" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
-[<a class="reference" href="http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz">http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz</a>]</p>
+<a class="reference external" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz">http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz</a>]</p>
 </li>
 <li><p class="first"><em>Optional (used by VirusFilter module)</em>
 ClamAv from
-<a class="reference" href="http://www.clamav.net/">http://www.clamav.net/</a></p>
+<a class="reference external" href="http://www.clamav.net/">http://www.clamav.net/</a></p>
 </li>
 <li><p class="first"><em>Optional (used for NTLM authentication)</em>
 Python Crypto Module from
-<a class="reference" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a></p>
+<a class="reference external" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a></p>
 </li>
 </ol>
 </div>
-<div class="section">
-<h2><a id="requirements-for-windows" name="requirements-for-windows">Requirements for Windows:</a></h2>
+<div class="section" id="requirements-for-windows">
+<h2>Requirements for Windows:</h2>
 <p>Direct download links are in brackets.</p>
 <ol class="arabic">
-<li><p class="first">Install Python &gt;= 2.5 from <a class="reference" href="http://www.python.org/">http://www.python.org/</a>
-[<a class="reference" href="http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi">http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi</a>]</p>
+<li><p class="first">Install Python &gt;= 2.5 from <a class="reference external" href="http://www.python.org/">http://www.python.org/</a>
+[<a class="reference external" href="http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi">http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi</a>]</p>
 </li>
 <li><p class="first">Install Python for Windows Extensions from
-<a class="reference" href="http://sourceforge.net/projects/pywin32/">http://sourceforge.net/projects/pywin32/</a>
-[<a class="reference" href="http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe">http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe</a>]</p>
+<a class="reference external" href="http://sourceforge.net/projects/pywin32/">http://sourceforge.net/projects/pywin32/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe">http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe</a>]</p>
 <p>To run Pythonwin, you may need a copy of the Microsoft MFC DLLs.
 You should only install these files if the install process tells you
 the DLL can not be found, or if Pythonwin fails to start due to this
 DLL missing. You can download at
-<a class="reference" href="http://www.dll-files.com/dllindex/dll-files.shtml?mfc71">http://www.dll-files.com/dllindex/dll-files.shtml?mfc71</a>
+<a class="reference external" href="http://www.dll-files.com/dllindex/dll-files.shtml?mfc71">http://www.dll-files.com/dllindex/dll-files.shtml?mfc71</a>
 Download this file and save it to your Windows System32 directory.</p>
 </li>
 <li><p class="first"><em>Optional but recommended (used by ImageSize and ImageReducer modules)</em>
 Install Python Imaging Library (PIL) from
-<a class="reference" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a>
-[<a class="reference" href="http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe">http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe</a>]</p>
+<a class="reference external" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a>
+[<a class="reference external" href="http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe">http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe</a>]</p>
 </li>
 <li><p class="first"><em>Optional but recommended (used for SSL connections)</em>
 Install OpenSSL and PyOpenSSL for Windows from
-<a class="reference" href="http://www.shininglightpro.com/products/Win32OpenSSL.html">http://www.shininglightpro.com/products/Win32OpenSSL.html</a>
-[<a class="reference" href="http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8g.exe">http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8g.exe</a>]
+<a class="reference external" href="http://www.shininglightpro.com/products/Win32OpenSSL.html">http://www.shininglightpro.com/products/Win32OpenSSL.html</a>
+[<a class="reference external" href="http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8j.exe">http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8j.exe</a>]
 and
-<a class="reference" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a>
-[<a class="reference" href="http://downloads.sourceforge.net/pyopenssl/pyOpenSSL-0.7.win32-py2.5.exe">http://downloads.sourceforge.net/pyopenssl/pyOpenSSL-0.7.win32-py2.5.exe</a>]</p>
+<a class="reference external" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/pyopenssl/pyOpenSSL-0.7.win32-py2.5.exe">http://downloads.sourceforge.net/pyopenssl/pyOpenSSL-0.7.win32-py2.5.exe</a>]</p>
 </li>
 <li><p class="first"><em>Optional but recommended (speedup for i386 compatible PCs)</em>
 Psyco from
-<a class="reference" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
-[<a class="reference" href="http://downloads.sourceforge.net/psyco/psyco-1.6.win32-py25.exe">http://downloads.sourceforge.net/psyco/psyco-1.6.win32-py25.exe</a>]</p>
+<a class="reference external" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/psyco/psyco-1.6.win32-py25.exe">http://downloads.sourceforge.net/psyco/psyco-1.6.win32-py25.exe</a>]</p>
 </li>
 <li><p class="first"><em>Optional (used for NTLM authentication)</em>
 Download Python Crypto Module from
-<a class="reference" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a>
-[<a class="reference" href="http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe">http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe</a>]</p>
+<a class="reference external" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a>
+[<a class="reference external" href="http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe">http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe</a>]</p>
 </li>
 <li><p class="first"><em>Optional (used by VirusFilter module)</em>
 ClamAv from
-<a class="reference" href="http://www.sosdg.org/clamav-win32/">http://www.sosdg.org/clamav-win32/</a>
-[<a class="reference" href="http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe">http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe</a>]</p>
+<a class="reference external" href="http://www.sosdg.org/clamav-win32/">http://www.sosdg.org/clamav-win32/</a>
+[<a class="reference external" href="http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe">http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe</a>]</p>
 </li>
 <li><p class="first"><em>Only needed if you compile from source:</em>
-install the MinGW suite from <a class="reference" href="http://mingw.sourceforge.net/">http://mingw.sourceforge.net/</a>.
+install the MinGW suite from <a class="reference external" href="http://mingw.sourceforge.net/">http://mingw.sourceforge.net/</a>.
 Be sure to install in the given order:</p>
 <ol class="loweralpha simple">
 <li>MingGW (this installer downloads additional packages)
-[<a class="reference" href="http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe">http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe</a>]</li>
+[<a class="reference external" href="http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe">http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe</a>]</li>
 <li>MSYS
-[<a class="reference" href="http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe">http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe</a>]</li>
+[<a class="reference external" href="http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe">http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe</a>]</li>
+<li>MSYS Developer Toolkit
+[<a class="reference external" href="http://downloads.sourceforge.net/mingw/msysDTK-1.0.1.exe">http://downloads.sourceforge.net/mingw/msysDTK-1.0.1.exe</a>]</li>
 </ol>
 </li>
 </ol>
 </div>
-<div class="section">
-<h2><a id="setup-for-unix-linux" name="setup-for-unix-linux">Setup for Unix/Linux:</a></h2>
+<div class="section" id="setup-for-unix-linux">
+<h2>Setup for Unix/Linux:</h2>
 <ol class="arabic">
 <li><p class="first">Install check</p>
 <p>Be sure to have installed all required Unix/Linux software listed above.</p>
@@ -434,25 +429,25 @@ to adjust your PATH and PYTHONPATH environment variables, eg. by
 adding the commands <tt class="docutils literal"><span class="pre">export</span> <span class="pre">PYTHONPATH=$HOME/lib/python</span></tt> and
 <tt class="docutils literal"><span class="pre">export</span> <span class="pre">PATH=$PATH:$HOME/bin</span></tt> to your shell configuration
 file.</p>
-<p>For more information look at the <a class="reference" href="http://docs.python.org/inst/search-path.html#SECTION000410000000000000000">Modifying Python's search path</a>
+<p>For more information look at the <a class="reference external" href="http://docs.python.org/inst/search-path.html#SECTION000410000000000000000">Modifying Python's search path</a>
 documentation.</p>
 <p>Now run <tt class="docutils literal"><span class="pre">webcleaner-certificates</span> <span class="pre">install</span></tt> to install the SSL
 certificates.
-After that read the <a class="reference" href="http://smarden.org/runit/runsvdir.8.html">runsvdir(8)</a> documentation on how to setup a
+After that read the <a class="reference external" href="http://smarden.org/runit/runsvdir.8.html">runsvdir(8)</a> documentation on how to setup a
 local runit service.</p>
 </li>
 </ol>
-<p>If you downloaded Psyco please read the <a class="reference" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
+<p>If you downloaded Psyco please read the <a class="reference external" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
 </li>
 <li><p class="first">Enjoy</p>
 <p>WebCleaner is now installed as a runit service and will start
 automatically in 5 seconds.
-See the <a class="reference" href="index.html">main page</a> on how to configure the proxy filters.</p>
+See the <a class="reference external" href="index.html">main page</a> on how to configure the proxy filters.</p>
 </li>
 </ol>
 </div>
-<div class="section">
-<h2><a id="setup-for-windows-the-binary-exe-installer" name="setup-for-windows-the-binary-exe-installer">Setup for Windows - the binary .exe installer:</a></h2>
+<div class="section" id="setup-for-windows-the-binary-exe-installer">
+<h2>Setup for Windows - the binary .exe installer:</h2>
 <ol class="arabic">
 <li><p class="first">Install check</p>
 <p>Be sure to have installed all required windows software listed above.</p>
@@ -468,8 +463,8 @@ the instructions.</p>
 </li>
 </ol>
 </div>
-<div class="section">
-<h2><a id="setup-for-windows-compiling-from-source" name="setup-for-windows-compiling-from-source">Setup for Windows - compiling from source:</a></h2>
+<div class="section" id="setup-for-windows-compiling-from-source">
+<h2>Setup for Windows - compiling from source:</h2>
 <ol class="arabic">
 <li><p class="first">Install check</p>
 <p>Be sure to have installed all required windows software listed
@@ -512,26 +507,26 @@ library:
 <p>This generates a binary .exe installer
 <tt class="docutils literal"><span class="pre">dist\webcleaner-X.Y.win32-py2.5.exe</span></tt>. Read above on how to
 install the binary .exe installer.</p>
-<p>If you installed Psyco please read the <a class="reference" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
+<p>If you installed Psyco please read the <a class="reference external" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
 </li>
 <li><p class="first">Enjoy</p>
 <p>WebCleaner is now downloaded and started as a regular Windows service.
-See the <a class="reference" href="index.html">main page</a> on how to configure the proxy filters.</p>
+See the <a class="reference external" href="index.html">main page</a> on how to configure the proxy filters.</p>
 </li>
 </ol>
 </div>
 </div>
-<div class="section">
-<h1><a id="troubleshooting" name="troubleshooting">Troubleshooting</a></h1>
-<p>You can search the <a class="reference" href="http://sourceforge.net/mailarchive/forum.php?forum_id=42921">webcleaner-users archive</a> if your problem has
+<div class="section" id="troubleshooting">
+<h1>Troubleshooting</h1>
+<p>You can search the <a class="reference external" href="http://sourceforge.net/mailarchive/forum.php?forum_id=42921">webcleaner-users archive</a> if your problem has
 already been reported.</p>
-<div class="section">
-<h2><a id="troubleshooting-for-linux" name="troubleshooting-for-linux">Troubleshooting for Linux</a></h2>
+<div class="section" id="troubleshooting-for-linux">
+<h2>Troubleshooting for Linux</h2>
 <p>Errors are logged in the runit log file located at
 /var/service/webcleaner/log/main/current</p>
 </div>
-<div class="section">
-<h2><a id="troubleshooting-for-windows" name="troubleshooting-for-windows">Troubleshooting for Windows</a></h2>
+<div class="section" id="troubleshooting-for-windows">
+<h2>Troubleshooting for Windows</h2>
 <ol class="arabic">
 <li><p class="first">Make sure the proxy is started.
 First look at the system event logger where startup errors are
@@ -572,7 +567,7 @@ file where you can see disallowed connection attempts.</p>
 </div>
 <div class="footer">
 <hr class="footer" />
-Generated on: 2008-06-18 07:25 UTC.
+Generated on: 2009-01-09 07:58 UTC.
 
 </div>
 </body>
