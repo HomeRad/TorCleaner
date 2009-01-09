@@ -124,8 +124,8 @@ msgstr "COPYRIGHT"
 #: en/webcleaner-certificates.1:24
 #: en/webcleaner.1:36
 #: en/webcleaner.conf.5:126
-msgid "Copyright \\(co 2000-2008 Bastian Kleineidam"
-msgstr "Copyright \\(co 2000-2008 Bastian Kleineidam"
+msgid "Copyright \\(co 2000-2009 Bastian Kleineidam"
+msgstr "Copyright \\(co 2000-2009 Bastian Kleineidam"
 
 # type: TH
 #: en/webcleaner.1:1
