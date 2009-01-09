@@ -1,3 +1,12 @@
+- Incorporate checks from purifier:
+  http://htmlpurifier.org/
+
+- Incorporate checks from ratproxy:
+  http://code.google.com/p/ratproxy/source/browse/trunk/ratproxy.c
+
+- wc/filter/Compress.py:165: DeprecationWarning: 'l' format requires -2147483648 <= number <= 2147483647
+  struct.pack('<l', compobj['crc']),
+
 - import proxomitron filter lists
 
 - A wrong regex input in the web interface crashes the server.
