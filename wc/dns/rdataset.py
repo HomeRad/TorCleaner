@@ -26,6 +26,9 @@ import wc.dns.rdataclass
 import wc.dns.rdata
 import wc.dns.set
 
+# define SimpleSet here for backwards compatibility
+SimpleSet = wc.dns.set.Set
+
 class DifferingCovers(wc.dns.exception.DNSException):
     """Raised if an attempt is made to add a SIG/RRSIG whose covered type
     is not the same as that of the other rdatas in the rdataset."""
@@ -100,12 +103,12 @@ class Rdataset(wc.dns.set.Set):
         @param ttl: The TTL
         @type ttl: int"""
 
-        #
+
         # If we're adding a signature, do some special handling to
         # check that the signature covers the same type as the
         # other rdatas in this rdataset.  If this is the first rdata
         # in the set, initialize the covers field.
-        #
+
         if self.rdclass != rd.rdclass or self.rdtype != rd.rdtype:
             raise IncompatibleTypes
         if not ttl is None:
@@ -194,11 +197,11 @@ class Rdataset(wc.dns.set.Set):
         else:
             rdclass = self.rdclass
         if len(self) == 0:
-            #
+
             # Empty rdatasets are used for the question section, and in
             # some dynamic updates, so we don't need to print out the TTL
             # (which is meaningless anyway).
-            #
+
             print >> s, '%s%s%s %s' % (ntext, pad,
                                        wc.dns.rdataclass.to_text(rdclass),
                                        wc.dns.rdatatype.to_text(self.rdtype))
@@ -208,9 +211,9 @@ class Rdataset(wc.dns.set.Set):
                       (ntext, pad, self.ttl, wc.dns.rdataclass.to_text(rdclass),
                        wc.dns.rdatatype.to_text(self.rdtype),
                        rd.to_text(origin=origin, relativize=relativize, **kw))
-        #
+
         # We strip off the final \n for the caller's convenience in printing
-        #
+
         return s.getvalue()[:-1]
 
     def to_wire(self, name, file, compress=None, origin=None,

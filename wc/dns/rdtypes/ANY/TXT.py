@@ -14,73 +14,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import wc.dns.exception
-import wc.dns.rdata
-import wc.dns.tokenizer
+import wc.dns.rdtypes.txtbase
 
-class TXT(wc.dns.rdata.Rdata):
-    """TXT record
-
-    @ivar strings: the text strings
-    @type strings: list of string
-    @see: RFC 1035"""
-
-    __slots__ = ['strings']
-
-    def __init__(self, rdclass, rdtype, strings):
-        super(TXT, self).__init__(rdclass, rdtype)
-        if isinstance(strings, str):
-            strings = [ strings ]
-        self.strings = strings[:]
-
-    def to_text(self, origin=None, relativize=True, **kw):
-        txt = ''
-        prefix = ''
-        for s in self.strings:
-            txt += '%s"%s"' % (prefix, wc.dns.rdata._escapify(s))
-            prefix = ' '
-        return txt
-
-    def from_text(cls, rdclass, rdtype, tok, origin = None, relativize = True):
-        strings = []
-        while 1:
-            (ttype, s) = tok.get()
-            if ttype == wc.dns.tokenizer.EOL or ttype == wc.dns.tokenizer.EOF:
-                break
-            if ttype != wc.dns.tokenizer.QUOTED_STRING:
-                raise wc.dns.exception.DNSSyntaxError, "expected a quoted string"
-            if len(s) > 255:
-                raise wc.dns.exception.DNSSyntaxError, "string too long"
-            strings.append(s)
-        if len(strings) == 0:
-            raise wc.dns.exception.UnexpectedEnd
-        return cls(rdclass, rdtype, strings)
-
-    from_text = classmethod(from_text)
-
-    def to_wire(self, file, compress = None, origin = None):
-        for s in self.strings:
-            l = len(s)
-            assert l < 256
-            byte = chr(l)
-            file.write(byte)
-            file.write(s)
-
-    def from_wire(cls, rdclass, rdtype, wire, current, rdlen, origin = None):
-        strings = []
-        while rdlen > 0:
-            l = ord(wire[current])
-            current += 1
-            rdlen -= 1
-            if l > rdlen:
-                raise wc.dns.exception.FormError
-            s = wire[current : current + l]
-            current += l
-            rdlen -= l
-            strings.append(s)
-        return cls(rdclass, rdtype, strings)
-
-    from_wire = classmethod(from_wire)
-
-    def _cmp(self, other):
-        return cmp(self.strings, other.strings)
+class TXT(wc.dns.rdtypes.txtbase.TXTBase):
+    """TXT record"""
+    pass

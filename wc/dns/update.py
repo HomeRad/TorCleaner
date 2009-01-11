@@ -47,10 +47,8 @@ class Update(wc.dns.message.Message):
         self.flags |= wc.dns.opcode.to_flags(wc.dns.opcode.UPDATE)
         if isinstance(zone, str):
             zone = wc.dns.name.from_text(zone)
-        else:
-            zone = zone.copy()
         self.origin = zone
-        if isinstance(rdclass, str):
+        if isinstance(rdclass, basestring):
             rdclass = wc.dns.rdataclass.from_text(rdclass)
         self.zone_rdclass = rdclass
         self.find_rrset(self.question, self.origin, rdclass, wc.dns.rdatatype.SOA,
@@ -81,7 +79,7 @@ class Update(wc.dns.message.Message):
 
                 - ttl, rdtype, string..."""
 
-        if isinstance(name, str):
+        if isinstance(name, basestring):
             name = wc.dns.name.from_text(name, None)
         if isinstance(args[0], wc.dns.rdataset.Rdataset):
             for rds in args:
@@ -131,7 +129,7 @@ class Update(wc.dns.message.Message):
 
                 - rdtype, [string...]"""
 
-        if isinstance(name, str):
+        if isinstance(name, basestring):
             name = wc.dns.name.from_text(name, None)
         if len(args) == 0:
             rrset = self.find_rrset(self.authority, name, wc.dns.rdataclass.ANY,
@@ -189,7 +187,7 @@ class Update(wc.dns.message.Message):
 
                 - rdtype, string..."""
 
-        if isinstance(name, str):
+        if isinstance(name, basestring):
             name = wc.dns.name.from_text(name, None)
         if len(args) == 0:
             rrset = self.find_rrset(self.answer, name,
@@ -217,7 +215,7 @@ class Update(wc.dns.message.Message):
         """Require that an owner name (and optionally an rdata type) does
         not exist as a prerequisite to the execution of the update."""
 
-        if isinstance(name, str):
+        if isinstance(name, basestring):
             name = wc.dns.name.from_text(name, None)
         if rdtype is None:
             rrset = self.find_rrset(self.answer, name,
@@ -232,7 +230,7 @@ class Update(wc.dns.message.Message):
                                     wc.dns.rdatatype.NONE, None,
                                     True, True)
 
-    def to_wire(self, origin=None, max_size=65535, **kw):
+    def to_wire(self, origin=None, max_size=65535):
         """Return a string containing the update in DNS compressed wire
         format.
         @rtype: string"""
