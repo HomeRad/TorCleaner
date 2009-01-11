@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.4.1: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
 <title>SSL Gateway</title>
 <meta content="SSL Gateway" name="navigation.name" />
 <style type="text/css">
@@ -306,18 +306,19 @@ window.onload = function() {
 <!-- /bfknav -->
 <div class="document" id="ssl-gateway">
 <h1 class="title">SSL Gateway</h1>
-<div class="section">
-<h1><a id="warning" name="warning">Warning</a></h1>
+
+<div class="section" id="warning">
+<h1>Warning</h1>
 <p>The SSL gateway is still considered in development, so use with care.</p>
 </div>
-<div class="section">
-<h1><a id="introduction" name="introduction">Introduction</a></h1>
+<div class="section" id="introduction">
+<h1>Introduction</h1>
 <p>An SSL gateway enables filtering of https traffic by spawning an SSL
 server on the local host (port 8443 per default) through which all
 secure traffic is routed.</p>
 </div>
-<div class="section">
-<h1><a id="security" name="security">Security</a></h1>
+<div class="section" id="security">
+<h1>Security</h1>
 <p>An SSL gateway has the disadvantage of having to fake the SSL certificate
 from the original server and replace it with our own certificate, which
 uses the owner name &quot;WebCleaner Server&quot;.
@@ -327,8 +328,8 @@ So in order to not weaken your secure web surfing experience, make sure
 you have set up the WebCleaner SSL gateway yourself and configure it
 to not allow administration of another person except yourself.</p>
 </div>
-<div class="section">
-<h1><a id="data-flux" name="data-flux">Data flux</a></h1>
+<div class="section" id="data-flux">
+<h1>Data flux</h1>
 <pre class="literal-block">
                        DOWN                    UP
 ________________________________________________________________________
@@ -366,7 +367,7 @@ ________________________________________________________________________
 </div>
 <div class="footer">
 <hr class="footer" />
-Generated on: 2008-06-30 06:30 UTC.
+Generated on: 2009-01-09 09:39 UTC.
 
 </div>
 </body>

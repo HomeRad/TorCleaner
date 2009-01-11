@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.4.1: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
 <title>Specification of content rating data</title>
 <meta content="Ratings" name="navigation.name" />
 <meta content="0" name="navigation.visible" />
@@ -307,34 +307,35 @@ window.onload = function() {
 <!-- /bfknav -->
 <div class="document" id="specification-of-content-rating-data">
 <h1 class="title">Specification of content rating data</h1>
+
 <p>This document defines the data and mechanisms used to
 rate internet pages. This can be used to enable surfing
 sessions that are limited to specified contents, and is
 especially useful for allowing children to experience the
 web in a safe manner.</p>
 <p>Unless otherwise noted, character data is assumed to be in Unicode.</p>
-<div class="section">
-<h1><a id="rating" name="rating">Rating</a></h1>
+<div class="section" id="rating">
+<h1>Rating</h1>
 <p>A rating is a dictionary filled with name/value items.
 Each name/value item is an instance of a defined rating format.</p>
 </div>
-<div class="section">
-<h1><a id="rating-format" name="rating-format">Rating format</a></h1>
+<div class="section" id="rating-format">
+<h1>Rating format</h1>
 <p>A rating format defines a unique, case insensitive name, and a range
 of valid values along with their interpretation.</p>
 <p>A given interpretation allows comparing two ratings against each other,
 to test if one exceeds the other. Comparisons are used to decide wether
 to allow a rated page or not.</p>
 </div>
-<div class="section">
-<h1><a id="url-rating" name="url-rating">URL rating</a></h1>
+<div class="section" id="url-rating">
+<h1>URL rating</h1>
 <p>A URL rating relates a rating to one or more URLs. It consists of
 a rating, an URL and an optional generic flag specifying that all
 URLs with the given URL as base path apply to the rating.
 It also has an optional comment explaining the rating.</p>
 </div>
-<div class="section">
-<h1><a id="rating-service" name="rating-service">Rating service</a></h1>
+<div class="section" id="rating-service">
+<h1>Rating service</h1>
 <p>A rating service defines a unique name and the (sub-)set of supported
 rating formats. The service name should be an URL with human-viewable
 information about the service.</p>
@@ -343,14 +344,14 @@ defines.</p>
 <p>Several recommended storage and delivery methods are explained below,
 however they are not mandatory.</p>
 </div>
-<div class="section">
-<h1><a id="service-delivery" name="service-delivery">Service delivery</a></h1>
+<div class="section" id="service-delivery">
+<h1>Service delivery</h1>
 <p>Several different rating delivery methods are defined.
 They allow content providers flexibility when providing rating data.
 Since rating data is in Unicode, it must be encoded if the delivery
 method does not support Unicode.</p>
-<div class="section">
-<h2><a id="http-header" name="http-header">HTTP Header</a></h2>
+<div class="section" id="http-header">
+<h2>HTTP Header</h2>
 <p>When answering a HTTP request, rating data can be submitted as
 HTTP headers. All headers start with <tt class="docutils literal"><span class="pre">X-Rating</span></tt> and are defined
 as follows:</p>
@@ -376,45 +377,45 @@ also defined case insensitive.</p>
 can occur multiple times, in which case it is service dependent on
 how to interpret the multiple values.</p>
 </div>
-<div class="section">
-<h2><a id="html-meta-data" name="html-meta-data">HTML meta data</a></h2>
+<div class="section" id="html-meta-data">
+<h2>HTML meta data</h2>
 <p>A HTML file can be rated by supplying data in a meta tag.
 The format is basically the same as the HTTP header format,
 using <tt class="docutils literal"><span class="pre">X-Rating</span></tt> in the name attribute and the value in the
 content attribute.</p>
 </div>
 </div>
-<div class="section">
-<h1><a id="service-storage" name="service-storage">Service storage</a></h1>
+<div class="section" id="service-storage">
+<h1>Service storage</h1>
 <p>There are several things to consider when storing URL ratings for
 a service.</p>
-<div class="section">
-<h2><a id="character-encoding" name="character-encoding">Character encoding</a></h2>
+<div class="section" id="character-encoding">
+<h2>Character encoding</h2>
 <p>Since rating data is in Unicode, it must be encoded if the storage
 method does not support Unicode.</p>
 </div>
-<div class="section">
-<h2><a id="platform-independence" name="platform-independence">Platform independence</a></h2>
+<div class="section" id="platform-independence">
+<h2>Platform independence</h2>
 <p>Rating data will be stored and processed on lots of different computers
 and platforms. All algorithms should be platform independent.</p>
 </div>
-<div class="section">
-<h2><a id="readable-format" name="readable-format">Readable format</a></h2>
+<div class="section" id="readable-format">
+<h2>Readable format</h2>
 <p>The storage format should be easily readable by humans. A readable
 format is automatically editable with a text editor, which also guarantees
 platform independence for editing operations.</p>
 </div>
 </div>
-<div class="section">
-<h1><a id="webcleaner-service" name="webcleaner-service">WebCleaner service</a></h1>
+<div class="section" id="webcleaner-service">
+<h1>WebCleaner service</h1>
 <p>As you might have guessed by now, the WebCleaner software delivers
 both a full featured rating service, and supports to deploy and
 enforce it on your computer. You can even submit your own ratings
 to the service. Below you will find a short description of the
 service. For more information, visit the
 WebCleaner rating service page (XXX todo).</p>
-<div class="section">
-<h2><a id="rating-formats" name="rating-formats">Rating formats</a></h2>
+<div class="section" id="rating-formats">
+<h2>Rating formats</h2>
 <p>The following rating formats are defined by WebCleaner:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -447,12 +448,12 @@ either none, some or a lot of it.</td>
 </tbody>
 </table>
 </div>
-<div class="section">
-<h2><a id="url-ratings" name="url-ratings">URL ratings</a></h2>
+<div class="section" id="url-ratings">
+<h2>URL ratings</h2>
 <p>WebCleaner stores URLs normalized and absolute.</p>
 </div>
-<div class="section">
-<h2><a id="id1" name="id1">Service delivery</a></h2>
+<div class="section" id="id1">
+<h2>Service delivery</h2>
 <p>WebCleaner supports both HTTP header and HTML meta data ratings.</p>
 <p>HTTP header example:</p>
 <pre class="literal-block">
@@ -465,8 +466,8 @@ X-Rating-WC-Agerange: 10-
 &lt;meta name=&quot;X-Rating-WC-Agerange&quot; content=&quot;10-&quot;&gt;
 </pre>
 </div>
-<div class="section">
-<h2><a id="web-interface" name="web-interface">Web interface</a></h2>
+<div class="section" id="web-interface">
+<h2>Web interface</h2>
 <p>The WebCleaner rating web interface allows to query and send ratings
 for specific URLs. Sent ratings will undergo a review process
 before being admitted into the official rating database.</p>
@@ -474,8 +475,8 @@ before being admitted into the official rating database.</p>
 for review to the rating service URL. It will also be possible to
 update the local rating database with the official rating database.</p>
 </div>
-<div class="section">
-<h2><a id="storage-format" name="storage-format">Storage format</a></h2>
+<div class="section" id="storage-format">
+<h2>Storage format</h2>
 <p>URL ratings are stored as a number of fields. Each field begins with a
 tag, such as <tt class="docutils literal"><span class="pre">URL</span></tt> or <tt class="docutils literal"><span class="pre">Comment</span></tt> (case insensitive), followed by a
 colon, and the body of the field. Certain fields may be multiple lines
@@ -505,7 +506,7 @@ order, and whitespace will be normalized.</p>
 </div>
 <div class="footer">
 <hr class="footer" />
-Generated on: 2008-06-30 06:30 UTC.
+Generated on: 2009-01-09 09:39 UTC.
 
 </div>
 </body>
