@@ -18,7 +18,6 @@
 Test required methods.
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 
@@ -44,11 +43,3 @@ class test_reqmethod_get (ProxyTest):
 
     def test_reqmethod_get (self):
         self.start_test()
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

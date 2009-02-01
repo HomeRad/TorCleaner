@@ -18,7 +18,6 @@
 Test handling of multiple headers.
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 
@@ -78,11 +77,3 @@ class test_multiheader_clen_toClt (ProxyTest):
             if header.lower().startswith("content-length:"):
                 num_found += 1
         self.assert_(num_found < 2)
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

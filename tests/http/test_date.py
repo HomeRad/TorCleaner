@@ -57,14 +57,3 @@ class TestDate (unittest.TestCase):
         self.assertEquals(wc.http.date.parse_date_asctime(s), t)
         s = "Tue Feb 99 12:13:14 2000"
         self.assertRaises(ValueError, wc.http.date.parse_date_asctime, s)
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    return unittest.makeSuite(TestDate)
-
-
-if __name__ == '__main__':
-    unittest.main()

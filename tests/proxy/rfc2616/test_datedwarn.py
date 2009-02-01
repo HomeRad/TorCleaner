@@ -18,7 +18,6 @@
 """
 
 import time
-from tests import make_suite
 from .. import ProxyTest
 from wc.http.date import get_date_rfc1123
 
@@ -154,12 +153,3 @@ class test_datedwarn_1cur_noquotes (ProxyTest):
 
     def check_response_headers (self, response):
         self.assertEquals(response.num_headers('Warning'), 1)
-
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

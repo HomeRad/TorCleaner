@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -121,11 +121,3 @@ class TestRdTypeAndClass (unittest.TestCase):
         def bad():
             junk = wc.dns.rdatatype.to_text(65536)
         self.assertRaises(ValueError, bad)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestRdTypeAndClass)
-
-
-if __name__ == '__main__':
-    unittest.main()

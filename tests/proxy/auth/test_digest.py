@@ -35,13 +35,3 @@ class TestDigest (unittest.TestCase):
         creds = wc.proxy.auth.parse_credentials(wc.proxy.auth.get_credentials(chals, **attrs))
         #wccreds = creds['Digest'][0]
         # XXX test this data
-
-
-def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestDigest))
-    return suite
-
-
-if __name__ == '__main__':
-    unittest.main()

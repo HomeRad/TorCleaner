@@ -1,0 +1,377 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="2" name="navigation.order" />
+<meta content="Installation" name="navigation.name" />
+
+    <title>Installation &mdash; WebCleaner</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.42',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="WebCleaner" href="index.html" />
+<style type="text/css">
+img { border: 0; }
+</style>
+
+  </head>
+  <body>
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<table border="0"><tr>
+ <td><a href="index.html"><img
+  src="_static/logo64x64.png" border="0" alt="LinkChecker"/></a></td>
+ <td><h1>LinkChecker</h1></td>
+</tr></table>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="index.html">Home </a> |&nbsp;</li>
+  <li><a href="">Installation </a> |&nbsp;</li>
+  <li><a href="upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Installation</a><ul>
+<li><a class="reference external" href="#requirements-for-unix-linux-or-max-os-x">Requirements for Unix/Linux or Max OS X</a></li>
+<li><a class="reference external" href="#requirements-for-windows">Requirements for Windows:</a></li>
+<li><a class="reference external" href="#setup-for-unix-linux">Setup for Unix/Linux:</a></li>
+<li><a class="reference external" href="#setup-for-windows-the-binary-exe-installer">Setup for Windows - the binary .exe installer:</a></li>
+<li><a class="reference external" href="#setup-for-windows-compiling-from-source">Setup for Windows - compiling from source:</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#troubleshooting">Troubleshooting</a><ul>
+<li><a class="reference external" href="#troubleshooting-for-linux">Troubleshooting for Linux</a></li>
+<li><a class="reference external" href="#troubleshooting-for-windows">Troubleshooting for Windows</a></li>
+</ul>
+</li>
+</ul>
+
+          <h3>Quick search</h3>
+            <form class="search" action="search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements-for-unix-linux-or-max-os-x">
+<h2>Requirements for Unix/Linux or Max OS X<a class="headerlink" href="#requirements-for-unix-linux-or-max-os-x" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">You need a standard GNU development environment with</p>
+<ul>
+<li><p class="first">C compiler (for example the GNU C Compiler gcc)</p>
+<p>Depending on your distribution, several development packages
+might be needed to provide a fully functional C development
+environment.</p>
+</li>
+</ul>
+<p>Note for developers: if you want to regenerate the .pot template
+from the source files, you will need xgettext with Python support.
+This is available in gettext &gt;= 0.12.</p>
+</li>
+<li><p class="first">Python &gt;= 2.5 from <a class="reference external" href="http://www.python.org/">http://www.python.org/</a> with zlib support</p>
+</li>
+<li><p class="first">runit &gt;= 1.3 from <a class="reference external" href="http://smarden.org/runit/">http://smarden.org/runit/</a></p>
+</li>
+<li><p class="first"><em>Optional but recommended (used by ImageSize and ImageReducer modules)</em>
+Python Imaging Library (PIL) from
+<a class="reference external" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a></p>
+</li>
+<li><p class="first"><em>Optional but recommended (used for SSL connections)</em>
+OpenSSL and PyOpenSSL from
+<a class="reference external" href="http://www.openssl.org/">http://www.openssl.org/</a> and
+<a class="reference external" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a></p>
+</li>
+<li><p class="first"><em>Optional but recommended (speedup for i386 compatible PCs)</em>
+Psyco from
+<a class="reference external" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz">http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz</a>]</p>
+</li>
+<li><p class="first"><em>Optional (used by VirusFilter module)</em>
+ClamAv from
+<a class="reference external" href="http://www.clamav.net/">http://www.clamav.net/</a></p>
+</li>
+<li><p class="first"><em>Optional (used for NTLM authentication)</em>
+Python Crypto Module from
+<a class="reference external" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a></p>
+</li>
+</ol>
+</div>
+<div class="section" id="requirements-for-windows">
+<h2>Requirements for Windows:<a class="headerlink" href="#requirements-for-windows" title="Permalink to this headline">¶</a></h2>
+<p>Direct download links are in brackets.</p>
+<ol class="arabic">
+<li><p class="first">Install Python &gt;= 2.5 from <a class="reference external" href="http://www.python.org/">http://www.python.org/</a>
+[<a class="reference external" href="http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi">http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi</a>]</p>
+</li>
+<li><p class="first">Install Python for Windows Extensions from
+<a class="reference external" href="http://sourceforge.net/projects/pywin32/">http://sourceforge.net/projects/pywin32/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe">http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe</a>]</p>
+<p>To run Pythonwin, you may need a copy of the Microsoft MFC DLLs.
+You should only install these files if the install process tells you
+the DLL can not be found, or if Pythonwin fails to start due to this
+DLL missing. You can download at
+<a class="reference external" href="http://www.dll-files.com/dllindex/dll-files.shtml?mfc71">http://www.dll-files.com/dllindex/dll-files.shtml?mfc71</a>
+Download this file and save it to your Windows System32 directory.</p>
+</li>
+<li><p class="first"><em>Optional but recommended (used by ImageSize and ImageReducer modules)</em>
+Install Python Imaging Library (PIL) from
+<a class="reference external" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a>
+[<a class="reference external" href="http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe">http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe</a>]</p>
+</li>
+<li><p class="first"><em>Optional but recommended (used for SSL connections)</em>
+Install OpenSSL and PyOpenSSL for Windows from
+<a class="reference external" href="http://www.shininglightpro.com/products/Win32OpenSSL.html">http://www.shininglightpro.com/products/Win32OpenSSL.html</a>
+[<a class="reference external" href="http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8j.exe">http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8j.exe</a>]
+and
+<a class="reference external" href="http://pyopenssl.sourceforge.net/">http://pyopenssl.sourceforge.net/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/pyopenssl/pyOpenSSL-0.7.win32-py2.5.exe">http://downloads.sourceforge.net/pyopenssl/pyOpenSSL-0.7.win32-py2.5.exe</a>]</p>
+</li>
+<li><p class="first"><em>Optional but recommended (speedup for i386 compatible PCs)</em>
+Psyco from
+<a class="reference external" href="http://psyco.sourceforge.net/">http://psyco.sourceforge.net/</a>
+[<a class="reference external" href="http://downloads.sourceforge.net/psyco/psyco-1.6.win32-py25.exe">http://downloads.sourceforge.net/psyco/psyco-1.6.win32-py25.exe</a>]</p>
+</li>
+<li><p class="first"><em>Optional (used for NTLM authentication)</em>
+Download Python Crypto Module from
+<a class="reference external" href="http://www.amk.ca/python/code/crypto.html">http://www.amk.ca/python/code/crypto.html</a>
+[<a class="reference external" href="http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe">http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe</a>]</p>
+</li>
+<li><p class="first"><em>Optional (used by VirusFilter module)</em>
+ClamAv from
+<a class="reference external" href="http://www.sosdg.org/clamav-win32/">http://www.sosdg.org/clamav-win32/</a>
+[<a class="reference external" href="http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe">http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe</a>]</p>
+</li>
+<li><p class="first"><em>Only needed if you compile from source:</em>
+install the MinGW suite from <a class="reference external" href="http://mingw.sourceforge.net/">http://mingw.sourceforge.net/</a>.
+Be sure to install in the given order:</p>
+<ol class="loweralpha simple">
+<li>MingGW (this installer downloads additional packages)
+[<a class="reference external" href="http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe">http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe</a>]</li>
+<li>MSYS
+[<a class="reference external" href="http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe">http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe</a>]</li>
+<li>MSYS Developer Toolkit
+[<a class="reference external" href="http://downloads.sourceforge.net/mingw/msysDTK-1.0.1.exe">http://downloads.sourceforge.net/mingw/msysDTK-1.0.1.exe</a>]</li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="setup-for-unix-linux">
+<h2>Setup for Unix/Linux:<a class="headerlink" href="#setup-for-unix-linux" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Install check</p>
+<p>Be sure to have installed all required Unix/Linux software listed above.</p>
+</li>
+<li><p class="first">Compilation</p>
+<p>Run <tt class="docutils literal"><span class="pre">./configure</span> <span class="pre">--enable-shared</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span></tt> to compile the included
+C libraries.
+Run <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build</span></tt> to compile the Python files.
+For help about the setup.py script options, run
+<tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">--help</span></tt>.
+The CC environment variable is checked before compilation, so you can
+change the default C compiler with <tt class="docutils literal"><span class="pre">export</span> <span class="pre">CC=myccompiler</span></tt>.
+If you work from CVS, you must run <tt class="docutils literal"><span class="pre">./autogen.sh</span></tt> first to generate the
+configure and Makefile files.</p>
+</li>
+<li><ol class="first loweralpha">
+<li><p class="first">Installation as root</p>
+<p>Run <tt class="docutils literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'python</span> <span class="pre">setup.py</span> <span class="pre">install'</span></tt> to install the proxy.
+Run <tt class="docutils literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'webcleaner-certificates</span> <span class="pre">install'</span></tt> to install the
+certificates.
+Run <tt class="docutils literal"><span class="pre">su</span> <span class="pre">-c</span> <span class="pre">'make</span> <span class="pre">installservice'</span></tt> to install the runit service.</p>
+</li>
+<li><p class="first">Installation as a normal user</p>
+<p>Run <tt class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--home</span> <span class="pre">$HOME</span></tt>. Note that you have
+to adjust your PATH and PYTHONPATH environment variables, eg. by
+adding the commands <tt class="docutils literal"><span class="pre">export</span> <span class="pre">PYTHONPATH=$HOME/lib/python</span></tt> and
+<tt class="docutils literal"><span class="pre">export</span> <span class="pre">PATH=$PATH:$HOME/bin</span></tt> to your shell configuration
+file.</p>
+<p>For more information look at the <a class="reference external" href="http://docs.python.org/inst/search-path.html#SECTION000410000000000000000">Modifying Python&#8217;s search path</a>
+documentation.</p>
+<p>Now run <tt class="docutils literal"><span class="pre">webcleaner-certificates</span> <span class="pre">install</span></tt> to install the SSL
+certificates.
+After that read the <a class="reference external" href="http://smarden.org/runit/runsvdir.8.html">runsvdir(8)</a> documentation on how to setup a
+local runit service.</p>
+</li>
+</ol>
+<p>If you downloaded Psyco please read the <a class="reference external" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
+</li>
+<li><p class="first">Enjoy</p>
+<p>WebCleaner is now installed as a runit service and will start
+automatically in 5 seconds.
+See the <a class="reference external" href="index.html">main page</a> on how to configure the proxy filters.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="setup-for-windows-the-binary-exe-installer">
+<h2>Setup for Windows - the binary .exe installer:<a class="headerlink" href="#setup-for-windows-the-binary-exe-installer" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Install check</p>
+<p>Be sure to have installed all required windows software listed above.</p>
+</li>
+<li><p class="first">Register the Python service control.</p>
+<p>Change to the directory where PythonService.exe is located,
+which is usually c:\python25\Lib\site-packages\win32,
+and execute <tt class="docutils literal"><span class="pre">c:&gt;</span> <span class="pre">PythonService.exe</span> <span class="pre">/register</span></tt>. This has to be
+done only once after installing the Python for Windows Extensions.</p>
+</li>
+<li><p class="first">Execute the <tt class="docutils literal"><span class="pre">webcleaner-x.xx.win32-py2.5.exe</span></tt> file and follow
+the instructions.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="setup-for-windows-compiling-from-source">
+<h2>Setup for Windows - compiling from source:<a class="headerlink" href="#setup-for-windows-compiling-from-source" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Install check</p>
+<p>Be sure to have installed all required windows software listed
+above.
+Note that a &#8216;c:\&gt;&#8217; prompt describes a command shell launched
+via cmd.exe, a &#8216;% &#8216; prompt describes a MSYS shell.</p>
+<p>If you do not want to recompile the PyOpenSSL installer yourself,
+skip to step 3. Otherwise read ahead.</p>
+</li>
+<li><p class="first">Compile and install PyOpenSSL</p>
+<p>Change to the directory where you installed the Win32OpenSSL
+software into (for example c:\OpenSSL).
+Now fix the library names for the mingw compiler:
+<tt class="docutils literal"><span class="pre">c:\OpenSSL&gt;</span> <span class="pre">cd</span> <span class="pre">lib\MinGW</span> <span class="pre">&amp;&amp;</span> <span class="pre">move</span> <span class="pre">ssleay32.a</span> <span class="pre">libssleay32.a</span> <span class="pre">&amp;&amp;</span>
+<span class="pre">move</span> <span class="pre">ssleay32.def</span> <span class="pre">libssleay32.def</span></tt></p>
+<p>Extract pyOpenSSL-0.6.tar.gz and change into the generated
+directory (for example c:\pyOpenSSL-0.6).
+Open a text editor for setup.py and replace &#8216;libeay32&#8217; with &#8216;eay32&#8217;.
+Then run:
+<tt class="docutils literal"><span class="pre">c:\pyOpenSSL-0.6&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">-c</span> <span class="pre">mingw32</span> <span class="pre">-I</span> <span class="pre">c:\OpenSSL\include</span>
+<span class="pre">-L</span> <span class="pre">c:\OpenSSL\lib\MinGW</span> <span class="pre">bdist_wininst</span></tt></p>
+<p>This generates a binary installer
+<tt class="docutils literal"><span class="pre">dist\pyOpenSSL-0.6.win32-py2.5.exe</span></tt> which you just have to
+execute.</p>
+</li>
+<li><p class="first">Compile the JavaScript library</p>
+<p>Copy webcleaner-X.Y.tar.gz into your MSYS home directory,
+which is usually under c:\msys\1.0\home\user\.
+Launch MSYS and extract the tarball with
+<tt class="docutils literal"><span class="pre">%</span> <span class="pre">tar</span> <span class="pre">xzvf</span> <span class="pre">webcleaner-X.Y.tar.gz</span></tt>.
+Now change into the generated directory with
+<tt class="docutils literal"><span class="pre">%</span> <span class="pre">cd</span> <span class="pre">webcleaner-X.Y</span></tt> and configure and compile the JavaScript
+library:
+<tt class="docutils literal"><span class="pre">%</span> <span class="pre">./configure</span> <span class="pre">--enable-shared</span> <span class="pre">&amp;&amp;</span> <span class="pre">make</span> <span class="pre">-C</span> <span class="pre">libjs</span></tt>.</p>
+</li>
+<li><p class="first">Generate the WebCleaner installer</p>
+<p>Change to the webcleaner-X.Y directory and run
+<tt class="docutils literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">sdist</span> <span class="pre">--manifest-only</span></tt> and
+<tt class="docutils literal"><span class="pre">c:&gt;</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build</span> <span class="pre">-c</span> <span class="pre">mingw32</span> <span class="pre">bdist_wininst</span></tt>.</p>
+<p>This generates a binary .exe installer
+<tt class="docutils literal"><span class="pre">dist\webcleaner-X.Y.win32-py2.5.exe</span></tt>. Read above on how to
+install the binary .exe installer.</p>
+<p>If you installed Psyco please read the <a class="reference external" href="http://psyco.sourceforge.net/psycoguide/node2.html">psyco installation docs</a>.</p>
+</li>
+<li><p class="first">Enjoy</p>
+<p>WebCleaner is now downloaded and started as a regular Windows service.
+See the <a class="reference external" href="index.html">main page</a> on how to configure the proxy filters.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
+<p>You can search the <a class="reference external" href="http://sourceforge.net/mailarchive/forum.php?forum_id=42921">webcleaner-users archive</a> if your problem has
+already been reported.</p>
+<div class="section" id="troubleshooting-for-linux">
+<h2>Troubleshooting for Linux<a class="headerlink" href="#troubleshooting-for-linux" title="Permalink to this headline">¶</a></h2>
+<p>Errors are logged in the runit log file located at
+/var/service/webcleaner/log/main/current</p>
+</div>
+<div class="section" id="troubleshooting-for-windows">
+<h2>Troubleshooting for Windows<a class="headerlink" href="#troubleshooting-for-windows" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Make sure the proxy is started.
+First look at the system event logger where startup errors are
+logged. Do this by executing
+Settings -&gt; Control Panel -&gt; Administrative Tools -&gt; Event Viewer
+and look at the &#8220;Application Log&#8221; events.
+There should be an entry saying <tt class="docutils literal"><span class="pre">The</span> <span class="pre">WebCleaner</span> <span class="pre">service</span> <span class="pre">has</span> <span class="pre">started</span></tt>.</p>
+<p>Then start a DOS command prompt and execute
+<tt class="docutils literal"><span class="pre">c:&gt;</span> <span class="pre">netstat</span> <span class="pre">-a</span> <span class="pre">-n</span> <span class="pre">-p</span> <span class="pre">TCP</span></tt>. In the listing there should be an
+entry like <tt class="docutils literal"><span class="pre">TCP</span> <span class="pre">0.0.0.0:8080</span> <span class="pre">0.0.0.0:0</span> <span class="pre">LISTENING</span></tt> which tells
+you that the WebCleaner proxy port 8080 is ready to accept
+incoming connections.</p>
+</li>
+<li><p class="first">A proxy restart can take a while. If the web configuration site
+refreshes itself after a restart the proxy might just not be up
+and running again. Just wait and press the Reload button in your
+browser until the webpage can be displayed.</p>
+</li>
+<li><p class="first">Take a look in the WebCleaner log file.
+It is located at <tt class="docutils literal"><span class="pre">c:\python25\share\webcleaner\config\webcleaner.log</span></tt>
+where <tt class="docutils literal"><span class="pre">c:\python25</span></tt> should be replaced with the directory you
+installed Python into.</p>
+<p>The log file has more detailed information as the application event log.
+The line <tt class="docutils literal"><span class="pre">WebCleaner</span> <span class="pre">listening</span> <span class="pre">on</span> <span class="pre">*:8080</span> <span class="pre">tcp</span></tt> tells you that the
+proxy is running.
+You can also turn on debugging by replacing INFO with DEBUG in the
+file <tt class="docutils literal"><span class="pre">c:\python25\share\webcleaner\config\logging.conf</span></tt>. After a
+restart, the log should be filled with debug statements.</p>
+</li>
+<li><p class="first">Make sure firewall rules allow proxy connections.
+If you have enabled a firewall, make sure that connections to
+and from the proxy are allowed. Most firewall products have a log
+file where you can see disallowed connection attempts.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="index.html">Home </a> |&nbsp;</li>
+  <li><a href="">Installation </a> |&nbsp;</li>
+  <li><a href="upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Bastian Kleineidam.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.5.1.
+    </div>
+  </body>
+</html>

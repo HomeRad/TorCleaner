@@ -32,13 +32,6 @@ class test_xyz (ProxyTest):
     def check_response_content (self, response):
         # response must not have content
         self.assert_(not response.content)
-
-#And the test suite method:
-def test_suite ():
-    "Build and return a TestSuite."
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())
-
 """
 
 import unittest

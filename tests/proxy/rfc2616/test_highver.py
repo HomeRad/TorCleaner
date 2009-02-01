@@ -18,7 +18,6 @@
 Test HTTP request version compatibility.
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 class HighverTest (ProxyTest):
@@ -121,11 +120,3 @@ class test_highver_011_1 (HighverTest):
         if request.content:
             data += request.content
         return data
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

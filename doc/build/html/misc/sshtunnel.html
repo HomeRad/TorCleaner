@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="SSH tunnel" name="navigation.name" />
+
+    <title>SSH tunnel &mdash; WebCleaner</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.42',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="WebCleaner" href="../index.html" />
+<style type="text/css">
+img { border: 0; }
+</style>
+
+  </head>
+  <body>
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<table border="0"><tr>
+ <td><a href="../index.html"><img
+  src="../_static/logo64x64.png" border="0" alt="LinkChecker"/></a></td>
+ <td><h1>LinkChecker</h1></td>
+</tr></table>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="../index.html">Home </a> |&nbsp;</li>
+  <li><a href="../install.html">Installation </a> |&nbsp;</li>
+  <li><a href="../upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="../documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="../other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+          <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  
+  <div class="section" id="ssh-tunnel">
+<h1>SSH tunnel<a class="headerlink" href="#ssh-tunnel" title="Permalink to this headline">¶</a></h1>
+<p>Here are some scripts (for Debian Linux systems) to let you use WebCleaner
+over ssh and dialup from your box at work (my.atworkbox.com) to your box
+at home (my.homedslbox.org).</p>
+<p>Remember: do not open port 8080 in your home-firewall for this to work.
+If you do not have a firewall on your home dsl box or don&#8217;t know what I
+am talking about, leave these scripts alone!</p>
+<ol class="arabic">
+<li><p class="first">Put this iptables line in your firewall at my.homedslbox.org:</p>
+<div class="highlight-python"><pre>$IPTABLES -A INPUT -i ppp0 -p tcp -s my.atworkbox.com --dport ssh -m state --state NEW -j ACCEPT</pre>
+</div>
+<p>This assumes your ppp interface is ppp0. And you must have state
+matching enabled in your kernel.</p>
+</li>
+<li><p class="first">copy this script on my.homedslbox.org:</p>
+<div class="highlight-python"><pre>-- start file /etc/ppp/ip-up.d/30webcleaner --
+# add external IP to the allowed host list
+# tested under Debian Linux
+#!/bin/sh
+D=/etc/webcleaner
+O=$D/webcleaner.conf
+R="s/^ allowedhosts=.*/ allowedhosts=\"localhost,$PPP_LOCAL\"/"
+test -f $O || exit 0
+sed  -i -e "$R" $O
+/usr/bin/webcleaner-ctl restart
+-- end file /etc/ppp/ip-up.d/30webcleaner --</pre>
+</div>
+</li>
+<li><p class="first">copy this script on your work box my.atworkbox.com:</p>
+<div class="highlight-python"><pre>-- start file ~/bin/f.sh --
+#!/bin/sh
+ssh -C -2 -L 8080:my.homedslbox.org:8080 my.homedslbox.org
+-- end file ~/bin/f.sh --</pre>
+</div>
+</li>
+<li><p class="first">Start your home box, start webcleaner, then start your network with &#8220;pon&#8221;.
+The script 30webcleaner gets executed.</p>
+</li>
+<li><p class="first">Go to work, start script f.sh and you can surf with this setting:
+<tt class="docutils literal"><span class="pre">export</span> <span class="pre">http_proxy=&quot;localhost:8080&quot;</span></tt> :-)</p>
+</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="../index.html">Home </a> |&nbsp;</li>
+  <li><a href="../install.html">Installation </a> |&nbsp;</li>
+  <li><a href="../upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="../documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="../other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Bastian Kleineidam.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.5.1.
+    </div>
+  </body>
+</html>

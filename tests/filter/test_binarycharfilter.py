@@ -51,11 +51,3 @@ class TestBinaryCharFilter (unittest.TestCase):
 
     def test_null (self):
         self.filt("\x00", " ")
-
-
-def test_suite ():
-    return unittest.makeSuite(TestBinaryCharFilter)
-
-
-if __name__ == '__main__':
-    unittest.main()

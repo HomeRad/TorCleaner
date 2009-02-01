@@ -37,10 +37,3 @@ class TestRating (unittest.TestCase):
         split_url = wc.configuration.ratingstorage.split_url
         for url, res in urls:
             self.assertEqual(split_url(url), res)
-
-def test_suite ():
-    return unittest.makeSuite(TestRating)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,0 +1,299 @@
+Installation
+============
+
+Requirements for Unix/Linux or Max OS X
+---------------------------------------
+
+1. You need a standard GNU development environment with
+   
+   - C compiler (for example the GNU C Compiler gcc)
+     
+     Depending on your distribution, several development packages
+     might be needed to provide a fully functional C development
+     environment.
+   
+   Note for developers: if you want to regenerate the .pot template
+   from the source files, you will need xgettext with Python support.
+   This is available in gettext >= 0.12.
+
+2. Python >= 2.5 from http://www.python.org/ with zlib support
+
+3. runit >= 1.3 from http://smarden.org/runit/
+
+4. *Optional but recommended (used by ImageSize and ImageReducer modules)*
+   Python Imaging Library (PIL) from
+   http://www.pythonware.com/products/pil/
+
+5. *Optional but recommended (used for SSL connections)*
+   OpenSSL and PyOpenSSL from
+   http://www.openssl.org/ and
+   http://pyopenssl.sourceforge.net/
+
+6. *Optional but recommended (speedup for i386 compatible PCs)*
+   Psyco from
+   http://psyco.sourceforge.net/
+   [http://downloads.sourceforge.net/psyco/psyco-1.6-src.tar.gz]
+
+7. *Optional (used by VirusFilter module)*
+   ClamAv from
+   http://www.clamav.net/
+
+8. *Optional (used for NTLM authentication)*
+   Python Crypto Module from
+   http://www.amk.ca/python/code/crypto.html
+
+Requirements for Windows:
+-------------------------
+Direct download links are in brackets.
+
+1. Install Python >= 2.5 from http://www.python.org/
+   [http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi]
+
+2. Install Python for Windows Extensions from
+   http://sourceforge.net/projects/pywin32/
+   [http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe]
+   
+   To run Pythonwin, you may need a copy of the Microsoft MFC DLLs.
+   You should only install these files if the install process tells you
+   the DLL can not be found, or if Pythonwin fails to start due to this
+   DLL missing. You can download at
+   http://www.dll-files.com/dllindex/dll-files.shtml?mfc71
+   Download this file and save it to your Windows System32 directory.
+
+3. *Optional but recommended (used by ImageSize and ImageReducer modules)*
+   Install Python Imaging Library (PIL) from
+   http://www.pythonware.com/products/pil/
+   [http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe]
+
+4. *Optional but recommended (used for SSL connections)*
+   Install OpenSSL and PyOpenSSL for Windows from
+   http://www.shininglightpro.com/products/Win32OpenSSL.html
+   [http://www.shininglightpro.com/download/Win32OpenSSL-0_9_8j.exe]
+   and
+   http://pyopenssl.sourceforge.net/
+   [http://downloads.sourceforge.net/pyopenssl/pyOpenSSL-0.7.win32-py2.5.exe]
+
+5. *Optional but recommended (speedup for i386 compatible PCs)*
+   Psyco from
+   http://psyco.sourceforge.net/
+   [http://downloads.sourceforge.net/psyco/psyco-1.6.win32-py25.exe]
+
+6. *Optional (used for NTLM authentication)*
+   Download Python Crypto Module from
+   http://www.amk.ca/python/code/crypto.html
+   [http://webcleaner.sourceforge.net/pycrypto-2.0.1.win32-py2.5.exe]
+
+7. *Optional (used by VirusFilter module)*
+   ClamAv from
+   http://www.sosdg.org/clamav-win32/
+   [http://clamav-sosdg.googlecode.com/files/clamav-0.93.1-2.exe]
+
+8. *Only needed if you compile from source:*
+   install the MinGW suite from http://mingw.sourceforge.net/.
+   Be sure to install in the given order:
+   
+   a) MingGW (this installer downloads additional packages)
+      [http://downloads.sourceforge.net/mingw/MinGW-5.1.4.exe]
+   b) MSYS
+      [http://downloads.sourceforge.net/mingw/MSYS-1.0.10.exe]
+   c) MSYS Developer Toolkit
+      [http://downloads.sourceforge.net/mingw/msysDTK-1.0.1.exe]
+
+Setup for Unix/Linux:
+---------------------
+
+1. Install check
+   
+   Be sure to have installed all required Unix/Linux software listed above.
+
+2. Compilation
+   
+   Run ``./configure --enable-shared && make`` to compile the included
+   C libraries.
+   Run ``python setup.py build`` to compile the Python files.
+   For help about the setup.py script options, run
+   ``python setup.py --help``.
+   The CC environment variable is checked before compilation, so you can
+   change the default C compiler with ``export CC=myccompiler``.
+   If you work from CVS, you must run ``./autogen.sh`` first to generate the
+   configure and Makefile files.
+
+3.
+   a) Installation as root
+      
+      Run ``su -c 'python setup.py install'`` to install the proxy.
+      Run ``su -c 'webcleaner-certificates install'`` to install the
+      certificates.
+      Run ``su -c 'make installservice'`` to install the runit service.
+   
+   b) Installation as a normal user
+      
+      Run ``python setup.py install --home $HOME``. Note that you have
+      to adjust your PATH and PYTHONPATH environment variables, eg. by
+      adding the commands ``export PYTHONPATH=$HOME/lib/python`` and
+      ``export PATH=$PATH:$HOME/bin`` to your shell configuration
+      file.
+      
+      For more information look at the `Modifying Python's search path`_
+      documentation.
+      
+      .. _Modifying Python's search path:
+         http://docs.python.org/inst/search-path.html#SECTION000410000000000000000
+      
+      Now run ``webcleaner-certificates install`` to install the SSL
+      certificates.
+      After that read the `runsvdir(8)`_ documentation on how to setup a
+      local runit service.
+      
+      .. _runsvdir(8):
+         http://smarden.org/runit/runsvdir.8.html
+   
+   If you downloaded Psyco please read the `psyco installation docs`_.
+   
+   .. _psyco installation docs:
+      http://psyco.sourceforge.net/psycoguide/node2.html
+
+4. Enjoy
+   
+   WebCleaner is now installed as a runit service and will start
+   automatically in 5 seconds.
+   See the `main page`_ on how to configure the proxy filters.
+   
+   .. _main page:
+      index.html
+
+Setup for Windows - the binary .exe installer:
+----------------------------------------------
+
+1. Install check
+   
+   Be sure to have installed all required windows software listed above.
+
+2. Register the Python service control.
+   
+   Change to the directory where PythonService.exe is located,
+   which is usually c:\\python25\\Lib\\site-packages\\win32,
+   and execute ``c:> PythonService.exe /register``. This has to be
+   done only once after installing the Python for Windows Extensions.
+
+3. Execute the ``webcleaner-x.xx.win32-py2.5.exe`` file and follow
+   the instructions.
+
+Setup for Windows - compiling from source:
+------------------------------------------
+
+1. Install check
+   
+   Be sure to have installed all required windows software listed
+   above.
+   Note that a 'c:\\>' prompt describes a command shell launched
+   via cmd.exe, a '% ' prompt describes a MSYS shell.
+   
+   If you do not want to recompile the PyOpenSSL installer yourself,
+   skip to step 3. Otherwise read ahead.
+
+2. Compile and install PyOpenSSL
+   
+   Change to the directory where you installed the Win32OpenSSL
+   software into (for example c:\\OpenSSL).
+   Now fix the library names for the mingw compiler:
+   ``c:\OpenSSL> cd lib\MinGW && move ssleay32.a libssleay32.a &&
+   move ssleay32.def libssleay32.def``
+   
+   Extract pyOpenSSL-0.6.tar.gz and change into the generated
+   directory (for example c:\\pyOpenSSL-0.6).
+   Open a text editor for setup.py and replace 'libeay32' with 'eay32'.
+   Then run:
+   ``c:\pyOpenSSL-0.6> python setup.py build_ext -c mingw32 -I c:\OpenSSL\include
+   -L c:\OpenSSL\lib\MinGW bdist_wininst``
+   
+   This generates a binary installer
+   ``dist\pyOpenSSL-0.6.win32-py2.5.exe`` which you just have to
+   execute.
+
+3. Compile the JavaScript library
+   
+   Copy webcleaner-X.Y.tar.gz into your MSYS home directory,
+   which is usually under c:\\msys\\1.0\\home\\user\\.
+   Launch MSYS and extract the tarball with
+   ``% tar xzvf webcleaner-X.Y.tar.gz``.
+   Now change into the generated directory with
+   ``% cd webcleaner-X.Y`` and configure and compile the JavaScript
+   library:
+   ``% ./configure --enable-shared && make -C libjs``.
+
+4. Generate the WebCleaner installer
+   
+   Change to the webcleaner-X.Y directory and run
+   ``c:> python setup.py sdist --manifest-only`` and
+   ``c:> python setup.py build -c mingw32 bdist_wininst``.
+   
+   This generates a binary .exe installer
+   ``dist\webcleaner-X.Y.win32-py2.5.exe``. Read above on how to
+   install the binary .exe installer.
+   
+   If you installed Psyco please read the `psyco installation docs`_.
+   
+   .. _psyco installation docs:
+      http://psyco.sourceforge.net/psycoguide/node2.html
+
+5. Enjoy
+   
+   WebCleaner is now downloaded and started as a regular Windows service.
+   See the `main page`_ on how to configure the proxy filters.
+   
+   .. _main page:
+      index.html
+
+
+Troubleshooting
+===============
+
+You can search the `webcleaner-users archive`_ if your problem has
+already been reported.
+
+.. _webcleaner-users archive:
+   http://sourceforge.net/mailarchive/forum.php?forum_id=42921
+
+Troubleshooting for Linux
+-------------------------
+Errors are logged in the runit log file located at
+/var/service/webcleaner/log/main/current
+
+Troubleshooting for Windows
+---------------------------
+1. Make sure the proxy is started.
+   First look at the system event logger where startup errors are
+   logged. Do this by executing
+   Settings -> Control Panel -> Administrative Tools -> Event Viewer
+   and look at the "Application Log" events.
+   There should be an entry saying ``The WebCleaner service has started``.
+
+   Then start a DOS command prompt and execute
+   ``c:> netstat -a -n -p TCP``. In the listing there should be an
+   entry like ``TCP 0.0.0.0:8080 0.0.0.0:0 LISTENING`` which tells
+   you that the WebCleaner proxy port 8080 is ready to accept
+   incoming connections.
+
+2. A proxy restart can take a while. If the web configuration site
+   refreshes itself after a restart the proxy might just not be up
+   and running again. Just wait and press the Reload button in your
+   browser until the webpage can be displayed.
+
+3. Take a look in the WebCleaner log file.
+   It is located at ``c:\python25\share\webcleaner\config\webcleaner.log``
+   where ``c:\python25`` should be replaced with the directory you
+   installed Python into.
+
+   The log file has more detailed information as the application event log.
+   The line ``WebCleaner listening on *:8080 tcp`` tells you that the
+   proxy is running.
+   You can also turn on debugging by replacing INFO with DEBUG in the
+   file ``c:\python25\share\webcleaner\config\logging.conf``. After a
+   restart, the log should be filled with debug statements.
+
+4. Make sure firewall rules allow proxy connections.
+   If you have enabled a firewall, make sure that connections to
+   and from the proxy are allowed. Most firewall products have a log
+   file where you can see disallowed connection attempts.
+

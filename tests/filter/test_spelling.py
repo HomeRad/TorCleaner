@@ -32,11 +32,3 @@ class TestSpelling (unittest.TestCase):
         self.assertEqual("hr", check_spelling("hrr", url))
         self.assertEqual("xmlns:a", check_spelling("xmlns:a", url))
         self.assertEqual("heisead", check_spelling("heisead", url))
-
-
-def test_suite ():
-    return unittest.makeSuite(TestSpelling)
-
-
-if __name__ == '__main__':
-    unittest.main()

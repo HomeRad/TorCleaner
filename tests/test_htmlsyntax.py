@@ -27,7 +27,6 @@ import sys
 import glob
 import wc.fileutil
 import wc.decorators
-from tests import make_suite
 
 
 htmlfiles = None
@@ -95,11 +94,3 @@ class TestProxyHtml (CheckHtml):
             self.check_html(url+".en")
         # check error page
         self.check_html("http://localhost:8081/hulla")
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

@@ -18,7 +18,6 @@
 Test localhost detection.
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 
@@ -67,11 +66,3 @@ class test_reqloop_loopname (LoopTest):
 
     def get_hostname (self):
         return "localhost"
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

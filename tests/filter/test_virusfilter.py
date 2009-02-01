@@ -48,11 +48,3 @@ class TestVirusFilter (unittest.TestCase):
         scanner.scan(data)
         scanner.close()
         return scanner.infected, scanner.errors
-
-
-def test_suite ():
-    return unittest.makeSuite(TestVirusFilter)
-
-
-if __name__ == '__main__':
-    unittest.main()

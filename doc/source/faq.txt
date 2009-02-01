@@ -1,0 +1,39 @@
+Frequently asked questions
+--------------------------
+
+**Q: The URL I am surfing at is not rendered correctly, it is blank, it misses
+some tags or is completely crippled.**
+
+A: First, try to disable the WebCleaner proxy by using the configuration
+shortcut ``http://localhost:8080/config.html?disablefilter=1``.
+Then look at the page again.
+If it renders ok, you most likely have encountered a bug in WebCleaner.
+Please write a `bug report`_ and include the URL you have problems with.
+
+.. _bug report: index.html#bug-reports-and-mailing-list
+
+**Q: I am paranoid. What should I do besides running WebCleaner?**
+
+A: The default config of WebCleaner is strict when it comes
+to passing private information, so there is not more that can
+be done (except adding new filters yourself).
+Here are some more tips for browser settings:
+
+- Use Mozillas JavaScript Popup filtering. See
+  *Mozilla -> Edit -> Preferences -> Advanced -> Scripts & Plugins*
+- Disable Java. See
+  *Mozilla -> Edit -> Preferences -> Advanced*
+- Don't send your real email address to FTP servers. See
+  *Mozilla -> Edit -> Preferences -> Advanced*
+- Don't accept cookies, or at least set the browser to warn you
+  of every attempt to store cookies. See
+  *Mozilla -> Edit -> Preferences -> Privacy & Security -> Cookies*
+- Disable image animation. See
+  *Mozilla -> Edit -> Preferences -> Privacy & Security -> Images*
+- Don't save form data. See
+  *Mozilla -> Edit -> Preferences -> Privacy & Security -> Forms*
+- Don't save passwords. See
+  *Mozilla -> Edit -> Preferences -> Privacy & Security ->
+  Passwords*
+- Don't install the Flash Plugin. It has security problems.
+

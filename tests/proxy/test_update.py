@@ -35,13 +35,3 @@ class TestUpdate (unittest.TestCase):
 
     def testUpdateRatings (self):
         wc.update.update_ratings(self.config, dryrun=True, log=self.nolog)
-
-
-def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestUpdate))
-    return suite
-
-
-if __name__ == '__main__':
-    unittest.main()

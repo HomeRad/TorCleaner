@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="Development" name="navigation.name" />
+
+    <title>Development &mdash; WebCleaner</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.42',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="WebCleaner" href="../index.html" />
+<style type="text/css">
+img { border: 0; }
+</style>
+
+  </head>
+  <body>
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<table border="0"><tr>
+ <td><a href="../index.html"><img
+  src="../_static/logo64x64.png" border="0" alt="LinkChecker"/></a></td>
+ <td><h1>LinkChecker</h1></td>
+</tr></table>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="../index.html">Home </a> |&nbsp;</li>
+  <li><a href="../install.html">Installation </a> |&nbsp;</li>
+  <li><a href="../upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="../documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="../other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+          <h3>Quick search</h3>
+            <form class="search" action="../search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<p>As with all OpenSource projects, it is easy for you to help or advance
+WebCleaner.</p>
+<p>The easiest thing is probably sending me URLs of web pages that do
+not work correctly through the WebCleaner proxy.</p>
+<p>If you want to implement a feature you need for yourself, here are
+some suggestions that might be helpful on a UNIX workstation.</p>
+<ul>
+<li><p class="first">You will need additional software packages to work with the
+<a class="reference external" href="http://sourceforge.net/svn/?group_id=7692">WebCleaner Subversion</a> repository:</p>
+<ul class="simple">
+<li>a subversion client</li>
+<li>automake &gt;= 1.9</li>
+<li>libtool</li>
+<li>python docutils &gt;= 3.3</li>
+</ul>
+<p>Instructions to pull the Subversion version are at the
+<a class="reference external" href="http://sourceforge.net/svn/?group_id=7692">WebCleaner Subversion</a> repository page. The quick way is to run:</p>
+<div class="highlight-python"><pre>svn co https://svn.sourceforge.net/svnroot/webcleaner/trunk/webcleaner2 webcleaner</pre>
+</div>
+<p>After checking out the Subversion tree, run <tt class="docutils literal"><span class="pre">./autogen.sh</span></tt> to generate
+all the Makefiles. Then run <tt class="docutils literal"><span class="pre">make</span> <span class="pre">localbuild</span></tt> to compile a
+local version. To start the proxy run <tt class="docutils literal"><span class="pre">scripts/startdev.sh</span> <span class="pre">config</span></tt>.</p>
+</li>
+<li><p class="first">When you want to send me patches, try to make them against
+the latest released version or the Subversion repository.
+For example you can use <tt class="docutils literal"><span class="pre">cvs</span> <span class="pre">diff</span> <span class="pre">-u</span> <span class="pre">&gt;</span> <span class="pre">mypatch.diff</span></tt> to generate
+a CVS diff.</p>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="../index.html">Home </a> |&nbsp;</li>
+  <li><a href="../install.html">Installation </a> |&nbsp;</li>
+  <li><a href="../upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="../documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="../other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Bastian Kleineidam.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.5.1.
+    </div>
+  </body>
+</html>

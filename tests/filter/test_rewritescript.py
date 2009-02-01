@@ -322,11 +322,3 @@ function a() {
 /* </script>blubb */
 </script>""", """<script>//<![CDATA[
 /* blubb *///]]></script>""")
-
-
-def test_suite ():
-    return unittest.makeSuite(TestRewriteScript)
-
-
-if __name__ == '__main__':
-    unittest.main()

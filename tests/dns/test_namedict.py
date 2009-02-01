@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -98,11 +98,3 @@ class TestNameDict (unittest.TestCase):
         n = wc.dns.name.from_text('a.b.c', None)
         (k, v) = self.rndict.get_deepest_match(n)
         self.assertEqual(v, 100)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestNameDict)
-
-
-if __name__ == '__main__':
-    unittest.main()

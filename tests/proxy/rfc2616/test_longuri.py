@@ -18,7 +18,6 @@
 Test long URIs.
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 
@@ -67,11 +66,3 @@ class test_longuri_65536 (LonguriTest):
 
     def get_request_uri (self):
         return self.longuri(65536)
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

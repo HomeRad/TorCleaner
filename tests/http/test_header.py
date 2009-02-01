@@ -25,14 +25,3 @@ class TestHeader (unittest.TestCase):
         d = wc.http.header.WcMessage()
         d['Via'] = 'foo\r'
         self.assert_('via' in d)
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    return unittest.makeSuite(TestHeader)
-
-
-if __name__ == '__main__':
-    unittest.main()

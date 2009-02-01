@@ -36,11 +36,3 @@ class TestBlocker (unittest.TestCase):
         attrs = get_filterattrs(self.url, "localhost", [STAGE_REQUEST])
         filtered = applyfilter(STAGE_REQUEST, data, 'finish', attrs)
         self.assert_(filtered.find("blocked.html")!=-1)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestBlocker)
-
-
-if __name__ == '__main__':
-    unittest.main()

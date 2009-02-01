@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -15,9 +15,13 @@
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 import unittest
+import socket
 from cStringIO import StringIO
 
 import wc.dns.name
+import wc.dns.reversename
+import wc.dns.e164
+
 
 class TestName (unittest.TestCase):
     def setUp(self):
@@ -399,6 +403,11 @@ class TestName (unittest.TestCase):
         self.assertEqual(f.getvalue(),
                          '\x03FOO\x03bar\x00\x01\x61\x03foo\x03bar\x00')
 
+    def testToWire6(self):
+        n = wc.dns.name.from_text('FOO.bar')
+        v = n.to_wire()
+        self.assertEqual(v, '\x03FOO\x03bar\x00')
+
     def testBadToWire(self):
         def bad():
             n = wc.dns.name.from_text('FOO.bar', None)
@@ -455,7 +464,7 @@ class TestName (unittest.TestCase):
         n = wc.dns.name.from_text('a.foo.bar.', None)
         o = wc.dns.name.from_text('bar.', None)
         e = wc.dns.name.from_text('a.foo', None)
-        self.assert_(n.relativize(o) == e)
+        self.assertEqual(n.relativize(o), e)
 
     def testRelativize2(self):
         n = wc.dns.name.from_text('a.foo.bar.', None)
@@ -595,13 +604,13 @@ class TestName (unittest.TestCase):
 
     def testParent1(self):
         n = wc.dns.name.from_text('foo.bar.')
-        self.failUnless(n.parent() == wc.dns.name.from_text('bar.'))
-        self.failUnless(n.parent().parent() == wc.dns.name.root)
+        self.assertEqual(n.parent(), wc.dns.name.from_text('bar.'))
+        self.assertEqual(n.parent().parent(), wc.dns.name.root)
 
     def testParent2(self):
         n = wc.dns.name.from_text('foo.bar', None)
-        self.failUnless(n.parent() == wc.dns.name.from_text('bar', None))
-        self.failUnless(n.parent().parent() == wc.dns.name.empty)
+        self.assertEqual(n.parent(), wc.dns.name.from_text('bar', None))
+        self.assertEqual(n.parent().parent(), wc.dns.name.empty)
 
     def testParent3(self):
         def bad():
@@ -615,10 +624,81 @@ class TestName (unittest.TestCase):
             n.parent()
         self.failUnlessRaises(wc.dns.name.NoParent, bad)
 
+    def testFromUnicode1(self):
+        n = wc.dns.name.from_text(u'foo.bar')
+        self.assertEqual(n.labels, ('foo', 'bar', ''))
 
-def test_suite ():
-    return unittest.makeSuite(TestName)
+    def testFromUnicode2(self):
+        n = wc.dns.name.from_text(u'foo\u1234bar.bar')
+        self.assertEqual(n.labels, ('xn--foobar-r5z', 'bar', ''))
 
+    def testFromUnicodeAlternateDot1(self):
+        n = wc.dns.name.from_text(u'foo\u3002bar')
+        self.assertEqual(n.labels, ('foo', 'bar', ''))
 
-if __name__ == '__main__':
-    unittest.main()
+    def testFromUnicodeAlternateDot2(self):
+        n = wc.dns.name.from_text(u'foo\uff0ebar')
+        self.assertEqual(n.labels, ('foo', 'bar', ''))
+
+    def testFromUnicodeAlternateDot3(self):
+        n = wc.dns.name.from_text(u'foo\uff61bar')
+        self.assertEqual(n.labels, ('foo', 'bar', ''))
+
+    def testToUnicode1(self):
+        n = wc.dns.name.from_text(u'foo.bar')
+        s = n.to_unicode()
+        self.assertEqual(s, u'foo.bar.')
+
+    def testToUnicode2(self):
+        n = wc.dns.name.from_text(u'foo\u1234bar.bar')
+        s = n.to_unicode()
+        self.assertEqual(s, u'foo\u1234bar.bar.')
+
+    def testToUnicode3(self):
+        n = wc.dns.name.from_text('foo.bar')
+        s = n.to_unicode()
+        self.assertEqual(s, u'foo.bar.')
+
+    def testReverseIPv4(self):
+        e = wc.dns.name.from_text('1.0.0.127.in-addr.arpa.')
+        n = wc.dns.reversename.from_address('127.0.0.1')
+        self.assertEqual(e, n)
+
+    def testReverseIPv6(self):
+        e = wc.dns.name.from_text('1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa.')
+        n = wc.dns.reversename.from_address('::1')
+        self.assertEqual(e, n)
+
+    def testBadReverseIPv4(self):
+        def bad():
+            n = wc.dns.reversename.from_address('127.0.foo.1')
+        self.failUnlessRaises(socket.error, bad)
+
+    def testBadReverseIPv6(self):
+        def bad():
+            n = wc.dns.reversename.from_address('::1::1')
+        self.failUnlessRaises(socket.error, bad)
+
+    def testForwardIPv4(self):
+        n = wc.dns.name.from_text('1.0.0.127.in-addr.arpa.')
+        e = '127.0.0.1'
+        text = wc.dns.reversename.to_address(n)
+        self.assertEqual(text, e)
+
+    def testForwardIPv6(self):
+        n = wc.dns.name.from_text('1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa.')
+        e = '::1'
+        text = wc.dns.reversename.to_address(n)
+        self.assertEqual(text, e)
+
+    def testE164ToEnum(self):
+        text = '+1 650 555 1212'
+        e = wc.dns.name.from_text('2.1.2.1.5.5.5.0.5.6.1.e164.arpa.')
+        n = wc.dns.e164.from_e164(text)
+        self.assertEqual(n, e)
+
+    def testEnumToE164(self):
+        n = wc.dns.name.from_text('2.1.2.1.5.5.5.0.5.6.1.e164.arpa.')
+        e = '+16505551212'
+        text = wc.dns.e164.to_e164(n)
+        self.assertEqual(text, e)

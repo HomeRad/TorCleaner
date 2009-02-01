@@ -94,12 +94,3 @@ class TestIp (unittest.TestCase):
     def testNetmask (self):
         for i in xrange(32):
             hosts, nets = iputil.hosts2map(["144.145.146.1/%d"%i])
-
-
-def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestIp))
-    return suite
-
-if __name__ == '__main__':
-    unittest.main()

@@ -35,7 +35,6 @@ trailer        = *(entity-header CRLF)
 """
 
 from .. import ProxyTest
-from tests import make_suite
 
 
 def chunk_size (data, extension):
@@ -1551,11 +1550,3 @@ class XXXtest_chunked_1p1_badClen_toSrv (ChunkedRequestTest):
 
     def get_request_content (self):
         return self.chunked("a"*100)
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

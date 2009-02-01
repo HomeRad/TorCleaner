@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="0" name="navigation.order" />
+<meta content="WebCleaner" name="navigation.name" />
+
+    <title>WebCleaner - a filtering HTTP proxy &mdash; WebCleaner</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2.42',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="WebCleaner" href="" />
+<style type="text/css">
+img { border: 0; }
+</style>
+
+  </head>
+  <body>
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<table border="0"><tr>
+ <td><a href=""><img
+  src="_static/logo64x64.png" border="0" alt="LinkChecker"/></a></td>
+ <td><h1>LinkChecker</h1></td>
+</tr></table>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="">Home </a> |&nbsp;</li>
+  <li><a href="install.html">Installation </a> |&nbsp;</li>
+  <li><a href="upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">WebCleaner - a filtering HTTP proxy</a><ul>
+<li><a class="reference external" href="#features">Features</a></li>
+<li><a class="reference external" href="#download">Download</a></li>
+<li><a class="reference external" href="#screenshots">Screenshots</a></li>
+<li><a class="reference external" href="#why-should-i-use-webcleaner">Why should I use WebCleaner?</a></li>
+<li><a class="reference external" href="#configuration">Configuration</a></li>
+<li><a class="reference external" href="#running">Running</a><ul>
+<li><a class="reference external" href="#running-under-unix-linux">Running under Unix/Linux</a></li>
+<li><a class="reference external" href="#running-under-windows">Running under Windows</a></li>
+<li><a class="reference external" href="#setting-access-permissions">Setting access permissions</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#bug-reports-and-mailing-list">Bug reports and mailing list</a></li>
+</ul>
+</li>
+</ul>
+
+          <h3>Quick search</h3>
+            <form class="search" action="search.html" method="get">
+              <input type="text" name="q" size="18" /> <input type="submit" value="Go" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+        </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  
+  <div class="section" id="webcleaner-a-filtering-http-proxy">
+<h1>WebCleaner - a filtering HTTP proxy<a class="headerlink" href="#webcleaner-a-filtering-http-proxy" title="Permalink to this headline">¶</a></h1>
+<p>The latest version of this document is available at
+<a class="reference external" href="http://webcleaner.sourceforge.net/">http://webcleaner.sourceforge.net/</a>.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>remove unwanted HTML (adverts, flash, etc.)</li>
+<li>popup blocker</li>
+<li>disable animated GIFs</li>
+<li>filter images by size, remove banner adverts</li>
+<li>compress documents on-the-fly (with gzip)</li>
+<li>reduce images to low-bandwidth JPEGs</li>
+<li>remove/add/modify arbitrary HTTP headers</li>
+<li>configurable over web interface</li>
+<li>usage of SquidGuard blacklists</li>
+<li>antivirus filter module</li>
+<li>detection and correction of known HTML security flaws</li>
+<li>Basic, Digest and (untested) NTLM proxy authentication support</li>
+<li>per-host access control</li>
+<li>HTTP/1.1 support (persistent connections, pipelining)</li>
+<li>HTTPS support (both forwarding and filtering)</li>
+</ul>
+<p>WebCleaner is featured in the <a class="reference external" href="http://www.linux-magazine.com/issue/43">Linux Magazine Issue 43</a>.
+The <a class="reference external" href="http://www.linux-magazine.com/issue/43/Charly_Column.pdf">article</a> is downloadable as PDF.</p>
+</div>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<p>WebCleaner is <a class="reference external" href="http://www.opensource.org/">OpenSource</a> software and licensed under the <a class="reference external" href="http://www.gnu.org/licenses/licenses.html#TOCGPL">GPL</a>.
+Downloads are available for Windows and Unix systems from the
+<a class="reference external" href="http://sourceforge.net/project/showfiles.php?group_id=7692">WebCleaner download section</a>.</p>
+<p>Software requirements and installation instructions are located at the
+<a class="reference external" href="install.html">install documentation</a>. To see what has changed between releases
+(and what will be in the next release), look at the <a class="reference external" href="http://webcleaner.svn.sourceforge.net/viewvc/webcleaner/trunk/webcleaner2/ChangeLog?view=markup">ChangeLog</a>.</p>
+<p>I also suggest using the <a class="reference external" href="https://addons.mozilla.org/extensions/moreinfo.php?id=125">SwitchProxy</a> Mozilla/Firefox extension.
+It allows easy switching between different proxy settings.</p>
+</div>
+<div class="section" id="screenshots">
+<h2>Screenshots<a class="headerlink" href="#screenshots" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr><td><a class="first last reference external image-reference" href="shot1.png"><div align="center" class="align-center"><img alt="shot1_thumb.jpg" class="align-center" src="shot1_thumb.jpg" /></div>
+</a>
+</td>
+<td><a class="first last reference external image-reference" href="shot2.png"><div align="center" class="align-center"><img alt="shot2_thumb.jpg" class="align-center" src="shot2_thumb.jpg" /></div>
+</a>
+</td>
+</tr>
+<tr><td>Proxy configuration</td>
+<td>Filter configuration</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</div>
+<div class="section" id="why-should-i-use-webcleaner">
+<h2>Why should I use WebCleaner?<a class="headerlink" href="#why-should-i-use-webcleaner" title="Permalink to this headline">¶</a></h2>
+<p>The first feature that sets WebCleaner apart from other proxies is
+exact HTML filtering, and this removes a lot of advertisings.
+The filter does not just replace some strings, the proxy parses all HTML
+data. The parser is fast (written in C) and can cope with every
+broken HTML page out there; if the parser does not recognize HTML
+structures, it just passes the data over to the proxy until it recognizes
+a tag again. No valid HTML data is ever discarded or dropped.</p>
+<p>Another feature is the JavaScript filtering: JavaScript data is
+executed in the integrated Spidermonkey JavaScript engine which is also
+used by the Mozilla browser suite.
+This eliminates all JavaScript obfuscation, popups, and document.write()
+stuff, but the other JavaScript functions still work as usual.</p>
+<p>Exact HTML filtering has another good side-effect: it is possible to
+detect and prevent known security flaws in HTML processors. Several
+known (but not all) buffer overflow exploits or Denial of Service
+attacks are detected and fixed by the HtmlSecurity class.</p>
+<p>If you find an HTML exploit that is not covered by the security filter,
+please let me know.</p>
+<p>Furthermore, WebCleaner can filter SSL traffic used in <tt class="docutils literal"><span class="pre">https://</span></tt> URLs.
+See the <a class="reference external" href="devel/sslgateway.html">SSL gateway</a> documentation for more info.</p>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>Assuming your proxy runs on port <em>8080</em>, point your browser to
+<a class="reference external" href="http://localhost:8080/">http://localhost:8080/</a> to configure the proxy.
+The underlying configuration format is a custom XML format. It is
+specified by the files <a class="reference external" href="filter/filter.dtd">filter.dtd</a> and <a class="reference external" href="filter/webcleaner.dtd">webcleaner.dtd</a>.</p>
+</div>
+<div class="section" id="running">
+<h2>Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<p>Please note that the web configuration interface needs write permissions
+in the configuration directory.</p>
+<div class="section" id="running-under-unix-linux">
+<h3>Running under Unix/Linux<a class="headerlink" href="#running-under-unix-linux" title="Permalink to this headline">¶</a></h3>
+<p>The proxy is supervised and automatically (re-)started from the runit
+package.
+See the <a class="reference external" href="http://smarden.org/runit/">runit homepage</a> for more information.</p>
+</div>
+<div class="section" id="running-under-windows">
+<h3>Running under Windows<a class="headerlink" href="#running-under-windows" title="Permalink to this headline">¶</a></h3>
+<p>The proxy is a normal NT service and can be started/stopped from the
+&#8220;Administrative Tasks&#8221; entry in the system configuration.</p>
+</div>
+<div class="section" id="setting-access-permissions">
+<h3>Setting access permissions<a class="headerlink" href="#setting-access-permissions" title="Permalink to this headline">¶</a></h3>
+<p>To allow using your proxy from other hosts than the one it is running
+on, you have to edit the allowed host list in the configuration
+interface.</p>
+<p>For example to allow access from your local LAN network at
+<tt class="docutils literal"><span class="pre">192.168.1.*</span></tt> you would add <tt class="docutils literal"><span class="pre">192.168.1.1/8</span></tt> to the allowed host
+list.</p>
+<p>If you do allow access from other hosts than your own, please do not
+remove the password protection.
+Otherwise you will be running an <a class="reference external" href="http://en.wikipedia.org/wiki/Open_proxy">open proxy</a> which is a security risk.</p>
+</div>
+</div>
+<div class="section" id="bug-reports-and-mailing-list">
+<h2>Bug reports and mailing list<a class="headerlink" href="#bug-reports-and-mailing-list" title="Permalink to this headline">¶</a></h2>
+<p>For help and bug reports you can join the
+<a class="reference external" href="mailto:webcleaner-users&#37;&#52;&#48;lists&#46;sourceforge&#46;net">webcleaner-users<span>&#64;</span>lists<span>&#46;</span>sourceforge<span>&#46;</span>net</a>
+mailing list at the <a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/webcleaner-users">subscription page</a> or read the <a class="reference external" href="http://sourceforge.net/mailarchive/forum.php?forum=webcleaner-users">list archives</a>.</p>
+<a class="reference external image-reference" href="http://sourceforge.net/projects/webcleaner/"><img align="right" alt="SourceForge Logo" class="align-right" src="http://sourceforge.net/sflogo.php?group_id=7692&amp;type=1" style="width: 88px; height: 31px;" /></a>
+<a class="reference external image-reference" href="http://sourceforge.net/donate/index.php?group_id=7692"><img align="right" alt="Support This Project" class="align-right" src="http://sourceforge.net/images/project-support.jpg" style="width: 88px; height: 32px;" /></a>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+  <li><a href="">Home </a> |&nbsp;</li>
+  <li><a href="install.html">Installation </a> |&nbsp;</li>
+  <li><a href="upgrading.html">Upgrading </a> |&nbsp;</li>
+  <li><a href="documentation.html">Documentation </a>|&nbsp;</li>
+  <li><a href="other.html">Other </a> </li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Bastian Kleineidam.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.5.1.
+    </div>
+  </body>
+</html>

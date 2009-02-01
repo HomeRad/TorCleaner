@@ -18,7 +18,6 @@
 Test optional methods.
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 
@@ -72,11 +71,3 @@ class test_optmethod_trace (MethodTest):
 
     def get_request_method (self):
         return "TRACE"
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

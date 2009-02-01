@@ -18,7 +18,6 @@
 Test leading zeros in HTTP version
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 
@@ -108,11 +107,3 @@ class test_lead0s_minor_toClt (ProxyTest):
         if response.content:
             data += response.content
         return data
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

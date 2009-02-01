@@ -18,7 +18,6 @@
 """
 
 import time
-from tests import make_suite
 from .. import ProxyTest
 from wc.http.date import get_date_rfc850, get_date_rfc1123, get_date_asctime
 
@@ -170,11 +169,3 @@ class test_dateformat_warn_asctime_rfc850 (ProxyTest):
 
     def check_response_headers (self, response):
         self.assert_(not response.has_header("Warning"))
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

@@ -92,11 +92,3 @@ class TestXmlRewriter (unittest.TestCase):
 <description><![CDATA[bla <img>]]></description>
 </item>
 </rdf:RDF>""")
-
-
-def test_suite ():
-    return unittest.makeSuite(TestXmlRewriter)
-
-
-if __name__ == '__main__':
-    unittest.main()

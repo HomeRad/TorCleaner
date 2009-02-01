@@ -24,8 +24,6 @@ PYFILES=webcleaner webcleaner-certificates *.py test/*.py config/*.py wc tests
 CHECKFILES=*.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
 SERVICEDIR=/etc/webcleaner/service
-# run unittests on check
-TESTS=scripts/test.sh
 # GPG key for .deb package
 GPGKEY=2DE589F5
 # build dir for svn-buildpackage
@@ -197,8 +195,6 @@ installservice:
           ln -s /etc/webcleaner/service /var/service/webcleaner; \
 	fi
 
-scripts/test.sh: localbuild
-
 # (re)generate webcleaner blacklists
 .PHONY: update-blacklists
 update-blacklists:
@@ -215,7 +211,8 @@ various:
 	py-find-nosvneolstyle $(CHECKFILES)
 
 .PHONY: test
-test:	check
+test:	localbuild
+	nosetests -m "^test_.*" tests/
 
 JSSRCDIR=/home/calvin/src/mozilla-js-cvs
 jsdiff:

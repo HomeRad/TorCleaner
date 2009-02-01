@@ -1,0 +1,191 @@
+.. meta::
+  :navigation.name: Ratings
+  :navigation.visible: 0
+
+====================================
+Specification of content rating data
+====================================
+
+This document defines the data and mechanisms used to
+rate internet pages. This can be used to enable surfing
+sessions that are limited to specified contents, and is
+especially useful for allowing children to experience the
+web in a safe manner.
+
+Unless otherwise noted, character data is assumed to be in Unicode.
+
+Rating
+======
+A rating is a dictionary filled with name/value items.
+Each name/value item is an instance of a defined rating format.
+
+Rating format
+=============
+A rating format defines a unique, case insensitive name, and a range
+of valid values along with their interpretation.
+
+A given interpretation allows comparing two ratings against each other,
+to test if one exceeds the other. Comparisons are used to decide wether
+to allow a rated page or not.
+
+URL rating
+==========
+A URL rating relates a rating to one or more URLs. It consists of
+a rating, an URL and an optional generic flag specifying that all
+URLs with the given URL as base path apply to the rating.
+It also has an optional comment explaining the rating.
+
+Rating service
+==============
+A rating service defines a unique name and the (sub-)set of supported
+rating formats. The service name should be an URL with human-viewable
+information about the service.
+
+The service should store and/or deliver URL ratings of the formats it
+defines.
+
+Several recommended storage and delivery methods are explained below,
+however they are not mandatory.
+
+Service delivery
+================
+Several different rating delivery methods are defined.
+They allow content providers flexibility when providing rating data.
+Since rating data is in Unicode, it must be encoded if the delivery
+method does not support Unicode.
+
+HTTP Header
+-----------
+When answering a HTTP request, rating data can be submitted as
+HTTP headers. All headers start with ``X-Rating`` and are defined
+as follows:
+
+- X-Rating: <service URL>
+   submits the service this rating applies to
+- X-Rating-<name>: <value>
+   submits one name/value item of the rating dictionary
+
+HTTP header names are defined case insensitive. This is the reason
+why rating names, which are used as part of HTTP header names, are
+also defined case insensitive.
+
+The order in which headers are sent does not matter. No duplicate
+``X-Rating`` headers are allowed, but a ``X-Rating-XYZ`` header
+can occur multiple times, in which case it is service dependent on
+how to interpret the multiple values.
+
+HTML meta data
+--------------
+A HTML file can be rated by supplying data in a meta tag.
+The format is basically the same as the HTTP header format,
+using ``X-Rating`` in the name attribute and the value in the
+content attribute.
+
+Service storage
+===============
+There are several things to consider when storing URL ratings for
+a service.
+
+Character encoding
+------------------
+Since rating data is in Unicode, it must be encoded if the storage
+method does not support Unicode.
+
+Platform independence
+---------------------
+Rating data will be stored and processed on lots of different computers
+and platforms. All algorithms should be platform independent.
+
+Readable format
+---------------
+The storage format should be easily readable by humans. A readable
+format is automatically editable with a text editor, which also guarantees
+platform independence for editing operations.
+
+WebCleaner service
+==================
+As you might have guessed by now, the WebCleaner software delivers
+both a full featured rating service, and supports to deploy and
+enforce it on your computer. You can even submit your own ratings
+to the service. Below you will find a short description of the
+service. For more information, visit the
+WebCleaner rating service page (XXX todo).
+
+Rating formats
+--------------
+The following rating formats are defined by WebCleaner:
+
++--------------+--------------+---------------------------------------+
+| Name         |    Values    |  Interpretation                       |
++--------------+--------------+---------------------------------------+
+| WC-Agerange  | INT "-" INT? | Content is only suited for people of  |
+|              |              | an age in the given range.            |
+|              |              | If the second range value is missing, |
+|              |              | it is considered infinite.            |
++--------------+--------------+---------------------------------------+
+| WC-Violence  | "none" or    | Content contains violence, sex or     |
+| WC-Sex       | "mild" or    | foul language in the given degree:    |
+| WC-Language  | "heavy"      | either none, some or a lot of it.     |
++--------------+--------------+---------------------------------------+
+
+URL ratings
+-----------
+WebCleaner stores URLs normalized and absolute.
+
+Service delivery
+----------------
+WebCleaner supports both HTTP header and HTML meta data ratings.
+
+HTTP header example:
+::
+
+ X-Rating: http://imadoofus.org/service/
+ X-Rating-WC-Agerange: 10-
+
+HTML meta data example:
+::
+
+  <meta name="X-Rating" content="http://imadoofus.org/service/">
+  <meta name="X-Rating-WC-Agerange" content="10-">
+
+Web interface
+-------------
+The WebCleaner rating web interface allows to query and send ratings
+for specific URLs. Sent ratings will undergo a review process
+before being admitted into the official rating database.
+
+The WebCleaner proxy web interface will allow to send local ratings
+for review to the rating service URL. It will also be possible to
+update the local rating database with the official rating database.
+
+Storage format
+--------------
+URL ratings are stored as a number of fields. Each field begins with a
+tag, such as ``URL`` or ``Comment`` (case insensitive), followed by a
+colon, and the body of the field. Certain fields may be multiple lines
+in length, with subsequent lines indented by whitespace.
+
+The format grammar assumes that the values of the URL rating are given
+as the ``-value`` terminals. Strings are case insensitive.
+
+::
+
+  url-rating ::= url generic? rating+ comment?
+  url ::= "Url: " url-value
+  generic ::= "Generic: " ("true" | "false")
+  rating ::= rating-name ": " rating-value
+  comment ::= "Comment: " indented-comment-value
+
+Example:
+
+::
+
+  Url: http://www.imadoofus.org/
+  generic: true
+  wc-Agerange: 6-
+  Comment: This is just a dandy site, suitable for
+    all kinds of people.
+    Now with more extras!
+
+The parser accepts malformed entries: the fields can be in any
+order, and whitespace will be normalized.

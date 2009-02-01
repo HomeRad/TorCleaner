@@ -74,14 +74,3 @@ class TestBasic (unittest.TestCase):
         warn = '110 Response is stale'
         self.assertEquals(wc.http.parse_http_warning(warn),
                           (110, "", "Response is stale", None))
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    return unittest.makeSuite(TestBasic)
-
-
-if __name__ == '__main__':
-    unittest.main()

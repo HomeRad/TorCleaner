@@ -18,7 +18,6 @@
 Test end-to-end and unrecognized headers
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 class test_endhdr_fwd_atom_Expect_100_continue_toSrv (ProxyTest):
@@ -280,11 +279,3 @@ class test_endhdr_fwd_atom_xtension_name_dot_toSrv (ProxyTest):
     def check_request_headers (self, request):
         self.assert_(request.has_header("."))
         self.assertEqual(request.get_header("."), "foo")
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())

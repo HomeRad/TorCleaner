@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -162,10 +162,14 @@ class TestMessage (unittest.TestCase):
             r2 = wc.dns.message.make_response(r1)
         self.assertRaises(wc.dns.exception.FormError, bad)
 
+    def test_ExtendedRcodeSetting(self):
+        m = wc.dns.message.make_query('foo', 'A')
+        m.set_rcode(4095)
+        self.assertEqual(m.rcode(), 4095)
+        m.set_rcode(2)
+        self.assertEqual(m.rcode(), 2)
 
-def test_suite ():
-    return unittest.makeSuite(TestMessage)
-
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_EDNSVersionCoherence(self):
+        m = wc.dns.message.make_query('foo', 'A')
+        m.use_edns(1)
+        self.assertEqual((m.ednsflags >> 16) & 0xFF, 1)

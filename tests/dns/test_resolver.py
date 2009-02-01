@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -101,11 +101,3 @@ class TestResolver (unittest.TestCase):
             name = wc.dns.name.from_text('dnspython.org', None)
             zname = wc.dns.resolver.zone_for_name(name)
         self.failUnlessRaises(wc.dns.resolver.NotAbsolute, bad)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestResolver)
-
-
-if __name__ == '__main__':
-    unittest.main()

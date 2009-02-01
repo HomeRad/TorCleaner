@@ -317,11 +317,3 @@ class TestRewriter (unittest.TestCase):
         # nested object tag level is restricted to 3
         obj_tag = "<object>"
         self.filt(obj_tag * 4, obj_tag * 3)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestRewriter)
-
-
-if __name__ == '__main__':
-    unittest.main()

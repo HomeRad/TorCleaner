@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -56,11 +56,3 @@ class TestFlags (unittest.TestCase):
     def test_flags2(self):
         flgs = wc.dns.flags.QR|wc.dns.flags.AA|wc.dns.flags.RD|wc.dns.flags.RA
         self.assertEqual(wc.dns.flags.to_text(flgs), "QR AA RD RA")
-
-
-def test_suite ():
-    return unittest.makeSuite(TestFlags)
-
-
-if __name__ == '__main__':
-    unittest.main()

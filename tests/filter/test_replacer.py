@@ -44,11 +44,3 @@ class TestReplacer (unittest.TestCase):
         attrs = get_filterattrs("", "localhost", [STAGE_RESPONSE_MODIFY])
         data = "äöü asdfö"
         applyfilter(STAGE_RESPONSE_MODIFY, data, 'finish', attrs)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestReplacer)
-
-
-if __name__ == '__main__':
-    unittest.main()

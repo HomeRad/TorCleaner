@@ -62,13 +62,3 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(16, convert.big2(chr(0)+chr(16)))
         self.assertEqual(2147483649, convert.little4(chr(1)+chr(0)+chr(0)+chr(128)))
         self.assertEqual(2147483649, convert.big4(chr(128)+chr(0)+chr(0)+chr(1)))
-
-
-def test_suite ():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestMagic))
-    return suite
-
-
-if __name__ == '__main__':
-    unittest.main()

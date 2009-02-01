@@ -65,11 +65,3 @@ class TestRating (unittest.TestCase):
         self.assertEqual(parse_range("-1"), range_c(None, 1))
         self.assertEqual(parse_range("1-1"), range_c(1, 1))
         self.assertEqual(parse_range("-1-"), None)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestRating)
-
-
-if __name__ == '__main__':
-    unittest.main()

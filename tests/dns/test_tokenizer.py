@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -172,11 +172,3 @@ class TestTokenizer (unittest.TestCase):
         tok = wc.dns.tokenizer.Tokenizer(r'ch\0ld')
         t = tok.get()
         self.assertEqual(t, (wc.dns.tokenizer.IDENTIFIER, r'ch\0ld'))
-
-
-def test_suite ():
-    return unittest.makeSuite(TestTokenizer)
-
-
-if __name__ == '__main__':
-    unittest.main()

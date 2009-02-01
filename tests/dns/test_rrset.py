@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2003, 2004 Nominum, Inc.
+# Copyright (C) 2003-2007 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -50,11 +50,3 @@ class TestRRset (unittest.TestCase):
         r1 = wc.dns.rrset.from_text('foo', 30, 'in', 'a', '10.0.0.1')
         r2 = wc.dns.rrset.from_text('FOO', 30, 'in', 'a', '10.0.0.2', '10.0.0.1')
         self.assertNotEqual(r1, r2)
-
-
-def test_suite ():
-    return unittest.makeSuite(TestRRset)
-
-
-if __name__ == '__main__':
-    unittest.main()

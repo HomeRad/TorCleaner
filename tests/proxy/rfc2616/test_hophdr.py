@@ -18,7 +18,6 @@
 Test hop-by-hop headers
 """
 
-from tests import make_suite
 from .. import ProxyTest
 
 class test_hophdr_connection_toSrv (ProxyTest):
@@ -208,11 +207,3 @@ class test_hophdr_proxyauth_toClt (ProxyTest):
 
     def check_response_headers (self, response):
         self.assert_(not response.has_header("Proxy-Authenticate"))
-
-
-def test_suite ():
-    """
-    Build and return a TestSuite.
-    """
-    prefix = __name__.split(".")[-1]
-    return make_suite(prefix, globals())
