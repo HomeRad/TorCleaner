@@ -45,7 +45,6 @@ include test/config/*.mime
 recursive-include test/config/blacklists *.gz
 include test/config/blacklists/README
 include scripts/*.sh
-include scripts/*.bat
 include tests/*.py
 include tests/magic/*.py tests/magic/*.html
 include tests/filter/*.py
