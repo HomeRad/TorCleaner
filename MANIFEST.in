@@ -1,8 +1,8 @@
 include README COPYING CREDITS TODO INSTALL ChangeLog
-include crossbuild.sh
+include *.sh
+include *.bat
 include webcleaner
 include install-webcleaner.py
-include install-rpm.sh
 include autogen.sh
 include webcleaner-certificates
 include doc/en/webcleaner.1
