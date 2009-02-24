@@ -45,12 +45,6 @@ from distutils.sysconfig import get_python_version
 from distutils.errors import DistutilsPlatformError
 from distutils.util import convert_path
 
-# cross compile config
-cc = os.environ.get("CC")
-# directory with cross compiled (for win32) python
-win_python_dir = "/home/calvin/src/python23-maint-cvs/dist/src/"
-# if we are compiling for or under windows
-win_compiling = (os.name == 'nt') or (cc is not None and "mingw32" in cc)
 # installed file list
 INSTALL_LIST = "install_log.txt"
 
@@ -273,95 +267,6 @@ class MyDistribution (distutils.dist.Distribution, object):
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
 
-class MyBdistWininst (bdist_wininst, object):
-    """
-    Custom bdist_wininst command supporting cross compilation.
-    """
-
-    def run (self):
-        if (not win_compiling and
-            (self.distribution.has_ext_modules() or
-             self.distribution.has_c_libraries())):
-            raise DistutilsPlatformError \
-                  ("distribution contains extensions and/or C libraries; "
-                   "must be compiled on a Windows 32 platform")
-
-        if not self.skip_build:
-            self.run_command('build')
-
-        install = self.reinitialize_command('install', reinit_subcommands=1)
-        install.root = self.bdist_dir
-        install.skip_build = self.skip_build
-        install.warn_dir = 0
-
-        install_lib = self.reinitialize_command('install_lib')
-        # we do not want to include pyc or pyo files
-        install_lib.compile = 0
-        install_lib.optimize = 0
-
-        # If we are building an installer for a Python version other
-        # than the one we are currently running, then we need to ensure
-        # our build_lib reflects the other Python version rather than ours.
-        # Note that for target_version!=sys.version, we must have skipped the
-        # build step, so there is no issue with enforcing the build of this
-        # version.
-        target_version = self.target_version
-        if not target_version:
-            assert self.skip_build, "Should have already checked this"
-            target_version = sys.version[0:3]
-        plat_specifier = ".%s-%s" % (distutils.util.get_platform(),
-                                     target_version)
-        build = self.get_finalized_command('build')
-        build.build_lib = os.path.join(build.build_base,
-                                       'lib' + plat_specifier)
-
-        # Use a custom scheme for the zip-file, because we have to decide
-        # at installation time which scheme to use.
-        for key in ('purelib', 'platlib', 'headers', 'scripts', 'data'):
-            value = string.upper(key)
-            if key == 'headers':
-                value = value + '/Include/$dist_name'
-            setattr(install,
-                    'install_' + key,
-                    value)
-
-        distutils.log.info("installing to %s", self.bdist_dir)
-        install.ensure_finalized()
-
-        # avoid warning of 'install_lib' about installing
-        # into a directory not in sys.path
-        oldpath = sys.path
-        sys.path.insert(0, os.path.join(self.bdist_dir, 'PURELIB'))
-
-        install.run()
-
-        sys.path = oldpath
-
-        # And make an archive relative to the root of the
-        # pseudo-installation tree.
-        from tempfile import mktemp
-        archive_basename = mktemp()
-        fullname = self.distribution.get_fullname()
-        arcname = self.make_archive(archive_basename, "zip",
-                                    root_dir=self.bdist_dir)
-        # create an exe containing the zip-file
-        self.create_exe(arcname, fullname, self.bitmap)
-        # remove the zip-file again
-        distutils.log.debug("removing temporary file '%s'", arcname)
-        os.remove(arcname)
-
-        if not self.keep_temp:
-            remove_tree(self.bdist_dir, dry_run=self.dry_run)
-
-    def get_exe_bytes (self):
-        if win_compiling:
-            # wininst-X.Y.exe is in the same directory as bdist_wininst
-            directory = os.path.dirname(distutils.command.__file__)
-            filename = os.path.join(directory, "wininst-7.1.exe")
-            return open(filename, "rb").read()
-        return super(MyBdistWininst, self).get_exe_bytes()
-
-
 _cc_test_file = ".setup.test"
 _cc_test_file_c = ".setup.test.c"
 def cc_run (cc, args):
@@ -565,15 +470,6 @@ if os.name == 'nt':
     define_macros.append(('YY_NO_UNISTD_H', None))
 else:
     extra_compile_args.append("-pedantic")
-    if win_compiling:
-        # we are cross compiling with mingw
-        # add directory for pyconfig.h
-        include_dirs.append(win_python_dir)
-        # add directory for Python.h
-        include_dirs.append(os.path.join(win_python_dir, "Include"))
-        # for finding libpythonX.Y.a
-        library_dirs.append(win_python_dir)
-        libraries.append("python%s" % get_python_version())
 
 # C extension modules
 extensions = []
@@ -734,7 +630,6 @@ setup (name = "webcleaner",
        cmdclass = {'install': MyInstall,
                    'install_data': MyInstallData,
                    'uninstall' : MyUninstall,
-                   'bdist_wininst': MyBdistWininst,
                    'build_ext': MyBuildExt,
                    'build': MyBuild,
                    'clean': MyClean,
