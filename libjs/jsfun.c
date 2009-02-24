@@ -1856,13 +1856,7 @@ Function(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     caller = JS_GetScriptedCaller(cx, fp);
     if (caller) {
         principals = JS_EvalFramePrincipals(cx, fp, caller);
-        if (principals == caller->script->principals) {
-            filename = caller->script->filename;
-            lineno = js_PCToLineNumber(cx, caller->script, caller->pc);
-        } else {
-            filename = principals->codebase;
-            lineno = 0;
-        }
+        filename = js_ComputeFilename(cx, caller, principals, &lineno);
     } else {
         filename = NULL;
         lineno = 0;
@@ -2085,17 +2079,12 @@ JSObject *
 js_InitFunctionClass(JSContext *cx, JSObject *obj)
 {
     JSObject *proto;
-    JSAtom *atom;
     JSFunction *fun;
 
     proto = JS_InitClass(cx, obj, NULL, &js_FunctionClass, Function, 1,
                          function_props, function_methods, NULL, NULL);
     if (!proto)
         return NULL;
-    atom = js_Atomize(cx, js_FunctionClass.name, strlen(js_FunctionClass.name),
-                      0);
-    if (!atom)
-        goto bad;
     fun = js_NewFunction(cx, proto, NULL, 0, 0, obj, NULL);
     if (!fun)
         goto bad;

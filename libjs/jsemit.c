@@ -4291,10 +4291,6 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                 return JS_FALSE;
             cg->treeContext.flags &= ~TCF_IN_FOR_INIT;
 
-            /* Emit a push to allocate the iterator. */
-            if (js_Emit1(cx, cg, JSOP_STARTITER) < 0)
-                return JS_FALSE;
-
             /* Compile the object expression to the right of 'in'. */
             if (!js_EmitTree(cx, cg, pn2->pn_right))
                 return JS_FALSE;
@@ -4393,7 +4389,7 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                 if (pn3->pn_slot >= 0) {
                     if (pn3->pn_attrs & JSPROP_READONLY) {
                         JS_ASSERT(op == JSOP_FORVAR);
-                        op = JSOP_GETVAR;
+                        op = JSOP_FORCONST;
                     }
                     atomIndex = (jsatomid) pn3->pn_slot;
                     EMIT_UINT16_IMM_OP(op, atomIndex);
@@ -5355,6 +5351,19 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
                 ReportStatementTooLarge(cx, cg);
                 return JS_FALSE;
             }
+            if (pn2->pn_type == TOK_NAME && pn2->pn_op != JSOP_SETNAME) {
+                /*
+                 * x getter = y where x is a local or let variable is not
+                 * supported.
+                 */
+                js_ReportCompileErrorNumber(cx,
+                                            pn2, JSREPORT_PN | JSREPORT_ERROR,
+                                            JSMSG_BAD_GETTER_OR_SETTER,
+                                            (op == JSOP_GETTER)
+                                            ? js_getter_str
+                                            : js_setter_str);
+                return JS_FALSE;
+            }
         } else
 #endif
         /* If += or similar, dup the left operand and get its value. */
@@ -5433,14 +5442,14 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
         /* Finally, emit the specialized assignment bytecode. */
         switch (pn2->pn_type) {
           case TOK_NAME:
-            if (pn2->pn_slot < 0 || !(pn2->pn_attrs & JSPROP_READONLY)) {
-                if (pn2->pn_slot >= 0) {
+            if (pn2->pn_slot >= 0) {
+                if (!(pn2->pn_attrs & JSPROP_READONLY))
                     EMIT_UINT16_IMM_OP(pn2->pn_op, atomIndex);
-                } else {
-          case TOK_DOT:
-                    EMIT_ATOM_INDEX_OP(pn2->pn_op, atomIndex);
-                }
+                break;
             }
+            /* FALL THROUGH */
+          case TOK_DOT:
+            EMIT_ATOM_INDEX_OP(pn2->pn_op, atomIndex);
             break;
           case TOK_LB:
 #if JS_HAS_LVALUE_RETURN
@@ -5721,13 +5730,13 @@ js_EmitTree(JSContext *cx, JSCodeGenerator *cg, JSParseNode *pn)
 
         /*
          * Allocate another stack slot for GC protection in case the initial
-         * value being post-incremented or -decremented is not a number, but
-         * converts to a jsdouble.  In the TOK_NAME cases, op has 0 operand
+         * value being incremented or decremented is not a number, but
+         * converts to a jsdouble. In the TOK_NAME cases, op has 0 operand
          * uses and 1 definition, so we don't need an extra stack slot -- we
          * can use the one allocated for the def.
          */
         if (pn2->pn_type != TOK_NAME &&
-            (js_CodeSpec[op].format & JOF_POST) &&
+            (js_CodeSpec[op].format & (JOF_INC | JOF_DEC)) &&
             (uintN)depth == cg->maxStackDepth) {
             ++cg->maxStackDepth;
         }

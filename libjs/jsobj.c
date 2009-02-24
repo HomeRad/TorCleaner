@@ -1237,6 +1237,25 @@ bad:
     return NULL;
 }
 
+const char *
+js_ComputeFilename(JSContext *cx, JSStackFrame *caller,
+                   JSPrincipals *principals, uintN *linenop)
+{
+    uint32 flags;
+
+    JS_ASSERT(principals || !cx->runtime->findObjectPrincipals);
+    flags = JS_GetScriptFilenameFlags(caller->script);
+    if ((flags & JSFILENAME_SYSTEM) &&
+        principals &&
+        strcmp(principals->codebase, "[System Principal]")) {
+        *linenop = 0;
+        return principals->codebase;
+    }
+
+    *linenop = js_PCToLineNumber(cx, caller->script, caller->pc);
+    return caller->script->filename;
+}
+
 static JSBool
 obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -1362,13 +1381,7 @@ obj_eval(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
     str = JSVAL_TO_STRING(argv[0]);
     if (caller) {
         principals = JS_EvalFramePrincipals(cx, fp, caller);
-        if (principals == caller->script->principals) {
-            file = caller->script->filename;
-            line = js_PCToLineNumber(cx, caller->script, caller->pc);
-        } else {
-            file = principals->codebase;
-            line = 0;
-        }
+        file = js_ComputeFilename(cx, caller, principals, &line);
     } else {
         file = NULL;
         line = 0;
@@ -2799,9 +2812,6 @@ js_AllocSlot(JSContext *cx, JSObject *obj, uint32 *slotp)
         obj->slots = newslots;
     }
 
-#ifdef TOO_MUCH_GC
-    obj->slots[map->freeslot] = JSVAL_VOID;
-#endif
     *slotp = map->freeslot++;
     return JS_TRUE;
 }
@@ -3279,13 +3289,13 @@ js_LookupPropertyWithFlags(JSContext *cx, JSObject *obj, jsid id, uintN flags,
                         /* Resolved: juggle locks and lookup id again. */
                         if (obj2 != obj) {
                             JS_UNLOCK_OBJ(cx, obj);
-                            JS_LOCK_OBJ(cx, obj2);
+                            if (OBJ_IS_NATIVE(obj2))
+                                JS_LOCK_OBJ(cx, obj2);
                         }
                         scope = OBJ_SCOPE(obj2);
                         if (!MAP_IS_NATIVE(&scope->map)) {
                             /* Whoops, newresolve handed back a foreign obj2. */
                             JS_ASSERT(obj2 != obj);
-                            JS_UNLOCK_OBJ(cx, obj2);
                             ok = OBJ_LOOKUP_PROPERTY(cx, obj2, id, objp, propp);
                             if (!ok || *propp)
                                 goto cleanup;
@@ -3306,7 +3316,8 @@ js_LookupPropertyWithFlags(JSContext *cx, JSObject *obj, jsid id, uintN flags,
                             JS_ASSERT(obj2 == scope->object);
                             obj = obj2;
                         } else if (obj2 != obj) {
-                            JS_UNLOCK_OBJ(cx, obj2);
+                            if (OBJ_IS_NATIVE(obj2))
+                                JS_UNLOCK_OBJ(cx, obj2);
                             JS_LOCK_OBJ(cx, obj);
                         }
                     }

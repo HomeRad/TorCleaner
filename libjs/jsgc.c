@@ -1397,14 +1397,14 @@ js_NewGCThing(JSContext *cx, uintN flags, size_t nbytes)
         return NULL;
     }
 
-#ifdef TOO_MUCH_GC
-#ifdef WAY_TOO_MUCH_GC
-    rt->gcPoke = JS_TRUE;
-#endif
-    doGC = JS_TRUE;
-#else
     doGC = (rt->gcMallocBytes >= rt->gcMaxMallocBytes);
-#endif
+#ifdef JS_GC_ZEAL
+    if (rt->gcZeal >= 1) {
+        doGC = JS_TRUE;
+        if (rt->gcZeal >= 2)
+            rt->gcPoke = JS_TRUE;
+    }
+#endif /* !JS_GC_ZEAL */
 
     arenaList = &rt->gcArenaList[flindex];
     for (;;) {
@@ -2572,6 +2572,9 @@ js_MarkStackFrame(JSContext *cx, JSStackFrame *fp)
               (fp->fun && JSFUN_THISP_FLAGS(fp->fun->flags)));
     if (JSVAL_IS_GCTHING((jsval)fp->thisp))
         GC_MARK(cx, JSVAL_TO_GCTHING((jsval)fp->thisp), "this");
+
+    if (fp->callee)
+        GC_MARK(cx, fp->callee, "callee object");
 
     /*
      * Mark fp->argv, even though in the common case it will be marked via our

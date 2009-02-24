@@ -1179,12 +1179,35 @@ js_InitFunctionAndObjectClasses(JSContext *cx, JSObject *obj)
     }
 
     /* Initialize the function class first so constructors can be made. */
-    fun_proto = js_InitFunctionClass(cx, obj);
-    if (!fun_proto)
+    if (!js_GetClassPrototype(cx, obj, INT_TO_JSID(JSProto_Function),
+                              &fun_proto)) {
+        fun_proto = NULL;
         goto out;
+    }
+    if (!fun_proto) {
+        fun_proto = js_InitFunctionClass(cx, obj);
+        if (!fun_proto)
+            goto out;
+    } else {
+        JSObject *ctor;
+
+        ctor = JS_GetConstructor(cx, fun_proto);
+        if (!ctor) {
+            fun_proto = NULL;
+            goto out;
+        }
+        OBJ_DEFINE_PROPERTY(cx, obj, ATOM_TO_JSID(CLASS_ATOM(cx, Function)),
+                            OBJECT_TO_JSVAL(ctor), 0, 0, 0, NULL);
+    }
 
     /* Initialize the object class next so Object.prototype works. */
-    obj_proto = js_InitObjectClass(cx, obj);
+    if (!js_GetClassPrototype(cx, obj, INT_TO_JSID(JSProto_Object),
+                              &obj_proto)) {
+        fun_proto = NULL;
+        goto out;
+    }
+    if (!obj_proto)
+        obj_proto = js_InitObjectClass(cx, obj);
     if (!obj_proto) {
         fun_proto = NULL;
         goto out;
@@ -1883,13 +1906,18 @@ JS_GC(JSContext *cx)
 JS_PUBLIC_API(void)
 JS_MaybeGC(JSContext *cx)
 {
-#ifdef WAY_TOO_MUCH_GC
-    JS_GC(cx);
-#else
     JSRuntime *rt;
     uint32 bytes, lastBytes;
 
     rt = cx->runtime;
+
+#ifdef JS_GC_ZEAL
+    if (rt->gcZeal > 0) {
+        JS_GC(cx);
+        return;
+    }
+#endif
+
     bytes = rt->gcBytes;
     lastBytes = rt->gcLastBytes;
 
@@ -1949,7 +1977,6 @@ JS_MaybeGC(JSContext *cx)
         /* Run scheduled but not yet executed close hooks. */
         js_RunCloseHooks(cx);
     }
-#endif
 #endif
 }
 
@@ -2216,7 +2243,6 @@ JS_InitClass(JSContext *cx, JSObject *obj, JSObject *parent_proto,
 
         /* Bootstrap Function.prototype (see also JS_InitStandardClasses). */
         if (OBJ_GET_CLASS(cx, ctor) == clasp) {
-            JS_ASSERT(!OBJ_GET_PROTO(cx, ctor));
             OBJ_SET_PROTO(cx, ctor, proto);
         }
     }
@@ -4981,6 +5007,14 @@ JS_ClearContextThread(JSContext *cx)
     jsword old = JS_THREAD_ID(cx);
     js_ClearContextThread(cx);
     return old;
+}
+#endif
+
+#ifdef JS_GC_ZEAL
+JS_PUBLIC_API(void)
+JS_SetGCZeal(JSContext *cx, uint8 zeal)
+{
+    cx->runtime->gcZeal = zeal;
 }
 #endif
 
