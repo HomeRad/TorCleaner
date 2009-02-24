@@ -26,13 +26,11 @@ if not (hasattr(sys, 'version_info') or
 import os
 import subprocess
 import stat
-import string
 import glob
 import distutils
 from distutils.core import setup, Extension
 from distutils.spawn import find_executable
 from distutils.cmd import Command
-from distutils.command.bdist_wininst import bdist_wininst
 from distutils.command.install import install
 from distutils.command.install_data import install_data
 from distutils.command.build_ext import build_ext
@@ -41,8 +39,6 @@ from distutils.command.clean import clean
 from distutils.command.sdist import sdist
 from distutils.dir_util import remove_tree
 from distutils.file_util import write_file
-from distutils.sysconfig import get_python_version
-from distutils.errors import DistutilsPlatformError
 from distutils.util import convert_path
 
 # installed file list
