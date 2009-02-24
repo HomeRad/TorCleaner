@@ -1,12 +1,13 @@
 # SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2005-11-19  1:16+0100\n"
+"POT-Creation-Date: 2009-02-24 20:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,125 +16,38 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING"
 
 # type: TH
-#: en/webcleaner-certificates.1:1
+#: en/webcleaner.1:1
 #, no-wrap
-msgid "WEBCLEANER-CERTIFICATES"
+msgid "webcleaner"
 msgstr ""
 
 # type: TH
-#: en/webcleaner-certificates.1:1
+#: en/webcleaner.1:1
 #, no-wrap
-msgid "22 March 2004"
+msgid "2000-12-6"
+msgstr ""
+
+# type: TH
+#: en/webcleaner.1:1 en/webcleaner.conf.5:1 en/webcleaner-certificates.1:1
+#, no-wrap
+msgid "WebCleaner"
 msgstr ""
 
 # type: SH
-#: en/webcleaner-certificates.1:2 en/webcleaner.1:2 en/webcleaner.conf.5:2
+#: en/webcleaner.1:2 en/webcleaner.conf.5:2 en/webcleaner-certificates.1:2
 #, no-wrap
 msgid "NAME"
 msgstr ""
 
 # type: Plain text
-#: en/webcleaner-certificates.1:4
-msgid "webcleaner-certificates - generate or remove WebCleaner SSL certificates"
-msgstr ""
-
-# type: SH
-#: en/webcleaner-certificates.1:4 en/webcleaner.1:4
-#, no-wrap
-msgid "SYNOPSIS"
-msgstr ""
-
-# type: Plain text
-#: en/webcleaner-certificates.1:6
-msgid "B<webcleaner-certificates> [I<options>] I<command>"
-msgstr ""
-
-# type: SH
-#: en/webcleaner-certificates.1:6 en/webcleaner.1:12
-#, no-wrap
-msgid "OPTIONS"
-msgstr ""
-
-# type: TP
-#: en/webcleaner-certificates.1:7 en/webcleaner.1:16
-#, no-wrap
-msgid "B<-d> I<directory>, B<--configdir=>I<directory>"
-msgstr ""
-
-# type: Plain text
-#: en/webcleaner-certificates.1:12
-msgid ""
-"Generate certificates in given directory instead of the default one for "
-"WebCleaner.  See also the option B<-d> in B<webcleaner(1)>."
-msgstr ""
-
-# type: SH
-#: en/webcleaner-certificates.1:12
-#, no-wrap
-msgid "COMMANDS"
-msgstr ""
-
-# type: TP
-#: en/webcleaner-certificates.1:13
-#, no-wrap
-msgid "B<install>"
-msgstr ""
-
-# type: Plain text
-#: en/webcleaner-certificates.1:18
-msgid ""
-"Generate and install WebCleaner SSL certificates for client and server "
-"authentification.  If the certificates exist already, do nothing."
-msgstr ""
-
-# type: TP
-#: en/webcleaner-certificates.1:18
-#, no-wrap
-msgid "B<remove>"
-msgstr ""
-
-# type: Plain text
-#: en/webcleaner-certificates.1:21
-msgid "Remove all previously generated WebCleaner SSL certificates."
-msgstr ""
-
-# type: SH
-#: en/webcleaner-certificates.1:21 en/webcleaner.1:33 en/webcleaner.conf.5:123
-#, no-wrap
-msgid "AUTHOR"
-msgstr ""
-
-# type: Plain text
-#: en/webcleaner-certificates.1:23 en/webcleaner.1:35 en/webcleaner.conf.5:125
-msgid "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
-msgstr ""
-
-# type: SH
-#: en/webcleaner-certificates.1:23 en/webcleaner.1:35 en/webcleaner.conf.5:125
-#, no-wrap
-msgid "COPYRIGHT"
-msgstr ""
-
-# type: Plain text
-#: en/webcleaner-certificates.1:24 en/webcleaner.1:36 en/webcleaner.conf.5:126
-msgid "Copyright \\(co 2000-2009 Bastian Kleineidam"
-msgstr ""
-
-# type: TH
-#: en/webcleaner.1:1
-#, no-wrap
-msgid "WEBCLEANER"
-msgstr ""
-
-# type: TH
-#: en/webcleaner.1:1
-#, no-wrap
-msgid "6 December 2000"
-msgstr ""
-
-# type: Plain text
 #: en/webcleaner.1:4
 msgid "webcleaner - a filtering HTTP proxy"
+msgstr ""
+
+# type: SH
+#: en/webcleaner.1:4 en/webcleaner-certificates.1:4
+#, no-wrap
+msgid "SYNOPSIS"
 msgstr ""
 
 # type: Plain text
@@ -157,6 +71,12 @@ msgid ""
 "animated GIF images and more."
 msgstr ""
 
+# type: SH
+#: en/webcleaner.1:12 en/webcleaner-certificates.1:6
+#, no-wrap
+msgid "OPTIONS"
+msgstr ""
+
 # type: TP
 #: en/webcleaner.1:13
 #, no-wrap
@@ -166,6 +86,12 @@ msgstr ""
 # type: Plain text
 #: en/webcleaner.1:16
 msgid "Print help text."
+msgstr ""
+
+# type: TP
+#: en/webcleaner.1:16 en/webcleaner-certificates.1:7
+#, no-wrap
+msgid "B<-d> I<directory>, B<--configdir=>I<directory>"
 msgstr ""
 
 # type: Plain text
@@ -218,16 +144,38 @@ msgstr ""
 msgid "webcleaner.conf(5)"
 msgstr ""
 
-# type: TH
-#: en/webcleaner.conf.5:1
+# type: SH
+#: en/webcleaner.1:33 en/webcleaner.conf.5:123 en/webcleaner-certificates.1:21
 #, no-wrap
-msgid "WEBCLEANER.CONF"
+msgid "AUTHOR"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:35 en/webcleaner.conf.5:125 en/webcleaner-certificates.1:23
+msgid "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
+msgstr ""
+
+# type: SH
+#: en/webcleaner.1:35 en/webcleaner.conf.5:125 en/webcleaner-certificates.1:23
+#, no-wrap
+msgid "COPYRIGHT"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:36 en/webcleaner.conf.5:126 en/webcleaner-certificates.1:24
+msgid "Copyright \\(co 2000-2009 Bastian Kleineidam"
 msgstr ""
 
 # type: TH
 #: en/webcleaner.conf.5:1
 #, no-wrap
-msgid "3 January 2003"
+msgid "webcleaner.conf"
+msgstr ""
+
+# type: TH
+#: en/webcleaner.conf.5:1
+#, no-wrap
+msgid "2003-01-03"
 msgstr ""
 
 # type: Plain text
@@ -624,4 +572,63 @@ msgstr ""
 # type: Plain text
 #: en/webcleaner.conf.5:123
 msgid "webcleaner(1)"
+msgstr ""
+
+# type: TH
+#: en/webcleaner-certificates.1:1
+#, no-wrap
+msgid "webcleaner-certificates"
+msgstr ""
+
+# type: TH
+#: en/webcleaner-certificates.1:1
+#, no-wrap
+msgid "2004-03-22"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:4
+msgid "webcleaner-certificates - generate or remove WebCleaner SSL certificates"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:6
+msgid "B<webcleaner-certificates> [I<options>] I<command>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:12
+msgid ""
+"Generate certificates in given directory instead of the default one for "
+"WebCleaner.  See also the option B<-d> in B<webcleaner(1)>."
+msgstr ""
+
+# type: SH
+#: en/webcleaner-certificates.1:12
+#, no-wrap
+msgid "COMMANDS"
+msgstr ""
+
+# type: TP
+#: en/webcleaner-certificates.1:13
+#, no-wrap
+msgid "B<install>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:18
+msgid ""
+"Generate and install WebCleaner SSL certificates for client and server "
+"authentification.  If the certificates exist already, do nothing."
+msgstr ""
+
+# type: TP
+#: en/webcleaner-certificates.1:18
+#, no-wrap
+msgid "B<remove>"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:21
+msgid "Remove all previously generated WebCleaner SSL certificates."
 msgstr ""

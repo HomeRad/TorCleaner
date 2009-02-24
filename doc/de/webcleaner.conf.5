@@ -1,11 +1,14 @@
+.\"*******************************************************************
+.\"
 .\" This file was generated with po4a. Translate the source file.
-.\" 
-.TH WEBCLEANER.CONF 5 "3. Januar 2003"  
+.\"
+.\"*******************************************************************
+.TH webcleaner.conf 5 2003\-01\-03 WebCleaner 
 .SH NAME
-webcleaner.conf \- Konfigurationsdatei für WebCleaner
+webcleaner.conf \- Konfigurationsdatei fÃ¼r WebCleaner
 .SH BESCHREIBUNG
-\fBwebcleaner.conf\fP ist die Hauptkonfigurationsdatei für den WebCleaner 
-Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokument 
+\fBwebcleaner.conf\fP ist die Hauptkonfigurationsdatei fÃ¼r den WebCleaner
+Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokument
 Definition der Datei \fBwebcleaner.dtd\fP folgt.
 .SH EINSTELLUNGEN
 .TP 
@@ -13,58 +16,57 @@ Definition der Datei \fBwebcleaner.dtd\fP folgt.
 Die Version des Konfigurationsformats.
 .TP 
 \fBport\fP
-Die Portnummer unter der der WebCleaner Proxy läuft.
+Die Portnummer unter der der WebCleaner Proxy lÃ¤uft.
 .TP 
 \fBsslport\fP
-Die Portnummer für den WebCleaner SSL Server.
+Die Portnummer fÃ¼r den WebCleaner SSL Server.
 .TP 
 \fBsslgateway\fP
-Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer einen SSL 
+Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer einen SSL
 Server starten, um HTTPS Daten weiterzuleiten und zu filtern.
 .TP 
 \fBadminuser\fP
-Der Benutzername für die Proxy Konfigurationsoberfläche.
+Der Benutzername fÃ¼r die Proxy KonfigurationsoberflÃ¤che.
 .TP 
 \fBadminpass\fP
-Der base64\-kodierte Passwort für die Proxy Konfigurationsoberfläche.
+Der base64\-kodierte Passwort fÃ¼r die Proxy KonfigurationsoberflÃ¤che.
 .TP 
 \fBproxyuser\fP
-Der Benutzername für Proxy Authentifizierung.
+Der Benutzername fÃ¼r Proxy Authentifizierung.
 .TP 
 \fBproxypass\fP
-Das base64\-kodierte Passwort für Proxy Authentifizierung.
+Das base64\-kodierte Passwort fÃ¼r Proxy Authentifizierung.
 .TP 
 \fBparentproxy\fP
-Der Rechnername des übergeordneten HTTP Proxy. Lassen Sie den Rechnernamen 
-leer, um keinen übergeordneten Proxy zu benutzen.
+Der Rechnername des Ã¼bergeordneten HTTP Proxy. Lassen Sie den Rechnernamen
+leer, um keinen Ã¼bergeordneten Proxy zu benutzen.
 .TP 
 \fBparentproxyport\fP
-Die Portnummer des übergeordneten Proxy.
+Die Portnummer des Ã¼bergeordneten Proxy.
 .TP 
 \fBparentproxyuser\fP
-Der Benutzername zur Authentifizierung des übergeordneten Proxy.
+Der Benutzername zur Authentifizierung des Ã¼bergeordneten Proxy.
 .TP 
 \fBparentproxypass\fP
-Das base64\-kodierte Passwort zur Authentifizierung des übergeordneten 
-Proxy.
+Das base64\-kodierte Passwort zur Authentifizierung des Ã¼bergeordneten Proxy.
 .TP 
 \fBtimeout\fP
-Zeitüberschreitungslimit für Verbindungen in Sekunden.
+ZeitÃ¼berschreitungslimit fÃ¼r Verbindungen in Sekunden.
 .TP 
 \fBgui\_theme\fP
-Themenauswahl für die Weboberfläche.
+Themenauswahl fÃ¼r die WeboberflÃ¤che.
 .TP 
 \fBnofilterhosts\fP
-Komma separierte Liste von Rechnernamen für die Filtern deaktiviert ist.
+Komma separierte Liste von Rechnernamen fÃ¼r die Filtern deaktiviert ist.
 .TP 
 \fBallowedhosts\fP
-Komma separierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen.
+Komma separierte Liste von Rechnernamen, die diesen Proxy benutzen dÃ¼rfen.
 .TP 
 \fBauth_ntlm\fP
 Falls auf Eins gesetzt, wird mit NTLM Algorithmus authentifiziert.
 .TP 
 \fBtry_google\fP
-Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung eine 
+Falls auf Eins gesetzt, wird bei einer VerbindungszeitÃ¼berschreitung eine
 Seite mit Verweisen zum Google Cache der angeforderten Seiten dargestellt.
 .SH FILTER
 .TP 
@@ -75,24 +77,24 @@ Blockiert bestimmte URLs. Dies ersetzt Werbebilder und \-frames.
 Komprimiert Dokumente mit guter Kompressionsrate (HTML, WAV, ...).
 .TP 
 \fBBinaryCharFilter\fP
-Ersetzt einige Binärzeichen (besonders die illegalen Microsoft 
-Anführungszeichen).
+Ersetzt einige BinÃ¤rzeichen (besonders die illegalen Microsoft
+AnfÃ¼hrungszeichen).
 .TP 
 \fBGifImage\fP
 Deanimiert GIF Bilder und entfernt GIF Kommentare.
 .TP 
 \fBHeader\fP
-Ersetzen, modifizieren und hinzufügen von beliebigen HTTP Kopfdaten.
+Ersetzen, modifizieren und hinzufÃ¼gen von beliebigen HTTP Kopfdaten.
 .TP 
 \fBImageReducer\fP
-Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.Nützlich für 
+Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.NÃ¼tzlich fÃ¼r
 Benutzer mit sehr niedriger Bandbreite.
 .TP 
 \fBImageSize\fP
-Filtere Bilder nach Größe.
+Filtere Bilder nach GrÃ¶ÃŸe.
 .TP 
 \fBMimeRecognizer\fP
-Erkenne und korrigiere fehlende oder falsche Angaben im Content\-Type 
+Erkenne und korrigiere fehlende oder falsche Angaben im Content\-Type
 Kopfdatum.
 .TP 
 \fBPicsHeader\fP
@@ -102,7 +104,7 @@ Ein PICS Filter.
 Ersetzt Daten im Textdateien (HTML, reiner Text, ...).
 .TP 
 \fBRewriter\fP
-Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filtert die 
+Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filtert die
 meiste Werbung heraus.
 .TP 
 \fBVirusFilter\fP
@@ -110,7 +112,7 @@ Aktiviert den Clamav Virusfilter (falls Clamav installiert ist).
 .SH BEISPIEL
  <?xml version="1.0"?>
  <!DOCTYPE webcleaner SYSTEM "webcleaner.dtd">
- <webcleaner 
+ <webcleaner
   version="0.8"
   port="8000"
   parentproxy="squid.company.com"
@@ -127,4 +129,4 @@ webcleaner(1)
 .SH AUTOR
 Bastian Kleineidam <calvin@users.sourceforge.net>
 .SH COPYRIGHT
-Copyright \(co 2000\-2008 Bastian Kleineidam
+Copyright \(co 2000\-2009 Bastian Kleineidam

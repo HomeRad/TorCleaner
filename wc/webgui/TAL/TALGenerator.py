@@ -458,7 +458,7 @@ class TALGenerator (object):
         # Result is (name, value, action, expr, xlat) if there is a
         # tal:attributes entry for that attribute.  Additional attrs
         # defined only by tal:attributes are added here.
-       
+
         # (name, value, action, expr, xlat)
         if not repldict:
             return attrlist
@@ -755,7 +755,7 @@ class TALGenerator (object):
         # the opcode after the i18nVariable opcode so we can better handle
         # tags with both of them in them (and in the latter case, the contents
         # would be thrown away for msgid purposes).
-       
+
         # Still, we should emit insertTranslation opcode before i18nVariable
         # in case tal:content, i18n:translate and i18n:name in the same tag
         if msgid is not None:

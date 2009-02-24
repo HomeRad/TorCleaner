@@ -244,7 +244,7 @@ class DummyDomain (object):
                    target_language=None, default=None):
         # This is a fake translation service which simply uppercases non
         # ${name} placeholder text in the message id.
-       
+
         # First, transform a string with ${name} placeholders into a list of
         # substrings.  Then upcase everything but the placeholders, then glue
         # things back together.

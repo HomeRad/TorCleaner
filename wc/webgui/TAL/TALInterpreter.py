@@ -533,7 +533,7 @@ class TALInterpreter (object):
         # include an implicit message id, if no explicit one was given.
         # Second, it will evaluate any i18nVariable definitions in the body of
         # the translation (necessary for $varname substitutions).
-       
+
         # Use a temporary stream to capture the interpretation of the
         # subnodes, which should /not/ go to the output stream.
         tmpstream = self.StringIO()

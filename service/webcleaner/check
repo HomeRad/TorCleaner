@@ -17,7 +17,7 @@ def get_port_addr ():
 def main ():
     wc.initlog()
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                               
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(get_port_addr())
         s.close()
     except:

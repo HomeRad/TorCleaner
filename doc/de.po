@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WebCleaner 2\n"
-"POT-Creation-Date: 2005-11-19  1:15+0100\n"
+"POT-Creation-Date: 2009-02-24 20:55+0100\n"
 "PO-Revision-Date: 2005-11-19 01:16+0100\n"
 "Last-Translator: Bastian Kleineidam <calvin@users.sourceforge.net>\n"
 "Language-Team: de <de@li.org>\n"
@@ -13,136 +13,40 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-# type: TH
-#: en/webcleaner-certificates.1:1
-#, no-wrap
-msgid "WEBCLEANER-CERTIFICATES"
-msgstr "WEBCLEANER-CERTIFICATES"
+# type: Plain text
+#: en/webcleaner.1:1
+#, fuzzy, no-wrap
+msgid "webcleaner"
+msgstr "webcleaner(1)"
 
 # type: TH
-#: en/webcleaner-certificates.1:1
+#: en/webcleaner.1:1
 #, no-wrap
-msgid "22 March 2004"
-msgstr "22. März 2004"
+msgid "2000-12-6"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner.1:1 en/webcleaner.conf.5:1 en/webcleaner-certificates.1:1
+#, fuzzy, no-wrap
+msgid "WebCleaner"
+msgstr "webcleaner(1)"
 
 # type: SH
-#: en/webcleaner-certificates.1:2
-#: en/webcleaner.1:2
-#: en/webcleaner.conf.5:2
+#: en/webcleaner.1:2 en/webcleaner.conf.5:2 en/webcleaner-certificates.1:2
 #, no-wrap
 msgid "NAME"
 msgstr "NAME"
 
 # type: Plain text
-#: en/webcleaner-certificates.1:4
-msgid "webcleaner-certificates - generate or remove WebCleaner SSL certificates"
-msgstr "webcleaner-certificates - erstelle oder entferne WebCleaner SSL Zertifikate"
-
-# type: SH
-#: en/webcleaner-certificates.1:4
-#: en/webcleaner.1:4
-#, no-wrap
-msgid "SYNOPSIS"
-msgstr "SYNTAX"
-
-# type: Plain text
-#: en/webcleaner-certificates.1:6
-msgid "B<webcleaner-certificates> [I<options>] I<command>"
-msgstr "B<webcleaner-certificates> [I<Optionen>] I<Kommando>"
-
-# type: SH
-#: en/webcleaner-certificates.1:6
-#: en/webcleaner.1:12
-#, no-wrap
-msgid "OPTIONS"
-msgstr "OPTIONEN"
-
-# type: TP
-#: en/webcleaner-certificates.1:7
-#: en/webcleaner.1:16
-#, no-wrap
-msgid "B<-d> I<directory>, B<--configdir=>I<directory>"
-msgstr "B<-d> I<Verzeichnis>, B<--configdir=>I<Verzeichnis>"
-
-# type: Plain text
-#: en/webcleaner-certificates.1:12
-msgid "Generate certificates in given directory instead of the default one for WebCleaner.  See also the option B<-d> in B<webcleaner(1)>."
-msgstr "Erstelle Zertifikate im angegebenen Verzeichnis anstelle des Standardverzeichnisses.Siehe auch die Option B<-d> in B<webcleaner(1)>."
-
-# type: SH
-#: en/webcleaner-certificates.1:12
-#, no-wrap
-msgid "COMMANDS"
-msgstr "KOMMANDOS"
-
-# type: TP
-#: en/webcleaner-certificates.1:13
-#, no-wrap
-msgid "B<install>"
-msgstr "B<install>"
-
-# type: Plain text
-#: en/webcleaner-certificates.1:18
-msgid "Generate and install WebCleaner SSL certificates for client and server authentification.  If the certificates exist already, do nothing."
-msgstr "Erstelle und installiere WebCleaner SSL Zertifikate für Klient- und Serverauthentifizierung.Tue nichts, falls die Zertifikate schon existieren."
-
-# type: TP
-#: en/webcleaner-certificates.1:18
-#, no-wrap
-msgid "B<remove>"
-msgstr "B<remove>"
-
-# type: Plain text
-#: en/webcleaner-certificates.1:21
-msgid "Remove all previously generated WebCleaner SSL certificates."
-msgstr "Entferne alle vorher erstellten WebCleaner SSL Zertifikate."
-
-# type: SH
-#: en/webcleaner-certificates.1:21
-#: en/webcleaner.1:33
-#: en/webcleaner.conf.5:123
-#, no-wrap
-msgid "AUTHOR"
-msgstr "AUTOR"
-
-# type: Plain text
-#: en/webcleaner-certificates.1:23
-#: en/webcleaner.1:35
-#: en/webcleaner.conf.5:125
-msgid "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
-msgstr "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
-
-# type: SH
-#: en/webcleaner-certificates.1:23
-#: en/webcleaner.1:35
-#: en/webcleaner.conf.5:125
-#, no-wrap
-msgid "COPYRIGHT"
-msgstr "COPYRIGHT"
-
-# type: Plain text
-#: en/webcleaner-certificates.1:24
-#: en/webcleaner.1:36
-#: en/webcleaner.conf.5:126
-msgid "Copyright \\(co 2000-2009 Bastian Kleineidam"
-msgstr "Copyright \\(co 2000-2009 Bastian Kleineidam"
-
-# type: TH
-#: en/webcleaner.1:1
-#, no-wrap
-msgid "WEBCLEANER"
-msgstr "WEBCLEANER"
-
-# type: TH
-#: en/webcleaner.1:1
-#, no-wrap
-msgid "6 December 2000"
-msgstr "6. Dezember 2000"
-
-# type: Plain text
 #: en/webcleaner.1:4
 msgid "webcleaner - a filtering HTTP proxy"
 msgstr "webcleaner - ein filternder HTTP Proxy"
+
+# type: SH
+#: en/webcleaner.1:4 en/webcleaner-certificates.1:4
+#, no-wrap
+msgid "SYNOPSIS"
+msgstr "SYNTAX"
 
 # type: Plain text
 #: en/webcleaner.1:6
@@ -150,16 +54,31 @@ msgid "B<webcleaner> [I<options>]"
 msgstr "B<webcleaner> [I<Optionen>]"
 
 # type: SH
-#: en/webcleaner.1:6
-#: en/webcleaner.conf.5:4
+#: en/webcleaner.1:6 en/webcleaner.conf.5:4
 #, no-wrap
 msgid "DESCRIPTION"
 msgstr "BESCHREIBUNG"
 
 # type: Plain text
 #: en/webcleaner.1:12
-msgid "WebCleaner is a filtering HTTP proxy. You can encode, decode and modify each part of an HTTP request. WebCleaner enhances your privacy and efficiency on the web. It comes with several ready-to-use filters to remove advertisement and unwanted HTML content, compresses documents on-the-fly, disables animated GIF images and more."
-msgstr "WebCleaner ist ein filternder HTTP Proxy. Sie können jeden Teil einer HTTP Anfrage kodieren, dekodieren und verändern. WebCleaner erhöht die Effektivität und den Schutz der Privatsphäre im Internet.Es kommt mit mehreren gebrauchsfertigen Filtern, um Werbung und unerwünschten Inhalt zu entfernen, komprimiert Dokumente,deaktiviert animierte GIF-Bilder, und mehr."
+msgid ""
+"WebCleaner is a filtering HTTP proxy. You can encode, decode and modify each "
+"part of an HTTP request. WebCleaner enhances your privacy and efficiency on "
+"the web. It comes with several ready-to-use filters to remove advertisement "
+"and unwanted HTML content, compresses documents on-the-fly, disables "
+"animated GIF images and more."
+msgstr ""
+"WebCleaner ist ein filternder HTTP Proxy. Sie können jeden Teil einer HTTP "
+"Anfrage kodieren, dekodieren und verändern. WebCleaner erhöht die "
+"Effektivität und den Schutz der Privatsphäre im Internet.Es kommt mit "
+"mehreren gebrauchsfertigen Filtern, um Werbung und unerwünschten Inhalt zu "
+"entfernen, komprimiert Dokumente,deaktiviert animierte GIF-Bilder, und mehr."
+
+# type: SH
+#: en/webcleaner.1:12 en/webcleaner-certificates.1:6
+#, no-wrap
+msgid "OPTIONS"
+msgstr "OPTIONEN"
 
 # type: TP
 #: en/webcleaner.1:13
@@ -172,10 +91,20 @@ msgstr "B<-h>, B<--help>"
 msgid "Print help text."
 msgstr "Gebe Hilfstext aus."
 
+# type: TP
+#: en/webcleaner.1:16 en/webcleaner-certificates.1:7
+#, no-wrap
+msgid "B<-d> I<directory>, B<--configdir=>I<directory>"
+msgstr "B<-d> I<Verzeichnis>, B<--configdir=>I<Verzeichnis>"
+
 # type: Plain text
 #: en/webcleaner.1:20
-msgid "Use given directory for configuration. It should include a B<webcleaner.conf> file and several .zap files."
-msgstr "Benutze das angegebene Konfigurationsverzeichnis. Es sollte eine B<webcleaner.conf> Datei beinhalten und mehrere .zap-Dateien."
+msgid ""
+"Use given directory for configuration. It should include a B<webcleaner."
+"conf> file and several .zap files."
+msgstr ""
+"Benutze das angegebene Konfigurationsverzeichnis. Es sollte eine "
+"B<webcleaner.conf> Datei beinhalten und mehrere .zap-Dateien."
 
 # type: TP
 #: en/webcleaner.1:20
@@ -196,17 +125,26 @@ msgstr "KONFIGURATION"
 
 # type: Plain text
 #: en/webcleaner.1:28
-msgid "To configure WebCleaner, point your favourite webbrowser to B<http://localhost:>I<port>B</> where I<port> is your configured WebCleaner port number (default 8080)."
-msgstr "Um WebCleaner zu konfigurieren, lassen Sie Ihren favorisierten Browser auf B<http://localhost:>I<port>B</> zeigen, wobei I<port> die konfigurierte WebCleaner Portnummer ist (Standard ist 8080)."
+msgid ""
+"To configure WebCleaner, point your favourite webbrowser to B<http://"
+"localhost:>I<port>B</> where I<port> is your configured WebCleaner port "
+"number (default 8080)."
+msgstr ""
+"Um WebCleaner zu konfigurieren, lassen Sie Ihren favorisierten Browser auf "
+"B<http://localhost:>I<port>B</> zeigen, wobei I<port> die konfigurierte "
+"WebCleaner Portnummer ist (Standard ist 8080)."
 
 # type: Plain text
 #: en/webcleaner.1:31
-msgid "The underlying configuration format is a custom XML format which is explained in I<webcleaner.conf(5)>."
-msgstr "Das zugrunde liegende Konfigurationsformat ist ein eigenes XML Format welches in I<webcleaner.conf(5)> erklärt ist."
+msgid ""
+"The underlying configuration format is a custom XML format which is "
+"explained in I<webcleaner.conf(5)>."
+msgstr ""
+"Das zugrunde liegende Konfigurationsformat ist ein eigenes XML Format "
+"welches in I<webcleaner.conf(5)> erklärt ist."
 
 # type: SH
-#: en/webcleaner.1:31
-#: en/webcleaner.conf.5:121
+#: en/webcleaner.1:31 en/webcleaner.conf.5:121
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "SIEHE AUCH"
@@ -216,17 +154,39 @@ msgstr "SIEHE AUCH"
 msgid "webcleaner.conf(5)"
 msgstr "webcleaner.conf(5)"
 
-# type: TH
-#: en/webcleaner.conf.5:1
+# type: SH
+#: en/webcleaner.1:33 en/webcleaner.conf.5:123 en/webcleaner-certificates.1:21
 #, no-wrap
-msgid "WEBCLEANER.CONF"
-msgstr "WEBCLEANER.CONF"
+msgid "AUTHOR"
+msgstr "AUTOR"
+
+# type: Plain text
+#: en/webcleaner.1:35 en/webcleaner.conf.5:125 en/webcleaner-certificates.1:23
+msgid "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
+msgstr "Bastian Kleineidam E<lt>calvin@users.sourceforge.netE<gt>"
+
+# type: SH
+#: en/webcleaner.1:35 en/webcleaner.conf.5:125 en/webcleaner-certificates.1:23
+#, no-wrap
+msgid "COPYRIGHT"
+msgstr "COPYRIGHT"
+
+# type: Plain text
+#: en/webcleaner.1:36 en/webcleaner.conf.5:126 en/webcleaner-certificates.1:24
+msgid "Copyright \\(co 2000-2009 Bastian Kleineidam"
+msgstr "Copyright \\(co 2000-2009 Bastian Kleineidam"
+
+# type: Plain text
+#: en/webcleaner.conf.5:1
+#, fuzzy, no-wrap
+msgid "webcleaner.conf"
+msgstr "webcleaner.conf(5)"
 
 # type: TH
 #: en/webcleaner.conf.5:1
 #, no-wrap
-msgid "3 January 2003"
-msgstr "3. Januar 2003"
+msgid "2003-01-03"
+msgstr ""
 
 # type: Plain text
 #: en/webcleaner.conf.5:4
@@ -235,8 +195,14 @@ msgstr "webcleaner.conf - Konfigurationsdatei für WebCleaner"
 
 # type: Plain text
 #: en/webcleaner.conf.5:8
-msgid "B<webcleaner.conf> is the main configuration file for the WebCleaner proxy. The file has a custom XML format following the Document Type Definition in the file B<webcleaner.dtd>."
-msgstr "B<webcleaner.conf> ist die Hauptkonfigurationsdatei für den WebCleaner Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokument Definition der Datei B<webcleaner.dtd> folgt."
+msgid ""
+"B<webcleaner.conf> is the main configuration file for the WebCleaner proxy. "
+"The file has a custom XML format following the Document Type Definition in "
+"the file B<webcleaner.dtd>."
+msgstr ""
+"B<webcleaner.conf> ist die Hauptkonfigurationsdatei für den WebCleaner "
+"Proxy. Die Datei besitzt ein eigenes XML Format, welches der Dokument "
+"Definition der Datei B<webcleaner.dtd> folgt."
 
 # type: SH
 #: en/webcleaner.conf.5:8
@@ -285,8 +251,12 @@ msgstr "B<sslgateway>"
 
 # type: Plain text
 #: en/webcleaner.conf.5:22
-msgid "If set to one, WebCleaner will start an SSL server on the above port for delegating and filtering HTTPS traffic."
-msgstr "Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer einen SSL Server starten, um HTTPS Daten weiterzuleiten und zu filtern."
+msgid ""
+"If set to one, WebCleaner will start an SSL server on the above port for "
+"delegating and filtering HTTPS traffic."
+msgstr ""
+"Falls auf Eins gesetzt, wird WebCleaner auf der obigen Portnummer einen SSL "
+"Server starten, um HTTPS Daten weiterzuleiten und zu filtern."
 
 # type: TP
 #: en/webcleaner.conf.5:22
@@ -340,8 +310,11 @@ msgstr "B<parentproxy>"
 
 # type: Plain text
 #: en/webcleaner.conf.5:38
-msgid "The hostname of the HTTP parent proxy. Leave empty to not use a parent proxy."
-msgstr "Der Rechnername des übergeordneten HTTP Proxy. Lassen Sie den Rechnernamen leer, um keinen übergeordneten Proxy zu benutzen."
+msgid ""
+"The hostname of the HTTP parent proxy. Leave empty to not use a parent proxy."
+msgstr ""
+"Der Rechnername des übergeordneten HTTP Proxy. Lassen Sie den Rechnernamen "
+"leer, um keinen übergeordneten Proxy zu benutzen."
 
 # type: TP
 #: en/webcleaner.conf.5:38
@@ -374,7 +347,8 @@ msgstr "B<parentproxypass>"
 # type: Plain text
 #: en/webcleaner.conf.5:47
 msgid "The base64 encoded password for parent proxy authentication."
-msgstr "Das base64-kodierte Passwort zur Authentifizierung des übergeordneten Proxy."
+msgstr ""
+"Das base64-kodierte Passwort zur Authentifizierung des übergeordneten Proxy."
 
 # type: TP
 #: en/webcleaner.conf.5:47
@@ -407,7 +381,8 @@ msgstr "B<nofilterhosts>"
 # type: Plain text
 #: en/webcleaner.conf.5:56
 msgid "Comma separated list of hosts for which filtering is disabled."
-msgstr "Komma separierte Liste von Rechnernamen für die Filtern deaktiviert ist."
+msgstr ""
+"Komma separierte Liste von Rechnernamen für die Filtern deaktiviert ist."
 
 # type: TP
 #: en/webcleaner.conf.5:56
@@ -418,7 +393,8 @@ msgstr "B<allowedhosts>"
 # type: Plain text
 #: en/webcleaner.conf.5:59
 msgid "Comma separated list of hosts which are allowed to use this proxy."
-msgstr "Komma separierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen."
+msgstr ""
+"Komma separierte Liste von Rechnernamen, die diesen Proxy benutzen dürfen."
 
 # type: TP
 #: en/webcleaner.conf.5:59
@@ -439,8 +415,12 @@ msgstr "B<try_google>"
 
 # type: Plain text
 #: en/webcleaner.conf.5:66
-msgid "If set to one, will display on timeouts or other fatal server errors a page with links to google cache for the requested page."
-msgstr "Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung eine Seite mit Verweisen zum Google Cache der angeforderten Seiten dargestellt."
+msgid ""
+"If set to one, will display on timeouts or other fatal server errors a page "
+"with links to google cache for the requested page."
+msgstr ""
+"Falls auf Eins gesetzt, wird bei einer Verbindungszeitüberschreitung eine "
+"Seite mit Verweisen zum Google Cache der angeforderten Seiten dargestellt."
 
 # type: SH
 #: en/webcleaner.conf.5:66
@@ -478,8 +458,11 @@ msgstr "B<BinaryCharFilter>"
 
 # type: Plain text
 #: en/webcleaner.conf.5:77
-msgid "Replace some binary chars (espacially those illegal Microsoft quote chars)."
-msgstr "Ersetzt einige Binärzeichen (besonders die illegalen Microsoft Anführungszeichen)."
+msgid ""
+"Replace some binary chars (espacially those illegal Microsoft quote chars)."
+msgstr ""
+"Ersetzt einige Binärzeichen (besonders die illegalen Microsoft "
+"Anführungszeichen)."
 
 # type: TP
 #: en/webcleaner.conf.5:77
@@ -511,8 +494,12 @@ msgstr "B<ImageReducer>"
 
 # type: Plain text
 #: en/webcleaner.conf.5:87
-msgid "Reduce all images to low-quality JPEG images. Useful for users with very low bandwidth."
-msgstr "Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.Nützlich für Benutzer mit sehr niedriger Bandbreite."
+msgid ""
+"Reduce all images to low-quality JPEG images. Useful for users with very low "
+"bandwidth."
+msgstr ""
+"Reduziert alle Bilder zu qualitativ niedrigen JPEG Bildern.Nützlich für "
+"Benutzer mit sehr niedriger Bandbreite."
 
 # type: TP
 #: en/webcleaner.conf.5:87
@@ -534,7 +521,9 @@ msgstr "B<MimeRecognizer>"
 # type: Plain text
 #: en/webcleaner.conf.5:93
 msgid "Detect and correct missing or wrong Content-Type headers."
-msgstr "Erkenne und korrigiere fehlende oder falsche Angaben im Content-Type Kopfdatum."
+msgstr ""
+"Erkenne und korrigiere fehlende oder falsche Angaben im Content-Type "
+"Kopfdatum."
 
 # type: TP
 #: en/webcleaner.conf.5:93
@@ -566,8 +555,12 @@ msgstr "B<Rewriter>"
 
 # type: Plain text
 #: en/webcleaner.conf.5:103
-msgid "Parse the HTML stream and replace arbitrary tag constructs; filters most advertising."
-msgstr "Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filtert die meiste Werbung heraus."
+msgid ""
+"Parse the HTML stream and replace arbitrary tag constructs; filters most "
+"advertising."
+msgstr ""
+"Parst den HTML Datenstrom und ersetzt beliebe Tagkonstrukte. Filtert die "
+"meiste Werbung heraus."
 
 # type: TP
 #: en/webcleaner.conf.5:103
@@ -625,3 +618,91 @@ msgstr ""
 msgid "webcleaner(1)"
 msgstr "webcleaner(1)"
 
+# type: Plain text
+#: en/webcleaner-certificates.1:1
+#, fuzzy, no-wrap
+msgid "webcleaner-certificates"
+msgstr "B<webcleaner-certificates> [I<Optionen>] I<Kommando>"
+
+# type: TH
+#: en/webcleaner-certificates.1:1
+#, no-wrap
+msgid "2004-03-22"
+msgstr ""
+
+# type: Plain text
+#: en/webcleaner-certificates.1:4
+msgid ""
+"webcleaner-certificates - generate or remove WebCleaner SSL certificates"
+msgstr ""
+"webcleaner-certificates - erstelle oder entferne WebCleaner SSL Zertifikate"
+
+# type: Plain text
+#: en/webcleaner-certificates.1:6
+msgid "B<webcleaner-certificates> [I<options>] I<command>"
+msgstr "B<webcleaner-certificates> [I<Optionen>] I<Kommando>"
+
+# type: Plain text
+#: en/webcleaner-certificates.1:12
+msgid ""
+"Generate certificates in given directory instead of the default one for "
+"WebCleaner.  See also the option B<-d> in B<webcleaner(1)>."
+msgstr ""
+"Erstelle Zertifikate im angegebenen Verzeichnis anstelle des "
+"Standardverzeichnisses.Siehe auch die Option B<-d> in B<webcleaner(1)>."
+
+# type: SH
+#: en/webcleaner-certificates.1:12
+#, no-wrap
+msgid "COMMANDS"
+msgstr "KOMMANDOS"
+
+# type: TP
+#: en/webcleaner-certificates.1:13
+#, no-wrap
+msgid "B<install>"
+msgstr "B<install>"
+
+# type: Plain text
+#: en/webcleaner-certificates.1:18
+msgid ""
+"Generate and install WebCleaner SSL certificates for client and server "
+"authentification.  If the certificates exist already, do nothing."
+msgstr ""
+"Erstelle und installiere WebCleaner SSL Zertifikate für Klient- und "
+"Serverauthentifizierung.Tue nichts, falls die Zertifikate schon existieren."
+
+# type: TP
+#: en/webcleaner-certificates.1:18
+#, no-wrap
+msgid "B<remove>"
+msgstr "B<remove>"
+
+# type: Plain text
+#: en/webcleaner-certificates.1:21
+msgid "Remove all previously generated WebCleaner SSL certificates."
+msgstr "Entferne alle vorher erstellten WebCleaner SSL Zertifikate."
+
+# type: TH
+#~ msgid "WEBCLEANER-CERTIFICATES"
+#~ msgstr "WEBCLEANER-CERTIFICATES"
+
+# type: TH
+#~ msgid "22 March 2004"
+#~ msgstr "22. März 2004"
+
+# type: TH
+#~ msgid "WEBCLEANER"
+#~ msgstr "WEBCLEANER"
+
+# type: TH
+#~ msgid "6 December 2000"
+#~ msgstr "6. Dezember 2000"
+
+# type: TH
+#~ msgid "WEBCLEANER.CONF"
+#~ msgstr "WEBCLEANER.CONF"
+
+# type: TH
+#~ msgid "3 January 2003"
+#~ msgstr "3. Januar 2003"
