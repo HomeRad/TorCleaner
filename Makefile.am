@@ -42,7 +42,6 @@ clean-local: clean-log
 	rm -f index.html* test.gif
 	rm -f config/magic.mime.mgc
 	rm -f _webcleaner2_configdata.py
-	rm -f crossbuild.log
 	rm -rf coverage
 	rm -rf *.prof
 # delete possible aborted dist build
@@ -62,22 +61,6 @@ localbuild: MANIFEST all
 	cp -f build/lib.linux-$(MACHINE)-$(PYVER)/wc/levenshtein.so wc/
 	cp -f build/lib.linux-$(MACHINE)-$(PYVER)/wc/js/jslib.so wc/js/
 	cp -f build/lib.linux-$(MACHINE)-$(PYVER)/wc/network/_network.so wc/network/
-
-.PHONY: crossdist
-crossdist: distclean
-	./crossbuild.sh
-
-# cross compilation Linux -> Win32 script
-.PHONY: crossbuild
-crossbuild: all MANIFEST
-# build the .exe
-	CC=/usr/bin/i586-mingw32msvc-gcc \
-	CCSHARED=/usr/bin/i586-mingw32msvc-gcc \
-	  CXX=/usr/bin/i586-mingw32msvc-g++ \
-	  LDSHARED="/usr/bin/i586-mingw32msvc-gcc --entry _DllMain@12" \
-	  PY_HOST_PLATFORM=nt \
-	  $(PYTHON) setup.py build -c mingw32 bdist_wininst -b tacho.bmp \
-	  2>&1 | tee --append crossbuild.log
 
 distclean-local:
 	rm -rf dist build
