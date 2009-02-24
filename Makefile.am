@@ -108,8 +108,8 @@ syntaxcheck:
 	[ ! -d .svn ] || check-nosvneolstyle -v
 	check-copyright
 	check-pofiles -v
-	py-tabnanny
-	$(MAKE) -C config xmlcheck
+	py-tabdaddy
+#	$(MAKE) -C config xmlcheck
 	$(MAKE) pyflakes
 
 .PHONY: releasecheck
@@ -144,17 +144,6 @@ sign_distfiles:
 	  if [ ! -f $${f}.asc ]; then \
 	    gpg --detach-sign --armor $$f; \
 	  fi; \
-	done
-
-.PHONY: homepage
-homepage: homepage-zapper
-	$(MAKE) -C doc/en homepage
-
-.PHONY: homepage-zapper
-homepage-zapper: md5sums
-	cp config/*.zap config/*.dtd config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/filter/
-	@for d in ads aggressive violence; do \
-	  cp config/blacklists/$$d/*.gz $(HTMLDIR)/htdocs/filter/blacklists/$$d/; \
 	done
 
 .PHONY: pyflakes
