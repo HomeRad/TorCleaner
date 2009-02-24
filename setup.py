@@ -49,19 +49,18 @@ from distutils.util import convert_path
 INSTALL_LIST = "install_log.txt"
 
 def normpath (path):
-    """norm a path name to platform specific notation"""
+    """Norm a path name."""
     return os.path.normpath(path)
 
 
 def cnormpath (path):
-    """norm a path name to platform specific notation, but honoring
-       the win_compiling flag"""
+    """Norm a path name to platform specific notation."""
     path = normpath(path)
-    if win_compiling:
+    if os.name == 'nt':
         # replace slashes with backslashes
         path = path.replace("/", "\\")
     if not os.path.isabs(path):
-        path = normpath(os.path.join(sys.prefix, path))
+        path= normpath(os.path.join(sys.prefix, path))
     return path
 
 
@@ -267,41 +266,38 @@ class MyDistribution (distutils.dist.Distribution, object):
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
 
-_cc_test_file = ".setup.test"
-_cc_test_file_c = ".setup.test.c"
-def cc_run (cc, args):
-    "Run C compiler with given args."
-    f = open(_cc_test_file_c, "w")
-    try:
-        f.write("int main(){return 0;}\n")
-    finally:
-        f.close()
-    cmd_args = [cc[0]]
-    cmd_args.extend(args)
-    cmd_args.extend(["-o", _cc_test_file, _cc_test_file_c])
-    retcode = subprocess.call(cmd_args, stderr=subprocess.PIPE)
-    # remove temp files
-    for filename in (_cc_test_file, _cc_test_file_c):
-        try:
-            os.unlink(filename)
-        except os.error:
-            pass
-    return retcode == 0
+def cc_run (args):
+    """Run the C compiler with a simple main program.
+
+    @return: successful exit flag
+    @rtype: bool
+    """
+    prog = "int main(){}\n"
+    pipe = subprocess.Popen(args,
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    pipe.communicate(input=prog)
+    if os.WIFEXITED(pipe.returncode):
+        return os.WEXITSTATUS(pipe.returncode) == 0
+    return False
 
 
 def cc_supports_option (cc, option):
-    """
-    Check if the given C compiler supports the given option by
-    compiling and linking a simple test program.
+    """Check if the given C compiler supports the given option.
 
     @return: True if the compiler supports the option, else False
     @rtype: bool
     """
-    return cc_run(cc, [option])
+    return cc_run([cc[0], "-E", option, "-"])
+
+
+def cc_remove_option (compiler, option):
+    for optlist in (compiler.compiler, compiler.compiler_so):
+        if option in optlist:
+            optlist.remove(option)
 
 
 def cc_has_library (cc, lib):
-    return cc_run(cc, ["-l", lib])
+    return cc_run([cc[0], "-x", "c", "-l", lib, "-"])
 
 
 class MyBuildExt (build_ext, object):
@@ -509,13 +505,13 @@ extensions.append(Extension("wc.network._network",
                   ))
 
 # javascript extension
-if win_compiling:
-    define_macros = [('WIN32', None),
-                     ('XP_WIN', None),
-                     ('EXPORT_JS_API', None),
-                    ]
-else:
-    define_macros = []
+#if os.name == 'nt':
+#    define_macros = [('WIN32', None),
+#                     ('XP_WIN', None),
+#                     ('EXPORT_JS_API', None),
+#                    ]
+#else:
+define_macros = []
 extensions.append(Extension('wc.js.jslib',
                   sources=[normpath('wc/js/jslib.c')],
                   include_dirs = include_dirs + ['libjs'],
@@ -531,8 +527,8 @@ scripts = [
     'webcleaner',
     'webcleaner-certificates',
 ]
-if win_compiling:
-    scripts.append('install-webcleaner.py')
+#if win_compiling:
+#    scripts.append('install-webcleaner.py')
 
 data_files = [
      ('share/webcleaner/config',

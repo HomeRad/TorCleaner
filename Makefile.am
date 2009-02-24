@@ -202,7 +202,7 @@ jsdiff:
 	(cd libjs && for f in *.c *.h *.tbl *.msg \
 	          fdlibm/*.h fdlibm/*.c; do \
 	   diff -u $$f $(JSSRCDIR)/$$f 2>/dev/null; \
-	 done) | less
+	 done) | $(PAGER)
 
 jsupdate:
 	cd libjs && for f in *.c *.h *.tbl *.msg \
