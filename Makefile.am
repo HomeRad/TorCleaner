@@ -105,14 +105,12 @@ md5sums:
 
 .PHONY: syntaxcheck
 syntaxcheck:
-	py-verify -v
-	py-find-nocoding -v
-	check-nosvneolstyle -v
-	check-copyright -v
+	[ ! -d .svn ] || check-nosvneolstyle -v
+	check-copyright
 	check-pofiles -v
-	py24-tabnanny
+	py-tabnanny
 	$(MAKE) -C config xmlcheck
-
+	$(MAKE) pyflakes
 
 .PHONY: releasecheck
 releasecheck:	syntaxcheck
