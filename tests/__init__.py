@@ -46,14 +46,24 @@ class memoized (object):
 def _run (cmd):
     null = open(os.name == 'nt' and ':NUL' or "/dev/null", 'w')
     try:
-        return subprocess.call(cmd, stdout=null, stderr=subprocess.STDOUT)
-    finally:
-       null.close()
+        try:
+            return subprocess.call(cmd, stdout=null, stderr=subprocess.STDOUT)
+        finally:
+            null.close()
+    except OSError:
+        return -1
 
 
 @memoized
 def has_network ():
-    return _run(["ping", "-c1", "www.debian.org"]) == 0
+    cmd = ["ping"]
+    if os.name == "nt":
+        cmd.append("-n")
+        cmd.append("1")
+    else:
+        cmd.append("-c1")
+    cmd.append("www.debian.org")
+    return _run(cmd) == 0
 
 
 @memoized
@@ -74,7 +84,7 @@ def has_clamav ():
         if sock:
             cmd = ["waitfor", "-w", "1", "unix:%s"%sock]
             return subprocess.call(cmd) == 0
-    except:
+    except OSError:
         pass
     return False
 
