@@ -24,10 +24,9 @@ import wc.dns.exception
 import wc.dns.rdatatype
 import wc.dns.rdataclass
 import wc.dns.rdata
-import wc.dns.set
 
 # define SimpleSet here for backwards compatibility
-SimpleSet = wc.dns.set.Set
+SimpleSet = set
 
 class DifferingCovers(wc.dns.exception.DNSException):
     """Raised if an attempt is made to add a SIG/RRSIG whose covered type
@@ -38,7 +37,7 @@ class IncompatibleTypes(wc.dns.exception.DNSException):
     """Raised if an attempt is made to add rdata of an incompatible type."""
     pass
 
-class Rdataset(wc.dns.set.Set):
+class Rdataset(set):
     """A DNS rdataset.
 
     @ivar rdclass: The class of the rdataset
