@@ -5,7 +5,7 @@ if !( autoreconf --version ) </dev/null > /dev/null 2>&1; then
     exit
 fi
 
-echo "Updating generated configuration files with autoreconf..." && autoreconf --force --install --verbose
+echo "Updating generated configuration files with autoreconf..." && autoreconf --install --verbose
 RES=$?
 if [ $RES != 0 ]; then
     echo "Autogeneration failed (exit code $RES)"
