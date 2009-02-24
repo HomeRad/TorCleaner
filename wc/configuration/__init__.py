@@ -28,7 +28,7 @@ from . import ratingstorage
 from ..XmlUtils import xmlquoteattr
 from ..url import match_url
 from .. import (log, LOG_PROXY, LOG_FILTER, decorators, strformat, fileutil,
-    ConfigDir, HasSsl, Url, proxy)
+    ConfigDir, HasSsl, Url, proxy, clamav)
 from ..network import iputil
 
 ConfigCharset = "iso-8859-1"
@@ -69,8 +69,7 @@ def reload_config ():
     config.read_filterconf()
     config.init_filter_modules()
     proxy.dns_lookups.init_resolver()
-    from ..filter import VirusFilter
-    VirusFilter.init_clamav_conf(config['clamavconf'])
+    clamav.init_clamav_conf(config['clamavconf'])
     pending_reload = False
 
 

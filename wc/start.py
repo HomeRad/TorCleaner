@@ -20,9 +20,8 @@ Proxy start function.
 
 import os
 from . import (configuration, log, fileutil, ConfigDir, initlog,
-    HasProfile, HasPsyco, LOG_PROXY)
+    HasProfile, HasPsyco, LOG_PROXY, clamav)
 from .proxy import mainloop, timer, dns_lookups
-from .filter import VirusFilter
 
 
 def wstartfunc (handle=None, confdir=ConfigDir, filelogs=True,
@@ -41,7 +40,7 @@ def wstartfunc (handle=None, confdir=ConfigDir, filelogs=True,
     checklog()
     # read configuration
     config = configuration.init(confdir)
-    VirusFilter.init_clamav_conf(config['clamavconf'])
+    clamav.init_clamav_conf(config['clamavconf'])
     config.init_filter_modules()
     dns_lookups.init_resolver()
     if profiling and HasProfile:

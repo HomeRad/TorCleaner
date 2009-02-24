@@ -69,7 +69,7 @@ HasProfile = fileutil.has_module("profile")
 HasPstats = fileutil.has_module("pstats")
 
 # logger areas
-LOG_WC = "wc"
+LOG_ROOT = "wc"
 LOG_FILTER = "wc.filter"
 LOG_JS = "wc.filter.js"
 LOG_RATING = "wc.rating"

@@ -41,7 +41,8 @@ import socket
 import select
 import errno
 
-from .. import log, LOG_PROXY, configuration
+from .. import log, LOG_PROXY
+from ..socketutil import create_socket, has_ipv6
 from . import timer
 
 def strerror (err):
@@ -50,40 +51,6 @@ def strerror (err):
 
 # map of sockets
 socket_map = {}
-
-# test for IPv6, both in Python build and in kernel build
-has_ipv6 = False
-if socket.has_ipv6:
-    # python has ipv6 compiled in, but the operating system also
-    # has to support it.
-    try:
-        socket.socket(socket.AF_INET6, socket.SOCK_STREAM).close()
-        has_ipv6 = True
-    except socket.error, msg:
-        # only catch these one:
-        # socket.error: (97, 'Address family not supported by protocol')
-        # socket.error: (10047, 'Address family not supported by protocol')
-        if msg[0] not in (97, 10047):
-            raise
-
-def create_socket (family, socktype, proto=0):
-    """
-    Create a socket with given family and type. If SSL context
-    is given an SSL socket is created.
-    """
-    sock = socket.socket(family, socktype, proto=proto)
-    # XXX todo custom timeout config
-    #sock.settimeout(configuration.config['timeout'])
-    socktypes_inet = [socket.AF_INET]
-    if has_ipv6:
-        socktypes_inet.append(socket.AF_INET6)
-    if family in socktypes_inet and socktype == socket.SOCK_STREAM:
-        # disable NAGLE algorithm, which means sending pending data
-        # immediately, possibly wasting bandwidth but improving
-        # responsiveness for fast networks
-        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    return sock
-
 
 class Dispatcher (object):
     """
