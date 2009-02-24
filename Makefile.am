@@ -163,7 +163,8 @@ homepage-zapper: md5sums
 pyflakes:
 	pyflakes $(CHECKFILES) 2>&1 | \
 	  grep -v "undefined name '_'" | \
-	  grep -v "undefined name '_n'"
+	  grep -v "undefined name '_n'" | \
+	  grep -v "redefinition of unused 'wc'"
 
 .PHONY: ccheck
 ccheck:
