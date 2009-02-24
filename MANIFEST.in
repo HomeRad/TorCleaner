@@ -61,4 +61,3 @@ include wc/HtmlParser/htmllex.l
 include wc/HtmlParser/htmlparse.y
 include wc/HtmlParser/Makefile
 include wc/HtmlParser/fixincludes.awk
-include tacho.bmp
