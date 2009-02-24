@@ -35,13 +35,13 @@ def _exec_form (form, lang):
     HTML CGI form handling.
     """
     global ruletitle, selfolder, selrule
-    if form.has_key('ruletitle'):
+    if 'ruletitle' in form:
         ruletitle = _getval(form, 'ruletitle')
-    if form.has_key('selfolder'):
+    if 'selfolder' in form:
         selfolder = int(_getval(form, 'selfolder'))
-    if form.has_key('selrule'):
+    if 'selrule' in form:
         selrule = int(_getval(form, 'selrule'))
-    if form.has_key('blockurl'):
+    if 'blockurl' in form:
         _handle_blockurl(_getval(form, 'blockurl'))
 
 

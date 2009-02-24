@@ -269,10 +269,10 @@ def check_ntlm_credentials (credentials, **attrs):
     """
     Return True if given credentials validate with given attrs.
     """
-    if credentials.has_key('host') and credentials['host'] != "UNKNOWN":
+    if 'host' in credentials and credentials['host'] != "UNKNOWN":
         log.info(LOG_AUTH, "NTLM wrong host %r", credentials['host'])
         return False
-    if credentials.has_key('domain') and credentials['domain'] != 'WORKGROUP':
+    if 'domain' in credentials and credentials['domain'] != 'WORKGROUP':
         log.info(LOG_AUTH, "NTLM wrong domain %r",
                     credentials['domain'])
         return False

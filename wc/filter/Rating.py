@@ -65,7 +65,7 @@ class Rating (Filter.Filter):
         if not erules:
             raise FilterRating(_("No rating data found."))
         headers = attrs['headers']['server']
-        if headers.has_key('X-Rating') and headers['X-Rating'] == service.url:
+        if 'X-Rating' in headers and headers['X-Rating'] == service.url:
             rating = rating_from_headers(headers)
             for rule in rules:
                 service.rating_check(rule.rating, rating)

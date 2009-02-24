@@ -134,7 +134,7 @@ class ServerPool (object):
             log.debug(LOG_PROXY, "expire %s server %s", addr, server)
             server.close()
             if addr in self.smap:
-                assert not self.smap[addr].has_key(server), \
+                assert server not in self.smap[addr], \
                        "Not expired: %s" % str(self.smap[addr])
         timer.make_timer(60, self.expire_servers)
 

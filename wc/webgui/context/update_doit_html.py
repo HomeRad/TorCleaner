@@ -34,9 +34,9 @@ def _exec_form (form, lang):
     """
     global updatelog
     updatelog = u""
-    if form.has_key('updatezapper'):
+    if 'updatezapper' in form:
         _updatezapper()
-    elif form.has_key('updaterating'):
+    elif 'updaterating' in form:
         _updaterating()
     else:
         updatelog = _("Error: nothing to update.")

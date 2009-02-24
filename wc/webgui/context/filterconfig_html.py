@@ -179,80 +179,80 @@ def _exec_form (form, lang):
     HTML CGI form handling.
     """
     # select a folder
-    if form.has_key('selfolder'):
+    if 'selfolder' in form:
         _form_selfolder(_getval(form, 'selfolder'))
-    if form.has_key('selindex') and curfolder:
+    if 'selindex' in form and curfolder:
         _form_selindex(_getval(form, 'selindex'))
     set_indexstr(curfolder)
     # select a rule
-    if form.has_key('selrule') and curfolder:
+    if 'selrule' in form and curfolder:
         _form_selrule(_getval(form, 'selrule'))
     # make a new folder
-    if form.has_key('newfolder'):
+    if 'newfolder' in form:
         _form_newfolder(_getval(form, 'newfoldername'), lang)
     # rename current folder
-    elif curfolder and form.has_key('renamefolder'):
+    elif curfolder and 'renamefolder' in form:
         _form_renamefolder(_getval(form, 'foldername'), lang)
     # disable current folder
-    elif curfolder and form.has_key('disablefolder%d' % curfolder.oid):
+    elif curfolder and ('disablefolder%d' % curfolder.oid) in form:
         _form_disablefolder(curfolder)
     # enable current folder
-    elif curfolder and form.has_key('enablefolder%d' % curfolder.oid):
+    elif curfolder and ('enablefolder%d' % curfolder.oid) in form:
         _form_enablefolder(curfolder)
     # remove current folder
-    elif curfolder and form.has_key('removefolder%d' % curfolder.oid):
+    elif curfolder and ('removefolder%d' % curfolder.oid) in form:
         _form_removefolder(curfolder)
     # make a new rule in current folder
-    elif curfolder and form.has_key('newrule'):
+    elif curfolder and 'newrule' in form:
         _form_newrule(_getval(form, 'newruletype'), lang)
     # disable current rule
-    elif currule and form.has_key('disablerule%d' % currule.oid):
+    elif currule and ('disablerule%d' % currule.oid) in form:
         _form_disablerule(currule)
     # enable current rule
-    elif currule and form.has_key('enablerule%d' % currule.oid):
+    elif currule and ('enablerule%d' % currule.oid) in form:
         _form_enablerule(currule)
     # remove current rule
-    elif currule and form.has_key('removerule%d' % currule.oid):
+    elif currule and ('removerule%d' % currule.oid) in form:
         _form_removerule(currule)
 
     # rule specific submit buttons
-    elif currule and form.has_key('addmimetype'):
+    elif currule and 'addmimetype' in form:
         _form_rule_addmimetype(form)
-    elif currule and form.has_key('delmimetypes'):
+    elif currule and 'delmimetypes' in form:
         _form_rule_delmimetypes(form)
-    elif currule and form.has_key('addmatchurl'):
+    elif currule and 'addmatchurl' in form:
         _form_rule_addmatchurl(form)
-    elif currule and form.has_key('delmatchurls'):
+    elif currule and 'delmatchurls' in form:
         _form_rule_delmatchurls(form)
-    elif currule and form.has_key('addnomatchurl'):
+    elif currule and 'addnomatchurl' in form:
         _form_rule_addnomatchurl(form)
-    elif currule and form.has_key('delnomatchurls'):
+    elif currule and 'delnomatchurls' in form:
         _form_rule_delnomatchurls(form)
-    elif currule and form.has_key('addattr'):
+    elif currule and 'addattr' in form:
         _form_htmlrewrite_addattr(form)
-    elif currule and form.has_key('removeattrs') and form.has_key('delattr'):
+    elif currule and 'removeattrs' in form and 'delattr' in form:
         _form_htmlrewrite_removeattrs(form)
 
     # generic apply rule values
-    elif currule and form.has_key('apply'):
+    elif currule and 'apply' in form:
         _form_apply(form, lang)
     # look for rule up/down moves
     elif curfolder:
         for rule in curfolder.rules:
             # note: image submits can append ".x" and ".y" to key
-            if form.has_key('rule_up_%d' % rule.oid) or \
-               form.has_key('rule_up_%d.x' % rule.oid):
+            if ('rule_up_%d' % rule.oid) in form or \
+               ('rule_up_%d.x' % rule.oid) in form:
                 _form_rule_up(rule.oid)
-            elif form.has_key('rule_down_%d' % rule.oid) or \
-                 form.has_key('rule_down_%d.x' % rule.oid):
+            elif ('rule_down_%d' % rule.oid) in form or \
+                 ('rule_down_%d.x' % rule.oid) in form:
                 _form_rule_down(rule.oid)
     # look for folder up/down moves
     for folder in config['folderrules']:
-        if form.has_key('folder_up_%d' % folder.oid) or \
-           form.has_key('folder_up_%d.x' % folder.oid):
+        if ('folder_up_%d' % folder.oid) in form or \
+           ('folder_up_%d.x' % folder.oid) in form:
             _form_folder_up(folder.oid)
-        elif form.has_key('folder_down_%d' % folder.oid) or \
-             form.has_key('folder_down_%d.x' % folder.oid):
+        elif ('folder_down_%d' % folder.oid) in form or \
+             ('folder_down_%d.x' % folder.oid) in form:
             _form_folder_down(folder.oid)
 
     _form_set_tags()
@@ -553,7 +553,7 @@ def _form_htmlrewrite_removeattrs (form):
     toremove = _getlist(form, 'delattr')
     if toremove:
         for attr in toremove:
-            if not currule.attrs.has_key(attr):
+            if attr not in currule.attrs:
                 error['htmlrewrite_delattr'] = True
                 return
         for attr in toremove:
@@ -683,7 +683,7 @@ def _form_rule_addmimetype (form):
     """
     Add rule MIME type.
     """
-    if not form.has_key('newmimetype'):
+    if 'newmimetype' not in form:
         return
     mimetype = _getval(form, 'newmimetype').strip()
     if mimetype not in currule.mimes:
@@ -711,7 +711,7 @@ def _form_rule_addmatchurl (form):
     """
     Add rule match URL.
     """
-    if not form.has_key('newmatchurl'):
+    if 'newmatchurl' not in form:
         return
     matchurl = _getval(form, 'newmatchurl').strip()
     if matchurl not in currule.matchurls:
@@ -739,7 +739,7 @@ def _form_rule_addnomatchurl (form):
     """
     Add rule nomatch URL.
     """
-    if not form.has_key('newnomatchurl'):
+    if 'newnomatchurl' not in form:
         return
     nomatchurl = _getval(form, 'newnomatchurl').strip()
     if nomatchurl not in currule.nomatchurls:
@@ -899,7 +899,7 @@ def _form_apply_rating (form):
     Change RatingRule.
     """
     #XXX todo fallback = _getval(form, 'rule_fallback')
-    use_extern = form.has_key('rule_use_extern')
+    use_extern = ('rule_use_extern' in form)
     if use_extern != currule.use_extern:
         currule.use_extern = use_extern and 1 or 0
         info['rulerating'] = True

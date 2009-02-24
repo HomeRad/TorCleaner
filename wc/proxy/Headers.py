@@ -32,7 +32,7 @@ from .decoder import UnchunkStream, GunzipStream, DeflateStream
 
 def get_content_length (headers, default=None):
     """Get content length as int or None on error."""
-    if not headers.has_key("Content-Length"):
+    if "Content-Length" not in headers:
         if has_header_value(headers, "Transfer-Encoding", "chunked"):
             return None
         return default
@@ -214,7 +214,7 @@ def client_remove_encoding_headers (headers):
     """
     # remove encoding header
     to_remove = ["Transfer-Encoding"]
-    if headers.has_key("Content-Length"):
+    if "Content-Length" in headers:
         log.info(LOG_PROXY,
                     'chunked encoding should not have Content-Length')
         to_remove.append("Content-Length")
@@ -305,7 +305,7 @@ def server_set_encoding_headers (server, filename=None):
     rewrite = server.is_rewrite()
     bytes_remaining = get_content_length(server.headers)
     to_remove = sets.Set()
-    if server.headers.has_key('Transfer-Encoding'):
+    if 'Transfer-Encoding' in server.headers:
         to_remove.add('Transfer-Encoding')
         tencs = server.headers['Transfer-Encoding'].lower()
         for tenc in tencs.split(","):
@@ -323,7 +323,7 @@ def server_set_encoding_headers (server, filename=None):
             else:
                 log.info(LOG_PROXY,
                             "unsupported transfer encoding in %r", tencs)
-        if server.headers.has_key("Content-Length"):
+        if "Content-Length" in server.headers:
             log.info(LOG_PROXY,
                         'Transfer-Encoding should not have Content-Length')
             to_remove.add("Content-Length")
@@ -331,7 +331,7 @@ def server_set_encoding_headers (server, filename=None):
     if rewrite:
         to_remove.add('Content-Length')
     remove_headers(server.headers, to_remove)
-    if not server.headers.has_key('Content-Length'):
+    if 'Content-Length' not in server.headers:
         server.headers['Connection'] = 'close\r'
     to_remove = sets.Set()
     #if server.protocol == "HTTP/1.1":
@@ -339,7 +339,7 @@ def server_set_encoding_headers (server, filename=None):
     #    server.headers['Transfer-Encoding'] = "chunked\r"
     #    server.encoders.append(ChunkStream.ChunkStream(server))
     # Compressed content (uncompress only for rewriting modules)
-    if server.headers.has_key('Content-Encoding'):
+    if 'Content-Encoding' in server.headers:
         to_remove.add('Content-Encoding')
         cencs = server.headers['Content-Encoding'].lower()
         for cenc in cencs.split(","):
@@ -364,7 +364,7 @@ def server_set_encoding_headers (server, filename=None):
             to_remove.add('Cache-Control')
         # add warning
         server.headers['Warning'] = "214 Transformation applied\r"
-        if server.headers.has_key("Content-Length"):
+        if "Content-Length" in server.headers:
             to_remove.add("Content-Length")
     remove_headers(server.headers, to_remove)
     return bytes_remaining

@@ -160,9 +160,9 @@ def get_digest_credentials (challenge, **attrs):
     base += ', algorithm="%s"' % challenge.get('algorithm', 'MD5')
     base += ', response="%s"' % response_digest
     # note: opaque value _should_ be there, but is not in apache mod_digest
-    if challenge.has_key('opaque'):
+    if 'opaque' in challenge:
         base += ', opaque="%s"' % challenge['opaque']
-    if challenge.has_key('qop'):
+    if 'qop' in challenge:
         # Microsoft-IIS implementation requires extra quotes
         if attrs['requireExtraQuotes']:
             base += ", qop=\"%s\"" % challenge['qop']

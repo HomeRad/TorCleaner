@@ -24,7 +24,7 @@ ustr = unicode
 
 
 IDomain = None
-if sys.modules.has_key('Zope'):
+if 'Zope' in sys.modules:
     try:
         from Zope.I18n.ITranslationService import ITranslationService
         from Zope.I18n.IDomain import IDomain
@@ -114,7 +114,7 @@ class DummyEngine (object):
         if type == "not":
             return not self.evaluate(expr)
         if type == "exists":
-            return self.locals.has_key(expr) or self.globals.has_key(expr)
+            return expr in self.locals or expr in self.globals
         if type == "python":
             try:
                 return eval(expr, self.globals, self.locals)
@@ -132,9 +132,9 @@ class DummyEngine (object):
 
     def evaluatePathOrVar (self, expr):
         expr = expr.strip()
-        if self.locals.has_key(expr):
+        if expr in self.locals:
             return self.locals[expr]
-        elif self.globals.has_key(expr):
+        elif expr in self.globals:
             return self.globals[expr]
         else:
             raise TALESError, "unknown variable: %r" % expr
@@ -244,7 +244,7 @@ class DummyDomain (object):
                    target_language=None, default=None):
         # This is a fake translation service which simply uppercases non
         # ${name} placeholder text in the message id.
-        #
+       
         # First, transform a string with ${name} placeholders into a list of
         # substrings.  Then upcase everything but the placeholders, then glue
         # things back together.

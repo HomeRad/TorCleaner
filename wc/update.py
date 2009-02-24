@@ -240,7 +240,7 @@ def update_filter (wconfig, dryrun=False, log=None):
         assert filename.endswith('.zap')
         fullname = os.path.join(wconfig.configdir, filename)
         # compare checksums
-        if filemap.has_key(filename):
+        if filename in filemap:
             f = file(fullname)
             data = f.read()
             digest = list(md5.new(data).digest())

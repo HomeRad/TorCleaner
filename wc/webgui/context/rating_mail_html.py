@@ -50,7 +50,7 @@ def _exec_form (form, lang):
         return
     if not _get_rating():
         return
-    if form.has_key('send'):
+    if 'send' in form:
         if not _form_send(form):
             return
 
@@ -73,7 +73,7 @@ def _form_url (form):
     Set rating URL.
     """
     global url, rating
-    if form.has_key('url'):
+    if 'url' in form:
         val = _getval(form, 'url')
         if not _is_safe_url(val):
             error['url'] = True
@@ -101,12 +101,12 @@ def _form_send (form):
     """
     Email a rating.
     """
-    if not form.has_key('smtphost'):
+    if 'smtphost' not in form:
         error['smtphost'] = True
         return False
     global smtphost
     smtphost = _getval(form, 'smtphost')
-    if form.has_key('fromaddr'):
+    if 'fromaddr' in form:
         fromaddr = _getval(form, 'fromaddr')
     else:
         fromaddr = "Wummel <%s>" % Email

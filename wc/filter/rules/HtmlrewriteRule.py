@@ -107,7 +107,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
             val = attrs.get('name', u'href')
             self.current_attr = val
             self.attrs[self.current_attr] = u""
-        elif name == 'replacement' and attrs.has_key('part'):
+        elif name == 'replacement' and 'part' in attrs:
             self.part = part_num(attrs['part'])
 
     def end_data (self, name):

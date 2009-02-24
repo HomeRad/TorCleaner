@@ -115,32 +115,32 @@ def _exec_form (form, lang):
     """
     res = [None]
     # bind address
-    if form.has_key('bindaddress'):
+    if 'bindaddress' in form:
         _form_bindaddress(_getval(form, 'bindaddress'))
     # proxy port
-    if form.has_key('port'):
+    if 'port' in form:
         _form_proxyport(_getval(form, 'port'))
     elif config['port'] != 8080:
         _form_proxyport(8080)
     # ssl server port
-    if form.has_key('sslport'):
+    if 'sslport' in form:
         _form_sslport(_getval(form, 'sslport'))
     elif config['sslport'] != 8443:
         _form_sslport(8443)
     # ssl gateway
-    if form.has_key('sslgateway'):
+    if 'sslgateway' in form:
         _form_sslgateway(1)
     else:
         _form_sslgateway(0)
     # admin user
-    if form.has_key('adminuser'):
+    if 'adminuser' in form:
         _form_adminuser(_getval(form, 'adminuser').strip(), res)
     elif config['adminuser']:
         config['adminuser'] = u''
         config.write_proxyconf()
         info['adminuser'] = True
     # admin pass
-    if form.has_key('adminpass'):
+    if 'adminpass' in form:
         val = _getval(form, 'adminpass')
         # ignore dummy values
         if val != u'__dummy__':
@@ -152,14 +152,14 @@ def _exec_form (form, lang):
         if config['adminuser']:
             res[0] = 401
     # proxy user
-    if form.has_key('proxyuser'):
+    if 'proxyuser' in form:
         _form_proxyuser(_getval(form, 'proxyuser').strip())
     elif config['proxyuser']:
         config['proxyuser'] = u''
         config.write_proxyconf()
         info['proxyuser'] = True
     # proxy pass
-    if form.has_key('proxypass'):
+    if 'proxypass' in form:
         val = _getval(form, 'proxypass')
         # ignore dummy values
         if val != u'__dummy__':
@@ -169,14 +169,14 @@ def _exec_form (form, lang):
         config.write_proxyconf()
         info['proxypass'] = True
     # ClamAV config
-    if form.has_key('clamav_conf'):
+    if 'clamav_conf' in form:
         _form_clamavconf(_getval(form, 'clamav_conf').strip())
     elif config['clamavconf']:
         config['clamavconf'] = ""
         config.write_proxyconf()
         info['clamavconf'] = True
     # ntlm authentication
-    if form.has_key('auth_ntlm'):
+    if 'auth_ntlm' in form:
         if not config['auth_ntlm']:
             config['auth_ntlm'] = 1
             config.write_proxyconf()
@@ -186,7 +186,7 @@ def _exec_form (form, lang):
         config.write_proxyconf()
         info['auth_ntlm'] = True
     # use google cache
-    if form.has_key('try_google'):
+    if 'try_google' in form:
         if not config['try_google']:
             config['try_google'] = 1
             config.write_proxyconf()
@@ -196,28 +196,28 @@ def _exec_form (form, lang):
         config.write_proxyconf()
         info['try_google'] = True
     # parent proxy host
-    if form.has_key('parentproxy'):
+    if 'parentproxy' in form:
         _form_parentproxy(_getval(form, 'parentproxy').strip())
     elif config['parentproxy']:
         config['parentproxy'] = u''
         config.write_proxyconf()
         info['parentproxy'] = True
     # parent proxy port
-    if form.has_key('parentproxyport'):
+    if 'parentproxyport' in form:
         _form_parentproxyport(_getval(form, 'parentproxyport'))
     elif config['parentproxyport'] != 3128:
         config['parentproxyport'] = 3128
         config.write_proxyconf()
         info['parentproxyport'] = True
     # parent proxy user
-    if form.has_key('parentproxyuser'):
+    if 'parentproxyuser' in form:
         _form_parentproxyuser(_getval(form, 'parentproxyuser').strip())
     elif config['parentproxyuser']:
         config['parentproxyuser'] = u''
         config.write_proxyconf()
         info['parentproxyuser'] = True
     # parent proxy pass
-    if form.has_key('parentproxypass'):
+    if 'parentproxypass' in form:
         val = _getval(form, 'parentproxypass')
         # ignore dummy values
         if val != u'__dummy__':
@@ -227,7 +227,7 @@ def _exec_form (form, lang):
         config.write_proxyconf()
         info['parentproxypass'] = True
     # timeout
-    if form.has_key('timeout'):
+    if 'timeout' in form:
         _form_timeout(_getval(form, 'timeout'))
     elif config['timeout']!=30:
         config['timeout'] = 30
@@ -236,19 +236,19 @@ def _exec_form (form, lang):
     # filter modules
     _form_filtermodules(form)
     # allowed hosts
-    if form.has_key('addallowed') and form.has_key('newallowed'):
+    if 'addallowed' in form and 'newallowed' in form:
         _form_addallowed(_getval(form, 'newallowed').strip())
-    elif form.has_key('delallowed') and form.has_key('allowedhosts'):
+    elif 'delallowed' in form and 'allowedhosts' in form:
         _form_delallowed(form)
     # no filter hosts
-    if form.has_key('addnofilter') and form.has_key('newnofilter'):
+    if 'addnofilter' in form and 'newnofilter' in form:
         _form_addnofilter(_getval(form, 'newnofilter').strip())
-    elif form.has_key('delnofilter') and form.has_key('nofilterhosts'):
+    elif 'delnofilter' in form and 'nofilterhosts' in form:
         _form_delnofilter(_getlist(form, 'nofilterhosts'))
     # nofilter shortcut: disable all filtering
-    if form.has_key('disablefilter'):
+    if 'disablefilter' in form:
         _form_addnofilter('1.1.1.1/0')
-    elif form.has_key('enablefilter'):
+    elif 'enablefilter' in form:
         _form_delnofilter(['1.1.1.1/0'])
     return res[0]
 

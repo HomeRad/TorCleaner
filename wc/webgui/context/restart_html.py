@@ -24,5 +24,5 @@ def _exec_form (form, lang):
     """
     HTML CGI form handling.
     """
-    if form.has_key('restart'):
+    if 'restart' in form:
         return "restart"

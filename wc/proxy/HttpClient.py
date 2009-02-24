@@ -286,7 +286,7 @@ class HttpClient (CodingConnection.CodingConnection):
         self.bytes_remaining = \
                Headers.get_content_length(self.headers, 0)
         # chunked encoded
-        if self.headers.has_key('Transfer-Encoding'):
+        if 'Transfer-Encoding' in self.headers:
             # XXX don't look at value, assume chunked encoding for now
             log.debug(LOG_PROXY, '%s Transfer-encoding %r',
                 self, self.headers['Transfer-encoding'])
@@ -297,7 +297,7 @@ class HttpClient (CodingConnection.CodingConnection):
             self.bytes_remaining = None
         if self.bytes_remaining is None:
             self.persistent = False
-        if not self.headers.has_key('Host'):
+        if 'Host' not in self.headers:
             if self.version == (1, 1):
                 log.error(LOG_PROXY, "%s missing Host: header", self)
                 self.error(400, _("Bad Request"))
@@ -319,7 +319,7 @@ class HttpClient (CodingConnection.CodingConnection):
             self.state = 'content'
             return
         # add missing host headers for HTTP/1.0
-        if not self.headers.has_key('Host'):
+        if 'Host' not in self.headers:
             log.info(LOG_PROXY,
                  "%s HTTP/1.0 request without Host header encountered", self)
         if self.port != urlutil.default_ports[self.get_default_scheme()]:
@@ -397,7 +397,7 @@ class HttpClient (CodingConnection.CodingConnection):
                                            "Proxy-Connection", "Keep-Alive")
 
     def fix_request_headers (self, headers):
-        if headers.has_key('Host'):
+        if 'Host' in headers:
             i = headers['Host'].find("\\")
             if i != -1:
                 self.needs_redirect = True
@@ -444,10 +444,10 @@ class HttpClient (CodingConnection.CodingConnection):
                     log.info(LOG_PROXY,
                                 "Unexpected content in %s request: %r",
                                 self.method, self.content)
-                    if self.headers.has_key('Content-Length'):
+                    if 'Content-Length' in self.headers:
                         del self.headers['Content-Length']
-                elif not self.headers.has_key('Content-Length') and \
-                     not self.headers.has_key('Transfer-Encoding'):
+                elif 'Content-Length' not in self.headers and \
+                     'Transfer-Encoding' not in self.headers:
                     self.headers['Content-Length'] = \
                                "%d\r" % len(self.content)
             # We're done reading content
@@ -513,7 +513,7 @@ class HttpClient (CodingConnection.CodingConnection):
         else:
             self.server = server
             self.write("%s\r\n" % response)
-            if not headers.has_key('Content-Length'):
+            if 'Content-Length' not in headers:
                 # without content length the client can not determine
                 # when all data is sent
                 self.persistent = False

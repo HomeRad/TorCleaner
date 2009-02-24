@@ -131,7 +131,7 @@ class DnsExpandHostname (object):
         self.answers = {} # Map hostname to DNS answer
         # How long do we wait before trying another expansion?
         self.delay = 3
-        if not dnscache.well_known_hosts.has_key(hostname):
+        if hostname not in dnscache.well_known_hosts:
             for domain in resolver.search:
                 self.queries.append(hostname + "." + domain.to_text(True))
             if hostname.find('.') < 0:
@@ -166,7 +166,7 @@ class DnsExpandHostname (object):
             return
 
         self.answers[hostname] = answer
-        while self.queries and self.answers.has_key(self.queries[0]):
+        while self.queries and self.queries[0] in self.answers:
             current_query = self.queries[0]
             del self.queries[0]
             answer = self.answers[current_query]
@@ -255,7 +255,7 @@ class DnsCache (object):
             DnsResponse('redirect', hostname[:-1])
             return
 
-        if self.cache.has_key(hostname):
+        if hostname in self.cache:
             if time.time() < self.expires[hostname]:
                 # It hasn't expired, so return this answer
                 log.debug(LOG_DNS, 'cached! %r', hostname)
@@ -268,7 +268,7 @@ class DnsCache (object):
                 # fill and use a dummy callback
                 callback = lambda h, a: None
 
-        if self.pending.has_key(hostname):
+        if hostname in self.pending:
             # Add this guy to the list of interested parties
             self.pending[hostname].append(callback)
             return
@@ -278,7 +278,7 @@ class DnsCache (object):
             DnsLookupHostname(hostname, self.handle_dns)
 
     def handle_dns (self, hostname, answer):
-        assert self.pending.has_key(hostname)
+        assert hostname in self.pending
         callbacks = self.pending[hostname]
         del self.pending[hostname]
         assert (not answer.isFound() or len(answer.data) > 0), \

@@ -146,7 +146,7 @@ class HttpProxyClient (object):
                 log.debug(LOG_PROXY,
                     "%s got %s status %d %r", self, version, status, msg)
                 self.finish()
-        if headers.has_key('Transfer-Encoding'):
+        if 'Transfer-Encoding' in headers:
             # XXX don't look at value, assume chunked encoding for now
             log.debug(LOG_PROXY,
                 '%s Transfer-encoding %r', self, headers['Transfer-encoding'])

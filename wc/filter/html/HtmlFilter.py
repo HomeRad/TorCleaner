@@ -138,7 +138,7 @@ class HtmlFilter (JSFilter.JSFilter):
            self.stackcount[-1][0] == tag:
             self.stackcount[-1][1] += 1
         if tag == "img":
-            if attrs.has_key("alt") and not attrs.has_key("title"):
+            if 'alt' in attrs and "title" not in attrs:
                 # Mozilla only displays title as tooltip.
                 title = attrs.get_true('alt', "")
                 # Get rid of the split() when bug #67127 is fixed:
@@ -163,7 +163,7 @@ class HtmlFilter (JSFilter.JSFilter):
                     service.rating_check(rule.rating, self.rating)
                 self.ratings = []
         elif tag == "base":
-            if attrs.has_key('href'):
+            if 'href' in attrs:
                 self.base_url = attrs['href']
                 # some base urls are just the host name, eg. www.imadoofus.com
                 if not urllib.splittype(self.base_url)[0]:

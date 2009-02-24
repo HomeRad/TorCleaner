@@ -53,7 +53,7 @@ def getval (form, key):
     """
     Return a formfield value.
     """
-    if not form.has_key(key):
+    if key not in form:
         return u''
     return get_item_value(form[key])
 
@@ -62,7 +62,7 @@ def getlist (form, key):
     """
     Return a list of formfield values.
     """
-    if not form.has_key(key):
+    if key not in form:
         return []
     return get_item_list(form[key])
 

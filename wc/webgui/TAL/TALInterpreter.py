@@ -64,7 +64,7 @@ def interpolate (text, mapping):
     # Now substitute with the variables in mapping.
     for string in to_replace:
         var = _get_var_regex.findall(string)[0]
-        if mapping.has_key(var):
+        if var in mapping:
             # Call ustr because we may have an integer for instance.
             subst = ustr(mapping[var])
             try:
@@ -533,7 +533,7 @@ class TALInterpreter (object):
         # include an implicit message id, if no explicit one was given.
         # Second, it will evaluate any i18nVariable definitions in the body of
         # the translation (necessary for $varname substitutions).
-        #
+       
         # Use a temporary stream to capture the interpretation of the
         # subnodes, which should /not/ go to the output stream.
         tmpstream = self.StringIO()

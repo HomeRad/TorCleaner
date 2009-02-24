@@ -297,7 +297,7 @@ class HtmlSecurity (object):
         """
         Check <input> start tag.
         """
-        if attrs.has_key('type') and not attrs['type']:
+        if 'type' in attrs and not attrs['type']:
             # prevent IE crash bug on empty type attribute
             msg = "%s\n Detected and prevented IE <input type> crash bug"
             log.info(LOG_HTML, msg, htmlfilter)
@@ -305,7 +305,7 @@ class HtmlSecurity (object):
 
     def link_start (self, attrs, htmlfilter):
         # CAN-2005-1155 and others
-        if attrs.has_key('rel') and attrs.has_key('href'):
+        if 'rel' in attrs and 'href' in attrs:
             if attrs.get_true('rel', u"").strip().lower() == 'icon':
                 check_javascript_url(attrs, 'href', htmlfilter)
 
@@ -313,7 +313,7 @@ class HtmlSecurity (object):
         """
         Check <meta> start tag.
         """
-        if attrs.has_key('content'):
+        if 'content' in attrs:
             # prevent redirect to non-http/ftp file
             refresh = attrs.get_true('name', u"")
             refresh = attrs.get_true('http-equiv', refresh)
@@ -340,7 +340,7 @@ class HtmlSecurity (object):
             # Prevent IE crash; see http://secunia.com/advisories/19762/
             return True
         self.object_level += 1
-        if attrs.has_key('type'):
+        if 'type' in attrs:
             # prevent CAN-2003-0344, only one / (slash) allowed
             t = attrs.get_true('type', u"")
             c = t.count("/")
@@ -349,10 +349,10 @@ class HtmlSecurity (object):
                 log.info(LOG_HTML, msg, htmlfilter)
                 t = t.replace("/", "", c-1)
                 attrs['type'] = t
-        if attrs.has_key('codebase'):
+        if 'codebase' in attrs:
             self.in_winhelp = attrs.get_true('codebase', u"").lower().startswith('hhctrl.ocx')
         # prevent CAN-2004-0380, see http://www.securityfocus.com/bid/9658/
-        if attrs.has_key('data'):
+        if 'data' in attrs:
             url = urlutil.url_norm(attrs.get_true('data', u""))[0]
             url = urllib.unquote(url)
             if url.startswith('its:') or \
@@ -367,7 +367,7 @@ class HtmlSecurity (object):
                           "Explorer ITS Protocol Zone Bypass Vulnerability"
                     log.info(LOG_HTML, msg, htmlfilter)
                     attrs['data'] = url[:i]
-        if attrs.has_key('classid'):
+        if 'classid' in attrs:
             classid = attrs.get_true('classid', u"").upper()
             if 'EC444CB6-3E7E-4865-B1C3-0DE72EF39B3F' in classid:
                 msg = "Detected IE msdds.dll overflow attack."
@@ -387,7 +387,7 @@ class HtmlSecurity (object):
         """
         Check <param> start tag.
         """
-        if attrs.has_key('value') and self.in_winhelp:
+        if 'value' in attrs and self.in_winhelp:
             # prevent CVE-2002-0823
             if len(attrs.get_true('value', u"")) > 50:
                 msg = "%s\n Detected and prevented WinHlp overflow bug"
@@ -398,7 +398,7 @@ class HtmlSecurity (object):
         """
         Check <table> start tag.
         """
-        if attrs.has_key('width'):
+        if 'width' in attrs:
             # prevent CAN-2003-0238, table width=-1 crashes ICQ client
             if attrs['width'] == '-1':
                 msg = "%s\n Detected and prevented ICQ table width crash bug"

@@ -104,7 +104,7 @@ class Dispatcher (object):
         Delete this connection from socket map.
         """
         fd = self.fileno()
-        if socket_map.has_key(fd):
+        if fd in socket_map:
             del socket_map[fd]
 
     def get_family (self, ip):

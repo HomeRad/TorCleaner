@@ -8,7 +8,7 @@ class MultiMapping (object):
 
     def __getitem__ (self, key):
         for store in self.stores:
-            if store.has_key(key):
+            if key in store:
                 return store[key]
         raise KeyError, key
 
@@ -16,7 +16,7 @@ class MultiMapping (object):
 
     def get (self, key, default=_marker):
         for store in self.stores:
-            if store.has_key(key):
+            if key in store:
                 return store[key]
         if default is self._marker:
             raise KeyError, key

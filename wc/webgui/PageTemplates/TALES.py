@@ -125,12 +125,11 @@ class Engine (object):
     def registerType (self, name, handler):
         if not _valid_name(name):
             raise RegistrationError, 'Invalid Expression type "%s".' % name
-        types = self.types
-        if types.has_key(name):
+        if name in self.types:
             raise RegistrationError, (
                 'Multiple registrations for Expression type "%s".' %
                 name)
-        types[name] = handler
+        self.types[name] = handler
 
     def getTypes (self):
         return self.types

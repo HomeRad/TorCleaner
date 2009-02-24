@@ -40,8 +40,8 @@ def _exec_form (form, lang):
     HTML CGI form handling.
     """
     global url, safeurl, reason
-    if form.has_key('url'):
+    if 'url' in form:
         url = _getval(form, 'url')
         safeurl = _make_safe_url(url)
-    if form.has_key('reason'):
+    if 'reason' in form:
         reason = _getval(form, 'reason')

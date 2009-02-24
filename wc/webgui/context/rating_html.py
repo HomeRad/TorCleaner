@@ -94,7 +94,7 @@ def _exec_form (form, lang):
     if not _form_ratings(form):
         return
     # index stuff
-    if form.has_key('selindex'):
+    if 'selindex' in form:
         _form_selindex(_getval(form, 'selindex'))
     l = len(rating_store)
     if l > _entries_per_page:
@@ -103,9 +103,9 @@ def _exec_form (form, lang):
         del selindex[:]
     # generic apply rule values
     if url:
-        if form.has_key('apply'):
+        if 'apply' in form:
             _form_apply()
-        elif form.has_key('delete'):
+        elif 'delete' in form:
             _form_delete()
         else:
             _form_load()
@@ -128,7 +128,7 @@ def _form_reset ():
 def _form_url (form):
     """Check url validity."""
     global url
-    if form.has_key('url'):
+    if 'url' in form:
         val = _getval(form, 'url')
         url = _make_safe_url(val)
     return True
@@ -137,7 +137,7 @@ def _form_url (form):
 def _form_generic (form):
     """Check generic validity."""
     global generic
-    generic = form.has_key('generic')
+    generic = ('generic' in form)
     return True
 
 

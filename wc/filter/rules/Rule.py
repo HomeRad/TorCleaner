@@ -47,7 +47,7 @@ class LangDict (dict):
         translated entry or if not found a random one or if the dict
         is empty an empty string.
         """
-        if not self.has_key(key):
+        if key not in self:
             # default is english
             if 'en' in self:
                 return self['en']
@@ -123,7 +123,7 @@ class Rule (object):
         """
         chg = False
         for key, value in rule.titles.iteritems():
-            if not self.titles.has_key(key):
+            if key not in self.titles:
                 oldvalue = ""
             elif self.titles[key] != value:
                 oldvalue = self.titles[key]
@@ -137,7 +137,7 @@ class Rule (object):
                 if not dryrun:
                     self.titles[key] = value
         for key, value in rule.descriptions.iteritems():
-            if not self.descriptions.has_key(key):
+            if key not in self.descriptions:
                 oldvalue = ""
             elif self.descriptions[key] != value:
                 oldvalue = self.descriptions[key]
@@ -220,7 +220,7 @@ class Rule (object):
             self._lang = attrs['lang']
             return
         for attr in self.attrnames:
-            if attrs.has_key(attr):
+            if attr in attrs:
                 setattr(self, attr, attrs[attr])
         for attr in self.intattrs:
             val = getattr(self, attr)

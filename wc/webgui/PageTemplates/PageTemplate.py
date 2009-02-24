@@ -90,7 +90,7 @@ class PageTemplate (object):
         return output.getvalue()
 
     def __call__ (self, *args, **kwargs):
-        if not kwargs.has_key('args'):
+        if not 'args' in kwargs:
             kwargs['args'] = args
         return self.pt_render(extra_context={'options': kwargs})
 

@@ -278,7 +278,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.js_output = 0
         self.js_popup = 0
         for name in js_event_attrs:
-            if attrs.has_key(name) and self.jsPopup(attrs, name):
+            if name in attrs and self.jsPopup(attrs, name):
                 log.debug(LOG_JS, "JS: del %r from %r", name, tag)
                 del attrs[name]
         if tag == 'form':
