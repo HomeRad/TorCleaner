@@ -880,36 +880,36 @@ class test_chunked_1p1_100B_toSrv (ChunkedRequestTest):
         return self.chunked("a"*100)
 
 
-class XXXtest_chunked_1p1_65535B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_65535B_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 65535-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_65535B_toSrv (self):
+    def XXXtest_chunked_1p1_65535B_toSrv (self):
         self.start_test()
 
     def get_request_content (self):
         return self.chunked("a"*65535)
 
 
-class XXXtest_chunked_1p1_65536B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_65536B_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 65536-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_65536B_toSrv (self):
+    def XXXtest_chunked_1p1_65536B_toSrv (self):
         self.start_test()
 
     def get_request_content (self):
         return self.chunked("a"*65536)
 
 
-class XXXtest_chunked_1p1_65537B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_65537B_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 65537-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_65537B_toSrv (self):
+    def XXXtest_chunked_1p1_65537B_toSrv (self):
         self.start_test()
 
     def get_request_content (self):
@@ -928,25 +928,25 @@ class test_chunked_1p1_2x100B_toSrv (ChunkedRequestTest):
         return self.chunked("a"*100, repeat=2)
 
 
-class XXXtest_chunked_1p1_1025x100B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_1025x100B_toSrv (ChunkedRequestTest):
     """
     Chunked request with 1025 100-Byte chunks to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_1025x100B_toSrv (self):
+    def XXXtest_chunked_1p1_1025x100B_toSrv (self):
         self.start_test()
 
     def get_request_content (self):
         return self.chunked("a"*100, repeat=1025)
 
 
-class XXXtest_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -967,13 +967,13 @@ class XXXtest_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (ChunkedRequestTes
         self.assert_(request.has_header("Foo"))
 
 
-class XXXtest_chunked_1p1_trailer_11_1_announced_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_announced_withTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_announced_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_announced_withTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -999,13 +999,13 @@ class XXXtest_chunked_1p1_trailer_11_1_announced_withTe_toSrv (ChunkedRequestTes
         self.assert_(request.has_header("Foo"))
 
 
-class XXXtest_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -1025,13 +1025,13 @@ class XXXtest_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (ChunkedRequestTest
         self.assert_(request.has_header("Foo"))
 
 
-class XXXtest_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -1063,13 +1063,13 @@ class XXXtest_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest
         self.assert_(request.has_header("Foo"))
 
 
-class XXXtest_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -1138,13 +1138,13 @@ class XXXtest_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTe
         self.assert_(request.has_header("Foo17"))
 
 
-class XXXtest_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_announced_withTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -1224,13 +1224,13 @@ class XXXtest_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTe
         self.assert_(request.has_header("Foo17"))
 
 
-class XXXtest_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -1282,13 +1282,13 @@ class XXXtest_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTes
         self.assert_(request.has_header("Foo17"))
 
 
-class XXXtest_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -1362,13 +1362,13 @@ class XXXtest_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTes
         self.assert_(request.has_header("Foo17"))
 
 
-class XXXtest_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (ChunkedRequestTest):
     """
     Chunked request with one 0-Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
@@ -1535,9 +1535,9 @@ class test_chunked_1p1_last_65x0_toSrv (ChunkedRequestTest):
         return data
 
 
-class XXXtest_chunked_1p1_badClen_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_badClen_toSrv (ChunkedRequestTest):
 
-    def test_chunked_1p1_badClen_toSrv (self):
+    def XXXtest_chunked_1p1_badClen_toSrv (self):
         self.start_test()
 
     def get_request_headers (self, content):
