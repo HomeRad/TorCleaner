@@ -18,10 +18,8 @@
 Rule objects representing configured filter rules.
 """
 
-import sets
-
 _rules_without_sid = []
-_sids = sets.Set()
+_sids = set()
 _sidcounter = 0
 
 def register_rule (rule):

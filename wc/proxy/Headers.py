@@ -19,7 +19,6 @@ Header mangling.
 """
 
 import re
-import sets
 import time
 import urlparse
 import mimetypes
@@ -304,7 +303,7 @@ def server_set_encoding_headers (server, filename=None):
     """
     rewrite = server.is_rewrite()
     bytes_remaining = get_content_length(server.headers)
-    to_remove = sets.Set()
+    to_remove = set()
     if 'Transfer-Encoding' in server.headers:
         to_remove.add('Transfer-Encoding')
         tencs = server.headers['Transfer-Encoding'].lower()
@@ -333,7 +332,7 @@ def server_set_encoding_headers (server, filename=None):
     remove_headers(server.headers, to_remove)
     if 'Content-Length' not in server.headers:
         server.headers['Connection'] = 'close\r'
-    to_remove = sets.Set()
+    to_remove = set()
     #if server.protocol == "HTTP/1.1":
     #    # To make pipelining possible, enable chunked encoding.
     #    server.headers['Transfer-Encoding'] = "chunked\r"

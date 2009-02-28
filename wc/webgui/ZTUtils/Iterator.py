@@ -36,7 +36,7 @@ class Iterator (object):
                 self._inner = inner
                 self._prep_next = inner.prep_next
                 return
-        raise TypeError, "Iterator does not support %s" % `seq`
+        raise TypeError, "Iterator does not support %r" % seq
 
     def __getattr__ (self, name):
         try:

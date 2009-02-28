@@ -286,8 +286,8 @@ class HTMLParser (markupbase.ParserBase):
                          - self.__starttag_text.rfind("\n")
             else:
                 offset = offset + len(self.__starttag_text)
-            self.error("junk characters in start tag: %s"
-                       % `rawdata[k:endpos][:20]`)
+            self.error("junk characters in start tag: %r"
+                       % rawdata[k:endpos][:20])
         if end[-2:] == '/>':
             # XHTML-style empty tag: <span attr="value" />
             self.handle_startendtag(tag, attrs)
@@ -339,7 +339,7 @@ class HTMLParser (markupbase.ParserBase):
         j = match.end()
         match = endtagfind.match(rawdata, i) # </ + tag + >
         if not match:
-            self.error("bad end tag: %s" % `rawdata[i:j]`)
+            self.error("bad end tag: %r" % rawdata[i:j])
         tag = match.group(1).lower()
         if (  self.cdata_endtag is not None
               and tag != self.cdata_endtag):
@@ -390,7 +390,7 @@ class HTMLParser (markupbase.ParserBase):
         pass
 
     def unknown_decl (self, data):
-        self.error("unknown declaration: " + `data`)
+        self.error("unknown declaration: %r" % data)
 
     # Internal -- helper to remove special character quoting
     def unescape (self, s):

@@ -299,7 +299,7 @@ class Dispatcher (object):
         try:
             return self.socket.accept()
         except socket.error, why:
-            if why[0] == errno.EWOULDBLOCK:
+            if why.args[0] == errno.EWOULDBLOCK:
                 pass
             else:
                 raise
@@ -317,9 +317,9 @@ class Dispatcher (object):
             result = self.socket.send(data, flags)
             return result
         except socket.error, why:
-            if why[0] == errno.EWOULDBLOCK:
+            if why.args[0] == errno.EWOULDBLOCK:
                 return 0
-            if why[0] in (errno.ECONNRESET, errno.ENOTCONN, errno.ESHUTDOWN):
+            if why.args[0] in (errno.ECONNRESET, errno.ENOTCONN, errno.ESHUTDOWN):
                 self.handle_close()
                 return 0
             raise
@@ -342,7 +342,7 @@ class Dispatcher (object):
                 return data
         except socket.error, why:
             # winsock sometimes throws errno.ENOTCONN
-            if why[0] in (errno.ECONNRESET, errno.ENOTCONN, errno.ESHUTDOWN):
+            if why.args[0] in (errno.ECONNRESET, errno.ENOTCONN, errno.ESHUTDOWN):
                 self.handle_close()
                 return ''
             else:

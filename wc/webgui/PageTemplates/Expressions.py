@@ -85,7 +85,7 @@ def render (ob, ns):
         ob = call_with_ns(ob.__render_with_namespace__, ns)
     else:
         base = ob
-        if callable(base):
+        if hasattr(base, "__call__"):
             try:
                 if getattr(base, 'isDocTemp', 0):
                     ob = call_with_ns(ob, ns, 2)

@@ -20,7 +20,6 @@ Add or delete HTTP headers.
 
 import re
 import string
-import sets
 from .. import log, LOG_FILTER, proxy, filter
 from . import Filter
 
@@ -96,7 +95,7 @@ class Header (Filter.Filter):
         """
         Apply stored header rules to data, which is a WcMessage object.
         """
-        delete = sets.Set()
+        delete = set()
         # stage is STAGE_REQUEST_HEADER or STAGE_RESPONSE_HEADER
         stage = attrs['filterstage']
         for h in data.keys():

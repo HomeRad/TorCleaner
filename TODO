@@ -1,7 +1,6 @@
 - Python 2.6:
   + use ssl module
   + use with statement
-  + fix deprecation warnings
 
 - wc/filter/Compress.py:165: DeprecationWarning: 'l' format requires -2147483648 <= number <= 2147483647
   struct.pack('<l', compobj['crc']),
