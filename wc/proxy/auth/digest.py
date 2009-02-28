@@ -22,11 +22,10 @@ __all__ = ["get_digest_challenge", "parse_digest_challenge",
            "get_digest_credentials", "parse_digest_credentials",
            "check_digest_credentials"]
 
-import md5
-import sha
 import random
 import base64
 import time
+import hashlib
 from .parse import parse_auth
 from ... import log, LOG_AUTH
 # the default realm
@@ -188,9 +187,9 @@ def get_response_digest (challenge, **attrs):
     # lambdas assume digest modules are imported at the top level
     algorithm = challenge.get('algorithm', 'MD5')
     if algorithm.startswith('MD5'):
-        H = lambda x: md5.new(x).digest()
+        H = lambda x: hashlib.md5(x).digest()
     elif algorithm == 'SHA':
-        H = lambda x: sha.new(x).digest()
+        H = lambda x: hashlib.sha1(x).digest()
     data = attrs.get('data')
     if data:
         # XXX POST data digest not implemented yet

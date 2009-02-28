@@ -21,7 +21,6 @@ Store configuration data.
 import time
 import signal
 import os
-import sets
 import stat
 import glob
 from . import ratingstorage
@@ -184,7 +183,7 @@ class Configuration (dict):
         self['nofilterhosts'] = None
         self['allowedhosts'] = None
         self['starttime'] = time.time()
-        self['mime_content_rewriting'] = sets.Set()
+        self['mime_content_rewriting'] = set()
         self['gui_theme'] = "classic"
         self['timeout'] = 10
         self['auth_ntlm'] = 0
@@ -273,7 +272,7 @@ class Configuration (dict):
 
     def check_single_rules (self):
         single_rules = ('javascript', 'rating', 'antivirus', 'nocomments')
-        enabled = sets.Set()
+        enabled = set()
         for folder in self['folderrules']:
             for rule in folder.rules:
                 if rule.disable:
@@ -321,7 +320,7 @@ class Configuration (dict):
         for stage in filter.FilterStages:
             self['filterlist'][stage] = []
         self['filtermodules'] = []
-        self['mime_content_rewriting'] = sets.Set()
+        self['mime_content_rewriting'] = set()
         for filtername in self['filters']:
             # import filter module
             exec "from ..filter import %s" % filtername
