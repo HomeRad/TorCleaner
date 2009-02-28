@@ -11,7 +11,7 @@ EXTRA_DIST = tests scripts \
 	wc/rating/tests
 MACHINE=$(shell uname -m)
 # python settings
-PYVER=2.5
+PYVER=2.6
 PYTHON=python$(PYVER)
 # homepage directory
 HTMLDIR=/home/calvin/public_html/webcleaner.sf.net
@@ -29,6 +29,7 @@ GPGKEY=2DE589F5
 # build dir for svn-buildpackage
 SVNBUILD=/home/calvin/src/build-area
 DEB_ORIG_TARGET=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
+TESTS ?= tests/
 
 MANIFEST: setup.py
 	rm -f share
@@ -183,7 +184,7 @@ various:
 
 .PHONY: test
 test:	localbuild
-	nosetests -m "^test_.*" tests/
+	nosetests -m "^test_.*" $(TESTS)
 
 JSSRCDIR=/home/calvin/src/mozilla-js-cvs
 jsdiff:
