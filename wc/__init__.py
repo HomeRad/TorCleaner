@@ -20,8 +20,8 @@ Basic start and init methods.
 
 import sys
 if not (hasattr(sys, 'version_info') or
-        sys.version_info < (2, 5, 0, 'final', 0)):
-    raise SystemExit("This program requires Python 2.5 or later.")
+        sys.version_info < (2, 6, 0, 'final', 0)):
+    raise SystemExit("This program requires Python 2.6 or later.")
 import os
 import ConfigParser
 import logging.config

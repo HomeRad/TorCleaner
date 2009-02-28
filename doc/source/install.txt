@@ -46,12 +46,12 @@ Requirements for Windows:
 -------------------------
 Direct download links are in brackets.
 
-1. Install Python >= 2.5 from http://www.python.org/
-   [http://www.python.org/ftp/python/2.5.2/python-2.5.2.msi]
+1. Install Python >= 2.6 from http://www.python.org/
+   [http://www.python.org/ftp/python/2.6.1/python-2.6.1.msi]
 
 2. Install Python for Windows Extensions from
    http://sourceforge.net/projects/pywin32/
-   [http://downloads.sourceforge.net/pywin32/pywin32-211.win32-py2.5.exe]
+   [http://downloads.sourceforge.net/pywin32/pywin32-212.win32-py2.6.exe?use_mirror=mesh&filesize=6134129]
    
    To run Pythonwin, you may need a copy of the Microsoft MFC DLLs.
    You should only install these files if the install process tells you
@@ -63,7 +63,7 @@ Direct download links are in brackets.
 3. *Optional but recommended (used by ImageSize and ImageReducer modules)*
    Install Python Imaging Library (PIL) from
    http://www.pythonware.com/products/pil/
-   [http://effbot.org/downloads/PIL-1.1.6.win32-py2.5.exe]
+   [http://effbot.org/downloads/PIL-1.1.6.win32-py2.6.exe]
 
 4. *Optional but recommended (used for SSL connections)*
    Install OpenSSL and PyOpenSSL for Windows from

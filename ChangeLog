@@ -1,26 +1,16 @@
 2.42 "" (released xx.xx.xxxx)
 
   * Check that charset is not None before lowering it in set_encoding().
-    Type: bugfix
-    Changed: wc/HtmlParser/__init__.py
 
   * Send the correct filtered headers to the server, not the unfiltered
     ones.
-    Type: bugfix
-    Changed: wc/proxy/HttpClient.py
 
   * Implement a new HTML filter type: 'matched'. It replaces the
     matched part of the enclosed block content, not the whole content.
-    Type: feature
-    Changed: wc/filter/rules/HtmlRewriteRule.py
 
   * Ensure that the timeout argument to select() is not negative.
-    Type: bugfix
-    Changed: wc/proxy/timer.py
 
-  * Require and use Python 2.5
-    Type: feature
-    Changed: *
+  * Require and use Python 2.6
 
 2.41 "Thank you for smoking" (released 16.12.2006)
 
