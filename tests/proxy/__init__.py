@@ -35,13 +35,18 @@ class test_xyz (ProxyTest):
 """
 
 import unittest
-import cStringIO as StringIO
+try:
+    import cStringIO as StringIO
+except:
+    import StringIO
 import rfc822
 import socket
 import sys
 import BaseHTTPServer
 import wc.dummy
 import wc.proxy.decoder.UnchunkStream
+from tests import has_proxy
+from nose import SkipTest
 
 
 _debug = 0
@@ -391,9 +396,6 @@ class ProxyTest (unittest.TestCase):
     the request and reading the response.
     """
 
-    # the proxy to test must be started
-    needed_resources = ['proxy']
-
     def start_client (self):
         """
         Start a HTTP client which is ready for use.
@@ -689,6 +691,8 @@ class ProxyTest (unittest.TestCase):
         Main test method. Start client and server, then send request
         and read response.
         """
+        if not has_proxy():
+            raise SkipTest()
         self.client = self.start_client()
         self.server = self.start_server()
         try:

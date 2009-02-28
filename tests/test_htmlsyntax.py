@@ -27,6 +27,8 @@ import sys
 import glob
 import wc.fileutil
 import wc.decorators
+from tests import has_proxy
+from nose import SkipTest
 
 
 htmlfiles = None
@@ -67,9 +69,7 @@ class CheckHtml (unittest.TestCase):
 
 
 class TestHtml (CheckHtml):
-    """
-    Test HTMl file syntax.
-    """
+    """Test HTMl file syntax."""
 
     def test_html (self):
         """
@@ -80,12 +80,11 @@ class TestHtml (CheckHtml):
 
 
 class TestProxyHtml (CheckHtml):
-    """
-    Test proxy HTML file syntax.
-    """
-    needed_resources = ['proxy']
+    """Test proxy HTML file syntax."""
 
     def test_html (self):
+        if not has_proxy():
+            raise SkipTest()
         for name in glob.glob("templates/classic/*.html"):
             name = os.path.basename(name)
             url = "http://localhost:8081/%s" % name

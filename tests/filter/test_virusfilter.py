@@ -19,19 +19,23 @@ Test virus filter.
 """
 import unittest
 import wc.filter.VirusFilter
+from tests import has_clamav
+from nose import SkipTest
 
 
 class TestVirusFilter (unittest.TestCase):
 
-    needed_resources = ['clamav']
-
     def testClean (self):
+        if not has_clamav():
+            raise SkipTest()
         data = ""
         infected, errors = self._scan(data)
         self.assertFalse(infected)
         self.assertFalse(errors)
 
     def testInfected (self):
+        if not has_clamav():
+            raise SkipTest()
         data = '<object data="&#109;s-its:mhtml:file://'+ \
                'C:\\foo.mht!${PATH}/' + \
                'EXPLOIT.CHM::' + \
