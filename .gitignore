@@ -41,6 +41,7 @@
 /python-build-stamp-2.4
 *.pyc
 *.pyo
+*.pyd
 *.o
 *.lo
 *.la
