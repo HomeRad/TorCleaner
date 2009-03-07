@@ -14,8 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+from __future__ import with_statement # Required in 2.5
+import signal
 import subprocess
 import os
+import socket
+from nose import SkipTest
+from contextlib import contextmanager
+from bk import LinkCheckerInterrupt
 
 
 class memoized (object):
@@ -56,14 +62,14 @@ def _run (cmd):
 
 @memoized
 def has_network ():
-    cmd = ["ping"]
-    if os.name == "nt":
-        cmd.append("-n")
-        cmd.append("1")
-    else:
-        cmd.append("-c1")
-    cmd.append("www.debian.org")
-    return _run(cmd) == 0
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("www.python.org", 80))
+        s.close()
+        return True
+    except StandardError:
+        pass
+    return False
 
 
 @memoized
@@ -82,9 +88,11 @@ def has_clamav ():
         cmd = ["grep", "LocalSocket", "/etc/clamav/clamd.conf"]
         sock = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0].split()[1]
         if sock:
-            cmd = ["waitfor", "-w", "1", "unix:%s"%sock]
-            return subprocess.call(cmd) == 0
-    except OSError:
+            s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            s.connect(sock)
+            s.close()
+            return True
+    except StandardError:
         pass
     return False
 
@@ -92,11 +100,45 @@ def has_clamav ():
 @memoized
 def has_proxy ():
     try:
-        cmd = ["waitfor", "-w", "1", "port:localhost:8081"]
-        return subprocess.call(cmd) == 0
-    except OSError:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("localhost", 8081))
+        s.close()
+        return True
+    except StandardError:
         pass
     return False
+
+
+@contextmanager
+def _limit_time (seconds):
+    """Raises LinkCheckerInterrupt if given number of seconds have passed."""
+    if os.name == 'posix':
+        def signal_handler(signum, frame):
+            raise LinkCheckerInterrupt("timed out")
+        old_handler = signal.getsignal(signal.SIGALRM)
+        signal.signal(signal.SIGALRM, signal_handler)
+        signal.alarm(seconds)
+    yield
+    if os.name == 'posix':
+        signal.alarm(0)
+        if old_handler is not None:
+            signal.signal(signal.SIGALRM, old_handler)
+
+
+def limit_time (seconds, skip=False):
+    """Limit test time to the given number of seconds, else fail or skip."""
+    def run_limited (func):
+        def new_func (*args, **kwargs):
+            try:
+                with _limit_time(seconds):
+                    return func(*args, **kwargs)
+            except LinkCheckerInterrupt, msg:
+                if skip:
+                    raise SkipTest
+                assert False, msg
+        new_func.func_name = func.func_name
+        return new_func
+    return run_limited
 
 
 if __name__ == '__main__':
