@@ -1,6 +1,6 @@
-SUBDIRS = libjs service po
-DIST_SUBDIRS = $(SUBDIRS) doc
-EXTRA_DIST = tests scripts \
+SUBDIRS := libjs service po
+DIST_SUBDIRS := $(SUBDIRS) doc
+EXTRA_DIST := tests scripts \
 	wc/tests \
 	wc/http/tests \
 	wc/dns/tests \
@@ -9,26 +9,26 @@ EXTRA_DIST = tests scripts \
 	wc/proxy/auth/tests \
 	wc/magic/tests \
 	wc/rating/tests
-MACHINE=$(shell uname -m)
+MACHINE:=$(shell uname -m)
 # python settings
-PYVER=2.6
-PYTHON=python$(PYVER)
+PYVER:=2.6
+PYTHON:=python$(PYVER)
 # homepage directory
-HTMLDIR=/home/calvin/public_html/webcleaner.sf.net
+HTMLDIR:=/home/calvin/public_html/webcleaner.sf.net
 # source code checker settings
-SPLINTOPTS=+posixlib \
+SPLINTOPTS:=+posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
 	      -nestcomment -ifempty
 # all Python files in the source
-PYFILES=webcleaner webcleaner-certificates *.py test/*.py config/*.py wc tests
-CHECKFILES=*.py webcleaner webcleaner-certificates test tests wc config
+PYFILES:=webcleaner webcleaner-certificates *.py test/*.py config/*.py wc tests
+CHECKFILES:=*.py webcleaner webcleaner-certificates test tests wc config
 # "runit" service directory
-SERVICEDIR=/etc/webcleaner/service
+SERVICEDIR:=/etc/webcleaner/service
 # GPG key for .deb package
-GPGKEY=2DE589F5
+GPGKEY:=2DE589F5
 # build dir for svn-buildpackage
-SVNBUILD=/home/calvin/src/build-area
-DEB_ORIG_TARGET=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
+SVNBUILD:=/home/calvin/src/build-area
+DEB_ORIG_TARGET:=$(SVNBUILD)/webcleaner_$(VERSION).orig.tar.gz
 TESTS ?= tests/
 
 MANIFEST: setup.py
