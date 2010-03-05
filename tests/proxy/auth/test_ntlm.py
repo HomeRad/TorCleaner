@@ -57,7 +57,7 @@ class TestNtlm (unittest.TestCase):
         creds = wc.proxy.auth.parse_credentials(creds)
         self.assertEqual(creds['NTLM'][0]['type'], 3)
         self.assertEqual(creds['NTLM'][0]['username'], 'calvin')
-        self.assert_(wc.proxy.auth.check_credentials(creds, **attrs))
+        self.assertTrue(wc.proxy.auth.check_credentials(creds, **attrs))
         wc.configuration.config['auth_ntlm'] = 0
 
     def test_ntlmpass (self):

@@ -206,4 +206,4 @@ class test_hophdr_proxyauth_toClt (ProxyTest):
         return headers
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Proxy-Authenticate"))
+        self.assertTrue(not response.has_header("Proxy-Authenticate"))

@@ -35,7 +35,7 @@ class test_endhdr_fwd_atom_Expect_100_continue_toSrv (ProxyTest):
         return headers
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Expect"))
+        self.assertTrue(request.has_header("Expect"))
         self.assertEqual(request.get_header("Expect"), "100-continue")
 
 
@@ -55,7 +55,7 @@ class test_endhdr_fwd_atom_Server_comm_no_toClt (ProxyTest):
         return headers
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Server"))
+        self.assertTrue(response.has_header("Server"))
         self.assertEqual(response.get_header("Server"), "foo")
 
 
@@ -75,7 +75,7 @@ class test_endhdr_fwd_atom_Server_comm_plain_toClt (ProxyTest):
         return headers
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Server"))
+        self.assertTrue(response.has_header("Server"))
         self.assertEqual(response.get_header("Server"), "(foo)")
 
 
@@ -95,7 +95,7 @@ class test_endhdr_fwd_atom_xtension_value_plain_toClt (ProxyTest):
         return headers
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Wummel"))
+        self.assertTrue(response.has_header("Wummel"))
         self.assertEqual(response.get_header("Wummel"), "bummel")
 
 
@@ -115,7 +115,7 @@ class test_endhdr_fwd_atom_xtension_value_plain_toSrv (ProxyTest):
         return headers
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Wummel"))
+        self.assertTrue(request.has_header("Wummel"))
         self.assertEqual(request.get_header("Wummel"), "bummel")
 
 
@@ -135,7 +135,7 @@ class test_endhdr_fwd_atom_xtension_value_none_toClt (ProxyTest):
         return headers
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Wummel"))
+        self.assertTrue(response.has_header("Wummel"))
         self.assertEqual(response.get_header("Wummel"), "")
 
 
@@ -155,7 +155,7 @@ class test_endhdr_fwd_atom_xtension_value_none_toSrv (ProxyTest):
         return headers
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Wummel"))
+        self.assertTrue(request.has_header("Wummel"))
         self.assertEqual(request.get_header("Wummel"), "")
 
 
@@ -175,7 +175,7 @@ class test_endhdr_fwd_atom_xtension_value_long_toClt (ProxyTest):
         return headers
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Wummel"))
+        self.assertTrue(response.has_header("Wummel"))
         self.assertEqual(response.get_header("Wummel"), "a" * 1024)
 
 
@@ -195,7 +195,7 @@ class test_endhdr_fwd_atom_xtension_value_long_toSrv (ProxyTest):
         return headers
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Wummel"))
+        self.assertTrue(request.has_header("Wummel"))
         self.assertEqual(request.get_header("Wummel"), "a" * 1024)
 
 
@@ -217,7 +217,7 @@ class test_endhdr_fwd_atom_xtension_name_long_toClt (ProxyTest):
 
     def check_response_headers (self, response):
         name = "Wummel" + ("a" * 1024)
-        self.assert_(response.has_header(name))
+        self.assertTrue(response.has_header(name))
         self.assertEqual(response.get_header(name), "foo")
 
 
@@ -239,7 +239,7 @@ class test_endhdr_fwd_atom_xtension_name_long_toSrv (ProxyTest):
 
     def check_request_headers (self, request):
         name = "Wummel" + ("a" * 1024)
-        self.assert_(request.has_header(name))
+        self.assertTrue(request.has_header(name))
         self.assertEqual(request.get_header(name), "foo")
 
 
@@ -258,7 +258,7 @@ class test_endhdr_fwd_atom_xtension_name_dot_toClt (ProxyTest):
         return headers
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("."))
+        self.assertTrue(response.has_header("."))
         self.assertEqual(response.get_header("."), "foo")
 
 
@@ -277,5 +277,5 @@ class test_endhdr_fwd_atom_xtension_name_dot_toSrv (ProxyTest):
         return headers
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("."))
+        self.assertTrue(request.has_header("."))
         self.assertEqual(request.get_header("."), "foo")

@@ -254,7 +254,7 @@ class test_chunked_1p1_trailer_11_1_announced_woutTe_toClt (ChunkedResponseTest)
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo"))
+        self.assertTrue(response.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_1_announced_withTe_toClt (ChunkedResponseTest):
@@ -286,7 +286,7 @@ class test_chunked_1p1_trailer_11_1_announced_withTe_toClt (ChunkedResponseTest)
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo"))
+        self.assertTrue(response.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_1_surprisesurprise_woutTe_toClt (ChunkedResponseTest):
@@ -312,7 +312,7 @@ class test_chunked_1p1_trailer_11_1_surprisesurprise_woutTe_toClt (ChunkedRespon
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo"))
+        self.assertTrue(response.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_1_surprise_withTe_toClt (ChunkedResponseTest):
@@ -350,7 +350,7 @@ class test_chunked_1p1_trailer_11_1_surprise_withTe_toClt (ChunkedResponseTest):
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo"))
+        self.assertTrue(response.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_17_announced_woutTe_toClt (ChunkedResponseTest):
@@ -409,23 +409,23 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toClt (ChunkedResponseTest
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo1"))
-        self.assert_(response.has_header("Foo2"))
-        self.assert_(response.has_header("Foo3"))
-        self.assert_(response.has_header("Foo4"))
-        self.assert_(response.has_header("Foo5"))
-        self.assert_(response.has_header("Foo6"))
-        self.assert_(response.has_header("Foo7"))
-        self.assert_(response.has_header("Foo8"))
-        self.assert_(response.has_header("Foo9"))
-        self.assert_(response.has_header("Foo10"))
-        self.assert_(response.has_header("Foo11"))
-        self.assert_(response.has_header("Foo12"))
-        self.assert_(response.has_header("Foo13"))
-        self.assert_(response.has_header("Foo14"))
-        self.assert_(response.has_header("Foo15"))
-        self.assert_(response.has_header("Foo16"))
-        self.assert_(response.has_header("Foo17"))
+        self.assertTrue(response.has_header("Foo1"))
+        self.assertTrue(response.has_header("Foo2"))
+        self.assertTrue(response.has_header("Foo3"))
+        self.assertTrue(response.has_header("Foo4"))
+        self.assertTrue(response.has_header("Foo5"))
+        self.assertTrue(response.has_header("Foo6"))
+        self.assertTrue(response.has_header("Foo7"))
+        self.assertTrue(response.has_header("Foo8"))
+        self.assertTrue(response.has_header("Foo9"))
+        self.assertTrue(response.has_header("Foo10"))
+        self.assertTrue(response.has_header("Foo11"))
+        self.assertTrue(response.has_header("Foo12"))
+        self.assertTrue(response.has_header("Foo13"))
+        self.assertTrue(response.has_header("Foo14"))
+        self.assertTrue(response.has_header("Foo15"))
+        self.assertTrue(response.has_header("Foo16"))
+        self.assertTrue(response.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_11_17_announced_withTe_toClt (ChunkedResponseTest):
@@ -495,23 +495,23 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toClt (ChunkedResponseTest
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo1"))
-        self.assert_(response.has_header("Foo2"))
-        self.assert_(response.has_header("Foo3"))
-        self.assert_(response.has_header("Foo4"))
-        self.assert_(response.has_header("Foo5"))
-        self.assert_(response.has_header("Foo6"))
-        self.assert_(response.has_header("Foo7"))
-        self.assert_(response.has_header("Foo8"))
-        self.assert_(response.has_header("Foo9"))
-        self.assert_(response.has_header("Foo10"))
-        self.assert_(response.has_header("Foo11"))
-        self.assert_(response.has_header("Foo12"))
-        self.assert_(response.has_header("Foo13"))
-        self.assert_(response.has_header("Foo14"))
-        self.assert_(response.has_header("Foo15"))
-        self.assert_(response.has_header("Foo16"))
-        self.assert_(response.has_header("Foo17"))
+        self.assertTrue(response.has_header("Foo1"))
+        self.assertTrue(response.has_header("Foo2"))
+        self.assertTrue(response.has_header("Foo3"))
+        self.assertTrue(response.has_header("Foo4"))
+        self.assertTrue(response.has_header("Foo5"))
+        self.assertTrue(response.has_header("Foo6"))
+        self.assertTrue(response.has_header("Foo7"))
+        self.assertTrue(response.has_header("Foo8"))
+        self.assertTrue(response.has_header("Foo9"))
+        self.assertTrue(response.has_header("Foo10"))
+        self.assertTrue(response.has_header("Foo11"))
+        self.assertTrue(response.has_header("Foo12"))
+        self.assertTrue(response.has_header("Foo13"))
+        self.assertTrue(response.has_header("Foo14"))
+        self.assertTrue(response.has_header("Foo15"))
+        self.assertTrue(response.has_header("Foo16"))
+        self.assertTrue(response.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt (ChunkedResponseTest):
@@ -553,23 +553,23 @@ class test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt (ChunkedResponseTest)
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo1"))
-        self.assert_(response.has_header("Foo2"))
-        self.assert_(response.has_header("Foo3"))
-        self.assert_(response.has_header("Foo4"))
-        self.assert_(response.has_header("Foo5"))
-        self.assert_(response.has_header("Foo6"))
-        self.assert_(response.has_header("Foo7"))
-        self.assert_(response.has_header("Foo8"))
-        self.assert_(response.has_header("Foo9"))
-        self.assert_(response.has_header("Foo10"))
-        self.assert_(response.has_header("Foo11"))
-        self.assert_(response.has_header("Foo12"))
-        self.assert_(response.has_header("Foo13"))
-        self.assert_(response.has_header("Foo14"))
-        self.assert_(response.has_header("Foo15"))
-        self.assert_(response.has_header("Foo16"))
-        self.assert_(response.has_header("Foo17"))
+        self.assertTrue(response.has_header("Foo1"))
+        self.assertTrue(response.has_header("Foo2"))
+        self.assertTrue(response.has_header("Foo3"))
+        self.assertTrue(response.has_header("Foo4"))
+        self.assertTrue(response.has_header("Foo5"))
+        self.assertTrue(response.has_header("Foo6"))
+        self.assertTrue(response.has_header("Foo7"))
+        self.assertTrue(response.has_header("Foo8"))
+        self.assertTrue(response.has_header("Foo9"))
+        self.assertTrue(response.has_header("Foo10"))
+        self.assertTrue(response.has_header("Foo11"))
+        self.assertTrue(response.has_header("Foo12"))
+        self.assertTrue(response.has_header("Foo13"))
+        self.assertTrue(response.has_header("Foo14"))
+        self.assertTrue(response.has_header("Foo15"))
+        self.assertTrue(response.has_header("Foo16"))
+        self.assertTrue(response.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_11_17_surprise_withTe_toClt (ChunkedResponseTest):
@@ -633,23 +633,23 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toClt (ChunkedResponseTest)
         return self.chunked("a"*11, trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo1"))
-        self.assert_(response.has_header("Foo2"))
-        self.assert_(response.has_header("Foo3"))
-        self.assert_(response.has_header("Foo4"))
-        self.assert_(response.has_header("Foo5"))
-        self.assert_(response.has_header("Foo6"))
-        self.assert_(response.has_header("Foo7"))
-        self.assert_(response.has_header("Foo8"))
-        self.assert_(response.has_header("Foo9"))
-        self.assert_(response.has_header("Foo10"))
-        self.assert_(response.has_header("Foo11"))
-        self.assert_(response.has_header("Foo12"))
-        self.assert_(response.has_header("Foo13"))
-        self.assert_(response.has_header("Foo14"))
-        self.assert_(response.has_header("Foo15"))
-        self.assert_(response.has_header("Foo16"))
-        self.assert_(response.has_header("Foo17"))
+        self.assertTrue(response.has_header("Foo1"))
+        self.assertTrue(response.has_header("Foo2"))
+        self.assertTrue(response.has_header("Foo3"))
+        self.assertTrue(response.has_header("Foo4"))
+        self.assertTrue(response.has_header("Foo5"))
+        self.assertTrue(response.has_header("Foo6"))
+        self.assertTrue(response.has_header("Foo7"))
+        self.assertTrue(response.has_header("Foo8"))
+        self.assertTrue(response.has_header("Foo9"))
+        self.assertTrue(response.has_header("Foo10"))
+        self.assertTrue(response.has_header("Foo11"))
+        self.assertTrue(response.has_header("Foo12"))
+        self.assertTrue(response.has_header("Foo13"))
+        self.assertTrue(response.has_header("Foo14"))
+        self.assertTrue(response.has_header("Foo15"))
+        self.assertTrue(response.has_header("Foo16"))
+        self.assertTrue(response.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_0_1_announced_woutTe_toClt (ChunkedResponseTest):
@@ -676,7 +676,7 @@ class test_chunked_1p1_trailer_0_1_announced_woutTe_toClt (ChunkedResponseTest):
         return self.chunked("", trailers=trailers)
 
     def check_response_headers (self, response):
-        self.assert_(response.has_header("Foo"))
+        self.assertTrue(response.has_header("Foo"))
 
 
 class test_chunked_1p1_nameExt_toClt (ChunkedResponseTest):
@@ -964,7 +964,7 @@ class test_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (ChunkedRequestTest):
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo"))
+        self.assertTrue(request.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_1_announced_withTe_toSrv (ChunkedRequestTest):
@@ -996,7 +996,7 @@ class test_chunked_1p1_trailer_11_1_announced_withTe_toSrv (ChunkedRequestTest):
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo"))
+        self.assertTrue(request.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (ChunkedRequestTest):
@@ -1022,7 +1022,7 @@ class test_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (ChunkedRequestTest):
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo"))
+        self.assertTrue(request.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest):
@@ -1060,7 +1060,7 @@ class test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest):
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo"))
+        self.assertTrue(request.has_header("Foo"))
 
 
 class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest):
@@ -1119,23 +1119,23 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest)
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo1"))
-        self.assert_(request.has_header("Foo2"))
-        self.assert_(request.has_header("Foo3"))
-        self.assert_(request.has_header("Foo4"))
-        self.assert_(request.has_header("Foo5"))
-        self.assert_(request.has_header("Foo6"))
-        self.assert_(request.has_header("Foo7"))
-        self.assert_(request.has_header("Foo8"))
-        self.assert_(request.has_header("Foo9"))
-        self.assert_(request.has_header("Foo10"))
-        self.assert_(request.has_header("Foo11"))
-        self.assert_(request.has_header("Foo12"))
-        self.assert_(request.has_header("Foo13"))
-        self.assert_(request.has_header("Foo14"))
-        self.assert_(request.has_header("Foo15"))
-        self.assert_(request.has_header("Foo16"))
-        self.assert_(request.has_header("Foo17"))
+        self.assertTrue(request.has_header("Foo1"))
+        self.assertTrue(request.has_header("Foo2"))
+        self.assertTrue(request.has_header("Foo3"))
+        self.assertTrue(request.has_header("Foo4"))
+        self.assertTrue(request.has_header("Foo5"))
+        self.assertTrue(request.has_header("Foo6"))
+        self.assertTrue(request.has_header("Foo7"))
+        self.assertTrue(request.has_header("Foo8"))
+        self.assertTrue(request.has_header("Foo9"))
+        self.assertTrue(request.has_header("Foo10"))
+        self.assertTrue(request.has_header("Foo11"))
+        self.assertTrue(request.has_header("Foo12"))
+        self.assertTrue(request.has_header("Foo13"))
+        self.assertTrue(request.has_header("Foo14"))
+        self.assertTrue(request.has_header("Foo15"))
+        self.assertTrue(request.has_header("Foo16"))
+        self.assertTrue(request.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest):
@@ -1205,23 +1205,23 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest)
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo1"))
-        self.assert_(request.has_header("Foo2"))
-        self.assert_(request.has_header("Foo3"))
-        self.assert_(request.has_header("Foo4"))
-        self.assert_(request.has_header("Foo5"))
-        self.assert_(request.has_header("Foo6"))
-        self.assert_(request.has_header("Foo7"))
-        self.assert_(request.has_header("Foo8"))
-        self.assert_(request.has_header("Foo9"))
-        self.assert_(request.has_header("Foo10"))
-        self.assert_(request.has_header("Foo11"))
-        self.assert_(request.has_header("Foo12"))
-        self.assert_(request.has_header("Foo13"))
-        self.assert_(request.has_header("Foo14"))
-        self.assert_(request.has_header("Foo15"))
-        self.assert_(request.has_header("Foo16"))
-        self.assert_(request.has_header("Foo17"))
+        self.assertTrue(request.has_header("Foo1"))
+        self.assertTrue(request.has_header("Foo2"))
+        self.assertTrue(request.has_header("Foo3"))
+        self.assertTrue(request.has_header("Foo4"))
+        self.assertTrue(request.has_header("Foo5"))
+        self.assertTrue(request.has_header("Foo6"))
+        self.assertTrue(request.has_header("Foo7"))
+        self.assertTrue(request.has_header("Foo8"))
+        self.assertTrue(request.has_header("Foo9"))
+        self.assertTrue(request.has_header("Foo10"))
+        self.assertTrue(request.has_header("Foo11"))
+        self.assertTrue(request.has_header("Foo12"))
+        self.assertTrue(request.has_header("Foo13"))
+        self.assertTrue(request.has_header("Foo14"))
+        self.assertTrue(request.has_header("Foo15"))
+        self.assertTrue(request.has_header("Foo16"))
+        self.assertTrue(request.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTest):
@@ -1263,23 +1263,23 @@ class test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTest):
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo1"))
-        self.assert_(request.has_header("Foo2"))
-        self.assert_(request.has_header("Foo3"))
-        self.assert_(request.has_header("Foo4"))
-        self.assert_(request.has_header("Foo5"))
-        self.assert_(request.has_header("Foo6"))
-        self.assert_(request.has_header("Foo7"))
-        self.assert_(request.has_header("Foo8"))
-        self.assert_(request.has_header("Foo9"))
-        self.assert_(request.has_header("Foo10"))
-        self.assert_(request.has_header("Foo11"))
-        self.assert_(request.has_header("Foo12"))
-        self.assert_(request.has_header("Foo13"))
-        self.assert_(request.has_header("Foo14"))
-        self.assert_(request.has_header("Foo15"))
-        self.assert_(request.has_header("Foo16"))
-        self.assert_(request.has_header("Foo17"))
+        self.assertTrue(request.has_header("Foo1"))
+        self.assertTrue(request.has_header("Foo2"))
+        self.assertTrue(request.has_header("Foo3"))
+        self.assertTrue(request.has_header("Foo4"))
+        self.assertTrue(request.has_header("Foo5"))
+        self.assertTrue(request.has_header("Foo6"))
+        self.assertTrue(request.has_header("Foo7"))
+        self.assertTrue(request.has_header("Foo8"))
+        self.assertTrue(request.has_header("Foo9"))
+        self.assertTrue(request.has_header("Foo10"))
+        self.assertTrue(request.has_header("Foo11"))
+        self.assertTrue(request.has_header("Foo12"))
+        self.assertTrue(request.has_header("Foo13"))
+        self.assertTrue(request.has_header("Foo14"))
+        self.assertTrue(request.has_header("Foo15"))
+        self.assertTrue(request.has_header("Foo16"))
+        self.assertTrue(request.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
@@ -1343,23 +1343,23 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
         return self.chunked("a"*11, trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo1"))
-        self.assert_(request.has_header("Foo2"))
-        self.assert_(request.has_header("Foo3"))
-        self.assert_(request.has_header("Foo4"))
-        self.assert_(request.has_header("Foo5"))
-        self.assert_(request.has_header("Foo6"))
-        self.assert_(request.has_header("Foo7"))
-        self.assert_(request.has_header("Foo8"))
-        self.assert_(request.has_header("Foo9"))
-        self.assert_(request.has_header("Foo10"))
-        self.assert_(request.has_header("Foo11"))
-        self.assert_(request.has_header("Foo12"))
-        self.assert_(request.has_header("Foo13"))
-        self.assert_(request.has_header("Foo14"))
-        self.assert_(request.has_header("Foo15"))
-        self.assert_(request.has_header("Foo16"))
-        self.assert_(request.has_header("Foo17"))
+        self.assertTrue(request.has_header("Foo1"))
+        self.assertTrue(request.has_header("Foo2"))
+        self.assertTrue(request.has_header("Foo3"))
+        self.assertTrue(request.has_header("Foo4"))
+        self.assertTrue(request.has_header("Foo5"))
+        self.assertTrue(request.has_header("Foo6"))
+        self.assertTrue(request.has_header("Foo7"))
+        self.assertTrue(request.has_header("Foo8"))
+        self.assertTrue(request.has_header("Foo9"))
+        self.assertTrue(request.has_header("Foo10"))
+        self.assertTrue(request.has_header("Foo11"))
+        self.assertTrue(request.has_header("Foo12"))
+        self.assertTrue(request.has_header("Foo13"))
+        self.assertTrue(request.has_header("Foo14"))
+        self.assertTrue(request.has_header("Foo15"))
+        self.assertTrue(request.has_header("Foo16"))
+        self.assertTrue(request.has_header("Foo17"))
 
 
 class test_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (ChunkedRequestTest):
@@ -1386,7 +1386,7 @@ class test_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (ChunkedRequestTest):
         return self.chunked("", trailers=trailers)
 
     def check_request_headers (self, request):
-        self.assert_(request.has_header("Foo"))
+        self.assertTrue(request.has_header("Foo"))
 
 
 class test_chunked_1p1_nameExt_toSrv (ChunkedRequestTest):

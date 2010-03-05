@@ -11,9 +11,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 Test decorators.
 """
@@ -33,7 +33,7 @@ class TestDecorators (unittest.TestCase):
         @wc.decorators.timed()
         def f ():
             return 42
-        self.assertEquals(f(), 42)
+        self.assertEqual(f(), 42)
 
     def test_timeit2 (self):
         log = StringIO()
@@ -41,5 +41,5 @@ class TestDecorators (unittest.TestCase):
         def f ():
             time.sleep(1)
             return 42
-        self.assertEquals(f(), 42)
-        self.assert_(log.getvalue())
+        self.assertEqual(f(), 42)
+        self.assertTrue(log.getvalue())

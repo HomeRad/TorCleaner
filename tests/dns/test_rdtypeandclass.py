@@ -24,10 +24,10 @@ class TestRdTypeAndClass (unittest.TestCase):
     # Classes
 
     def test_class_meta1(self):
-        self.assert_(wc.dns.rdataclass.is_metaclass(wc.dns.rdataclass.ANY))
+        self.assertTrue(wc.dns.rdataclass.is_metaclass(wc.dns.rdataclass.ANY))
 
     def test_class_meta2(self):
-        self.assert_(not wc.dns.rdataclass.is_metaclass(wc.dns.rdataclass.IN))
+        self.assertTrue(not wc.dns.rdataclass.is_metaclass(wc.dns.rdataclass.IN))
 
     def test_class_bytext1(self):
         self.assertEqual(wc.dns.rdataclass.from_text('IN'),
@@ -71,19 +71,19 @@ class TestRdTypeAndClass (unittest.TestCase):
     # Types
 
     def test_type_meta1(self):
-        self.assert_(wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.ANY))
+        self.assertTrue(wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.ANY))
 
     def test_type_meta2(self):
-        self.assert_(wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.OPT))
+        self.assertTrue(wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.OPT))
 
     def test_type_meta3(self):
-        self.assert_(not wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.A))
+        self.assertTrue(not wc.dns.rdatatype.is_metatype(wc.dns.rdatatype.A))
 
     def test_type_singleton1(self):
-        self.assert_(wc.dns.rdatatype.is_singleton(wc.dns.rdatatype.SOA))
+        self.assertTrue(wc.dns.rdatatype.is_singleton(wc.dns.rdatatype.SOA))
 
     def test_type_singleton2(self):
-        self.assert_(not wc.dns.rdatatype.is_singleton(wc.dns.rdatatype.A))
+        self.assertTrue(not wc.dns.rdatatype.is_singleton(wc.dns.rdatatype.A))
 
     def test_type_bytext1(self):
         self.assertEqual(wc.dns.rdatatype.from_text('A'), wc.dns.rdatatype.A)

@@ -40,7 +40,7 @@ class test_datedwarn_1old_0cur_0fut (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))
 
 
 class test_datedwarn_0old_0cur_1fut (ProxyTest):
@@ -61,7 +61,7 @@ class test_datedwarn_0old_0cur_1fut (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))
 
 
 class test_datedwarn_1old_1cur_1fut (ProxyTest):
@@ -87,7 +87,7 @@ class test_datedwarn_1old_1cur_1fut (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assertEquals(response.num_headers('Warning'), 1)
+        self.assertEqual(response.num_headers('Warning'), 1)
 
 
 class test_datedwarn_1old_continuation (ProxyTest):
@@ -110,7 +110,7 @@ class test_datedwarn_1old_continuation (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header('Warning'))
+        self.assertTrue(not response.has_header('Warning'))
 
 
 class test_datedwarn_1cur_continuation (ProxyTest):
@@ -132,7 +132,7 @@ class test_datedwarn_1cur_continuation (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assertEquals(response.num_headers('Warning'), 1)
+        self.assertEqual(response.num_headers('Warning'), 1)
 
 
 class test_datedwarn_1cur_noquotes (ProxyTest):
@@ -152,4 +152,4 @@ class test_datedwarn_1cur_noquotes (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assertEquals(response.num_headers('Warning'), 1)
+        self.assertEqual(response.num_headers('Warning'), 1)

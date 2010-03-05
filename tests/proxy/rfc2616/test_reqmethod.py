@@ -33,7 +33,7 @@ class test_reqmethod_head (ProxyTest):
         return "HEAD"
 
     def check_response_content (self, response):
-        self.assert_(not response.content)
+        self.assertTrue(not response.content)
 
 
 class test_reqmethod_get (ProxyTest):

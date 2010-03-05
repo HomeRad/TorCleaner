@@ -11,29 +11,26 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 Test network functions.
 """
 
 import unittest
-from tests import has_posix
-from nose import SkipTest
+from tests import need_posix
 import wc.network
 
 
 class TestNetwork (unittest.TestCase):
     """Test network functions."""
 
+    @need_posix
     def test_ifreq_size (self):
-        if not has_posix():
-            raise SkipTest()
         self.assertTrue(wc.network.ifreq_size() > 0)
 
+    @need_posix
     def test_interfaces (self):
-        if not has_posix():
-            raise SkipTest()
         ifc = wc.network.IfConfig()
         ifc.getInterfaceList()

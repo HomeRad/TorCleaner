@@ -29,7 +29,7 @@ class LonguriTest (ProxyTest):
         return "/%s%s" % ("01234567" * octets, "x"*remainder)
 
     def check_response_status (self, response):
-        self.assert_(response.status in (200, 414))
+        self.assertTrue(response.status in (200, 414))
 
 
 class test_longuri_1024 (LonguriTest):

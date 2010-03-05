@@ -24,4 +24,4 @@ class TestHeader (unittest.TestCase):
     def test_add (self):
         d = wc.http.header.WcMessage()
         d['Via'] = 'foo\r'
-        self.assert_('via' in d)
+        self.assertTrue('via' in d)

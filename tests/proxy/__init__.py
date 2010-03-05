@@ -31,7 +31,7 @@ class test_xyz (ProxyTest):
 
     def check_response_content (self, response):
         # response must not have content
-        self.assert_(not response.content)
+        self.assertTrue(not response.content)
 """
 
 import unittest
@@ -495,7 +495,7 @@ class ProxyTest (unittest.TestCase):
         Check individual parts of the request with check_request_*
         methods.
         """
-        self.assert_(request is not None)
+        self.assertTrue(request is not None)
         self.check_request_method(request)
         self.check_request_uri(request)
         self.check_request_version(request)
@@ -506,19 +506,19 @@ class ProxyTest (unittest.TestCase):
         """
         Check HTTP request method.
         """
-        self.assertEquals(request.method, self.get_request_method())
+        self.assertEqual(request.method, self.get_request_method())
 
     def check_request_uri (self, request):
         """
         Check HTTP request URI.
         """
-        self.assertEquals(request.uri, self.get_request_uri())
+        self.assertEqual(request.uri, self.get_request_uri())
 
     def check_request_version (self, request):
         """
         Check HTTP request version.
         """
-        self.assertEquals(request.version, self.get_request_version())
+        self.assertEqual(request.version, self.get_request_version())
 
     def check_request_headers (self, request):
         """
@@ -530,7 +530,7 @@ class ProxyTest (unittest.TestCase):
         """
         Check HTTP request content.
         """
-        self.assertEquals(request.content, self.get_request_content())
+        self.assertEqual(request.content, self.get_request_content())
 
     def get_response (self):
         """
@@ -643,7 +643,7 @@ class ProxyTest (unittest.TestCase):
         Check individual parts of the response with check_response_*
         methods.
         """
-        self.assert_(response is not None)
+        self.assertTrue(response is not None)
         self.check_response_version(response)
         self.check_response_status(response)
         self.check_response_message(response)

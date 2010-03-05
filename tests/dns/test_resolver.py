@@ -64,7 +64,7 @@ class TestResolver (unittest.TestCase):
         cache = wc.dns.resolver.Cache()
         cache.put((name, wc.dns.rdatatype.A, wc.dns.rdataclass.IN), answer)
         time.sleep(2)
-        self.assert_(cache.get((name, wc.dns.rdatatype.A,
+        self.assertTrue(cache.get((name, wc.dns.rdatatype.A,
                                 wc.dns.rdataclass.IN)) is None)
 
     def testCacheCleaning(self):
@@ -75,29 +75,29 @@ class TestResolver (unittest.TestCase):
         cache = wc.dns.resolver.Cache(cleaning_interval=1.0)
         cache.put((name, wc.dns.rdatatype.A, wc.dns.rdataclass.IN), answer)
         time.sleep(2)
-        self.assert_(cache.get((name, wc.dns.rdatatype.A,
+        self.assertTrue(cache.get((name, wc.dns.rdatatype.A,
                                 wc.dns.rdataclass.IN)) is None)
 
     def testZoneForName1(self):
         name = wc.dns.name.from_text('www.dnspython.org.')
         ezname = wc.dns.name.from_text('dnspython.org.')
         zname = wc.dns.resolver.zone_for_name(name)
-        self.failUnless(zname == ezname)
+        self.assertTrue(zname == ezname)
 
     def testZoneForName2(self):
         name = wc.dns.name.from_text('a.b.www.dnspython.org.')
         ezname = wc.dns.name.from_text('dnspython.org.')
         zname = wc.dns.resolver.zone_for_name(name)
-        self.failUnless(zname == ezname)
+        self.assertTrue(zname == ezname)
 
     def testZoneForName3(self):
         name = wc.dns.name.from_text('dnspython.org.')
         ezname = wc.dns.name.from_text('dnspython.org.')
         zname = wc.dns.resolver.zone_for_name(name)
-        self.failUnless(zname == ezname)
+        self.assertTrue(zname == ezname)
 
     def testZoneForName4(self):
         def bad():
             name = wc.dns.name.from_text('dnspython.org', None)
             zname = wc.dns.resolver.zone_for_name(name)
-        self.failUnlessRaises(wc.dns.resolver.NotAbsolute, bad)
+        self.assertRaises(wc.dns.resolver.NotAbsolute, bad)

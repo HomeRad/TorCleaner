@@ -42,7 +42,7 @@ class TestVirusFilter (unittest.TestCase):
                '/exploit.htm">'
         msg = 'stream: Exploit.HTML.MHTRedir.2n FOUND\n'
         infected, errors = self._scan(data)
-        self.assert_(msg in infected)
+        self.assertTrue(msg in infected)
         self.assertFalse(errors)
 
     def _scan (self, data):

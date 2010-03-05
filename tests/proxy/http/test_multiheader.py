@@ -52,7 +52,7 @@ class test_multiheader_clen_toSrv (ProxyTest):
         for header in request.headers:
             if header.lower().startswith("content-length:"):
                 num_found += 1
-        self.assert_(num_found < 2)
+        self.assertTrue(num_found < 2)
 
 
 class test_multiheader_clen_toClt (ProxyTest):
@@ -76,4 +76,4 @@ class test_multiheader_clen_toClt (ProxyTest):
         for header in response.headers:
             if header.lower().startswith("content-length:"):
                 num_found += 1
-        self.assert_(num_found < 2)
+        self.assertTrue(num_found < 2)

@@ -35,4 +35,4 @@ class TestBlocker (unittest.TestCase):
         data = "GET %s HTTP/1.0" % self.url
         attrs = get_filterattrs(self.url, "localhost", [STAGE_REQUEST])
         filtered = applyfilter(STAGE_REQUEST, data, 'finish', attrs)
-        self.assert_(filtered.find("blocked.html")!=-1)
+        self.assertTrue(filtered.find("blocked.html")!=-1)

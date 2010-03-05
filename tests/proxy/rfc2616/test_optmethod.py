@@ -24,7 +24,7 @@ from .. import ProxyTest
 class MethodTest (ProxyTest):
 
     def check_response_status (self, response):
-        self.assert_(response.status in (405, 200))
+        self.assertTrue(response.status in (405, 200))
 
     def check_response_message (self, response):
         pass
@@ -38,7 +38,7 @@ class MethodTest (ProxyTest):
 
     def check_response_content (self, response):
         if response.status == 200:
-            self.assertEquals(response.content, self.get_response_content())
+            self.assertEqual(response.content, self.get_response_content())
 
 
 class test_optmethod_options (MethodTest):
@@ -55,9 +55,9 @@ class test_optmethod_options (MethodTest):
     def check_response_method2 (self, response):
         if response.content:
             # Content-Type must be included
-            self.assert_(response.has_header("Content-Type"))
+            self.assertTrue(response.has_header("Content-Type"))
         else:
-            self.assert_(response.has_header("Content-Length"))
+            self.assertTrue(response.has_header("Content-Length"))
             self.assertEqual(response.get_header("Content-Length"), "0")
 
 

@@ -43,7 +43,7 @@ class test_dateformat_warn_rfc1123_rfc850 (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))
 
 
 class test_dateformat_warn_rfc1123_asctime (ProxyTest):
@@ -68,7 +68,7 @@ class test_dateformat_warn_rfc1123_asctime (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))
 
 
 class test_dateformat_warn_rfc850_rfc1123 (ProxyTest):
@@ -93,7 +93,7 @@ class test_dateformat_warn_rfc850_rfc1123 (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))
 
 
 class test_dateformat_warn_rfc850_asctime (ProxyTest):
@@ -118,7 +118,7 @@ class test_dateformat_warn_rfc850_asctime (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))
 
 
 class test_dateformat_warn_asctime_rfc1123 (ProxyTest):
@@ -143,7 +143,7 @@ class test_dateformat_warn_asctime_rfc1123 (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))
 
 
 class test_dateformat_warn_asctime_rfc850 (ProxyTest):
@@ -168,4 +168,4 @@ class test_dateformat_warn_asctime_rfc850 (ProxyTest):
         ]
 
     def check_response_headers (self, response):
-        self.assert_(not response.has_header("Warning"))
+        self.assertTrue(not response.has_header("Warning"))

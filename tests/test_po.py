@@ -12,9 +12,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 Test gettext .po files.
 """
@@ -22,8 +22,7 @@ Test gettext .po files.
 import unittest
 import os
 import glob
-from tests import has_msgfmt, has_posix
-from nose import SkipTest
+from tests import need_msgfmt, need_posix
 
 
 pofiles = None
@@ -39,13 +38,13 @@ def get_pofiles ():
 class TestPo (unittest.TestCase):
     """Test .po file syntax."""
 
+    @need_posix
+    @need_msgfmt
     def test_pos (self):
         """Test .po files syntax."""
-        if not (has_msgfmt() and has_posix()):
-            raise SkipTest()
         for f in get_pofiles():
             ret = os.system("msgfmt -c -o - %s > /dev/null" % f)
-            self.assertEquals(ret, 0, msg="PO-file syntax error in %r" % f)
+            self.assertEqual(ret, 0, msg="PO-file syntax error in %r" % f)
 
 
 class TestGTranslator (unittest.TestCase):
@@ -66,5 +65,5 @@ class TestGTranslator (unittest.TestCase):
         for line in fd:
             if line.strip().startswith("#"):
                 continue
-            self.failIf("\xc2\xb7" in line,
+            self.assertFalse("\xc2\xb7" in line,
                  "Broken GTranslator copy/paste in %r:\n%r" % (f, line))

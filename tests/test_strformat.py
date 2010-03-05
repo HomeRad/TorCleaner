@@ -11,9 +11,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 Test string formatting operations.
 """
@@ -33,25 +33,25 @@ class TestStrFormat (unittest.TestCase):
         Test quote stripping.
         """
         u = wc.strformat.unquote
-        self.assertEquals(u(""), "")
-        self.assertEquals(u(None), None)
-        self.assertEquals(u("'"), "'")
-        self.assertEquals(u("\""), "\"")
-        self.assertEquals(u("\"\""), "")
-        self.assertEquals(u("''"), "")
-        self.assertEquals(u("'a'"), "a")
-        self.assertEquals(u("'a\"'"), "a\"")
-        self.assertEquals(u("'\"a'"), "\"a")
-        self.assertEquals(u('"a\'"'), 'a\'')
-        self.assertEquals(u('"\'a"'), '\'a')
-        self.assertEquals(u("'a'", matching=True), "a")
-        self.assertEquals(u('"a"', matching=True), "a")
+        self.assertEqual(u(""), "")
+        self.assertEqual(u(None), None)
+        self.assertEqual(u("'"), "'")
+        self.assertEqual(u("\""), "\"")
+        self.assertEqual(u("\"\""), "")
+        self.assertEqual(u("''"), "")
+        self.assertEqual(u("'a'"), "a")
+        self.assertEqual(u("'a\"'"), "a\"")
+        self.assertEqual(u("'\"a'"), "\"a")
+        self.assertEqual(u('"a\'"'), 'a\'')
+        self.assertEqual(u('"\'a"'), '\'a')
+        self.assertEqual(u("'a'", matching=True), "a")
+        self.assertEqual(u('"a"', matching=True), "a")
         # even mis-matching quotes should be removed...
-        self.assertEquals(u("'a\""), "a")
-        self.assertEquals(u("\"a'"), "a")
+        self.assertEqual(u("'a\""), "a")
+        self.assertEqual(u("\"a'"), "a")
         # ...but not when matching is True
-        self.assertEquals(u("'a\"", matching=True), "'a\"")
-        self.assertEquals(u("\"a'", matching=True), "\"a'")
+        self.assertEqual(u("'a\"", matching=True), "'a\"")
+        self.assertEqual(u("\"a'", matching=True), "\"a'")
 
     def test_wrap (self):
         """
@@ -60,20 +60,20 @@ class TestStrFormat (unittest.TestCase):
         wrap = wc.strformat.wrap
         s = "11%(sep)s22%(sep)s33%(sep)s44%(sep)s55" % {'sep': os.linesep}
         # testing width <= 0
-        self.assertEquals(wrap(s, -1), s)
-        self.assertEquals(wrap(s, 0), s)
+        self.assertEqual(wrap(s, -1), s)
+        self.assertEqual(wrap(s, 0), s)
         l = len(os.linesep)
         gap = " "*l
         s2 = "11%(gap)s22%(sep)s33%(gap)s44%(sep)s55" % \
              {'sep': os.linesep, 'gap': gap}
         # splitting lines
-        self.assertEquals(wrap(s2, 2), s)
+        self.assertEqual(wrap(s2, 2), s)
         # combining lines
-        self.assertEquals(wrap(s, 4+l), s2)
+        self.assertEqual(wrap(s, 4+l), s2)
         # misc
-        self.assertEquals(wrap(s, -1), s)
-        self.assertEquals(wrap(s, 0), s)
-        self.assertEquals(wrap(None, 10), None)
+        self.assertEqual(wrap(s, -1), s)
+        self.assertEqual(wrap(s, 0), s)
+        self.assertEqual(wrap(None, 10), None)
         self.assertFalse(wc.strformat.get_paragraphs(None))
 
 
@@ -81,33 +81,33 @@ class TestStrFormat (unittest.TestCase):
         """
         Test markup removing.
         """
-        self.assertEquals(wc.strformat.remove_markup("<a>"), "")
-        self.assertEquals(wc.strformat.remove_markup("<>"), "")
-        self.assertEquals(wc.strformat.remove_markup("<<>"), "")
-        self.assertEquals(wc.strformat.remove_markup("a < b"), "a < b")
+        self.assertEqual(wc.strformat.remove_markup("<a>"), "")
+        self.assertEqual(wc.strformat.remove_markup("<>"), "")
+        self.assertEqual(wc.strformat.remove_markup("<<>"), "")
+        self.assertEqual(wc.strformat.remove_markup("a < b"), "a < b")
 
     def test_strsize (self):
         """
         Test byte size strings.
         """
         self.assertRaises(ValueError, wc.strformat.strsize, -1)
-        self.assertEquals(wc.strformat.strsize(0), "0B")
-        self.assertEquals(wc.strformat.strsize(1), "1B")
-        self.assertEquals(wc.strformat.strsize(2), "2B")
-        self.assertEquals(wc.strformat.strsize(1023), "1023B")
-        self.assertEquals(wc.strformat.strsize(1024), "1KB")
-        self.assertEquals(wc.strformat.strsize(1024*25), "25.00KB")
-        self.assertEquals(wc.strformat.strsize(1024*1024), "1.00MB")
-        self.assertEquals(wc.strformat.strsize(1024*1024*11), "11.0MB")
-        self.assertEquals(wc.strformat.strsize(1024*1024*1024),
+        self.assertEqual(wc.strformat.strsize(0), "0B")
+        self.assertEqual(wc.strformat.strsize(1), "1B")
+        self.assertEqual(wc.strformat.strsize(2), "2B")
+        self.assertEqual(wc.strformat.strsize(1023), "1023B")
+        self.assertEqual(wc.strformat.strsize(1024), "1KB")
+        self.assertEqual(wc.strformat.strsize(1024*25), "25.00KB")
+        self.assertEqual(wc.strformat.strsize(1024*1024), "1.00MB")
+        self.assertEqual(wc.strformat.strsize(1024*1024*11), "11.0MB")
+        self.assertEqual(wc.strformat.strsize(1024*1024*1024),
             "1.00GB")
-        self.assertEquals(wc.strformat.strsize(1024*1024*1024*14),
+        self.assertEqual(wc.strformat.strsize(1024*1024*1024*14),
             "14.0GB")
 
     def test_is_ascii (self):
-        self.assert_(wc.strformat.is_ascii("abcd./"))
-        self.assert_(not wc.strformat.is_ascii("ä"))
-        self.assert_(not wc.strformat.is_ascii(u"ä"))
+        self.assertTrue(wc.strformat.is_ascii("abcd./"))
+        self.assertTrue(not wc.strformat.is_ascii("ä"))
+        self.assertTrue(not wc.strformat.is_ascii(u"ä"))
 
     def test_indent (self):
         s = "bla"
@@ -166,7 +166,7 @@ class TestStrFormat (unittest.TestCase):
 
     def test_encoding (self):
         is_encoding = wc.strformat.is_encoding
-        self.assert_(is_encoding('ascii'))
+        self.assertTrue(is_encoding('ascii'))
         self.assertFalse(is_encoding('hulla'))
 
     def test_unicode_safe (self):
