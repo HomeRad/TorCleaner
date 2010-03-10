@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2000-2009 Bastian Kleineidam
+# Copyright (C) 2000-2010 Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,9 +11,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 """
 Application internationalization support.
 """
@@ -70,10 +70,11 @@ def init (domain, directory):
     loc, encoding = get_locale()
     if loc in supported_languages:
         default_language = loc
-        default_encoding = encoding
     else:
         default_language = "en"
-        default_encoding = "ascii"
+    # Even if the default language is not supported, the encoding should
+    # be installed. Otherwise the Python installation is borked.
+    default_encoding = encoding
     # install translation service routines into default namespace
     translator = get_translator(domain, directory,
                                 languages=[default_language], fallback=True)
