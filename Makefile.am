@@ -13,8 +13,6 @@ MACHINE:=$(shell uname -m)
 # python settings
 PYVER:=2.6
 PYTHON:=python$(PYVER)
-# homepage directory
-HTMLDIR:=/home/calvin/public_html/webcleaner.sf.net
 # source code checker settings
 SPLINTOPTS:=+posixlib \
               -Iwc/HtmlParser -Ilibjs -I/usr/include/$(PYTHON) \
@@ -110,6 +108,7 @@ syntaxcheck:
 	check-copyright
 	check-pofiles -v
 	py-tabdaddy
+	py-unittest2-compat tests/
 #	$(MAKE) -C config xmlcheck
 	$(MAKE) pyflakes
 
