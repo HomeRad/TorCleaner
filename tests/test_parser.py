@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2004-2009 Bastian Kleineidam
+# Copyright (C) 2004-2010 Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -191,9 +191,7 @@ class TestParser (unittest.TestCase):
         self.htmlparser2 = wc.HtmlParser.htmlsax.parser()
 
     def test_parse (self):
-        """
-        Parse all test patterns in one go.
-        """
+        # Parse all test patterns in one go.
         for _in, _out in parsetests:
             out = StringIO()
             handler = wc.HtmlParser.htmllib.HtmlPrettyPrinter(out)
@@ -213,9 +211,7 @@ class TestParser (unittest.TestCase):
         htmlparser.reset()
 
     def test_feed (self):
-        """
-        Parse all test patterns sequentially.
-        """
+        # Parse all test patterns sequentially.
         for _in, _out in parsetests:
             out = StringIO()
             handler = wc.HtmlParser.htmllib.HtmlPrettyPrinter(out)
@@ -225,9 +221,7 @@ class TestParser (unittest.TestCase):
             self.check_results(self.htmlparser, _in, _out, out)
 
     def test_interwoven (self):
-        """
-        Parse all test patterns on two parsers interwoven.
-        """
+        # Parse all test patterns on two parsers interwoven.
         for _in, _out in parsetests:
             out = StringIO()
             out2 = StringIO()
@@ -255,9 +249,7 @@ class TestParser (unittest.TestCase):
             self.assertEqual(out.getvalue(), out2.getvalue())
 
     def test_flush (self):
-        """
-        Test parser flushing.
-        """
+        # Test parser flushing.
         for _in, _out in flushtests:
             out = StringIO()
             handler = wc.HtmlParser.htmllib.HtmlPrettyPrinter(out)
@@ -266,10 +258,20 @@ class TestParser (unittest.TestCase):
             self.check_results(self.htmlparser, _in, _out, out)
 
     def test_entities (self):
-        """
-        Test entity resolving.
-        """
+        # Test entity resolving.
         resolve = wc.HtmlParser.resolve_entities
         for c in "abcdefghijklmnopqrstuvwxyz":
             self.assertEqual(resolve("&#%d;" % ord(c)), c)
         self.assertEqual(resolve("&#1114112;"), u"")
+
+    def test_peek (self):
+        # Test peek() parser function
+        data = '<a href="test.html">name</a>'
+        class NamePeeker (object):
+            def start_element (self_handler, tag, attrs):
+                # use self reference of TestParser instance
+                self.assertRaises(TypeError, self.htmlparser.peek, -1)
+                self.assertEqual(self.htmlparser.peek(0), "")
+                self.assertEqual(self.htmlparser.peek(4), "name")
+        self.htmlparser.handler = NamePeeker()
+        self.htmlparser.feed(data)
