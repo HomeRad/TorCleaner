@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2004 Nominum, Inc.
+# Copyright (C) 2004-2007, 2009, 2010 Nominum, Inc.
 #
 # Permission to use, copy, modify, and distribute this software and its
 # documentation for any purpose with or without fee is hereby granted,
@@ -110,12 +110,12 @@ class SIGBase(wc.dns.rdata.Rdata):
         signer = signer.choose_relativity(origin, relativize)
         chunks = []
         while 1:
-            t = tok.get()
-            if t[0] == wc.dns.tokenizer.EOL or t[0] == wc.dns.tokenizer.EOF:
+            t = tok.get().unescape()
+            if t.is_eol_or_eof():
                 break
-            if t[0] != wc.dns.tokenizer.IDENTIFIER:
+            if not t.is_identifier():
                 raise wc.dns.exception.DNSSyntaxError
-            chunks.append(t[1])
+            chunks.append(t.value)
         b64 = ''.join(chunks)
         signature = b64.decode('base64_codec')
         return cls(rdclass, rdtype, type_covered, algorithm, labels,
