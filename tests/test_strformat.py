@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2004-2009 Bastian Kleineidam
+# Copyright (C) 2004-2010 Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,9 +29,7 @@ class TestStrFormat (unittest.TestCase):
     """
 
     def test_unquote (self):
-        """
-        Test quote stripping.
-        """
+        # Test quote stripping.
         u = wc.strformat.unquote
         self.assertEqual(u(""), "")
         self.assertEqual(u(None), None)
@@ -54,9 +52,7 @@ class TestStrFormat (unittest.TestCase):
         self.assertEqual(u("\"a'", matching=True), "\"a'")
 
     def test_wrap (self):
-        """
-        Test line wrapping.
-        """
+        # Test line wrapping.
         wrap = wc.strformat.wrap
         s = "11%(sep)s22%(sep)s33%(sep)s44%(sep)s55" % {'sep': os.linesep}
         # testing width <= 0
@@ -78,18 +74,14 @@ class TestStrFormat (unittest.TestCase):
 
 
     def test_remove_markup (self):
-        """
-        Test markup removing.
-        """
+        # Test markup removing.
         self.assertEqual(wc.strformat.remove_markup("<a>"), "")
         self.assertEqual(wc.strformat.remove_markup("<>"), "")
         self.assertEqual(wc.strformat.remove_markup("<<>"), "")
         self.assertEqual(wc.strformat.remove_markup("a < b"), "a < b")
 
     def test_strsize (self):
-        """
-        Test byte size strings.
-        """
+        # Test byte size strings.
         self.assertRaises(ValueError, wc.strformat.strsize, -1)
         self.assertEqual(wc.strformat.strsize(0), "0B")
         self.assertEqual(wc.strformat.strsize(1), "1B")
