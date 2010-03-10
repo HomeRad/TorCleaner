@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2004-2009 Bastian Kleineidam
+# Copyright (C) 2004-2010 Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -240,6 +240,48 @@ class TestCaselessSortedDict (unittest.TestCase):
             if prev is not None:
                 self.assertTrue(key > prev)
             prev = key
+
+
+class TestLFUCache (unittest.TestCase):
+    """
+    Test LFU cache implementation.
+    """
+
+    def setUp (self):
+        """
+        Set up self.d as empty LFU cache with default size of 1000.
+        """
+        self.size = 1000
+        self.d = wc.containers.LFUCache(self.size)
+
+    def test_num_uses (self):
+        self.assertTrue(not self.d)
+        self.d["a"] = 1
+        self.assertTrue("a" in self.d)
+        self.assertEqual(self.d.uses("a"), 0)
+        a = self.d["a"]
+        self.assertEqual(self.d.uses("a"), 1)
+
+    def test_values (self):
+        self.assertTrue(not self.d)
+        self.d["a"] = 1
+        self.d["b"] = 2
+        self.assertEqual(set([1, 2]), set(self.d.values()))
+        self.assertEqual(set([1, 2]), set(self.d.itervalues()))
+
+    def test_popitem (self):
+        self.assertTrue(not self.d)
+        self.d["a"] = 42
+        self.assertEqual(self.d.popitem(), ("a", 42))
+        self.assertTrue(not self.d)
+        self.assertRaises(KeyError, self.d.popitem)
+
+    def test_shrink (self):
+        self.assertTrue(not self.d)
+        for i in range(self.size):
+            self.d[i] = i
+        self.d[1001] = 1001
+        self.assertTrue(len(self.d) <= self.size)
 
 
 class TestEnum (unittest.TestCase):
