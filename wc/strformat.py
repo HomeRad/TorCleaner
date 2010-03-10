@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2000-2009 Bastian Kleineidam
+# Copyright (C) 2000-2010 Bastian Kleineidam
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,9 +11,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # Some functions have been taken and adjusted from the quodlibet
 # source. Quodlibet is (C) 2004-2005 Joe Wreschnig, Michael Urman
@@ -31,9 +31,10 @@ import math
 import time
 import urlparse
 import pydoc
+from . import i18n
 
 
-def unicode_safe (s, encoding="iso-8859-1"):
+def unicode_safe (s):
     """Get unicode string without raising encoding errors. Unknown
     characters of the given encoding will be ignored.
 
@@ -47,7 +48,7 @@ def unicode_safe (s, encoding="iso-8859-1"):
     if isinstance(s, unicode):
         # s is already unicode, nothing to do
         return s
-    return unicode(str(s), encoding, "ignore")
+    return unicode(str(s), i18n.default_encoding, "ignore")
 
 
 def ascii_safe (s):
@@ -181,7 +182,7 @@ def strsize (b):
     if b < 1024:
         return u"%dB" % b
     if b < 1024 * 10:
-        return u"%dKB" % int(b / 1024)
+        return u"%dKB" % (b // 1024)
     if b < 1024 * 1024:
         return u"%.2fKB" % (float(b) / 1024)
     if b < 1024 * 1024 * 10:
@@ -264,7 +265,7 @@ def strtimezone ():
         zone = time.altzone
     else:
         zone = time.timezone
-    return "%+04d" % int(-zone/3600)
+    return "%+04d" % (-zone//3600)
 
 
 _sub_ws = re.compile(r"\s+").sub
