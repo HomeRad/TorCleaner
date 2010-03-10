@@ -21,7 +21,7 @@ import os
 import socket
 from nose import SkipTest
 from contextlib import contextmanager
-from bk import LinkCheckerInterrupt
+from wc import WebCleanerInterrupt
 
 
 class memoized (object):
@@ -185,10 +185,10 @@ need_pyqt = _need_func(has_pyqt, "PyQT")
 
 @contextmanager
 def _limit_time (seconds):
-    """Raises LinkCheckerInterrupt if given number of seconds have passed."""
+    """Raises WebCleanerInterrupt if given number of seconds have passed."""
     if os.name == 'posix':
         def signal_handler(signum, frame):
-            raise LinkCheckerInterrupt("timed out")
+            raise WebCleanerInterrupt("timed out")
         old_handler = signal.getsignal(signal.SIGALRM)
         signal.signal(signal.SIGALRM, signal_handler)
         signal.alarm(seconds)
@@ -206,7 +206,7 @@ def limit_time (seconds, skip=False):
             try:
                 with _limit_time(seconds):
                     return func(*args, **kwargs)
-            except LinkCheckerInterrupt, msg:
+            except WebCleanerInterrupt, msg:
                 if skip:
                     skipmsg = "time limit of %d seconds exceeded" % seconds
                     raise SkipTest(skipmsg)

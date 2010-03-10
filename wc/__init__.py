@@ -28,6 +28,12 @@ import logging.config
 import _webcleaner2_configdata as configdata
 from . import log, i18n, fileutil
 
+
+class WebCleanerInterrupt (StandardError):
+    """Used for testing."""
+    pass
+
+
 def abspath (path):
     """
     If path is not absolute, make it absolute with sys.prefix.
