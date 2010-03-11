@@ -42,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'WebCleaner'
-copyright = u'2009, Bastian Kleineidam'
+copyright = u'2010, Bastian Kleineidam'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -64,7 +64,7 @@ release = version
 #today_fmt = '%B %d, %Y'
 
 # List of documents that shouldn't be included in the build.
-#unused_docs = None
+#unused_docs = []
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
@@ -87,14 +87,25 @@ add_module_names = False
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'friendly'
 
+# A list of ignored prefixes for module index sorting.
+#modindex_common_prefix = []
+
 
 # Options for HTML output
 # -----------------------
+# The theme to use for HTML and HTML Help pages.  Major themes that come with
+# Sphinx are currently 'default' and 'sphinxdoc'.
+html_theme = 'sphinxdoc'
 
-# The style sheet to use for HTML and HTML Help pages. A file of that name
-# must exist either in Sphinx' static/ path, or in one of the custom paths
-# given in html_static_path.
-html_style = 'sphinxdoc.css'
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+html_theme_options = {
+    "nosidebar": True,
+}
+
+# Add any paths that contain custom themes here, relative to this directory.
+#html_theme_path = []
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -105,7 +116,7 @@ html_title = project
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = None
+#html_logo = None
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -142,7 +153,7 @@ html_use_index = False
 #html_split_index = False
 
 # If true, the reST sources are included in the HTML build as _sources/<name>.
-html_copy_source = False
+html_show_sourcelink = False
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the

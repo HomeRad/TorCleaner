@@ -1,6 +1,9 @@
 # Makefile for Sphinx documentation
 #
 
+# homepage directory
+HTMLDIR:=/home/calvin/public_html/webcleaner.sf.net
+
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
@@ -23,28 +26,28 @@ build-htmlhelp:	clean htmlhelp helpfiles
 html:
 	mkdir -p build/html build/doctrees
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) build/html
-	rm build/html/_static/Makefile
-	rm build/html/_static/default.css
-	rm build/html/_static/plus.png
-	rm build/html/_static/minus.png
-	rm build/html/_static/rightsidebar.css
-	rm build/html/_static/stickysidebar.css
-	rm build/html/_static/traditional.css
+#-rm build/html/_static/Makefile
+#-rm build/html/_static/default.css
+#-rm build/html/_static/plus.png
+#-rm build/html/_static/minus.png
+#-rm build/html/_static/rightsidebar.css
+#-rm build/html/_static/stickysidebar.css
+#-rm build/html/_static/traditional.css
 	@echo
 	@echo "Build finished. The HTML pages are in build/html."
 
 htmlhelp:
 	mkdir -p build/htmlhelp build/doctrees
 	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) build/htmlhelp
-	rm build/htmlhelp/WebCleaner*
-	rm build/htmlhelp/_static/Makefile
-	rm build/htmlhelp/_static/default.css
-	rm build/htmlhelp/_static/*.js
-	rm build/htmlhelp/_static/plus.png
-	rm build/htmlhelp/_static/minus.png
-	rm build/htmlhelp/_static/rightsidebar.css
-	rm build/htmlhelp/_static/stickysidebar.css
-	rm build/htmlhelp/_static/traditional.css
+	-rm build/htmlhelp/WebCleaner*
+	-rm build/htmlhelp/_static/Makefile
+	-rm build/htmlhelp/_static/default.css
+	-rm build/htmlhelp/_static/*.js
+	-rm build/htmlhelp/_static/plus.png
+	-rm build/htmlhelp/_static/minus.png
+	-rm build/htmlhelp/_static/rightsidebar.css
+	-rm build/htmlhelp/_static/stickysidebar.css
+	-rm build/htmlhelp/_static/traditional.css
 	@echo
 	@echo "Build finished. The HTML pages are in build/htmlhelp."
 
@@ -110,14 +113,12 @@ helpfiles: $(HELPFILES)
 po4a:
 	po4a --localized-charset=UTF-8 po4a.conf
 
-api:
-	epydoc --html -o api --name "LinkChecker source documentation" --url ../index.html ../linkcheck/
-
-homepage: homepage-zapper build-html compress
+homepage: build-html compress
 	cp -r build/html/* $(HOME)/public_html/webcleaner.sf.net/htdocs
+	$(MAKE) -C $(HOME)/public_html/webcleaner.sf.net/ chmod
 
 .PHONY: homepage-zapper
-homepage-zapper: md5sums
+homepage-zapper:
 	cp config/*.zap config/*.dtd config/filter-md5sums.txt config/extern-md5sums.txt $(HTMLDIR)/htdocs/filter/
 	@for d in ads aggressive violence; do \
 	  cp config/blacklists/$$d/*.gz $(HTMLDIR)/htdocs/filter/blacklists/$$d/; \

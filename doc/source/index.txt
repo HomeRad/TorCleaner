@@ -1,6 +1,13 @@
 ======================
 A filtering HTTP proxy
 ======================
+.. image:: http://sourceforge.net/images/project-support.jpg
+   :align: right
+   :target: http://sourceforge.net/donate/index.php?group_id=7692
+   :alt: Support This Project
+   :width: 88
+   :height: 32
+
 The latest version of this document is available at
 http://webcleaner.sourceforge.net/.
 
@@ -43,7 +50,7 @@ Downloads are available for Windows and Unix systems from the
 .. _GPL:
    http://www.gnu.org/licenses/licenses.html#TOCGPL
 .. _WebCleaner download section:
-   http://sourceforge.net/project/showfiles.php?group_id=7692
+   http://sourceforge.net/projects/webcleaner/files/
 
 Software requirements and installation instructions are located at the
 `install documentation`_. To see what has changed between releases
@@ -51,13 +58,13 @@ Software requirements and installation instructions are located at the
 
 .. _install documentation: install.html
 .. _ChangeLog:
-   http://webcleaner.svn.sourceforge.net/viewvc/webcleaner/trunk/webcleaner2/ChangeLog?view=markup
+   http://webcleaner.git.sourceforge.net/git/gitweb.cgi?p=webcleaner/webcleaner;a=blob_plain;f=ChangeLog;hb=HEAD
 
 I also suggest using the `SwitchProxy`_ Mozilla/Firefox extension.
 It allows easy switching between different proxy settings.
 
 .. _SwitchProxy:
-   https://addons.mozilla.org/extensions/moreinfo.php?id=125
+   https://addons.mozilla.org/de/firefox/addon/125?id=125
 
 
 Screenshots
@@ -175,10 +182,3 @@ mailing list at the `subscription page`_ or read the `list archives`_.
    :alt: SourceForge Logo
    :width: 88
    :height: 31
-
-.. image:: http://sourceforge.net/images/project-support.jpg
-   :align: right
-   :target: http://sourceforge.net/donate/index.php?group_id=7692
-   :alt: Support This Project
-   :width: 88
-   :height: 32

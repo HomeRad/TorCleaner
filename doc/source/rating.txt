@@ -1,7 +1,3 @@
-.. meta::
-  :navigation.name: Ratings
-  :navigation.visible: 0
-
 ====================================
 Specification of content rating data
 ====================================
