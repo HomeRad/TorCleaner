@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Rule rewriting html tags.
 """
@@ -54,7 +40,7 @@ partnames = {
 NO_CLOSE_TAGS = ('img', 'image', 'meta', 'br', 'link', 'area')
 
 
-def part_num (s):
+def part_num(s):
     """
     Translation: tag name ==> tag number.
     """
@@ -64,20 +50,20 @@ def part_num (s):
     return None
 
 
-def num_part (i):
+def num_part(i):
     """
     Translation: tag number ==> tag name.
     """
     return partvalnames[i]
 
 
-class HtmlrewriteRule (UrlRule.UrlRule):
+class HtmlrewriteRule(UrlRule.UrlRule):
     """
     A rewrite rule applies to a specific tag, optional with attribute
     constraints (stored in self.attrs) or a regular expression to
     match the enclosed content (self.contentmatch).
     """
-    def __init__ (self, sid=None, titles=None, descriptions=None,
+    def __init__(self, sid=None, titles=None, descriptions=None,
                   disable=0, tag=u"a", attrs=None, contentmatch=u"",
                   part=COMPLETE, replacement=u""):
         """
@@ -98,7 +84,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         self.contentmatch_ro = None
         self.attrnames.append('tag')
 
-    def fill_attrs (self, attrs, name):
+    def fill_attrs(self, attrs, name):
         """
         Set attribute values.
         """
@@ -110,7 +96,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         elif name == 'replacement' and 'part' in attrs:
             self.part = part_num(attrs['part'])
 
-    def end_data (self, name):
+    def end_data(self, name):
         """
         Store attr, contentmatch or replacement data.
         """
@@ -123,7 +109,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         elif name == 'replacement':
             self.replacement = self._data
 
-    def compile_data (self):
+    def compile_data(self):
         """
         Compile url regular expressions.
         """
@@ -145,7 +131,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
                               "so specifying a contentmatch value is invalid." % \
                               (self.titles['en'], tag))
 
-    def update (self, rule, dryrun=False, log=None):
+    def update(self, rule, dryrun=False, log=None):
         """
         Update rewrite attributes with given rule data.
         """
@@ -154,7 +140,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         attrs = ['attrs', 'part', 'replacement', 'contentmatch']
         return self.update_attrs(attrs, rule, dryrun, log) or chg
 
-    def matches_starttag (self, tag):
+    def matches_starttag(self, tag):
         """See if this rule matches start tag."""
         if tag in NO_CLOSE_TAGS:
             return True
@@ -164,7 +150,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
             COMPLETE,
         ]
 
-    def matches_endtag (self, tag):
+    def matches_endtag(self, tag):
         """See if this rule matches end tags."""
         if tag in NO_CLOSE_TAGS:
             return True
@@ -174,19 +160,19 @@ class HtmlrewriteRule (UrlRule.UrlRule):
             ATTRNAME,
         ]
 
-    def _match_tag_ro (self, tag):
+    def _match_tag_ro(self, tag):
         """
         Return True iff tag name matches this rule.
         """
         return self.tag_ro.search(tag)
 
-    def _match_tag (self, tag):
+    def _match_tag(self, tag):
         """
         Return True iff tag name matches this rule.
         """
         return self.tag == tag
 
-    def match_attrs (self, attrs):
+    def match_attrs(self, attrs):
         """
         Return True iff this rule matches given attributes.
         """
@@ -207,7 +193,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
                 return False
         return True
 
-    def match_complete (self, pos, tagbuf):
+    def match_complete(self, pos, tagbuf):
         """
         We know that the tag (and tag attributes) match. Now match
         the enclosing block, where pos points to the buffer start tag.
@@ -221,7 +207,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         data = tagbuf2data(items, StringIO()).getvalue()
         return self.contentmatch_ro.search(data)
 
-    def filter_tag (self, tag, attrs, starttype):
+    def filter_tag(self, tag, attrs, starttype):
         """Return filtered tag data for given tag and attributes."""
         log.debug(LOG_HTML, "rule %s filter_tag", self.titles['en'])
         log.debug(LOG_HTML, "original tag %r attrs %s", tag, attrs)
@@ -271,7 +257,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         log.debug(LOG_HTML, "filtered tag %s attrs %s", tag, newattrs)
         return [starttype, tag, newattrs]
 
-    def filter_complete (self, i, buf, tag, mo):
+    def filter_complete(self, i, buf, tag, mo):
         """Replace tag data in buf with replacement."""
         log.debug(LOG_HTML, "rule %s filter_complete", self.titles['en'])
         log.debug(LOG_HTML, "original buffer %s", buf)
@@ -291,7 +277,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
             buf.append([ENDTAG, tag])
         log.debug(LOG_HTML, "filtered buffer %s", buf)
 
-    def toxml (self):
+    def toxml(self):
         """
         Rule data as XML for storing.
         """
@@ -317,7 +303,7 @@ class HtmlrewriteRule (UrlRule.UrlRule):
         s += u"\n</%s>" % self.name
         return s
 
-    def __str__ (self):
+    def __str__(self):
         """
         Return rule data as string.
         """

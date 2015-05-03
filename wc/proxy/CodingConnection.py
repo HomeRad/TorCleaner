@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Handle encoding and decoding.
 """
@@ -24,10 +10,10 @@ from . import StatefulConnection
 from ..http.header import WcMessage
 
 
-class CodingConnection (StatefulConnection.StatefulConnection):
+class CodingConnection(StatefulConnection.StatefulConnection):
     """Connection storing a list of decoders and encoders."""
 
-    def reset (self):
+    def reset(self):
         """Reset the connection data and status."""
         super(CodingConnection, self).reset()
         # Handle each of these, left to right
@@ -36,7 +22,7 @@ class CodingConnection (StatefulConnection.StatefulConnection):
         # Chunk trailer store
         self.chunktrailer = StringIO()
 
-    def flush_coders (self, coders, data=""):
+    def flush_coders(self, coders, data=""):
         """Flush given de- or encoders.
 
         @param data: initial data to process (default: empty string)
@@ -52,7 +38,7 @@ class CodingConnection (StatefulConnection.StatefulConnection):
         return data
 
     @decorators.notimplemented
-    def filter_headers (self, headers):
+    def filter_headers(self, headers):
         """Filter HTTP headers.
 
         @param headers: the headers to filter
@@ -62,11 +48,11 @@ class CodingConnection (StatefulConnection.StatefulConnection):
         """
         pass
 
-    def write_trailer (self, data):
+    def write_trailer(self, data):
         """Store data of a chunk trailer."""
         self.chunktrailer.write(data)
 
-    def handle_trailer (self):
+    def handle_trailer(self):
         """Process a completed chunk trailer. This method must be called
         only once."""
         self.chunktrailer.seek(0)

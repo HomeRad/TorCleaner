@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Store configuration data.
 """
@@ -37,7 +23,7 @@ config = None
 # if config is about to be reloaded
 pending_reload = False
 
-def init (confdir=ConfigDir):
+def init(confdir=ConfigDir):
     """Initialize and load the configuration."""
     global config
     config = Configuration(confdir)
@@ -50,7 +36,7 @@ if os.name == 'posix':
 else:
     _signum = signal.NSIG
 @decorators.signal_handler(_signum)
-def sighup_reload_config (signum, frame):
+def sighup_reload_config(signum, frame):
     """Support reload on posix systems.
     Store timer for reloading configuration data."""
     global pending_reload
@@ -60,7 +46,7 @@ def sighup_reload_config (signum, frame):
         timer.make_timer(1, reload_config)
 
 
-def reload_config ():
+def reload_config():
     """Reload configuration."""
     global pending_reload
     config.reset()
@@ -72,12 +58,12 @@ def reload_config ():
     pending_reload = False
 
 
-def proxyconf_file (confdir):
+def proxyconf_file(confdir):
     """Return proxy configuration filename."""
     return os.path.join(confdir, "webcleaner.conf")
 
 
-def filterconf_files (dirname):
+def filterconf_files(dirname):
     """
     Return list of filter configuration filenames.
     """
@@ -124,10 +110,10 @@ rewriting_filter_modules = [
     'XmlRewriter',
 ]
 
-class Configuration (dict):
+class Configuration(dict):
     """Hold all configuration data, inclusive filter rules."""
 
-    def __init__ (self, confdir):
+    def __init__(self, confdir):
         """
         Initialize the options.
         """
@@ -141,7 +127,7 @@ class Configuration (dict):
         self.check_ssl_certificates()
         self.read_filterconf()
 
-    def check_ssl_certificates (self):
+    def check_ssl_certificates(self):
         """Check existance of SSL support and generate certificates if
         needed. This is necessary since SSL support can be installed
         after WebCleaner."""
@@ -150,7 +136,7 @@ class Configuration (dict):
             if not ssl.exist_certificates(self.configdir):
                 ssl.create_certificates(self.configdir)
 
-    def reset (self):
+    def reset(self):
         """Reset to default values."""
         self['configversion'] = '0.10'
         # The bind address specifies on which address the socket should
@@ -199,7 +185,7 @@ class Configuration (dict):
         from ..filter.rules import delete_registered_sids
         delete_registered_sids()
 
-    def read_proxyconf (self):
+    def read_proxyconf(self):
         """Read proxy configuration."""
         from .confparse import WConfigParser
         WConfigParser(self.configfile, self).parse()
@@ -210,7 +196,7 @@ class Configuration (dict):
                 msg = "The %r configuration value must be ASCII." % name
                 raise TypeError(msg)
 
-    def write_proxyconf (self):
+    def write_proxyconf(self):
         """Write proxy configuration."""
         lines = []
         lines.append('<?xml version="1.0" encoding="%s"?>' % ConfigCharset)
@@ -248,7 +234,7 @@ class Configuration (dict):
         content = os.linesep.join(lines)
         fileutil.write_file(self.configfile, content)
 
-    def read_filterconf (self):
+    def read_filterconf(self):
         """Read filter rules."""
         from ..filter.rules import generate_sids
         from ..filter.rules.FolderRule import recalc_up_down
@@ -270,7 +256,7 @@ class Configuration (dict):
         generate_sids(prefix)
         self.check_single_rules()
 
-    def check_single_rules (self):
+    def check_single_rules(self):
         single_rules = ('javascript', 'rating', 'antivirus', 'nocomments')
         enabled = set()
         for folder in self['folderrules']:
@@ -285,7 +271,7 @@ class Configuration (dict):
                     else:
                         enabled.add(rule.name)
 
-    def merge_folder (self, folder, dryrun=False, log=None):
+    def merge_folder(self, folder, dryrun=False, log=None):
         """Merge given folder data into config
 
         @return: True if something has changed
@@ -305,12 +291,12 @@ class Configuration (dict):
                 self['folderrules'].append(folder)
         return chg
 
-    def write_filterconf (self):
+    def write_filterconf(self):
         """Write filter rules."""
         for folder in self['folderrules']:
             folder.write()
 
-    def init_filter_modules (self):
+    def init_filter_modules(self):
         """Go through list of rules and store them in the filter
         objects. This will also compile regular expression strings
         to regular expression objects.
@@ -349,14 +335,14 @@ class Configuration (dict):
             # see Filter.__cmp__ on how sorting is done
             filters.sort()
 
-    def nofilter (self, url):
+    def nofilter(self, url):
         """Decide whether to filter this url or not.
 
         @return: True if the request must not be filtered, else False
         """
         return match_url(url, self['nofilterhosts'])
 
-    def allowed (self, host):
+    def allowed(self, host):
         """Return True if the host is allowed for proxying, else False."""
         hostset = self['allowedhostset']
         return iputil.host_in_set(host, hostset[0], hostset[1])

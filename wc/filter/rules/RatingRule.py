@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2004-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter according to rating rules.
 """
@@ -26,7 +12,7 @@ from . import UrlRule
 MISSING = _("Unknown page")
 
 
-class RatingRule (UrlRule.UrlRule):
+class RatingRule(UrlRule.UrlRule):
     """
     Holds a rating to match against when checking for allowance of
     the rating system.
@@ -35,7 +21,7 @@ class RatingRule (UrlRule.UrlRule):
     external rating data from HTTP headers or HTML <meta> tags.
     """
 
-    def __init__ (self, sid=None, titles=None, descriptions=None, disable=0,
+    def __init__(self, sid=None, titles=None, descriptions=None, disable=0,
                   matchurls=None, nomatchurls=None, use_extern=0):
         """Initialize rating data."""
         super(RatingRule, self).__init__(sid=sid, titles=titles,
@@ -47,13 +33,13 @@ class RatingRule (UrlRule.UrlRule):
         self.attrnames.append('use_extern')
         self.intattrs.append('use_extern')
 
-    def fill_attrs (self, attrs, name):
+    def fill_attrs(self, attrs, name):
         """Init rating and url attrs."""
         super(RatingRule, self).fill_attrs(attrs, name)
         if name == 'limit':
             self._name = attrs.get('name')
 
-    def end_data (self, name):
+    def end_data(self, name):
         """Store category or url data."""
         super(RatingRule, self).end_data(name)
         if name == 'limit':
@@ -61,12 +47,12 @@ class RatingRule (UrlRule.UrlRule):
         elif name == 'url':
             self.url = self._data
 
-    def compile_data (self):
+    def compile_data(self):
         """Compile parsed rule values."""
         super(RatingRule, self).compile_data()
         self.compile_values()
 
-    def compile_values (self):
+    def compile_values(self):
         """Fill missing rating values."""
         ratingservice.rating_compile(self.rating)
         # helper dict for web gui
@@ -79,7 +65,7 @@ class RatingRule (UrlRule.UrlRule):
                     value = str(value)
                     self.values[name][value] = value == self.rating[name]
 
-    def toxml (self):
+    def toxml(self):
         """Rule data as XML for storing."""
         s = u'%s\n use_extern="%d">' % (super(RatingRule, self).toxml(),
                                         self.use_extern)

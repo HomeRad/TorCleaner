@@ -1,20 +1,6 @@
 #!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Setup file for the distuils module.
 """
@@ -44,12 +30,12 @@ from distutils.util import convert_path
 # installed file list
 INSTALL_LIST = "install_log.txt"
 
-def normpath (path):
+def normpath(path):
     """Norm a path name."""
     return os.path.normpath(path)
 
 
-def cnormpath (path):
+def cnormpath(path):
     """Norm a path name to platform specific notation."""
     path = normpath(path)
     if os.name == 'nt':
@@ -87,9 +73,9 @@ def find_packages(where='.', exclude=()):
     return out
 
 
-class MyInstall (install, object):
+class MyInstall(install, object):
 
-    def run (self):
+    def run(self):
         global INSTALL_LIST
         super(MyInstall, self).run()
         # we have to write a configuration file because we need the
@@ -123,7 +109,7 @@ class MyInstall (install, object):
         finally:
             fd.close()
 
-    def get_outputs (self):
+    def get_outputs(self):
         """
         Add the generated config file from distribution.create_conf_file()
         to the list of outputs.
@@ -133,10 +119,10 @@ class MyInstall (install, object):
         return outs
 
 
-class MyInstallData (install_data, object):
+class MyInstallData(install_data, object):
     """My own data installer to handle permissions."""
 
-    def run (self):
+    def run(self):
         """Install .mo files and adjust permissions on POSIX systems."""
         # add .mo files to data files
         for (_src, _dst) in list_message_files(self.distribution.get_name()):
@@ -157,7 +143,7 @@ class MyInstallData (install_data, object):
                 os.chmod(path, mode)
 
 
-class MyUninstall (Command):
+class MyUninstall(Command):
     description = "Remove all installed files"
 
     user_options = []
@@ -209,12 +195,12 @@ class MyUninstall (Command):
                         self.warn("Could not remove directory: %s" % details)
 
 
-class MyDistribution (distutils.dist.Distribution, object):
+class MyDistribution(distutils.dist.Distribution, object):
     """
     Custom distribution class generating config file.
     """
 
-    def run_commands (self):
+    def run_commands(self):
         """
         Generate config file and run commands.
         """
@@ -227,13 +213,13 @@ class MyDistribution (distutils.dist.Distribution, object):
         self.create_conf_file(data)
         super(MyDistribution, self).run_commands()
 
-    def get_conf_filename (self, directory):
+    def get_conf_filename(self, directory):
         """
         Get name for config file.
         """
         return os.path.join(directory, "_%s2_configdata.py"%self.get_name())
 
-    def create_conf_file (self, data, directory=None):
+    def create_conf_file(self, data, directory=None):
         """
         Create local config file from given data (list of lines) in
         the directory (or current directory if not given).
@@ -262,7 +248,7 @@ class MyDistribution (distutils.dist.Distribution, object):
                      "creating %s" % filename, self.verbose>=1, self.dry_run)
 
 
-def cc_run (args):
+def cc_run(args):
     """Run the C compiler with a simple main program.
 
     @return: successful exit flag
@@ -277,7 +263,7 @@ def cc_run (args):
     return False
 
 
-def cc_supports_option (cc, option):
+def cc_supports_option(cc, option):
     """Check if the given C compiler supports the given option.
 
     @return: True if the compiler supports the option, else False
@@ -286,22 +272,22 @@ def cc_supports_option (cc, option):
     return cc_run([cc[0], "-E", option, "-"])
 
 
-def cc_remove_option (compiler, option):
+def cc_remove_option(compiler, option):
     for optlist in (compiler.compiler, compiler.compiler_so):
         if option in optlist:
             optlist.remove(option)
 
 
-def cc_has_library (cc, lib):
+def cc_has_library(cc, lib):
     return cc_run([cc[0], "-x", "c", "-l", lib, "-"])
 
 
-class MyBuildExt (build_ext, object):
+class MyBuildExt(build_ext, object):
     """
     Custom build extension command.
     """
 
-    def build_extensions (self):
+    def build_extensions(self):
         """
         Add -std=gnu99 to build options if supported.
         And compress extension libraries.
@@ -332,7 +318,7 @@ class MyBuildExt (build_ext, object):
             self.build_extension(ext)
         self.compress_extensions()
 
-    def compress_extensions (self):
+    def compress_extensions(self):
         """
         Run UPX compression over built extension libraries.
         """
@@ -347,7 +333,7 @@ class MyBuildExt (build_ext, object):
             compress_library(upx, filename)
 
 
-def compress_library (upx, filename):
+def compress_library(upx, filename):
     """
     Compresses a dynamic library file with upx (currently only .dll
     files are supported).
@@ -356,7 +342,7 @@ def compress_library (upx, filename):
     os.system('%s -q --best "%s"' % (upx, filename))
 
 
-def list_message_files (package, suffix=".po"):
+def list_message_files(package, suffix=".po"):
     """
     Return list of all found message files and their installation paths.
     """
@@ -370,7 +356,7 @@ def list_message_files (package, suffix=".po"):
     return _list
 
 
-def check_manifest ():
+def check_manifest():
     """
     Snatched from roundup.sourceforge.net.
     Check that the files listed in the MANIFEST are present when the
@@ -393,12 +379,12 @@ def check_manifest ():
         print 'Missing:', '\nMissing: '.join(err)
 
 
-class MyBuild (build, object):
+class MyBuild(build, object):
     """
     Custom build command.
     """
 
-    def build_message_files (self):
+    def build_message_files(self):
         """
         For each po/*.po, build .mo file in target locale directory.
         """
@@ -413,18 +399,18 @@ class MyBuild (build, object):
                 from wc import msgfmt
                 msgfmt.make(_src, _build_dst)
 
-    def run (self):
+    def run(self):
         check_manifest()
         self.build_message_files()
         build.run(self)
 
 
-class MyClean (clean, object):
+class MyClean(clean, object):
     """
     Custom clean command.
     """
 
-    def run (self):
+    def run(self):
         if self.all:
             # remove share directory
             directory = os.path.join("build", "share")
@@ -436,12 +422,12 @@ class MyClean (clean, object):
         clean.run(self)
 
 
-class MySdist (sdist, object):
+class MySdist(sdist, object):
     """
     Custom sdist command.
     """
 
-    def get_file_list (self):
+    def get_file_list(self):
         super(MySdist, self).get_file_list()
         self.filelist.append("MANIFEST")
 

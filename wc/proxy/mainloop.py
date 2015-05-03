@@ -32,7 +32,7 @@ from .. import log, LOG_PROXY, configuration, HasSsl, AppName
 from . import timer, HttpClient, Listener, Dispatcher
 
 
-def proxy_poll (timeout=None):
+def proxy_poll(timeout=None):
     """
     Look for sockets with pending data and call the appropriate
     connection handlers.
@@ -84,7 +84,7 @@ def proxy_poll (timeout=None):
     return handlerCount
 
 
-def mainloop (handle=None):
+def mainloop(handle=None):
     """
     Proxy main loop, handles requests forever.
     """
@@ -97,12 +97,12 @@ def mainloop (handle=None):
         port = configuration.config['sslport']
         sslctx = ssl.get_serverctx(configuration.config.configdir)
         Listener.Listener(host, port, SslClient.SslClient, sslctx=sslctx)
-    class Abort (StandardError):
+    class Abort(StandardError):
         pass
     try:
         if handle is not None:
             import win32event
-            def abort_check ():
+            def abort_check():
                 # win32 handle signaling stop
                 rc = win32event.WaitForSingleObject(handle, 0)
                 if rc == win32event.WAIT_OBJECT_0:

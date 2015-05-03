@@ -19,7 +19,7 @@ import unittest
 import wc.dns.exception
 import wc.dns.tokenizer
 
-class TestTokenizer (unittest.TestCase):
+class TestTokenizer(unittest.TestCase):
 
     def testQuotedString1(self):
         tok = wc.dns.tokenizer.Tokenizer(r'"foo"')

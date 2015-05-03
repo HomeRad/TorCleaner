@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter images by size.
 """
@@ -21,12 +7,12 @@ from . import UrlRule
 from wc.XmlUtils import xmlquoteattr
 
 
-class ImageRule (UrlRule.UrlRule):
+class ImageRule(UrlRule.UrlRule):
     """
     If enabled, tells the Image filter to block certain images.
     """
 
-    def __init__ (self, sid=None, titles=None, descriptions=None,
+    def __init__(self, sid=None, titles=None, descriptions=None,
                   disable=0, width=0, height=0, formats=None, url="",
                   matchurls=None, nomatchurls=None):
         """
@@ -46,7 +32,7 @@ class ImageRule (UrlRule.UrlRule):
         self.url = url
         self.attrnames.extend(('formats', 'url', 'width', 'height'))
 
-    def toxml (self):
+    def toxml(self):
         """
         Rule data as XML for storing.
         """

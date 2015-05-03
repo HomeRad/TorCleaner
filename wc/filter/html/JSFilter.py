@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter JavaScript.
 """
@@ -41,12 +27,12 @@ js_event_attrs = (
     'onselectstart',
 )
 
-class JSFilter (wc.js.JSListener.JSListener):
+class JSFilter(wc.js.JSListener.JSListener):
     """
     Defines callback handlers for filtering Javascript code.
     """
 
-    def __init__ (self, url, localhost, opts):
+    def __init__(self, url, localhost, opts):
         """
         Initialize javascript engine and variables.
         """
@@ -72,13 +58,13 @@ class JSFilter (wc.js.JSListener.JSListener):
             self.js_output = 0
             self.js_popup = 0
 
-    def _str__ (self):
+    def _str__(self):
         """
         Info string with class name and recursion level.
         """
         return "%s[%d]" % (self.__class__.__name__, self.level)
 
-    def js_process_data (self, data):
+    def js_process_data(self, data):
         """
         Process data produced by document.write() JavaScript.
         """
@@ -87,21 +73,21 @@ class JSFilter (wc.js.JSListener.JSListener):
         # parse recursively
         self.js_htmlparser.feed(data)
 
-    def js_process_popup (self):
+    def js_process_popup(self):
         """
         Process javascript popup.
         """
         log.debug(LOG_JS, "%s js_process_popup", self)
         self.js_popup += 1
 
-    def js_process_error (self, msg):
+    def js_process_error(self, msg):
         """
         Process javascript syntax error.
         """
         log.debug(LOG_JS, "JS error at %s", self.url)
         log.debug(LOG_JS, msg.rstrip())
 
-    def jsPopup (self, attrs, name):
+    def jsPopup(self, attrs, name):
         """
         Check if attrs[name] javascript opens a popup window.
         """
@@ -119,13 +105,13 @@ class JSFilter (wc.js.JSListener.JSListener):
         res, self.js_popup = self.js_popup, 0
         return res
 
-    def new_instance (self, **opts):
+    def new_instance(self, **opts):
         """
         Generate new JSFilter instance.
         """
         return JSFilter(self.url, self.localhost, opts)
 
-    def jsScript (self, script, ver, item):
+    def jsScript(self, script, ver, item):
         """
         Execute script with javascript a specific version.
 
@@ -156,7 +142,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         # wait for recursive filter to finish
         self.js_end_script(item)
 
-    def js_end_script (self, item):
+    def js_end_script(self, item):
         """
         A </script> was encountered.
         """
@@ -203,13 +189,13 @@ class JSFilter (wc.js.JSListener.JSListener):
         self.htmlparser.debugbuf(cat=LOG_JS)
 
     @decorators.notimplemented
-    def filter_end_element (self, tag):
+    def filter_end_element(self, tag):
         """
         Filters an end tag, return True if tag was filtered, else False.
         """
         pass
 
-    def js_end_element (self, item):
+    def js_end_element(self, item):
         """
         Parse generated html for scripts.
         """
@@ -267,7 +253,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         # execute script
         self.jsScript(script, ver, item)
 
-    def js_start_element (self, tag, attrs, starttype):
+    def js_start_element(self, tag, attrs, starttype):
         """
         Check popups for onmouseout and onmouseover.
         Inline extern javascript sources.
@@ -304,7 +290,7 @@ class JSFilter (wc.js.JSListener.JSListener):
                     return
         self.htmlparser.tagbuf.append([starttype, tag, attrs])
 
-    def jsForm (self, name, action, target):
+    def jsForm(self, name, action, target):
         """
         When hitting a named form, add it to the JS environment.
         """
@@ -317,7 +303,7 @@ class JSFilter (wc.js.JSListener.JSListener):
         target = target.encode(self.htmlparser.encoding, "ignore")
         self.js_env.addForm(name, action, target)
 
-    def jsScriptSrc (self, url, language):
+    def jsScriptSrc(self, url, language):
         """
         Start a background download for <script src=""> tags.
         After that, self.js_client points to the proxy client object.
@@ -347,7 +333,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             mime_types=["application/x-javascript", "text/javascript"],
             )
 
-    def jsScriptData (self, data, url, ver):
+    def jsScriptData(self, data, url, ver):
         """
         Callback for loading <script src=""> data in the background
         If downloading is finished, data is None.
@@ -385,7 +371,7 @@ class JSFilter (wc.js.JSListener.JSListener):
             log.debug(LOG_JS, "JS read %d <= %s", len(data), url)
             self.js_script += data.decode(self.htmlparser.encoding, "ignore")
 
-    def finish (self):
+    def finish(self):
         """
         Stop all background downloads immediately.
         """

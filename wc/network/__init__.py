@@ -9,7 +9,7 @@ from _network import ifreq_size
 from .. import log, LOG_DNS
 
 
-class IfConfig (object):
+class IfConfig(object):
     """Access to socket interfaces"""
 
     SIOCGIFNAME = 0x8910
@@ -36,22 +36,22 @@ class IfConfig (object):
     IFF_PORTSEL = 0x2000        # Can set media type.
     IFF_AUTOMEDIA = 0x4000      # Auto media select active.
 
-    def __init__ (self):
+    def __init__(self):
         # create a socket so we have a handle to query
         self.sockfd = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         # Note that sizeof(struct ifreq) is not always 32
         # (eg. on *BSD, x86_64 Linux) Thus the function call.
         self.ifr_size = ifreq_size()
 
-    def _ioctl (self, func, args):
+    def _ioctl(self, func, args):
         import fcntl
         return fcntl.ioctl(self.sockfd.fileno(), func, args)
 
-    def _getifreq (self, ifname):
+    def _getifreq(self, ifname):
         """Return ifreq buffer for given interface name."""
         return struct.pack("%ds" % self.ifr_size, ifname)
 
-    def _getaddr (self, ifname, func):
+    def _getaddr(self, ifname, func):
         try:
             result = self._ioctl(func, self._getifreq(ifname))
         except IOError, msg:
@@ -60,7 +60,7 @@ class IfConfig (object):
             return None
         return socket.inet_ntoa(result[20:24])
 
-    def getInterfaceList (self):
+    def getInterfaceList(self):
         """Get all interface names in a list."""
         # initial 8kB buffer to hold interface data
         bufsize = 8192
@@ -92,7 +92,7 @@ class IfConfig (object):
             i += self.ifr_size
         return iflist
 
-    def getFlags (self, ifname):
+    def getFlags(self, ifname):
         """Get the flags for an interface"""
         try:
             result = self._ioctl(self.SIOCGIFFLAGS, self._getifreq(ifname))
@@ -105,35 +105,35 @@ class IfConfig (object):
         # return "UP" bit
         return flags
 
-    def getAddr (self, ifname):
+    def getAddr(self, ifname):
         """Get the inet addr for an interface.
         @param ifname: interface name
         @type ifname: string
         """
         return self._getaddr(ifname, self.SIOCGIFADDR)
 
-    def getMask (self, ifname):
+    def getMask(self, ifname):
         """Get the netmask for an interface.
         @param ifname: interface name
         @type ifname: string
         """
         return self._getaddr(ifname, self.SIOCGIFNETMASK)
 
-    def getBroadcast (self, ifname):
+    def getBroadcast(self, ifname):
         """Get the broadcast addr for an interface.
         @param ifname: interface name
         @type ifname: string
         """
         return self._getaddr(ifname, self.SIOCGIFBRDADDR)
 
-    def isUp (self, ifname):
+    def isUp(self, ifname):
         """Check whether interface is UP.
         @param ifname: interface name
         @type ifname: string
         """
         return (self.getFlags(ifname) & self.IFF_UP) != 0
 
-    def isLoopback (self, ifname):
+    def isLoopback(self, ifname):
         """Check whether interface is a loopback device.
         @param ifname: interface name
         @type ifname: string

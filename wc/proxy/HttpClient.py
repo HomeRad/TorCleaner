@@ -48,7 +48,7 @@ if HasCrypto:
 
 hostattr = re.compile(r"^(?i)([-a-z0-9\.]+)\.wc-([-a-z0-9]+)$")
 
-class HttpClient (CodingConnection.CodingConnection):
+class HttpClient(CodingConnection.CodingConnection):
     """States:
      - request (read first line)
      - headers (read HTTP headers)
@@ -58,7 +58,7 @@ class HttpClient (CodingConnection.CodingConnection):
      - closed  (this connection is closed)
     """
 
-    def __init__ (self, sock, addr):
+    def __init__(self, sock, addr):
         """Initialize connection data, test if client connection is allowed.
         """
         super(HttpClient, self).__init__('request', sock=sock)
@@ -72,7 +72,7 @@ class HttpClient (CodingConnection.CodingConnection):
             log.warn(LOG_PROXY, "host %s access denied", host)
             self.close()
 
-    def reset (self):
+    def reset(self):
         """Reset connection state."""
         super(HttpClient, self).reset()
         log.debug(LOG_PROXY, '%s reset', self)
@@ -89,7 +89,7 @@ class HttpClient (CodingConnection.CodingConnection):
         self.url = ''
         self.needs_redirect = False
 
-    def error (self, status, msg, txt='', auth_challenges=None):
+    def error(self, status, msg, txt='', auth_challenges=None):
         """Display error page."""
         self.state = 'done'
         log.debug(LOG_PROXY, '%s error %r (%d)', self, msg, status)
@@ -107,7 +107,7 @@ class HttpClient (CodingConnection.CodingConnection):
                 localcontext={'error': err,}, status=status, msg=msg,
                 auth_challenges=auth_challenges).send()
 
-    def __repr__ (self):
+    def __repr__(self):
         """Object representation."""
         extra = ""
         if hasattr(self, "persistent") and self.persistent:
@@ -127,7 +127,7 @@ class HttpClient (CodingConnection.CodingConnection):
             extra += " (%s)" % self.socket.state_string()
         return '<%s:%-8s %s>' % (self.__class__.__name__, self.state, extra)
 
-    def process_read (self):
+    def process_read(self):
         """Delegate read according to current connection state."""
         assert self.state != 'closed'
         while True:
@@ -136,7 +136,7 @@ class HttpClient (CodingConnection.CodingConnection):
             if self.delegate_read():
                 break
 
-    def process_request (self):
+    def process_request(self):
         """Read request, split it up and filter it."""
         # One newline ends request
         i = self.recv_buffer.find('\r\n')
@@ -164,7 +164,7 @@ class HttpClient (CodingConnection.CodingConnection):
             headers = WcMessage()
             headers['Content-Type'] = 'text/html\r'
             headers['Server'] = 'WebCleaner\r'
-            def callback (headers):
+            def callback(headers):
                 mime = Headers.get_content_type(headers, self.url)
                 body = webfilter.show_rules(self.url, mime)
                 ServerHandleDirectly.ServerHandleDirectly(self,
@@ -187,7 +187,7 @@ class HttpClient (CodingConnection.CodingConnection):
                     time.ctime(time.time()), self.request)
         self.state = 'headers'
 
-    def check_request (self, method, url, version):
+    def check_request(self, method, url, version):
         res = True
         if not self.allow.method(method):
             self.error(405, _("Method not allowed"))
@@ -204,7 +204,7 @@ class HttpClient (CodingConnection.CodingConnection):
         self.version = version
         return res
 
-    def fix_request (self):
+    def fix_request(self):
         """Try to fix requests. Return False on error, else True."""
         # Refresh with filtered request data.
         # Assumes that the request now has correct syntax.
@@ -246,11 +246,11 @@ class HttpClient (CodingConnection.CodingConnection):
         # request is ok
         return True
 
-    def get_default_scheme (self):
+    def get_default_scheme(self):
         """Get default URL scheme."""
         return "http"
 
-    def check_host_attrs (self, request):
+    def check_host_attrs(self, request):
         """Check if host name defines some config attributes to honor."""
         parts = list(urlutil.url_split(self.url))
         attrmatch = hostattr.search(parts[1] or "")
@@ -261,7 +261,7 @@ class HttpClient (CodingConnection.CodingConnection):
             self.attrs[attrmatch.group(2)] = True
         return request
 
-    def process_headers (self):
+    def process_headers(self):
         """Read and filter client request headers."""
         # Two newlines ends headers
         i = self.recv_buffer.find('\r\n\r\n')
@@ -374,7 +374,7 @@ class HttpClient (CodingConnection.CodingConnection):
             return
         self.state = 'content'
 
-    def filter_headers (self, msg):
+    def filter_headers(self, msg):
         """Filter and return client headers."""
         stage = webfilter.STAGE_REQUEST_HEADER
         self.attrs = webfilter.get_filterattrs(self.url,
@@ -383,7 +383,7 @@ class HttpClient (CodingConnection.CodingConnection):
                        headers=msg)
         return webfilter.applyfilter(stage, msg, "finish", self.attrs)
 
-    def set_persistent (self, headers, http_ver):
+    def set_persistent(self, headers, http_ver):
         """Return True if connection is persistent."""
         # look if client wants persistent connections
         if http_ver >= (1, 1):
@@ -396,18 +396,18 @@ class HttpClient (CodingConnection.CodingConnection):
             self.persistent = Headers.has_header_value(headers,
                                            "Proxy-Connection", "Keep-Alive")
 
-    def fix_request_headers (self, headers):
+    def fix_request_headers(self, headers):
         if 'Host' in headers:
             i = headers['Host'].find("\\")
             if i != -1:
                 self.needs_redirect = True
                 headers['Host'] = "%s\r" % headers['Host'][:i]
 
-    def mangle_request_headers (self, headers):
+    def mangle_request_headers(self, headers):
         """Modify request headers."""
         Headers.client_set_headers(headers, self.url)
 
-    def process_content (self):
+    def process_content(self):
         """Read and filter client request content."""
         data = self.read(self.bytes_remaining)
         if self.bytes_remaining is not None:
@@ -476,7 +476,7 @@ class HttpClient (CodingConnection.CodingConnection):
             else:
                 self.server_request()
 
-    def process_receive (self):
+    def process_receive(self):
         """Called for tunneled ssl connections."""
         if not self.server:
             # server is not yet there, delay
@@ -491,7 +491,7 @@ class HttpClient (CodingConnection.CodingConnection):
         else:
             log.info(LOG_PROXY, "%s invalid data", self)
 
-    def server_request (self):
+    def server_request(self):
         """Issue server request through ClientServerMatchmaker object."""
         assert self.state == 'receive', \
                              "%s server_request in non-receive state" % self
@@ -500,7 +500,7 @@ class HttpClient (CodingConnection.CodingConnection):
         ClientServerMatchmaker.ClientServerMatchmaker(self,
                               self.request, self.headers, self.content)
 
-    def server_response (self, server, response, status, headers):
+    def server_response(self, server, response, status, headers):
         """Read and filter server response data."""
         assert server.connected, "%s server was not connected" % self
         log.debug(LOG_PROXY,
@@ -522,7 +522,7 @@ class HttpClient (CodingConnection.CodingConnection):
             self.write("".join(headers.headers))
             self.write('\r\n')
 
-    def try_google (self, url, response):
+    def try_google(self, url, response):
         """Display page with google cache links for requests page."""
         log.debug(LOG_PROXY,
             '%s try_google %r', self, response)
@@ -531,14 +531,14 @@ class HttpClient (CodingConnection.CodingConnection):
         WebConfig(self, '/google.html', form, protocol, self.headers,
               localcontext=google.get_google_context(url, response)).send()
 
-    def server_content (self, data):
+    def server_content(self, data):
         """The server received some content. Write it to the client."""
         assert self.server, "%s server_content(%r) had no server" % \
                             (self, data)
         if data:
             self.write(data)
 
-    def server_close (self, server):
+    def server_close(self, server):
         """The server closed."""
         assert self.server, "%s server_close had no server" % self
         log.debug(LOG_PROXY, '%s server_close', self)
@@ -548,12 +548,12 @@ class HttpClient (CodingConnection.CodingConnection):
             self.close()
         self.server = None
 
-    def server_abort (self, reason=""):
+    def server_abort(self, reason=""):
         """The server aborted the connection."""
         log.debug(LOG_PROXY, '%s server_abort', self)
         self.close()
 
-    def handle_error (self, what):
+    def handle_error(self, what):
         """An error occured, close the connection and inform the server."""
         # close the server connection
         if self.server:
@@ -561,7 +561,7 @@ class HttpClient (CodingConnection.CodingConnection):
             self.server = None
         super(HttpClient, self).handle_error(what)
 
-    def handle_close (self):
+    def handle_close(self):
         """The client closed the connection, so cancel the server connection.
         """
         log.debug(LOG_PROXY, '%s handle_close', self)
@@ -574,7 +574,7 @@ class HttpClient (CodingConnection.CodingConnection):
             # check to see if the client is still connected.
         super(HttpClient, self).handle_close()
 
-    def handle_local (self, is_public_doc=False, is_admin_doc=False):
+    def handle_local(self, is_public_doc=False, is_admin_doc=False):
         """Handle local request by delegating it to the web configuration."""
         assert self.state == 'receive'
         log.debug(LOG_PROXY, '%s handle_local', self)
@@ -613,7 +613,7 @@ class HttpClient (CodingConnection.CodingConnection):
         protocol = "HTTP/%d.%d" % self.version
         WebConfig(self, self.url, form, protocol, self.headers).send()
 
-    def get_form_data (self):
+    def get_form_data(self):
         """Return CGI form data from stored request."""
         form = None
         if self.method == 'GET':
@@ -628,13 +628,13 @@ class HttpClient (CodingConnection.CodingConnection):
                                     environ={'REQUEST_METHOD': 'POST'})
         return form
 
-    def close_reuse (self):
+    def close_reuse(self):
         """Reset connection state, leave connection alive for pipelining."""
         log.debug(LOG_PROXY, '%s close_reuse', self)
         super(HttpClient, self).close_reuse()
         self.reset()
 
-    def close_close (self):
+    def close_close(self):
         """Close this connection."""
         log.debug(LOG_PROXY, '%s close_close', self)
         self.state = 'closed'

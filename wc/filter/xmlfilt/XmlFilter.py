@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter XML tags.
 """
@@ -24,19 +10,19 @@ from . import (STARTDOCUMENT, ENDDOCUMENT, INSTRUCTION, STARTTAG, ENDTAG,
     DATA, tagbuf2data)
 
 
-def dict_attrs (attrs):
+def dict_attrs(attrs):
     _attrs = containers.ListDict()
     for name in attrs.getQNames():
         _attrs[name] = attrs.getValueByQName(name)
     return _attrs
 
 
-class XmlFilter (object):
+class XmlFilter(object):
     """
     Filtering XML parser handler. Has filter rules and a rule stack.
     """
 
-    def __init__ (self, xmlrules, htmlrules, url, localhost, encoding):
+    def __init__(self, xmlrules, htmlrules, url, localhost, encoding):
         """
         Init rules and buffers.
         """
@@ -62,19 +48,19 @@ class XmlFilter (object):
 
     # ErrorHandler methods
 
-    def error (self, msg):
+    def error(self, msg):
         """
         Report a filter/parser error.
         """
         log.error(LOG_XML, msg)
 
-    def fatalError (self, msg):
+    def fatalError(self, msg):
         """
         Report a fatal filter/parser error.
         """
         log.critical(LOG_XML, msg)
 
-    def warning (self, msg):
+    def warning(self, msg):
         """
         Report a filter/parser warning.
         """
@@ -82,11 +68,11 @@ class XmlFilter (object):
 
     # ContentHandler methods
 
-    def setDocumentLocator (self, locator):
+    def setDocumentLocator(self, locator):
         # A Locator is not used here.
         pass
 
-    def startDocument (self):
+    def startDocument(self):
         """
         Nothing to do here.
         """
@@ -98,30 +84,30 @@ class XmlFilter (object):
         item = [STARTDOCUMENT, u"xml", attrs]
         self.tagbuf.append(item)
 
-    def endDocument (self):
+    def endDocument(self):
         """
         Nothing to do here.
         """
         item = [ENDDOCUMENT]
         self.tagbuf.append(item)
 
-    def startPrefixMapping (self, prefix, uri):
+    def startPrefixMapping(self, prefix, uri):
         ns = (prefix, uri)
         self.ns_stack.append(ns)
         self.ns_current.append(ns)
 
-    def endPrefixMapping (self, prefix):
+    def endPrefixMapping(self, prefix):
         if not self.ns_stack or self.ns_stack[-1][0] != prefix:
             self.error("Removing unknown prefix mapping (%r)" % prefix)
         del self.ns_stack[-1]
 
-    def find_namespace (self, uri):
+    def find_namespace(self, uri):
         for prefix, nsuri in reversed(self.ns_stack):
             if nsuri == uri:
                 return (prefix, uri)
         return None
 
-    def startElement (self, name, attrs):
+    def startElement(self, name, attrs):
         attrs = dict_attrs(attrs)
         for prefix, uri in self.ns_current:
             if prefix:
@@ -138,7 +124,7 @@ class XmlFilter (object):
             pos = len(self.tagbuf)
             self.rulestack.append((pos, rulelist))
 
-    def endElement (self, name):
+    def endElement(self, name):
         item = [ENDTAG, name]
         if not self.filter_end_element(name):
             self.tagbuf.append(item)
@@ -146,7 +132,7 @@ class XmlFilter (object):
             self.tagbuf2data()
         del self.stack[-1]
 
-    def filter_end_element (self, tag):
+    def filter_end_element(self, tag):
         """
         Filters an end tag, return True if tag was filtered, else False.
         """
@@ -161,34 +147,34 @@ class XmlFilter (object):
             return True
         return False
 
-    def startElementNS (self, name, qname, attrs):
+    def startElementNS(self, name, qname, attrs):
         tag = name[1]
         namespace = self.find_namespace(name[0])
         if namespace and namespace[0]:
             tag = u"%s:%s" % (namespace[0], name[1])
         self.startElement(tag, attrs)
 
-    def endElementNS (self, name, qname):
+    def endElementNS(self, name, qname):
         tag = name[1]
         namespace = self.find_namespace(name[0])
         if namespace and namespace[0]:
             tag = u"%s:%s" % (namespace[0], name[1])
         self.endElement(tag)
 
-    def characters (self, content):
+    def characters(self, content):
         if self.tagbuf and self.tagbuf[-1][0] == DATA:
             self.tagbuf[-1][1] += content
         else:
             self.tagbuf.append([DATA, content])
 
-    def ignorableWhitespace (self, chars):
+    def ignorableWhitespace(self, chars):
         pass
 
-    def processingInstruction (self, target, data):
+    def processingInstruction(self, target, data):
         item = [INSTRUCTION, target, data]
         self.tagbuf.append(item)
 
-    def skippedEntity (self, name):
+    def skippedEntity(self, name):
         """
         An unknown entity was found, for example '&foo;'.
         """
@@ -196,14 +182,14 @@ class XmlFilter (object):
 
     # DTDHandler methods
 
-    def notationDecl (self, name, publicId, systemId):
+    def notationDecl(self, name, publicId, systemId):
         """
         DTD content is ignored.
         """
         log.info(LOG_XML, "%s: DTD notation ignored: %r %r %r",
             self, name, publicId, systemId)
 
-    def unparsedEntityDecl (self, name, publicId, systemId, ndata):
+    def unparsedEntityDecl(self, name, publicId, systemId, ndata):
         """
         DTD content is ignored.
         """
@@ -212,7 +198,7 @@ class XmlFilter (object):
 
     # other methods
 
-    def tagbuf2data (self):
+    def tagbuf2data(self):
         """
         Append serialized tag items of the tag buffer to the output buffer
         and clear the tag buffer.
@@ -220,7 +206,7 @@ class XmlFilter (object):
         tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
-    def getoutput (self):
+    def getoutput(self):
         """
         Returns all data in output buffer and clears the output buffer.
         """
@@ -229,7 +215,7 @@ class XmlFilter (object):
         self.outbuf = StringIO()
         return data.encode(self.encoding, "ignore")
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Representation with state.
         """

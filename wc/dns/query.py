@@ -257,7 +257,7 @@ def tcp(q, where, timeout=None, port=53, af=None, source=None, source_port=0,
         raise BadResponse
     return r
 
-def xfr (where, zone, rdtype=wc.dns.rdatatype.AXFR,
+def xfr(where, zone, rdtype=wc.dns.rdatatype.AXFR,
          rdclass=wc.dns.rdataclass.IN,
          timeout=None, port=53, keyring=None, keyname=None, relativize=True,
          af=None, lifetime=None, source=None, source_port=0, serial=0,

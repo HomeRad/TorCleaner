@@ -21,12 +21,12 @@ Default HTML parser handler classes.
 import sys
 
 
-class HtmlPrinter (object):
+class HtmlPrinter(object):
     """
     Handles all functions by printing the function name and attributes.
     """
 
-    def __init__ (self, fd=sys.stdout):
+    def __init__(self, fd=sys.stdout):
         """
         Write to given file descriptor.
 
@@ -35,7 +35,7 @@ class HtmlPrinter (object):
         """
         self.fd = fd
 
-    def _print (self, *attrs):
+    def _print(self, *attrs):
         """
         Print function attributes to stored file descriptor.
 
@@ -45,7 +45,7 @@ class HtmlPrinter (object):
         """
         print >> self.fd, self.mem, attrs
 
-    def __getattr__ (self, name):
+    def __getattr__(self, name):
         """
         Remember the called method name in self.mem.
 
@@ -58,13 +58,13 @@ class HtmlPrinter (object):
         return self._print
 
 
-class HtmlPrettyPrinter (object):
+class HtmlPrettyPrinter(object):
     """
     Print out all parsed HTML data in encoded form.
     Also stores error and warnings messages.
     """
 
-    def __init__ (self, fd=sys.stdout, encoding="iso8859-1"):
+    def __init__(self, fd=sys.stdout, encoding="iso8859-1"):
         """
         Write to given file descriptor in given encoding.
 
@@ -76,7 +76,7 @@ class HtmlPrettyPrinter (object):
         self.fd = fd
         self.encoding = encoding
 
-    def comment (self, data):
+    def comment(self, data):
         """
         Print HTML comment.
 
@@ -87,7 +87,7 @@ class HtmlPrettyPrinter (object):
         data = data.encode(self.encoding, "ignore")
         self.fd.write("<!--%s-->" % data)
 
-    def start_element (self, tag, attrs):
+    def start_element(self, tag, attrs):
         """
         Print HTML start element.
 
@@ -99,7 +99,7 @@ class HtmlPrettyPrinter (object):
         """
         self._start_element(tag, attrs, ">")
 
-    def start_end_element (self, tag, attrs):
+    def start_end_element(self, tag, attrs):
         """
         Print HTML start-end element.
 
@@ -111,7 +111,7 @@ class HtmlPrettyPrinter (object):
         """
         self._start_element(tag, attrs, "/>")
 
-    def _start_element (self, tag, attrs, end):
+    def _start_element(self, tag, attrs, end):
         """
         Print HTML element with end string.
 
@@ -134,7 +134,7 @@ class HtmlPrettyPrinter (object):
                 self.fd.write(' %s="%s"' % (key, quote_attrval(val)))
         self.fd.write(end)
 
-    def end_element (self, tag):
+    def end_element(self, tag):
         """
         Print HTML end element.
 
@@ -145,7 +145,7 @@ class HtmlPrettyPrinter (object):
         tag = tag.encode(self.encoding, "ignore")
         self.fd.write("</%s>" % tag)
 
-    def doctype (self, data):
+    def doctype(self, data):
         """
         Print HTML document type.
 
@@ -156,7 +156,7 @@ class HtmlPrettyPrinter (object):
         data = data.encode(self.encoding, "ignore")
         self.fd.write("<!DOCTYPE%s>" % data)
 
-    def pi (self, data):
+    def pi(self, data):
         """
         Print HTML pi.
 
@@ -167,7 +167,7 @@ class HtmlPrettyPrinter (object):
         data = data.encode(self.encoding, "ignore")
         self.fd.write("<?%s?>" % data)
 
-    def cdata (self, data):
+    def cdata(self, data):
         """
         Print HTML cdata.
 
@@ -178,7 +178,7 @@ class HtmlPrettyPrinter (object):
         data = data.encode(self.encoding, "ignore")
         self.fd.write("<![CDATA[%s]]>" % data)
 
-    def characters (self, data):
+    def characters(self, data):
         """
         Print characters.
 
@@ -190,7 +190,7 @@ class HtmlPrettyPrinter (object):
         self.fd.write(data)
 
 
-def quote_attrval (s):
+def quote_attrval(s):
     """
     Quote a HTML attribute to be able to wrap it in double quotes.
 

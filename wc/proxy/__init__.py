@@ -34,7 +34,7 @@ Used and modified by Bastian Kleineidam for WebCleaner
 import select
 
 
-def readable_socket (sock, timeout=0.5):
+def readable_socket(sock, timeout=0.5):
     """
     Check if socket is readable.
     @param sock: the socket to check

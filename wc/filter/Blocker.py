@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Block specific requested URLs.
 """
@@ -25,21 +11,21 @@ from . import Filter, STAGE_REQUEST
 from .. import log, LOG_FILTER, gzip2 as gzip, configuration, url as urlutil
 
 
-def is_flash_mime (mime):
+def is_flash_mime(mime):
     """
     Return True if mime is Shockwave Flash.
     """
     return mime.startswith('application/x-shockwave-flash')
 
 
-def is_image_mime (mime):
+def is_image_mime(mime):
     """
     Return True if mime is an image.
     """
     return mime.startswith('image/')
 
 
-def is_javascript_mime (mime):
+def is_javascript_mime(mime):
     """
     Return True if mime is JavaScript.
     """
@@ -47,7 +33,7 @@ def is_javascript_mime (mime):
            mime.startswith('text/javascript')
 
 
-def is_html_mime (mime):
+def is_html_mime(mime):
     """
     Return True if mime is HTML.
     """
@@ -61,7 +47,7 @@ is_flash_url = re.compile(r'(?i)\.(swf|flash)$').search
 is_javascript_url = re.compile(r'(?i)\.js$').search
 
 
-def strblock (block):
+def strblock(block):
     """
     Return string representation of block pattern(s).
     """
@@ -69,7 +55,7 @@ def strblock (block):
     return "[%s]" % ", ".join(patterns)
 
 
-def append_lines (lines, lst, sid):
+def append_lines(lines, lst, sid):
     """
     Append lines to given list, augmented with sid.
     """
@@ -80,7 +66,7 @@ def append_lines (lines, lst, sid):
         lst.append((line, sid))
 
 
-def get_file_data (filename):
+def get_file_data(filename):
     """
     Return plain file object, possible gunzipping the file.
     """
@@ -94,7 +80,7 @@ def get_file_data (filename):
     return f
 
 
-def try_append_lines (lst, rule):
+def try_append_lines(lst, rule):
     """
     Read rule file, print log note on error.
     """
@@ -106,14 +92,14 @@ def try_append_lines (lst, rule):
                      rule.filename, str(msg))
 
 
-class Blocker (Filter.Filter):
+class Blocker(Filter.Filter):
     """
     Block urls and show replacement data instead.
     """
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """
         Load blocked/allowed urls/regex.
         """
@@ -144,21 +130,21 @@ class Blocker (Filter.Filter):
         self.block_flash = "/blocked.swf"
         self.block_js = "/blocked.js"
 
-    def addrule (self, rule):
+    def addrule(self, rule):
         """
         Add rule data to blocker, delegated to add_* methods.
         """
         super(Blocker, self).addrule(rule)
         getattr(self, "add_"+rule.name)(rule)
 
-    def add_allow (self, rule):
+    def add_allow(self, rule):
         """
         Add AllowRule data.
         """
         if rule.url:
             self.allow.append((re.compile(rule.url), rule.sid))
 
-    def add_block (self, rule):
+    def add_block(self, rule):
         """
         Add BlockRule data.
         """
@@ -166,31 +152,31 @@ class Blocker (Filter.Filter):
             self.block.append((re.compile(rule.url), rule.replacement,
                                rule.sid))
 
-    def add_blockdomains (self, rule):
+    def add_blockdomains(self, rule):
         """
         Add BlockdomainsRule data.
         """
         try_append_lines(self.blocked_domains, rule)
 
-    def add_allowdomains (self, rule):
+    def add_allowdomains(self, rule):
         """
         Add AllowdomainsRule data.
         """
         try_append_lines(self.allowed_domains, rule)
 
-    def add_blockurls (self, rule):
+    def add_blockurls(self, rule):
         """
         Add BlockurlsRule data.
         """
         try_append_lines(self.blocked_urls, rule)
 
-    def add_allowurls (self, rule):
+    def add_allowurls(self, rule):
         """
         Add AllowurlsRule data.
         """
         try_append_lines(self.allowed_urls, rule)
 
-    def doit (self, data, attrs):
+    def doit(self, data, attrs):
         """
         Investigate request data for a block.
 
@@ -246,7 +232,7 @@ class Blocker (Filter.Filter):
             return 'GET %s HTTP/1.1' % doc
         return data
 
-    def blocked (self, url, parts):
+    def blocked(self, url, parts):
         """
         True if url is blocked. Parts are the splitted url parts.
         """
@@ -272,7 +258,7 @@ class Blocker (Filter.Filter):
                 return True, sid
         return False, None
 
-    def allowed (self, url, parts):
+    def allowed(self, url, parts):
         """
         True if url is allowed. Parts are the splitted url parts.
         """

@@ -27,7 +27,7 @@ import gettext
 supported_languages = set(['en'])
 default_language = default_encoding = None
 
-def install_builtin (translator, do_unicode):
+def install_builtin(translator, do_unicode):
     """Install _() and _n() gettext methods into default namespace."""
     import __builtin__
     if do_unicode:
@@ -39,25 +39,25 @@ def install_builtin (translator, do_unicode):
         # also install ngettext
         __builtin__.__dict__['_n'] = translator.ngettext
 
-class Translator (gettext.GNUTranslations):
+class Translator(gettext.GNUTranslations):
     """A translation class always installing its gettext methods into the
     default namespace."""
 
-    def install (self, do_unicode):
+    def install(self, do_unicode):
         """Install gettext methods into the default namespace."""
         install_builtin(self, do_unicode)
 
 
-class NullTranslator (gettext.NullTranslations):
+class NullTranslator(gettext.NullTranslations):
     """A dummy translation class always installing its gettext methods into
     the default namespace."""
 
-    def install (self, do_unicode):
+    def install(self, do_unicode):
         """Install gettext methods into the default namespace."""
         install_builtin(self, do_unicode)
 
 
-def init (domain, directory):
+def init(domain, directory):
     """Initialize this gettext i18n module. Searches for supported languages
     and installs the gettext translator class."""
     global default_language, default_encoding
@@ -82,7 +82,7 @@ def init (domain, directory):
     translator.install(do_unicode)
 
 
-def get_translator (domain, directory, languages=None,
+def get_translator(domain, directory, languages=None,
                     translatorklass=Translator, fallback=False,
                     fallbackklass=NullTranslator):
     """Search the appropriate GNUTranslations class."""
@@ -93,14 +93,14 @@ def get_translator (domain, directory, languages=None,
     return translator
 
 
-def get_lang (lang):
+def get_lang(lang):
     """Return lang if it is supported, or the default language."""
     if lang in supported_languages:
         return lang
     return default_language
 
 
-def get_headers_lang (headers):
+def get_headers_lang(headers):
     """Return preferred supported language in given HTTP headers."""
     if 'Accept-Language' not in headers:
         return default_language
@@ -124,7 +124,7 @@ def get_headers_lang (headers):
     return default_language
 
 
-def get_locale ():
+def get_locale():
     loc, encoding = locale.getdefaultlocale()
     if loc is None:
         loc = "C"
@@ -135,7 +135,7 @@ def get_locale ():
     return (loc, encoding)
 
 
-def norm_locale (loc):
+def norm_locale(loc):
     """Normalize a locale."""
     loc = locale.normalize(loc)
     # split up the locale into its base components
@@ -160,11 +160,11 @@ lang_transis = {
     'en': {'de': u'Englisch'},
 }
 
-def lang_name (lang):
+def lang_name(lang):
     """Return full name of given language."""
     return lang_names[lang]
 
 
-def lang_trans (lang, curlang):
+def lang_trans(lang, curlang):
     """Return translated full name of given language."""
     return lang_transis[lang][curlang]

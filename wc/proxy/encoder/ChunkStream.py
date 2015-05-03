@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Deal with Transfer-encoding: chunked [HTTP/1.1].
 
@@ -38,7 +24,7 @@ trailer        = *(entity-header CRLF)
 from ... import log, LOG_NET
 
 
-def chunkenc (data):
+def chunkenc(data):
     """
     Chunk-encode data.
 
@@ -52,12 +38,12 @@ def chunkenc (data):
     return ""
 
 
-class ChunkStream (object):
+class ChunkStream(object):
     """
     Stream filter for chunked transfer encoding
     """
 
-    def __init__ (self, trailerhandler):
+    def __init__(self, trailerhandler):
         """
         Initialize closed flag and trailer handler.
 
@@ -67,7 +53,7 @@ class ChunkStream (object):
         self.closed = False
         self.trailerhandler = trailerhandler
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Representation of stream filter state.
         """
@@ -77,7 +63,7 @@ class ChunkStream (object):
             s = "open"
         return '<chunk %s>' % s
 
-    def process (self, s):
+    def process(self, s):
         """
         Chunk given data s.
         """
@@ -85,7 +71,7 @@ class ChunkStream (object):
         log.debug(LOG_NET, "chunked %d bytes: %r", len(s), s)
         return s
 
-    def get_trailer (self):
+    def get_trailer(self):
         """
         Construct HTTP header lines.
         """
@@ -94,7 +80,7 @@ class ChunkStream (object):
             return ""
         return "".join(headers.headers)+"\r\n"
 
-    def flush (self):
+    def flush(self):
         """
         Write end-chunk and trailer.
         """

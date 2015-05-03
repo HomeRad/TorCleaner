@@ -43,7 +43,7 @@ _host_netmask_re = re.compile(r"^%s/%s$" % (_ipv4_num_4, _ipv4_num_4))
 _host_cidrmask_re = re.compile(r"^%s/\d{1,2}$" % _ipv4_num_4)
 
 
-def expand_ipv6 (ip, num):
+def expand_ipv6(ip, num):
     """
     Expand an IPv6 address with included :: to num octets.
 
@@ -65,7 +65,7 @@ def expand_ipv6 (ip, num):
     return prefix+fill+suffix
 
 
-def expand_ip (ip):
+def expand_ip(ip):
     """
     ipv6 addresses are expanded to full 8 octets, all other
     addresses are left untouched
@@ -84,14 +84,14 @@ def expand_ip (ip):
     return (ip, 0)
 
 
-def is_valid_ip (ip):
+def is_valid_ip(ip):
     """
     Return True if given ip is a valid IPv4 or IPv6 address.
     """
     return is_valid_ipv4(ip) or is_valid_ipv6(ip)
 
 
-def is_valid_ipv4 (ip):
+def is_valid_ipv4(ip):
     """
     Return True if given ip is a valid IPv4 address.
     """
@@ -101,7 +101,7 @@ def is_valid_ipv4 (ip):
     return a <= 255 and b <= 255 and c <= 255 and d <= 255
 
 
-def is_valid_ipv6 (ip):
+def is_valid_ipv6(ip):
     """
     Return True if given ip is a valid IPv6 address.
     """
@@ -112,61 +112,61 @@ def is_valid_ipv6 (ip):
     return True
 
 
-def is_valid_cidrmask (mask):
+def is_valid_cidrmask(mask):
     """
     Check if given mask is a valid network bitmask in CIDR notation.
     """
     return 0 <= mask <= 32
 
 
-def dq2num (ip):
+def dq2num(ip):
     """
     Convert decimal dotted quad string to long integer.
     """
     return struct.unpack('!L', socket.inet_aton(ip))[0]
 
 
-def num2dq (n):
+def num2dq(n):
     """
     Convert long int to dotted quad string.
     """
     return socket.inet_ntoa(struct.pack('!L', n))
 
 
-def cidr2mask (n):
+def cidr2mask(n):
     """
     Return a mask where the n left-most of 32 bits are set.
     """
     return ((1L << n) - 1) << (32-n)
 
 
-def netmask2mask (ip):
+def netmask2mask(ip):
     """
     Return a mask of bits as a long integer.
     """
     return dq2num(ip)
 
-def mask2netmask (mask):
+def mask2netmask(mask):
     """
     Return dotted quad string as netmask.
     """
     return num2dq(mask)
 
-def dq2net (ip, mask):
+def dq2net(ip, mask):
     """
     Return a tuple (network ip, network mask) for given ip and mask.
     """
     return dq2num(ip) & mask
 
 
-def dq_in_net (n, mask):
+def dq_in_net(n, mask):
     """
     Return True iff numerical ip n is in given network.
     """
     return (n & mask) == mask
 
 
-def host_in_set (ip, hosts, nets):
+def host_in_set(ip, hosts, nets):
     """
     Return True if given ip is in host or network list.
     """
@@ -180,7 +180,7 @@ def host_in_set (ip, hosts, nets):
     return False
 
 
-def strhosts2map (strhosts):
+def strhosts2map(strhosts):
     """
     Convert a string representation of hosts and networks to
     a tuple (hosts, networks).
@@ -188,7 +188,7 @@ def strhosts2map (strhosts):
     return hosts2map([s.strip() for s in strhosts.split(",") if s])
 
 
-def hosts2map (hosts):
+def hosts2map(hosts):
     """
     Return a set of named hosts, and a list of subnets (host/netmask
     adresses).
@@ -225,7 +225,7 @@ def hosts2map (hosts):
     return (hostset, nets)
 
 
-def map2hosts (hostmap):
+def map2hosts(hostmap):
     """
     Convert a tuple (hosts, networks) into a host/network list
     suitable for storing in a config file.
@@ -236,7 +236,7 @@ def map2hosts (hostmap):
     return ret
 
 
-def lookup_ips (ips):
+def lookup_ips(ips):
     """
     Return set of host names that resolve to given ips.
     """
@@ -249,7 +249,7 @@ def lookup_ips (ips):
     return hosts
 
 
-def resolve_host (host):
+def resolve_host(host):
     """
     Return set of ip numbers for given host.
     """

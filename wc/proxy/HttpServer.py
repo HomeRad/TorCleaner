@@ -45,7 +45,7 @@ PRINT_SERVER_HEADERS = 0
 SPEEDCHECK_START = time.time()
 SPEEDCHECK_BYTES = 0
 
-class HttpServer (Server.Server):
+class HttpServer(Server.Server):
     """
     HttpServer handles the connection between the proxy and a http server.
     It writes the client request to the server and sends answer data back
@@ -53,7 +53,7 @@ class HttpServer (Server.Server):
     but could also be a HttpProxyClient (for Javascript sources).
     """
 
-    def __init__ (self, ipaddr, port, client):
+    def __init__(self, ipaddr, port, client):
         """
         Initialize connection data and connect to remove server.
         """
@@ -63,7 +63,7 @@ class HttpServer (Server.Server):
         self.create_socket(self.get_family(ipaddr), socket.SOCK_STREAM)
         self.try_connect()
 
-    def reset (self):
+    def reset(self):
         """
         Reset connection values.
         """
@@ -92,7 +92,7 @@ class HttpServer (Server.Server):
                 self.defer_data = True
         log.debug(LOG_PROXY, "%s resetted", self)
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Object description.
         """
@@ -116,7 +116,7 @@ class HttpServer (Server.Server):
             extra += " (%s)" % self.socket.state_string()
         return '<%s:%-8s %s>' % (self.__class__.__name__, self.state, extra)
 
-    def process_connect (self):
+    def process_connect(self):
         """
         Notify client that this server has connected.
         """
@@ -128,7 +128,7 @@ class HttpServer (Server.Server):
             # Hm, the client no longer cares about us, so close
             self.close()
 
-    def client_send_request (self, method, protocol, hostname, port, document,
+    def client_send_request(self, method, protocol, hostname, port, document,
                              headers, content, client, url, mime_types):
         """
         The client (matchmaker) sends the request to the server.
@@ -152,7 +152,7 @@ class HttpServer (Server.Server):
             self.mangle_request_headers()
             self.send_request()
 
-    def mangle_request_headers (self):
+    def mangle_request_headers(self):
         """
         Modify request headers.
         """
@@ -161,7 +161,7 @@ class HttpServer (Server.Server):
             self.clientheaders['Proxy-Authorization'] = \
                           "%s\r" % configuration.config['parentproxycreds']
 
-    def send_request (self):
+    def send_request(self):
         """
         Send the request to the server, is also used to send a request
         twice for NTLM authentication.
@@ -177,7 +177,7 @@ class HttpServer (Server.Server):
         self.write(self.content)
         self.state = 'response'
 
-    def process_read (self):
+    def process_read(self):
         """
         Process read event by delegating it to process_* functions.
         """
@@ -196,7 +196,7 @@ class HttpServer (Server.Server):
             if self.delegate_read():
                 break
 
-    def process_response (self):
+    def process_response(self):
         """
         Look for response line and process it if found.
         """
@@ -249,7 +249,7 @@ class HttpServer (Server.Server):
             self.mime_types = None
         log.debug(LOG_PROXY, "%s response %r", self, self.response)
 
-    def process_headers (self):
+    def process_headers(self):
         """
         Look for headers and process them if found.
         """
@@ -321,7 +321,7 @@ class HttpServer (Server.Server):
                                         self.headers)
             # note: self.client could be None here
 
-    def filter_headers (self, msg):
+    def filter_headers(self, msg):
         stage = webfilter.STAGE_RESPONSE_HEADER
         self.attrs = webfilter.get_filterattrs(self.url,
                         self.client.localhost, [stage],
@@ -329,7 +329,7 @@ class HttpServer (Server.Server):
                         serverheaders=self.serverheaders)
         return webfilter.applyfilter(stage, msg, "finish", self.attrs)
 
-    def mangle_response_headers (self):
+    def mangle_response_headers(self):
         """
         Modify response headers.
         """
@@ -344,7 +344,7 @@ class HttpServer (Server.Server):
         Headers.server_set_content_headers(
                     self.statuscode, self.headers, self.mime_types, self.url)
 
-    def set_persistent (self, headers, http_ver):
+    def set_persistent(self, headers, http_ver):
         """
         Return True iff this server connection is persistent.
         """
@@ -357,7 +357,7 @@ class HttpServer (Server.Server):
         else:
             self.persistent = False
 
-    def is_rewrite (self):
+    def is_rewrite(self):
         """
         Return True iff this server will modify content.
         """
@@ -366,7 +366,7 @@ class HttpServer (Server.Server):
                 return True
         return False
 
-    def _show_rating_deny (self, msg):
+    def _show_rating_deny(self, msg):
         """
         Requested page is rated.
         """
@@ -391,7 +391,7 @@ class HttpServer (Server.Server):
         self.persistent = False
         self.close()
 
-    def process_content (self):
+    def process_content(self):
         """
         Process server data: filter it and write it to client.
         """
@@ -446,7 +446,7 @@ class HttpServer (Server.Server):
             # either we ran out of bytes, or the decoder says we're done
             self.state = 'recycle'
 
-    def process_client (self):
+    def process_client(self):
         """
         Gets called on SSL tunneled connections, delegates server data
         directly to the client without filtering.
@@ -461,7 +461,7 @@ class HttpServer (Server.Server):
                 self, len(data), self.client)
             self.client.write(data)
 
-    def process_recycle (self):
+    def process_recycle(self):
         """
         Recycle the server connection and put it in the server pool.
         """
@@ -507,7 +507,7 @@ class HttpServer (Server.Server):
             # flush pending client data and try to reuse this connection
             self.delayed_close()
 
-    def flush (self):
+    def flush(self):
         """
         Flush data of decoders (if any) and filters and write it to
         the client. return True if flush was successful.
@@ -548,7 +548,7 @@ class HttpServer (Server.Server):
             self.client.server_content(data)
         return True
 
-    def set_unreadable (self, secs):
+    def set_unreadable(self, secs):
         """
         Make this connection unreadable for (secs) seconds.
         """
@@ -556,7 +556,7 @@ class HttpServer (Server.Server):
         oldstate, self.state = self.state, 'unreadable'
         timer.make_timer(secs, lambda: self.set_readable(oldstate))
 
-    def set_readable (self, state):
+    def set_readable(self, state):
         """
         Make the connection readable again and close.
         """
@@ -568,7 +568,7 @@ class HttpServer (Server.Server):
         else:
             log.debug(LOG_PROXY, "%s client is gone", self)
 
-    def close_reuse (self):
+    def close_reuse(self):
         """
         Reset connection data, but to not close() the socket. Put this
         connection in server pool.
@@ -581,7 +581,7 @@ class HttpServer (Server.Server):
         # be sure to unreserve _after_ reset because of callbacks
         ServerPool.serverpool.unreserve_server(self.addr, self)
 
-    def close_ready (self):
+    def close_ready(self):
         """
         Return True if connection has all data sent and is ready for closing.
         """
@@ -601,7 +601,7 @@ class HttpServer (Server.Server):
             return True
         return False
 
-    def close_close (self):
+    def close_close(self):
         """
         Close the connection socket and remove this connection from
         the connection pool.
@@ -620,7 +620,7 @@ class HttpServer (Server.Server):
             ServerPool.serverpool.unregister_server(self.addr, self)
         assert not self.connected
 
-    def handle_error (self, what):
+    def handle_error(self, what):
         """
         Tell the client that connection had an error, and close the
         connection.
@@ -631,7 +631,7 @@ class HttpServer (Server.Server):
             client.server_abort(what)
         super(HttpServer, self).handle_error(what)
 
-    def handle_close (self):
+    def handle_close(self):
         """
         Close the connection.
         """
@@ -640,7 +640,7 @@ class HttpServer (Server.Server):
         super(HttpServer, self).handle_close()
 
 
-def speedcheck_print_status ():
+def speedcheck_print_status():
     """
     Print speed statistics for connections.
     """

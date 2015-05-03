@@ -23,14 +23,14 @@ from tests import need_posix
 import wc.network
 
 
-class TestNetwork (unittest.TestCase):
+class TestNetwork(unittest.TestCase):
     """Test network functions."""
 
     @need_posix
-    def test_ifreq_size (self):
+    def test_ifreq_size(self):
         self.assertTrue(wc.network.ifreq_size() > 0)
 
     @need_posix
-    def test_interfaces (self):
+    def test_interfaces(self):
         ifc = wc.network.IfConfig()
         ifc.getInterfaceList()

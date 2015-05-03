@@ -132,7 +132,7 @@ class Answer(object):
         self.rrset = rrset
         self.expiration = time.time() + min_ttl
 
-    def __str__ (self):
+    def __str__(self):
         return str(self.rrset)
 
     def __getattr__(self, attr):
@@ -379,14 +379,14 @@ class Resolver(object):
         if len(self.nameservers) == 0:
             self.nameservers.append('127.0.0.1')
 
-    def read_local_hosts (self):
+    def read_local_hosts(self):
         self.add_addrinfo(socket.gethostname())
         # add system specific hosts for all enabled interfaces
         self.add_addrinfo('localhost', interface=True)
         for addr in self.read_local_ifaddrs():
             self.add_addrinfo(addr, interface=True)
 
-    def read_local_ifaddrs (self):
+    def read_local_ifaddrs(self):
         """
         IP addresses for all active interfaces.
         @return: list of IP addresses
@@ -400,7 +400,7 @@ class Resolver(object):
         return [ifc.getAddr(iface) for iface in ifc.getInterfaceList() \
                 if ifc.isUp(iface)]
 
-    def add_addrinfo (self, host, interface=False):
+    def add_addrinfo(self, host, interface=False):
         try:
             addrinfo = socket.gethostbyaddr(host)
         except socket.error:
@@ -431,7 +431,7 @@ class Resolver(object):
             split_char = ' '
         return split_char
 
-    def _config_win32_nameservers (self, nameservers, split_char=','):
+    def _config_win32_nameservers(self, nameservers, split_char=','):
         """Configure a NameServer registry entry."""
         # we call str() on nameservers to convert it from unicode to ascii
         nameservers = str(nameservers)
@@ -441,12 +441,12 @@ class Resolver(object):
             if not ns in self.nameservers:
                 self.nameservers.append(ns)
 
-    def _config_win32_domain (self, domain):
+    def _config_win32_domain(self, domain):
         """Configure a Domain registry entry."""
         # we call str() on domain to convert it from unicode to ascii
         self.domain = wc.dns.name.from_text(str(domain))
 
-    def _config_win32_search (self, search):
+    def _config_win32_search(self, search):
         """Configure a Search registry entry."""
         # we call str() on search to convert it from unicode to ascii
         search = str(search)
@@ -456,7 +456,7 @@ class Resolver(object):
             if not s in self.search:
                 self.search.add(wc.dns.name.from_text(s))
 
-    def _config_win32_add_ifaddr (self, key, name):
+    def _config_win32_add_ifaddr(self, key, name):
         """Add interface ip address to self.localhosts."""
         try:
             ip, rtype = _winreg.QueryValueEx(key, name)
@@ -467,7 +467,7 @@ class Resolver(object):
         except WindowsError:
             pass
 
-    def _config_win32_fromkey (self, key):
+    def _config_win32_fromkey(self, key):
         """Extract DNS info from a registry key."""
         try:
             enable_dhcp, rtype = _winreg.QueryValueEx(key, 'EnableDHCP')

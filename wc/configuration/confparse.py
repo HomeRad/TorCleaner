@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Parse configuration data.
 """
@@ -56,7 +42,7 @@ for _x in _nestedtags:
     assert _x not in rulenames
 
 
-def make_xmlparser ():
+def make_xmlparser():
     """
     Return a new xml parser object.
     """
@@ -64,19 +50,19 @@ def make_xmlparser ():
     return xml.parsers.expat.ParserCreate()
 
 
-class ParseException (StandardError):
+class ParseException(StandardError):
     """
     Exception thrown at parse errors.
     """
     pass
 
 
-class BaseParser (object):
+class BaseParser(object):
     """
     Base class for parsing xml config files.
     """
 
-    def __init__ (self, filename):
+    def __init__(self, filename):
         """
         Initialize filename and configuration for this parser.
         """
@@ -87,14 +73,14 @@ class BaseParser (object):
         # set by _preparse() and _postparse()
         self.xmlparser = None
 
-    def _preparse (self):
+    def _preparse(self):
         """Set handler functions before parsing."""
         self.xmlparser = make_xmlparser()
         self.xmlparser.StartElementHandler = self.start_element
         self.xmlparser.EndElementHandler = self.end_element
         self.xmlparser.CharacterDataHandler = self.character_data
 
-    def _postparse (self):
+    def _postparse(self):
         """
         Remove handler functions after parsing; avoids cyclic references.
         """
@@ -104,7 +90,7 @@ class BaseParser (object):
         # note: expat parsers cannot be reused
         self.xmlparser = None
 
-    def parse (self, fp=None):
+    def parse(self, fp=None):
         """Parse the stored filename, or another source given by fp."""
         log.debug(LOG_PROXY, "Parsing %s", self.filename)
         if fp is None:
@@ -119,25 +105,25 @@ class BaseParser (object):
         finally:
             self._postparse()
 
-    def start_element (self, name, attrs):
+    def start_element(self, name, attrs):
         """Basic start element method doing nothing."""
         pass
 
-    def end_element (self, name):
+    def end_element(self, name):
         """Basic end element method doing nothing."""
         pass
 
-    def character_data (self, data):
+    def character_data(self, data):
         """Basic character data method doing nothing."""
         pass
 
 
-class ZapperParser (BaseParser):
+class ZapperParser(BaseParser):
     """
     Parser class for *.zap filter configuration files.
     """
 
-    def __init__ (self, filename, compile_data=True):
+    def __init__(self, filename, compile_data=True):
         """Initialize filename, configuration and compile flag."""
         super(ZapperParser, self).__init__(filename)
         self.folder = filter.rules.FolderRule.FolderRule(filename=filename)
@@ -145,7 +131,7 @@ class ZapperParser (BaseParser):
         self.rule = None
         self.compile_data = compile_data
 
-    def start_element (self, name, attrs):
+    def start_element(self, name, attrs):
         """
         Handle start tag of folder, rule or nested element.
         """
@@ -170,7 +156,7 @@ class ZapperParser (BaseParser):
             self.error = name
             self.cmode = None
 
-    def end_element (self, name):
+    def end_element(self, name):
         """
         Handle end tag of folder, rule or nested element.
         """
@@ -190,7 +176,7 @@ class ZapperParser (BaseParser):
                 if self.compile_data:
                     self.folder.compile_data()
 
-    def character_data (self, data):
+    def character_data(self, data):
         """
         Handle rule of folder character data.
         """
@@ -203,19 +189,19 @@ class ZapperParser (BaseParser):
                 self.rule.fill_data(data, self.cmode)
 
 
-class WConfigParser (BaseParser):
+class WConfigParser(BaseParser):
     """
     Parser class for webcleaner.conf configuration files.
     """
 
-    def __init__ (self, filename, _config):
+    def __init__(self, filename, _config):
         """
         Initialize filename, configuration and compile flag.
         """
         super(WConfigParser, self).__init__(filename)
         self.config = _config
 
-    def start_element (self, name, attrs):
+    def start_element(self, name, attrs):
         """
         Handle xml configuration for webcleaner attributes and filter
         modules.
@@ -248,7 +234,7 @@ class WConfigParser (BaseParser):
             log.warn(LOG_FILTER, _("unknown tag name %r"), name)
             self.error = name
 
-    def end_element (self, name):
+    def end_element(self, name):
         """
         Handle error case.
         """

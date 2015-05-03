@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Group filter rules into folders.
 """
@@ -21,7 +7,7 @@ from ... import fileutil, configuration
 from . import Rule
 
 
-def recalc_up_down (rules):
+def recalc_up_down(rules):
     """
     Add .up and .down attributes to rules, used for display up/down
     arrows in GUIs
@@ -32,12 +18,12 @@ def recalc_up_down (rules):
         rule.down = (i<upper)
 
 
-class FolderRule (Rule.Rule):
+class FolderRule(Rule.Rule):
     """
     Container for a list of rules.
     """
 
-    def __init__ (self, sid=None, titles=None, descriptions=None,
+    def __init__(self, sid=None, titles=None, descriptions=None,
                   disable=0, filename=""):
         """
         Initialize rule data.
@@ -52,21 +38,21 @@ class FolderRule (Rule.Rule):
         self.oid = None
         self.configversion = "-"
 
-    def __str__ (self):
+    def __str__(self):
         """
         Return rule data as string.
         """
         return super(FolderRule, self).__str__() + \
             ("\nrules:   %d" % len(self.rules))
 
-    def filename_get (self):
+    def filename_get(self):
         """
         Get filename where this folder is stored.
         """
         return self._filename
     filename = property(filename_get)
 
-    def append_rule (self, r):
+    def append_rule(self, r):
         """
         Append rule to folder.
         """
@@ -75,14 +61,14 @@ class FolderRule (Rule.Rule):
         self.rules.append(r)
         r.parent = self
 
-    def delete_rule (self, i):
+    def delete_rule(self, i):
         """
         Delete rule from folder with index i.
         """
         del self.rules[i]
         recalc_up_down(self.rules)
 
-    def update (self, rule, dryrun=False, log=None):
+    def update(self, rule, dryrun=False, log=None):
         """
         Update this folder with given folder rule data.
         """
@@ -105,7 +91,7 @@ class FolderRule (Rule.Rule):
             recalc_up_down(self.rules)
         return chg
 
-    def get_rule (self, sid):
+    def get_rule(self, sid):
         """
         Return rule with given sid or None if not found.
         """
@@ -114,7 +100,7 @@ class FolderRule (Rule.Rule):
                 return rule
         return None
 
-    def toxml (self):
+    def toxml(self):
         """
         Rule data as XML for storing.
         """
@@ -128,7 +114,7 @@ class FolderRule (Rule.Rule):
             s += u"\n%s\n" % r.toxml()
         return s+u"</folder>\n"
 
-    def write (self, fd=None):
+    def write(self, fd=None):
         """
         Write xml data into filename.
         @raise: OSError if file could not be written.
@@ -139,7 +125,7 @@ class FolderRule (Rule.Rule):
         else:
             fd.write(s)
 
-    def tiptext (self):
+    def tiptext(self):
         """
         Return short info for gui display.
         """

@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2004-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Test javascript filtering.
 """
@@ -28,13 +14,13 @@ from wc.filter import FilterException
 from wc.filter import applyfilter, get_filterattrs, STAGE_RESPONSE_MODIFY
 
 
-class TestRewriteScript (unittest.TestCase):
+class TestRewriteScript(unittest.TestCase):
     """
     All these tests work with the test filter configuration.
     If you change any of the *.zap filter configs, tests can fail...
     """
 
-    def setUp (self):
+    def setUp(self):
         confdir = os.path.join("test", "config")
         wc.configuration.init(confdir=confdir)
         wc.configuration.config['filters'] = ['HtmlRewriter',]
@@ -46,7 +32,7 @@ class TestRewriteScript (unittest.TestCase):
                                      serverheaders=self.headers,
                                      headers=self.headers)
 
-    def filt (self, data, result):
+    def filt(self, data, result):
         filtered = ""
         try:
             filtered += applyfilter(STAGE_RESPONSE_MODIFY, data, 'filter', self.attrs)
@@ -65,13 +51,13 @@ class TestRewriteScript (unittest.TestCase):
                 raise FilterException("Slow")
         self.assertEqual(filtered, result)
 
-    def testEmpty (self):
+    def testEmpty(self):
         self.filt(
 """<script language="JavaScript">
 
 </script>""", "")
 
-    def testStandard (self):
+    def testStandard(self):
         self.filt(
 """<script type="text/javascript" defer>
 <!-- Hide code for older browsers...
@@ -131,7 +117,7 @@ function display() {
     w.defaultStatus = message;
 }//]]></script>""")
 
-    def testRecursion1 (self):
+    def testRecursion1(self):
         self.filt(
 """<script language="JavaScript">
 <!--
@@ -146,7 +132,7 @@ document.write('foo');
    </tr>
 </table>""")
 
-    def testRecursion3 (self):
+    def testRecursion3(self):
         self.filt(
 """<script language="JavaScript">
 <!--
@@ -164,7 +150,7 @@ a=0;//]]></script>
    </tr>
 </table>""")
 
-    def testScriptSrc4 (self):
+    def testScriptSrc4(self):
         self.filt(
 """<script src="http://imadoofus.org/notfound.js">
 /* this should not be here **/
@@ -173,7 +159,7 @@ a=0;//]]></script>
 <script type="text/javascript">//<![CDATA[
 // error fetching script from u'http://imadoofus.org/notfound.js'//]]></script>""")
 
-    def testScriptSrc5 (self):
+    def testScriptSrc5(self):
         self.filt(
 """<script src="file:///C:/Progra~1/1.js"></script>
 
@@ -182,7 +168,7 @@ a=0;//]]></script>
 
 </html>""")
 
-    def testCommentQuoting (self):
+    def testCommentQuoting(self):
         self.filt(
 """<script language="JavaScript">
 function a () {
@@ -211,7 +197,7 @@ function a () {
 function a () {
 }//]]></script>""")
 
-    def testFlash (self):
+    def testFlash(self):
         self.filt(
 """<script language="JavaScript1.1">
 <!--
@@ -221,7 +207,7 @@ var words = navigator.plugins["Shockwave Flash"].description.split(" ");
 """<script language="JavaScript1.1">//<![CDATA[
 var words = navigator.plugins["Shockwave Flash"].description.split(" ");//]]></script>""")
 
-    def testHostname (self):
+    def testHostname(self):
         self.filt(
 """<script language="JavaScript1.1">
 <!--
@@ -233,7 +219,7 @@ var v2 = location.hostname;
 var v1 = document.location.hostname;
 var v2 = location.hostname;//]]></script>""")
 
-    def testNonScript (self):
+    def testNonScript(self):
         self.filt(
 """<script language="VBScript">
 <!--
@@ -246,7 +232,7 @@ tooooooot.
 //-->
 </script>""")
 
-    def testScriptError (self):
+    def testScriptError(self):
         self.filt(
 """<script language="JavaScript1.1">
 <!--
@@ -256,7 +242,7 @@ tooooooot.
 """<script language="JavaScript1.1">//<![CDATA[
 tooooooot.//]]></script>""")
 
-    def testCommentQuoting2 (self):
+    def testCommentQuoting2(self):
         self.filt(
 """<script>
 <!-- hui
@@ -266,7 +252,7 @@ a = 0
 """<script>//<![CDATA[
 a = 0//]]></script>""")
 
-    def testCommentQuoting3 (self):
+    def testCommentQuoting3(self):
         self.filt(
 """<script>
 <!-- hui
@@ -276,7 +262,7 @@ a = 0; b = a--;
 """<script>//<![CDATA[
 a = 0; b = a--;//]]></script>""")
 
-    def testCommentQuoting4 (self):
+    def testCommentQuoting4(self):
         self.filt(
 """<script>
 <!-- hui
@@ -286,7 +272,7 @@ a = "-->";
 """<script>//<![CDATA[
 a = "-->";//]]></script>""")
 
-    def testPopup1 (self):
+    def testPopup1(self):
         self.filt(
 """<script>
 function a () {
@@ -295,7 +281,7 @@ function a () {
 a();
 </script>""", "")
 
-    def testPopup2 (self):
+    def testPopup2(self):
         self.filt(
 """<script>
 function a () {
@@ -304,10 +290,10 @@ function a () {
 a();
 </script>""", "")
 
-    def testFilter (self):
+    def testFilter(self):
         self.filt("""<script src="http://ivwbox.de"></script>""", "")
 
-    def test_quoting1 (self):
+    def test_quoting1(self):
         self.filt("""<script>
 function a() {
     alert("This is not a </script>!");
@@ -317,7 +303,7 @@ function a() {
     alert("This is not a </scr"+"ipt>!");
 }//]]></script>""")
 
-    def test_quoting2 (self):
+    def test_quoting2(self):
         self.filt("""<script>
 /* </script>blubb */
 </script>""", """<script>//<![CDATA[

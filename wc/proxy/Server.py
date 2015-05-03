@@ -35,19 +35,19 @@ from .. import log, LOG_PROXY, decorators
 from . import CodingConnection
 
 
-class Server (CodingConnection.CodingConnection):
+class Server(CodingConnection.CodingConnection):
     """
     Basic class for server connections.
     """
 
-    def __init__ (self, client, state):
+    def __init__(self, client, state):
         """
         Initialize server in given state, writing received data to client.
         """
         super(Server, self).__init__(state)
         self.client = client
 
-    def client_abort (self):
+    def client_abort(self):
         """
         The client has aborted the connection.
         """
@@ -55,7 +55,7 @@ class Server (CodingConnection.CodingConnection):
         self.client = None
         self.close()
 
-    def try_connect (self):
+    def try_connect(self):
         """
         Attempt connect to server given by self.addr. Close on error.
         """
@@ -67,7 +67,7 @@ class Server (CodingConnection.CodingConnection):
             self.del_channel()
             raise
 
-    def handle_connect (self):
+    def handle_connect(self):
         """
         Make connection to remote server.
         """
@@ -80,7 +80,7 @@ class Server (CodingConnection.CodingConnection):
         self.process_connect()
 
     @decorators.notimplemented
-    def process_connect (self):
+    def process_connect(self):
         """
         Connect to remote server, must be implemented in subclass.
         """

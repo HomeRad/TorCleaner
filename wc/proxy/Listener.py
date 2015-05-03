@@ -34,13 +34,13 @@ from .. import log, LOG_PROXY, App
 from . import Dispatcher
 
 
-class Listener (Dispatcher.Dispatcher):
+class Listener(Dispatcher.Dispatcher):
     """
     A listener accepts connections on a specified port. Each
     accepted incoming connection gets delegated to an instance of the
     handler class.
     """
-    def __init__ (self, sockaddr, port, handler, sslctx=None):
+    def __init__(self, sockaddr, port, handler, sslctx=None):
         """
         Create a socket on specified port and start listening to it.
         """
@@ -62,25 +62,25 @@ class Listener (Dispatcher.Dispatcher):
             host = "*:%d" % port
         log.info(LOG_PROXY, "%s listening on %s tcp", App, host)
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Return listener class and address.
         """
         return '<Listener:%s>' % str(self.addr)
 
-    def log (self, msg):
+    def log(self, msg):
         """
         Standard logging is disabled, we dont need it here.
         """
         pass
 
-    def writable (self):
+    def writable(self):
         """
         The listener is never writable, it returns None.
         """
         return None
 
-    def handle_accept (self):
+    def handle_accept(self):
         """
         Start the handler class with the new socket.
         """

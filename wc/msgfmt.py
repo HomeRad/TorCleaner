@@ -37,7 +37,7 @@ __version__ = "1.1"
 MESSAGES = {}
 
 
-def usage (ecode, msg=''):
+def usage(ecode, msg=''):
     """Print usage and msg and exit with given code."""
     print >> sys.stderr, __doc__
     if msg:
@@ -45,13 +45,13 @@ def usage (ecode, msg=''):
     sys.exit(ecode)
 
 
-def add (msgid, transtr, fuzzy):
+def add(msgid, transtr, fuzzy):
     """Add a non-fuzzy translation to the dictionary."""
     if not fuzzy and transtr and not transtr.startswith('\0'):
         MESSAGES[msgid] = transtr
 
 
-def generate ():
+def generate():
     """Return the generated output."""
     keys = MESSAGES.keys()
     # the keys are sorted in the .mo file
@@ -91,7 +91,7 @@ def generate ():
     return output
 
 
-def make (filename, outfile):
+def make(filename, outfile):
     ID = 1
     STR = 2
     MESSAGES.clear()
@@ -179,7 +179,7 @@ def make (filename, outfile):
         print >> sys.stderr, msg
 
 
-def main ():
+def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'hVo:',
                                    ['help', 'version', 'output-file='])

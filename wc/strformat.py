@@ -34,7 +34,7 @@ import pydoc
 from . import i18n
 
 
-def unicode_safe (s):
+def unicode_safe(s):
     """Get unicode string without raising encoding errors. Unknown
     characters of the given encoding will be ignored.
 
@@ -51,7 +51,7 @@ def unicode_safe (s):
     return unicode(str(s), i18n.default_encoding, "ignore")
 
 
-def ascii_safe (s):
+def ascii_safe(s):
     """Get ASCII string without raising encoding errors. Unknown
     characters of the given encoding will be ignored.
 
@@ -65,7 +65,7 @@ def ascii_safe (s):
     return s
 
 
-def is_ascii (s):
+def is_ascii(s):
     """Test if a string can be encoded in ASCII."""
     try:
         s.encode('ascii', 'strict')
@@ -74,7 +74,7 @@ def is_ascii (s):
         return False
 
 
-def is_encoding (text):
+def is_encoding(text):
     """Check if string is a valid encoding."""
     try:
         return codecs.lookup(text)
@@ -82,12 +82,12 @@ def is_encoding (text):
         return False
 
 
-def url_unicode_split (url):
+def url_unicode_split(url):
     """Like urlparse.urlsplit(), but always returning unicode parts."""
     return [unicode_safe(s) for s in urlparse.urlsplit(url)]
 
 
-def unquote (s, matching=False):
+def unquote(s, matching=False):
     """Remove leading and ending single and double quotes.
     The quotes need to match if matching is True. Only one quote from each
     end will be stripped.
@@ -116,7 +116,7 @@ _para_posix = r"(?:%(sep)s)(?:(?:%(sep)s)\s*)+" % {'sep': '\n'}
 _para_win = r"(?:%(sep)s)(?:(?:%(sep)s)\s*)+" % {'sep': '\r\n'}
 _para_ro = re.compile("%s|%s|%s" % (_para_mac, _para_posix, _para_win))
 
-def get_paragraphs (text):
+def get_paragraphs(text):
     """A new paragraph is considered to start at a line which follows
     one or more blank lines (lines containing nothing or just spaces).
     The first line of the text also starts a paragraph."""
@@ -125,7 +125,7 @@ def get_paragraphs (text):
     return _para_ro.split(text)
 
 
-def wrap (text, width, **kwargs):
+def wrap(text, width, **kwargs):
     """Adjust lines of text to be not longer than width. The text will be
     returned unmodified if width <= 0.
     See textwrap.wrap() for a list of supported kwargs.
@@ -138,13 +138,13 @@ def wrap (text, width, **kwargs):
     return os.linesep.join(ret)
 
 
-def indent (text, indent_string="  "):
+def indent(text, indent_string="  "):
     """Indent each line of text with the given indent string."""
     lines = str(text).splitlines()
     return os.linesep.join("%s%s" % (indent_string, x) for x in lines)
 
 
-def get_line_number (s, index):
+def get_line_number(s, index):
     r"""Return the line number of s[index] or zero on errors.
     Lines are assumed to be separated by the ASCII character '\n'."""
     i = 0
@@ -158,14 +158,14 @@ def get_line_number (s, index):
     return line
 
 
-def paginate (text):
+def paginate(text):
     """Print text in pages of lines."""
     pydoc.pager(text)
 
 
 _markup_re = re.compile("<.*?>", re.DOTALL)
 
-def remove_markup (s):
+def remove_markup(s):
     """Remove all <*> html markup tags from s."""
     mo = _markup_re.search(s)
     while mo:
@@ -174,7 +174,7 @@ def remove_markup (s):
     return s
 
 
-def strsize (b):
+def strsize(b):
     """Return human representation of bytes b. A negative number of bytes
     raises a value error."""
     if b < 0:
@@ -194,14 +194,14 @@ def strsize (b):
     return u"%.1fGB" % (float(b) / (1024*1024*1024))
 
 
-def strtime (t):
+def strtime(t):
     """Return ISO 8601 formatted time."""
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t)) + \
            strtimezone()
 
 
 # from quodlibet
-def strduration (duration):
+def strduration(duration):
     """Turn a time value in seconds into hh:mm:ss or mm:ss."""
     if duration < 0:
         duration = abs(duration)
@@ -219,7 +219,7 @@ def strduration (duration):
 
 
 # from quodlibet
-def strduration_long (duration):
+def strduration_long(duration):
     """Turn a time value in seconds into x hours, x minutes, etc."""
     if duration < 0:
         duration = abs(duration)
@@ -258,7 +258,7 @@ def strduration_long (duration):
     return "%s%s" % (prefix, ", ".join(time_str))
 
 
-def strtimezone ():
+def strtimezone():
     """Return timezone info, %z on some platforms, but not supported on all.
     """
     if time.daylight:
@@ -269,14 +269,14 @@ def strtimezone ():
 
 
 _sub_ws = re.compile(r"\s+").sub
-def stripall (s):
+def stripall(s):
     """Remove all whitespace from given string."""
     if not s:
         return s
     return _sub_ws("", s)
 
 
-def limit (s, length=72):
+def limit(s, length=72):
     """If the length of the string exceeds the given limit, it will be cut
     off and three dots will be appended.
 
@@ -294,6 +294,6 @@ def limit (s, length=72):
     return "%s..." % s[:length]
 
 
-def strline (s):
+def strline(s):
     """Display string representation on one line."""
     return u"`%s'" % unicode(s).replace(u"\n", u"\\n")

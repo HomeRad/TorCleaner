@@ -47,7 +47,7 @@ example. 1 IN A 10.0.0.1
 ;ADDITIONAL
 """
 
-class TestResolver (unittest.TestCase):
+class TestResolver(unittest.TestCase):
 
     if sys.platform != 'win32':
         def testRead(self):

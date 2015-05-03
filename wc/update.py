@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2004-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Routines for updating filter and rating configuration.
 """
@@ -61,7 +47,7 @@ from . import gzip2 as gzip
 
 UA_STR = '%s/%s' % (Name, Version)
 
-def decode (page):
+def decode(page):
     """
     Gunzip or deflate a compressed page.
     """
@@ -93,12 +79,12 @@ def decode (page):
     return page
 
 
-class HttpWithGzipHandler (urllib2.HTTPHandler):
+class HttpWithGzipHandler(urllib2.HTTPHandler):
     """
     Support gzip encoding.
     """
 
-    def http_open (self, req):
+    def http_open(self, req):
         """
         Open and gunzip request data.
         """
@@ -106,37 +92,37 @@ class HttpWithGzipHandler (urllib2.HTTPHandler):
 
 
 if hasattr(httplib, 'HTTPS'):
-    class HttpsWithGzipHandler (urllib2.HTTPSHandler):
+    class HttpsWithGzipHandler(urllib2.HTTPSHandler):
         """
         Support gzip encoding.
         """
 
-        def http_open (self, req):
+        def http_open(self, req):
             """
             Open and gunzip request data.
             """
             return decode(urllib2.HTTPSHandler.http_open(self, req))
 
 
-class PasswordManager (object):
+class PasswordManager(object):
     """
     Simple user/password store.
     """
 
-    def __init__ (self, user, password):
+    def __init__(self, user, password):
         """
         Store given credentials.
         """
         self.user = user
         self.password = password
 
-    def add_password (self, realm, uri, user, passwd):
+    def add_password(self, realm, uri, user, passwd):
         """
         Already have the password, ignore parameters.
         """
         pass
 
-    def find_user_password (self, realm, authuri):
+    def find_user_password(self, realm, authuri):
         """
         Return stored credentials.
         """
@@ -144,7 +130,7 @@ class PasswordManager (object):
 
 
 _opener = None
-def urlopen (url, proxies=None, data=None):
+def urlopen(url, proxies=None, data=None):
     """
     Return connected request object for given url.
     All errors raise exceptions.
@@ -180,7 +166,7 @@ def urlopen (url, proxies=None, data=None):
 
 
 # Global useful URL opener; throws IOError on error
-def open_url (url, proxies=None):
+def open_url(url, proxies=None):
     """
     Return connected request object for given url.
 
@@ -207,7 +193,7 @@ def open_url (url, proxies=None):
 
 # ====================== end of urlutils.py =================================
 
-def update_filter (wconfig, dryrun=False, log=None):
+def update_filter(wconfig, dryrun=False, log=None):
     """
     Update the given configuration object with .zap files found at baseurl.
     If dryrun is True, only print out the changes but do nothing.
@@ -320,7 +306,7 @@ def update_filter (wconfig, dryrun=False, log=None):
     return chg
 
 
-def update_ratings (wconfig, dryrun=False, log=None):
+def update_ratings(wconfig, dryrun=False, log=None):
     """
     Update rating database from configured online rating service.
     """

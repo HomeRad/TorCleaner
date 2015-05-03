@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2003-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter some security flaws out of HTML tags.
 
@@ -30,7 +16,7 @@ from ... import log, LOG_HTML, strformat, url as urlutil
 
 # helper methods to check/sanitize values
 
-def has_lots_of_percents (url):
+def has_lots_of_percents(url):
     """
     Return True iff URL has more than 10 percent chars in a row.
     """
@@ -39,7 +25,7 @@ def has_lots_of_percents (url):
     return '%'*11 in url
 
 
-def has_dashes_in_hostname (url):
+def has_dashes_in_hostname(url):
     """
     Return True iff URL hostname has more than 2 consecutive dashes.
     """
@@ -55,7 +41,7 @@ def has_dashes_in_hostname (url):
     return "---" in host
 
 
-def check_javascript_url (attrs, name, htmlfilter):
+def check_javascript_url(attrs, name, htmlfilter):
     """
     Check if url has javascript: embedded.
     """
@@ -70,7 +56,7 @@ def check_javascript_url (attrs, name, htmlfilter):
 
 isfloat = re.compile(r"^[1-9][0-9]*\.[0-9]+$").search
 
-def check_length (attrs, name, htmlfilter, maxlen=4):
+def check_length(attrs, name, htmlfilter, maxlen=4):
     """
     Check correct format of a length attribute. Allowed are
     digits, followed by 'px', 'em' or '%'.
@@ -105,7 +91,7 @@ def check_length (attrs, name, htmlfilter, maxlen=4):
         del attrs[name]
 
 
-def check_attr_size (attrs, name, htmlfilter, maxlen=4):
+def check_attr_size(attrs, name, htmlfilter, maxlen=4):
     """
     Sanitize too large values (usually used for length attributes).
     Side effect: attribute value is stripped from whitespace.
@@ -122,7 +108,7 @@ def check_attr_size (attrs, name, htmlfilter, maxlen=4):
         del attrs[name]
 
 
-def check_attr_number (attrs, htmlfilter, maxnum=200):
+def check_attr_number(attrs, htmlfilter, maxnum=200):
     """
     Restrict the number of attributes a start tag can have. Too much attributes
     are known to crash some browsers.
@@ -136,7 +122,7 @@ def check_attr_number (attrs, htmlfilter, maxnum=200):
             attrs.popitem()
 
 
-def check_url (attrs, name, htmlfilter):
+def check_url(attrs, name, htmlfilter):
     """
     Check if url has suspicious patterns.
     """
@@ -159,12 +145,12 @@ def check_url (attrs, name, htmlfilter):
 
 # security checker
 
-class HtmlSecurity (object):
+class HtmlSecurity(object):
     """
     Scan and repair known security exploits in HTML start/end tags.
     """
 
-    def __init__ (self):
+    def __init__(self):
         # inside object tag calling WinHelp
         self.in_winhelp = False
         # number of nested <object> levels
@@ -172,7 +158,7 @@ class HtmlSecurity (object):
 
     # scan methods
 
-    def scan_start_tag (self, tag, attrs, htmlfilter):
+    def scan_start_tag(self, tag, attrs, htmlfilter):
         """
         Delegate to individual start tag handlers.
         """
@@ -186,7 +172,7 @@ class HtmlSecurity (object):
         check_length(attrs, 'width', htmlfilter)
         check_length(attrs, 'height', htmlfilter)
 
-    def scan_end_tag (self, tag):
+    def scan_end_tag(self, tag):
         """
         Delegate to individual end tag handlers.
         """
@@ -197,19 +183,19 @@ class HtmlSecurity (object):
 
     # tag specific scan methods, sorted alphabetically
 
-    def a_start (self, attrs, htmlfilter):
+    def a_start(self, attrs, htmlfilter):
         """
         Check <a> start tag.
         """
         check_url(attrs, 'href', htmlfilter)
 
-    def applet_start (self, attrs, htmlfilter):
+    def applet_start(self, attrs, htmlfilter):
         """
         Check <applet> start tag.
         """
         check_length(attrs, 'hspace', htmlfilter)
 
-    def body_start (self, attrs, htmlfilter):
+    def body_start(self, attrs, htmlfilter):
         """
         Check <body> start tag.
         """
@@ -222,7 +208,7 @@ class HtmlSecurity (object):
             msg = "%s\n Detected and prevented IE window() crash bug"
             log.info(LOG_HTML, msg, htmlfilter)
 
-    def embed_start (self, attrs, htmlfilter):
+    def embed_start(self, attrs, htmlfilter):
         """
         Check <embed> start tag.
         """
@@ -244,7 +230,7 @@ class HtmlSecurity (object):
                 log.info(LOG_HTML, msg, htmlfilter, src)
                 del attrs['src']
 
-    def fieldset_start (self, attrs, htmlfilter):
+    def fieldset_start(self, attrs, htmlfilter):
         """
         Check <fieldset> start tag.
         """
@@ -255,27 +241,27 @@ class HtmlSecurity (object):
             log.info(LOG_HTML, msg, htmlfilter)
             del attrs['style']
 
-    def font_start (self, attrs, htmlfilter):
+    def font_start(self, attrs, htmlfilter):
         """
         Check <font> start tag.
         """
         check_attr_size(attrs, 'size', htmlfilter)
 
-    def frame_start (self, attrs, htmlfilter):
+    def frame_start(self, attrs, htmlfilter):
         """
         Check <frame> start tag.
         """
         check_attr_size(attrs, 'src', htmlfilter, maxlen=1024)
         check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
 
-    def hr_start (self, attrs, htmlfilter):
+    def hr_start(self, attrs, htmlfilter):
         """
         Check <hr> start tag.
         """
         # prevent CAN-2003-0469
         check_attr_size(attrs, 'align', htmlfilter, maxlen=50)
 
-    def iframe_start (self, attrs, htmlfilter):
+    def iframe_start(self, attrs, htmlfilter):
         """
         Check <iframe> start tag.
         """
@@ -283,7 +269,7 @@ class HtmlSecurity (object):
         check_attr_size(attrs, 'name', htmlfilter, maxlen=1024)
         check_url(attrs, 'src', htmlfilter)
 
-    def img_start (self, attrs, htmlfilter):
+    def img_start(self, attrs, htmlfilter):
         """
         Check <img> start tag.
         """
@@ -293,7 +279,7 @@ class HtmlSecurity (object):
         check_url(attrs, 'lowsrc', htmlfilter)
         check_javascript_url(attrs, 'lowsrc', htmlfilter)
 
-    def input_start (self, attrs, htmlfilter):
+    def input_start(self, attrs, htmlfilter):
         """
         Check <input> start tag.
         """
@@ -303,13 +289,13 @@ class HtmlSecurity (object):
             log.info(LOG_HTML, msg, htmlfilter)
             del attrs['type']
 
-    def link_start (self, attrs, htmlfilter):
+    def link_start(self, attrs, htmlfilter):
         # CAN-2005-1155 and others
         if 'rel' in attrs and 'href' in attrs:
             if attrs.get_true('rel', u"").strip().lower() == 'icon':
                 check_javascript_url(attrs, 'href', htmlfilter)
 
-    def meta_start (self, attrs, htmlfilter):
+    def meta_start(self, attrs, htmlfilter):
         """
         Check <meta> start tag.
         """
@@ -332,7 +318,7 @@ class HtmlSecurity (object):
                         del attrs['content']
                         break
 
-    def object_start (self, attrs, htmlfilter):
+    def object_start(self, attrs, htmlfilter):
         """
         Check <object> start tag.
         """
@@ -374,7 +360,7 @@ class HtmlSecurity (object):
                 log.info(LOG_HTML, msg, htmlfilter)
                 del attrs['classid']
 
-    def object_end (self):
+    def object_end(self):
         """
         Check <object> start tag.
         """
@@ -383,7 +369,7 @@ class HtmlSecurity (object):
         if self.in_winhelp:
             self.in_winhelp = False
 
-    def param_start (self, attrs, htmlfilter):
+    def param_start(self, attrs, htmlfilter):
         """
         Check <param> start tag.
         """
@@ -394,7 +380,7 @@ class HtmlSecurity (object):
                 log.info(LOG_HTML, msg, htmlfilter)
                 del attrs['value']
 
-    def table_start (self, attrs, htmlfilter):
+    def table_start(self, attrs, htmlfilter):
         """
         Check <table> start tag.
         """

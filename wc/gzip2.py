@@ -170,10 +170,10 @@ class GzipFile:
         magic = self.fileobj.read(2)
         if magic != '\037\213':
             raise IOError('Not a gzipped file')
-        method = ord( self.fileobj.read(1) )
+        method = ord(self.fileobj.read(1))
         if method != 8:
             raise IOError('Unknown compression method')
-        flag = ord( self.fileobj.read(1) )
+        flag = ord(self.fileobj.read(1))
         self.mtime = read32(self.fileobj)
         # extraflag = self.fileobj.read(1)
         # os = self.fileobj.read(1)
@@ -210,7 +210,7 @@ class GzipFile:
         if len(data) > 0:
             self.size = self.size + len(data)
             self.crc = zlib.crc32(data, self.crc) & 0xffffffffL
-            self.fileobj.write( self.compress.compress(data) )
+            self.fileobj.write(self.compress.compress(data))
             self.offset += len(data)
 
     def read(self, size=-1):
@@ -265,7 +265,7 @@ class GzipFile:
             if pos == self.fileobj.tell():
                 raise EOFError("Reached EOF")
             else:
-                self.fileobj.seek( pos ) # Return to original position
+                self.fileobj.seek(pos) # Return to original position
 
             self._init_read()
             self._read_gzip_header()
@@ -281,11 +281,11 @@ class GzipFile:
         if buf == "":
             uncompress = self.decompress.flush()
             self._read_eof()
-            self._add_read_data( uncompress )
+            self._add_read_data(uncompress)
             raise EOFError('Reached EOF')
 
         uncompress = self.decompress.decompress(buf)
-        self._add_read_data( uncompress )
+        self._add_read_data(uncompress)
 
         if self.decompress.unused_data != "":
             # Ending case: we've come to the end of a member in the file,

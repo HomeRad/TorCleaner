@@ -21,14 +21,14 @@ import os
 from . import log, LOG_ROOT
 from .socketutil import create_socket
 
-class ClamavError (Exception):
+class ClamavError(Exception):
     pass
 
 
-class ClamdScanner (object):
+class ClamdScanner(object):
     """Virus scanner using a clamd daemon process."""
 
-    def __init__ (self, clamav_conf):
+    def __init__(self, clamav_conf):
         """Initialize clamd daemon process sockets."""
         self.infected = []
         self.errors = []
@@ -37,7 +37,7 @@ class ClamdScanner (object):
              self.sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
         self.wsock = self.new_scansock()
 
-    def new_scansock (self):
+    def new_scansock(self):
         """Return a connected socket for sending scan data to it."""
         port = None
         try:
@@ -63,11 +63,11 @@ class ClamdScanner (object):
             raise
         return wsock
 
-    def scan (self, data):
+    def scan(self, data):
         """Scan given data for viruses."""
         self.wsock.sendall(data)
 
-    def close (self):
+    def close(self):
         """Get results and close clamd daemon sockets."""
         self.wsock.close()
         data = self.sock.recv(self.sock_rcvbuf)
@@ -80,7 +80,7 @@ class ClamdScanner (object):
         self.sock.close()
 
 
-def canonical_clamav_conf ():
+def canonical_clamav_conf():
     """Default clamav configs for various platforms."""
     if os.name == 'posix':
         clamavconf = "/etc/clamav/clamd.conf"
@@ -92,7 +92,7 @@ def canonical_clamav_conf ():
 
 
 _clamav_conf = None
-def init_clamav_conf (conf):
+def init_clamav_conf(conf):
     """Initialize clamav configuration."""
     if not conf:
         # clamav was not configured
@@ -104,21 +104,21 @@ def init_clamav_conf (conf):
         log.warn(LOG_ROOT, "No ClamAV config file found at %r.", conf)
 
 
-def get_clamav_conf ():
+def get_clamav_conf():
     """Get the ClamavConfig instance."""
     return _clamav_conf
 
 
-def get_sockinfo (host, port=None):
+def get_sockinfo(host, port=None):
     """Return socket.getaddrinfo for given host and port."""
     family, socktype = socket.AF_INET, socket.SOCK_STREAM
     return socket.getaddrinfo(host, port, family, socktype)
 
 
-class ClamavConfig (dict):
+class ClamavConfig(dict):
     """Clamav configuration wrapper, with clamd connection method."""
 
-    def __init__ (self, filename):
+    def __init__(self, filename):
         """Parse clamav configuration file."""
         super(ClamavConfig, self).__init__()
         self.parseconf(filename)
@@ -127,7 +127,7 @@ class ClamavConfig (dict):
         if self.get('TCPSocket') and self.get('LocalSocket'):
             raise ClamavError(_("only one of TCPSocket and LocalSocket must be enabled"))
 
-    def parseconf (self, filename):
+    def parseconf(self, filename):
         """Parse clamav configuration from given file."""
         with open(filename) as fd:
             # yet another config format, sigh
@@ -142,7 +142,7 @@ class ClamavConfig (dict):
                 else:
                     self[split[0]] = split[1]
 
-    def new_connection (self):
+    def new_connection(self):
         """Connect to clamd for stream scanning.
 
         @return: tuple (connected socket, host)
@@ -157,7 +157,7 @@ class ClamavConfig (dict):
             raise ClamavError(_("one of TCPSocket or LocalSocket must be enabled"))
         return sock, host
 
-    def create_local_socket (self):
+    def create_local_socket(self):
         """Create local socket, connect to it and return socket object."""
         sock = create_socket(socket.AF_UNIX, socket.SOCK_STREAM)
         addr = self['LocalSocket']
@@ -168,7 +168,7 @@ class ClamavConfig (dict):
             raise
         return sock
 
-    def create_tcp_socket (self, host):
+    def create_tcp_socket(self, host):
         """Create tcp socket, connect to it and return socket object."""
         port = int(self['TCPSocket'])
         sockinfo = get_sockinfo(host, port=port)
@@ -181,7 +181,7 @@ class ClamavConfig (dict):
         return sock
 
 
-def scan (data):
+def scan(data):
     """Scan data for viruses.
     @return (infection msgs, errors)
     @rtype ([], [])

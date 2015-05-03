@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter modules.
 
@@ -93,35 +79,35 @@ ClientFilterStages = FilterStages[2:5]
 ServerFilterStages = FilterStages[7:10]
 
 
-class FilterException (StandardError):
+class FilterException(StandardError):
     """Generic filter exception."""
     pass
 
 
-class FilterWait (FilterException):
+class FilterWait(FilterException):
     """Raised when a filter waits for more data. The filter should
     buffer the already passed data until the next call (and until
     it has enough data to proceed)."""
     pass
 
 
-class FilterRating (FilterException):
+class FilterRating(FilterException):
     """Raised when a filter detected rated content.
     The proxy must not have sent any content."""
     pass
 
 
-class FilterProxyError (FilterException):
+class FilterProxyError(FilterException):
     """Raised to signal a proxy error which should be delegated to
     the HTTP client."""
 
-    def __init__ (self, status, msg, text):
+    def __init__(self, status, msg, text):
         self.status = status
         self.msg = msg
         self.text = text
 
 
-def GetRuleFromName (name):
+def GetRuleFromName(name):
     """Return new rule instance for given rule name."""
 
     name = '%sRule' % name.capitalize()
@@ -129,7 +115,7 @@ def GetRuleFromName (name):
     return getattr(mod, name)()
 
 
-def applyfilter (filterstage, data, fun, attrs):
+def applyfilter(filterstage, data, fun, attrs):
     """Apply all filters which are registered in the given filter stage.
     For different filter stages we have different data objects.
     Look at the filter examples.
@@ -154,7 +140,7 @@ def applyfilter (filterstage, data, fun, attrs):
     return data
 
 
-def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
+def get_filterattrs(url, localhost, filterstages, browser='Calzilla/6.0',
                      clientheaders=None, serverheaders=None, headers=None):
     """Init external state objects."""
     if clientheaders is None:
@@ -187,7 +173,7 @@ def get_filterattrs (url, localhost, filterstages, browser='Calzilla/6.0',
     return attrs
 
 
-def which_filters (url, mime):
+def which_filters(url, mime):
     """Deduce which filters apply to the given url/mime."""
     filters_by_stage = {}
     for stage in FilterStages:
@@ -205,7 +191,7 @@ def which_filters (url, mime):
     return filters_by_stage
 
 
-def show_rules (url, mime):
+def show_rules(url, mime):
     """Build an html document showing which rules are enabled for the given
     url and mime type."""
     lang = 'en'

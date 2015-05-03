@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 HTTP digest authentication routines.
 """
@@ -40,7 +26,7 @@ nonces = {} # nonce to timestamp
 max_noncesecs = 2*60*60 # max. lifetime of a nonce is 2 hours (and 5 minutes)
 
 
-def check_nonces ():
+def check_nonces():
     """
     Deprecate old digest nonces.
     """
@@ -54,7 +40,7 @@ def check_nonces ():
     make_timer(300, check_nonces)
 
 
-def get_digest_challenge (stale="false"):
+def get_digest_challenge(stale="false"):
     """
     Return initial challenge token for digest authentication.
     """
@@ -68,21 +54,21 @@ def get_digest_challenge (stale="false"):
     return "Digest %s" % auth
 
 
-def parse_digest_challenge (challenge):
+def parse_digest_challenge(challenge):
     """
     Parse a digest challenge into a dictionary.
     """
     return parse_auth({}, challenge)
 
 
-def parse_digest_credentials (credentials):
+def parse_digest_credentials(credentials):
     """
     Parse digest credentials into a dictionary.
     """
     return parse_auth({}, credentials)
 
 
-def check_digest_credentials (credentials, **attrs):
+def check_digest_credentials(credentials, **attrs):
     """
     Check digest credentials.
     """
@@ -117,7 +103,7 @@ def check_digest_credentials (credentials, **attrs):
     return True
 
 
-def check_digest_values (auth):
+def check_digest_values(auth):
     """
     Check basic digest values on vadility; auth can be a parsed
     challenge or credential.
@@ -139,7 +125,7 @@ def check_digest_values (auth):
     return True
 
 
-def get_digest_credentials (challenge, **attrs):
+def get_digest_credentials(challenge, **attrs):
     """
     Return digest credentials for given challenge.
     """
@@ -174,7 +160,7 @@ def get_digest_credentials (challenge, **attrs):
     return "Digest %s" % base
 
 
-def get_response_digest (challenge, **attrs):
+def get_response_digest(challenge, **attrs):
     """
     Calculate the response digest.
     The get_response_digest function is taken from the following sources
@@ -229,7 +215,7 @@ def get_response_digest (challenge, **attrs):
 
 
 _hexchars = "0123456789abcdef"
-def get_cnonce ():
+def get_cnonce():
     """
     Return 16 random hex characters.
     """
@@ -237,7 +223,7 @@ def get_cnonce ():
 
 
 _nonce_count = 0
-def get_nonce_count ():
+def get_nonce_count():
     """
     Increment nonce count and return it as formatted string.
     """
@@ -246,14 +232,14 @@ def get_nonce_count ():
     return "%08d" % _nonce_count
 
 
-def get_entity_digest (data, chal):
+def get_entity_digest(data, chal):
     """
     XXX not implemented yet, returns None.
     """
     return None
 
 
-def encode_digest (digest):
+def encode_digest(digest):
     """
     Encode given digest in hexadecimal representation and return it.
     """
@@ -267,7 +253,7 @@ def encode_digest (digest):
 
 
 from wc.proxy.timer import make_timer
-def init ():
+def init():
     """
     Check for timed out nonces every 5 minutes.
     """

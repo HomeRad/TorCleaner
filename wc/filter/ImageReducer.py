@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Reduce big images to JPGs to save bandwidth.
 """
@@ -27,14 +13,14 @@ if HasPil:
 
 
 # XXX honor minimal_size_bytes
-class ImageReducer (Filter.Filter):
+class ImageReducer(Filter.Filter):
     """
     Reduce the image size by making low quality JPEGs.
     """
 
     enable = HasPil
 
-    def __init__ (self):
+    def __init__(self):
         """
         Initialize image reducer flags.
         """
@@ -50,7 +36,7 @@ class ImageReducer (Filter.Filter):
         self.quality = 20
         self.init_image_reducer = True
 
-    def filter (self, data, attrs):
+    def filter(self, data, attrs):
         """
         Feed image data to buffer.
         """
@@ -62,7 +48,7 @@ class ImageReducer (Filter.Filter):
         attrs['imgreducer_buf'].write(data)
         return ''
 
-    def finish (self, data, attrs):
+    def finish(self, data, attrs):
         """
         Feed image data to buffer, then convert it and return result.
         """
@@ -94,7 +80,7 @@ class ImageReducer (Filter.Filter):
             return p.getvalue()
         return data.getvalue()
 
-    def set_ctype_header (self, attrs):
+    def set_ctype_header(self, attrs):
         """
         Set Content-Type header value to JPEG.
         """
@@ -102,7 +88,7 @@ class ImageReducer (Filter.Filter):
         headers['data']['Content-Type'] = 'image/jpeg'
         Headers.remove_headers(headers['data'], ['Content-Length'])
 
-    def update_attrs (self, attrs, url, localhost, stages, headers):
+    def update_attrs(self, attrs, url, localhost, stages, headers):
         """
         Initialize image reducer buffer and flags.
         """

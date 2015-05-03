@@ -1,35 +1,21 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2010 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Basic proxy test classes and methods.
 
 Example test for a HEAD request:
-class test_xyz (ProxyTest):
+class test_xyz(ProxyTest):
     "check HEAD request"
 
-    def test_xyz (self):
+    def test_xyz(self):
         self.start_test()
 
     # now override test methods
 
-    def get_response_method (self):
+    def get_response_method(self):
         return "HEAD"
 
-    def check_response_content (self, response):
+    def check_response_content(self, response):
         # response must not have content
         self.assertTrue(not response.content)
 """
@@ -51,32 +37,32 @@ from nose import SkipTest
 
 _debug = 0
 if _debug:
-    def debug (msg):
+    def debug(msg):
         print >> sys.stderr, "TEST", msg
 else:
     debug = wc.dummy.Dummy()
 
 ###################### utility functions ######################
 
-class TrailerHandler (object):
+class TrailerHandler(object):
     """
     Store chunk trailer for chunked encoding.
     """
 
-    def __init__ (self, headers):
+    def __init__(self, headers):
         """
         Init trailer store and set self.headers.
         """
         self.chunktrailer = StringIO.StringIO()
         self.headers = headers
 
-    def write_trailer (self, data):
+    def write_trailer(self, data):
         """
         Write trailer data.
         """
         self.chunktrailer.write(data)
 
-    def handle_trailer (self):
+    def handle_trailer(self):
         """
         Parse trailer headers and write them into self.headers.
         """
@@ -88,7 +74,7 @@ class TrailerHandler (object):
                 self.headers.append("%s: %s" % (name, value))
 
 
-def decode_transfer (encoding, data, handler):
+def decode_transfer(encoding, data, handler):
     """
     Decode data according to given transfer encoding. Optional the header
     list is updated since the "chunked" encoding can have additional
@@ -112,7 +98,7 @@ def decode_transfer (encoding, data, handler):
     return data
 
 
-def decode_content (encoding, data):
+def decode_content(encoding, data):
     """
     Decode data with given content-encoding.
     """
@@ -133,7 +119,7 @@ def decode_content (encoding, data):
     return data
 
 
-def socket_send (sock, data):
+def socket_send(sock, data):
     """
     Send data to socket.
     """
@@ -141,7 +127,7 @@ def socket_send (sock, data):
     debug("Socket sent %d bytes: %r" % (len(data), data))
 
 
-def socket_read (sock):
+def socket_read(sock):
     """
     Read data from socket until no more data is available.
     """
@@ -155,7 +141,7 @@ def socket_read (sock):
     return data
 
 
-def socketfile_read (sock):
+def socketfile_read(sock):
     """
     Read data from socket until no more data is available.
     """
@@ -169,25 +155,25 @@ def socketfile_read (sock):
     return data + sock._rbuf
 
 
-class HttpData (object):
+class HttpData(object):
     """
     Store HTTP data.
     """
 
-    def __init__ (self, headers, content=None):
+    def __init__(self, headers, content=None):
         """
         Set headers and content variables.
         """
         self.headers = headers
         self.content = content
 
-    def has_header (self, name):
+    def has_header(self, name):
         """
         Test if header with given name is stored.
         """
         return self.num_headers(name) > 0
 
-    def num_headers (self, name):
+    def num_headers(self, name):
         """
         Count number of headers with given name.
         """
@@ -199,7 +185,7 @@ class HttpData (object):
                 num += 1
         return num
 
-    def get_header (self, name):
+    def get_header(self, name):
         """
         Get first header value with given name.
         @raise: KeyError if header is not found
@@ -212,12 +198,12 @@ class HttpData (object):
         raise KeyError(name)
 
 
-class HttpRequest (HttpData):
+class HttpRequest(HttpData):
     """
     Store HTTP request data.
     """
 
-    def __init__ (self, method, uri, version, headers, content=None):
+    def __init__(self, method, uri, version, headers, content=None):
         """
         @param method: request method
         @type method: string
@@ -236,12 +222,12 @@ class HttpRequest (HttpData):
         super(HttpRequest, self).__init__(headers, content=content)
 
 
-class HttpResponse (HttpData):
+class HttpResponse(HttpData):
     """
     Store HTTP response data.
     """
 
-    def __init__ (self, version, status, msg, headers, content=None):
+    def __init__(self, version, status, msg, headers, content=None):
         """
         @param version: HTTP version (major,minor)
         @type version: tuple (int, int)
@@ -260,18 +246,18 @@ class HttpResponse (HttpData):
         super(HttpResponse, self).__init__(headers, content=content)
 
 
-class HttpClient (object):
+class HttpClient(object):
     """
     Simple minded HTTP client class.
     """
 
-    def __init__ (self):
+    def __init__(self):
         """
         Initial the socket is not connected
         """
         self.socket = None
 
-    def connect (self, addr):
+    def connect(self, addr):
         """
         Connect to given address.
         """
@@ -279,20 +265,20 @@ class HttpClient (object):
         self.socket = socket.socket()
         self.socket.connect(addr)
 
-    def connected (self):
+    def connected(self):
         """
         Check if this client is already connected.
         """
         return self.socket != None
 
-    def send_data (self, data):
+    def send_data(self, data):
         """
         Send complete data to socket.
         """
         debug("Client send")
         socket_send(self.socket, data)
 
-    def read_data (self):
+    def read_data(self):
         """
         Read until no more data is available.
         """
@@ -300,7 +286,7 @@ class HttpClient (object):
         return socket_read(self.socket)
 
 
-class HttpServer (BaseHTTPServer.HTTPServer):
+class HttpServer(BaseHTTPServer.HTTPServer):
     """
     Custom HTTP server class.
     """
@@ -329,12 +315,12 @@ class HttpServer (BaseHTTPServer.HTTPServer):
         pass
 
 
-class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
+class HttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     """
     Custom HTTP request handler.
     """
 
-    def handle_one_request (self):
+    def handle_one_request(self):
         """
         Read one request and parse it. Then let the TestCase class
         check the request and construct the response which is sent back.
@@ -353,13 +339,13 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
         self.wfile.write(data)
         debug("... ok.")
 
-    def log_message (self, format, *args):
+    def log_message(self, format, *args):
         """
         Suppress request/error logging.
         """
         pass
 
-    def get_request (self):
+    def get_request(self):
         """
         Get HttpRequest from internal data
         """
@@ -386,7 +372,7 @@ class HttpRequestHandler (BaseHTTPServer.BaseHTTPRequestHandler):
 
 ################ Proxy tests ######################
 
-class ProxyTest (unittest.TestCase):
+class ProxyTest(unittest.TestCase):
     """
     Basic proxy test case. Subclasses have complete control over
     request or response data by overriding the
@@ -396,7 +382,7 @@ class ProxyTest (unittest.TestCase):
     the request and reading the response.
     """
 
-    def start_client (self):
+    def start_client(self):
         """
         Start a HTTP client which is ready for use.
         @return: http client
@@ -405,7 +391,7 @@ class ProxyTest (unittest.TestCase):
         debug("Start client")
         return HttpClient()
 
-    def start_server (self):
+    def start_server(self):
         """
         Start a HTTP server which is ready for use.
         @return: http server
@@ -421,7 +407,7 @@ class ProxyTest (unittest.TestCase):
         httpd.tester = self
         return httpd
 
-    def get_request (self):
+    def get_request(self):
         """
         Build a HTTP request from individual get_request_* methods.
         @return: HTTP request
@@ -434,25 +420,25 @@ class ProxyTest (unittest.TestCase):
         headers = self.get_request_headers(content)
         return HttpRequest(method, uri, version, headers, content=content)
 
-    def get_request_method (self):
+    def get_request_method(self):
         """
         Get HTTP request method; default is 'GET'.
         """
         return "GET"
 
-    def get_request_uri (self):
+    def get_request_uri(self):
         """
         Get HTTP request URI; default is '/'.
         """
         return "/"
 
-    def get_request_version (self):
+    def get_request_version(self):
         """
         Get HTTP request version; default is 1.1.
         """
         return (1, 1)
 
-    def get_request_content (self):
+    def get_request_content(self):
         """
         Get HTTP request content; default is an empty string.
         Note that some request methods do not allow a non-empty
@@ -460,7 +446,7 @@ class ProxyTest (unittest.TestCase):
         """
         return ""
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         """
         Get request headers; default are a Host: and a Proxy-Connection:
         header, and a Content-Length: header if a non-empty request
@@ -475,7 +461,7 @@ class ProxyTest (unittest.TestCase):
             headers.append("Content-Length: %d" % len(content))
         return headers
 
-    def construct_request_data (self, request):
+    def construct_request_data(self, request):
         """
         Construct valid HTTP request data string.
         """
@@ -490,7 +476,7 @@ class ProxyTest (unittest.TestCase):
             data += request.content
         return data
 
-    def check_request (self, request):
+    def check_request(self, request):
         """
         Check individual parts of the request with check_request_*
         methods.
@@ -502,37 +488,37 @@ class ProxyTest (unittest.TestCase):
         self.check_request_headers(request)
         self.check_request_content(request)
 
-    def check_request_method (self, request):
+    def check_request_method(self, request):
         """
         Check HTTP request method.
         """
         self.assertEqual(request.method, self.get_request_method())
 
-    def check_request_uri (self, request):
+    def check_request_uri(self, request):
         """
         Check HTTP request URI.
         """
         self.assertEqual(request.uri, self.get_request_uri())
 
-    def check_request_version (self, request):
+    def check_request_version(self, request):
         """
         Check HTTP request version.
         """
         self.assertEqual(request.version, self.get_request_version())
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         """
         Check HTTP request headers.
         """
         pass
 
-    def check_request_content (self, request):
+    def check_request_content(self, request):
         """
         Check HTTP request content.
         """
         self.assertEqual(request.content, self.get_request_content())
 
-    def get_response (self):
+    def get_response(self):
         """
         Build a HTTP response from individual get_response_* methods.
         @return: HTTP response
@@ -545,7 +531,7 @@ class ProxyTest (unittest.TestCase):
         headers = self.get_response_headers(content)
         return HttpResponse(version, status, msg, headers, content=content)
 
-    def get_response_version (self):
+    def get_response_version(self):
         """
         Get HTTP response version; default (1, 1).
         @return: HTTP version
@@ -553,7 +539,7 @@ class ProxyTest (unittest.TestCase):
         """
         return (1, 1)
 
-    def get_response_status (self):
+    def get_response_status(self):
         """
         Get HTTP response status; default 200.
         @return: status
@@ -561,19 +547,19 @@ class ProxyTest (unittest.TestCase):
         """
         return 200
 
-    def get_response_message (self, status):
+    def get_response_message(self, status):
         """
         Get HTTP response message; default 'OK'.
         """
         return "OK"
 
-    def get_response_content (self):
+    def get_response_content(self):
         """
         Get HTTP response content; default 'hui'.
         """
         return "hui"
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         """
         Get HTTP response headers; default are a Content-Type: text/plain
         and a Content-Length: header if content was non-empty.
@@ -585,7 +571,7 @@ class ProxyTest (unittest.TestCase):
             headers.append("Content-Length: %d" % len(content))
         return headers
 
-    def construct_response_data (self, response):
+    def construct_response_data(self, response):
         """
         Construct a HTTP response data string.
         """
@@ -600,7 +586,7 @@ class ProxyTest (unittest.TestCase):
             data += response.content
         return data
 
-    def parse_response_data (self, data):
+    def parse_response_data(self, data):
         """
         Parse HTTP response data.
         @return: HTTP response
@@ -638,7 +624,7 @@ class ProxyTest (unittest.TestCase):
             headers.extend([x[:-2] for x in rfcheaders.headers])
         return HttpResponse(version, status, msg, headers, content=data)
 
-    def check_response (self, response):
+    def check_response(self, response):
         """
         Check individual parts of the response with check_response_*
         methods.
@@ -650,19 +636,19 @@ class ProxyTest (unittest.TestCase):
         self.check_response_headers(response)
         self.check_response_content(response)
 
-    def check_response_version (self, response):
+    def check_response_version(self, response):
         """
         Check HTTP response version.
         """
         self.assertEqual(response.version, self.get_response_version())
 
-    def check_response_status (self, response):
+    def check_response_status(self, response):
         """
         Check HTTP response status.
         """
         self.assertEqual(response.status, self.get_response_status())
 
-    def check_response_message (self, response):
+    def check_response_message(self, response):
         """
         Check HTTP response message.
         """
@@ -671,14 +657,14 @@ class ProxyTest (unittest.TestCase):
             msg = self.get_response_message(response.status)
             self.assertEqual(response.msg, msg)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         """
         Check HTTP response headers.
         """
         # no standard checks here
         pass
 
-    def check_response_content (self, response):
+    def check_response_content(self, response):
         """
         Check HTTP response content.
         """
@@ -686,7 +672,7 @@ class ProxyTest (unittest.TestCase):
         if response.status == self.get_response_status():
             self.assertEqual(response.content, self.get_response_content())
 
-    def start_test (self):
+    def start_test(self):
         """
         Main test method. Start client and server, then send request
         and read response.

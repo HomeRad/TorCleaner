@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 SSL related utility functions.
 """
@@ -23,7 +9,7 @@ from .. import log, LOG_PROXY, AppName
 from OpenSSL import SSL, crypto
 
 
-def exist_certificates (configdir):
+def exist_certificates(configdir):
     """
     Ensure that all certificates are present in given config directory.
     """
@@ -34,14 +20,14 @@ def exist_certificates (configdir):
     return True
 
 
-def dump_certificate (cert, filetype=crypto.FILETYPE_PEM):
+def dump_certificate(cert, filetype=crypto.FILETYPE_PEM):
     """
     A helper to dump an incoming cert as a PEM.
     """
     return crypto.dump_certificate(filetype, cert)
 
 
-def verify_server_cb (conn, cert, errnum, depth, ok):
+def verify_server_cb(conn, cert, errnum, depth, ok):
     """
     The browser (or commandline client) has sent a SSL certificate to
     the WebCleaner server.
@@ -54,7 +40,7 @@ def verify_server_cb (conn, cert, errnum, depth, ok):
 
 
 serverctx = None
-def get_serverctx (configdir):
+def get_serverctx(configdir):
     """
     Get SSL context for server.
     """
@@ -73,7 +59,7 @@ def get_serverctx (configdir):
     return serverctx
 
 
-def verify_client_cb (conn, cert, errnum, depth, ok):
+def verify_client_cb(conn, cert, errnum, depth, ok):
     """
     Verify expiration of the given certificate.
     """
@@ -85,7 +71,7 @@ def verify_client_cb (conn, cert, errnum, depth, ok):
 
 
 clientctx = None
-def get_clientctx (configdir):
+def get_clientctx(configdir):
     """
     Get SSL context for client.
     """
@@ -103,7 +89,7 @@ def get_clientctx (configdir):
         clientctx.load_verify_locations(os.path.join(configdir, 'CA.cert'))
     return clientctx
 
-def create_certificates (configdir):
+def create_certificates(configdir):
     """
     Create certificates and private keys for WebCleaner.
     """
@@ -146,7 +132,7 @@ def create_certificates (configdir):
 TYPE_RSA = crypto.TYPE_RSA
 TYPE_DSA = crypto.TYPE_DSA
 
-def create_key_pair (ktype, bits):
+def create_key_pair(ktype, bits):
     """
     Create a public/private key pair.
 
@@ -160,7 +146,7 @@ def create_key_pair (ktype, bits):
     return pkey
 
 
-def create_cert_request (pkey, digest="md5", **name):
+def create_cert_request(pkey, digest="md5", **name):
     """
     Create a certificate request.
 
@@ -195,7 +181,7 @@ def create_cert_request (pkey, digest="md5", **name):
     return req
 
 
-def create_certificate (req, (issuerCert, issuerKey), serial,
+def create_certificate(req,(issuerCert, issuerKey), serial,
                        (notBefore, notAfter), digest="md5"):
     """
     Generate a certificate given a certificate request.

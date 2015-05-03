@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Add or delete HTTP headers.
 """
@@ -24,14 +10,14 @@ from .. import log, LOG_FILTER, proxy, filter
 from . import Filter
 
 
-class Header (Filter.Filter):
+class Header(Filter.Filter):
     """
     Filter for adding, modifying and deleting headers.
     """
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """
         Init stages and rulenames.
         """
@@ -40,7 +26,7 @@ class Header (Filter.Filter):
         rulenames = ['header']
         super(Header, self).__init__(stages=stages, rulenames=rulenames)
 
-    def update_attrs (self, attrs, url, localhost, stages, headers):
+    def update_attrs(self, attrs, url, localhost, stages, headers):
         """
         Configure header rules to add/delete.
         """
@@ -91,7 +77,7 @@ class Header (Filter.Filter):
         attrs['header_replace'] = replace
         attrs['header_delete'] = delete
 
-    def doit (self, data, attrs):
+    def doit(self, data, attrs):
         """
         Apply stored header rules to data, which is a WcMessage object.
         """

@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2004-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 General navigation writer reading .nav file info.
 """
@@ -28,7 +14,7 @@ _thisdir_ro = re.compile(r"^\./")
 _samedir_ro = re.compile(r"/\./|/\.$")
 _parentdir_ro = re.compile(r"^/(\.\./)+|/(?!\.\./)[^/]+/\.\.(/|$)")
 _relparentdir_ro = re.compile(r"^(?!\.\./)[^/]+/\.\.(/|$)")
-def collapse_segments (path):
+def collapse_segments(path):
     """
     Remove all redundant segments from the given URL path.
     Precondition: path is an unquoted url path
@@ -54,13 +40,13 @@ def collapse_segments (path):
     return path
 
 
-class Node (object):
+class Node(object):
     """
     Node class for use in a navigation tree, with abilities to write
     HTML output.
     """
 
-    def __init__ (self, name, order, filename):
+    def __init__(self, name, order, filename):
         """Initialize node information"""
         self.name = name
         self.order = order
@@ -71,7 +57,7 @@ class Node (object):
         self.active = False
         self.parent = None
 
-    def get_url (self, level):
+    def get_url(self, level):
         """Get relative URL to this node."""
         if self.children:
             url = self.children[0].get_url(level)
@@ -79,7 +65,7 @@ class Node (object):
             url = "../"*level + self.filename
         return collapse_segments(url)
 
-    def addChildren (self, nodes):
+    def addChildren(self, nodes):
         """
         Add given nodes as children of this node, setting parent
         and level information accordingly.
@@ -89,7 +75,7 @@ class Node (object):
             node.level = self.level + 1
             self.children.append(node)
 
-    def write_nav (self, fp, active):
+    def write_nav(self, fp, active):
         """
         Write HTML node navigation.
         """
@@ -105,7 +91,7 @@ class Node (object):
             self.write_nextlevel(fp)
             self.children[0].write_nav(fp, active)
 
-    def write_inactive (self, fp, level):
+    def write_inactive(self, fp, level):
         """
         Write HTML of inactive navigation node.
         """
@@ -115,7 +101,7 @@ class Node (object):
         s += "</a>\n"
         fp.write(s)
 
-    def write_active (self, fp):
+    def write_active(self, fp):
         """
         Write HTML of active navigation node.
         """
@@ -128,13 +114,13 @@ class Node (object):
         s += "</span>\n"
         fp.write(s)
 
-    def write_nextlevel (self, fp):
+    def write_nextlevel(self, fp):
         fp.write('</div>\n<div class="navrow" style="padding: 0em 0em 0em %dem;">'% (self.level+2))
 
-    def new_node (self):
+    def new_node(self):
         return Node(self.name, sys.maxint, self.filename)
 
-    def __repr__ (self):
+    def __repr__(self):
         return "<Node %r>"%self.name
 
     def __lt__(self, other):
@@ -156,7 +142,7 @@ class Node (object):
         return self.order >= other.order
 
 
-def parse_navtree (dirname):
+def parse_navtree(dirname):
     """
     Parse a hierarchy of .nav files into a tree structure,
     consisting of lists of lists. The list entries are sorted in
@@ -187,7 +173,7 @@ def parse_navtree (dirname):
     return nodes
 
 
-def get_nav_node (navfile, htmlname):
+def get_nav_node(navfile, htmlname):
     """
     Get a Node() instance with info of given navfile.
     """
@@ -198,7 +184,7 @@ def get_nav_node (navfile, htmlname):
     return Node(name, order, htmlname)
 
 
-def print_nodes (nodes):
+def print_nodes(nodes):
     """
     Print a tree structure to stdout.
     """
@@ -208,7 +194,7 @@ def print_nodes (nodes):
             print_nodes(node.children)
 
 
-def has_node (node, nodes):
+def has_node(node, nodes):
     """
     Look for node in a tree structure.
 
@@ -222,7 +208,7 @@ def has_node (node, nodes):
     return False
 
 
-def generate_nav (start, nodes):
+def generate_nav(start, nodes):
     """
     Write one navigation tree level into HTML files, with given
     start node as root node.
@@ -245,7 +231,7 @@ def generate_nav (start, nodes):
             write_nav(node.filename, nav)
 
 
-def write_nav (filename, nav):
+def write_nav(filename, nav):
     """
     Write navigation into filename.
     """

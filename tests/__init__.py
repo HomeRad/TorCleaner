@@ -24,7 +24,7 @@ from contextlib import contextmanager
 from wc import WebCleanerInterrupt
 
 
-class memoized (object):
+class memoized(object):
     """Decorator that caches a function's return value each time it is called.
     If called later with the same arguments, the cached value is returned, and
     not re-evaluated."""
@@ -49,7 +49,7 @@ class memoized (object):
         return self.func.__doc__
 
 
-def _run (cmd):
+def _run(cmd):
     """Run given command without output."""
     null = open(os.name == 'nt' and ':NUL' or "/dev/null", 'w')
     try:
@@ -61,10 +61,10 @@ def _run (cmd):
         return -1
 
 
-def _need_func (testfunc, name):
+def _need_func(testfunc, name):
     """Decorator skipping test if given testfunc fails."""
-    def check_func (func):
-        def newfunc (*args, **kwargs):
+    def check_func(func):
+        def newfunc(*args, **kwargs):
             if not testfunc():
                 raise SkipTest("%s is not available" % name)
             return func(*args, **kwargs)
@@ -74,7 +74,7 @@ def _need_func (testfunc, name):
 
 
 @memoized
-def has_network ():
+def has_network():
     """Test if network is up."""
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -89,7 +89,7 @@ need_network = _need_func(has_network, "network")
 
 
 @memoized
-def has_msgfmt ():
+def has_msgfmt():
     """Test if msgfmt is available."""
     return _run(["msgfmt", "-V"]) == 0
 
@@ -97,7 +97,7 @@ need_msgfmt = _need_func(has_msgfmt, "msgfmt")
 
 
 @memoized
-def has_posix ():
+def has_posix():
     """Test if this is a POSIX system."""
     return os.name == "posix"
 
@@ -105,7 +105,7 @@ need_posix = _need_func(has_posix, "POSIX system")
 
 
 @memoized
-def has_clamav ():
+def has_clamav():
     """Test if ClamAV daemon is installed and running."""
     try:
         cmd = ["grep", "LocalSocket", "/etc/clamav/clamd.conf"]
@@ -123,7 +123,7 @@ need_clamav = _need_func(has_clamav, "ClamAV")
 
 
 @memoized
-def has_proxy ():
+def has_proxy():
     """Test if proxy is running on port 8081."""
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -137,7 +137,7 @@ need_proxy = _need_func(has_proxy, "proxy")
 
 
 @memoized
-def has_pyftpdlib ():
+def has_pyftpdlib():
     """Test if pyftpdlib is available."""
     try:
         import pyftpdlib
@@ -149,7 +149,7 @@ need_pyftpdlib = _need_func(has_pyftpdlib, "pyftpdlib")
 
 
 @memoized
-def has_newsserver (server):
+def has_newsserver(server):
     try:
         import nntplib
         nntp = nntplib.NNTP(server, usenetrc=False)
@@ -159,10 +159,10 @@ def has_newsserver (server):
         return False
 
 
-def need_newsserver (server):
+def need_newsserver(server):
     """Decorator skipping test if newsserver is not available."""
-    def check_func (func):
-        def newfunc (*args, **kwargs):
+    def check_func(func):
+        def newfunc(*args, **kwargs):
             if not has_newsserver(server):
                 raise SkipTest("Newsserver `%s' is not available" % server)
             return func(*args, **kwargs)
@@ -172,7 +172,7 @@ def need_newsserver (server):
 
 
 @memoized
-def has_pyqt ():
+def has_pyqt():
     """Test if PyQT is installed."""
     try:
         import PyQt4
@@ -184,7 +184,7 @@ def has_pyqt ():
 need_pyqt = _need_func(has_pyqt, "PyQT")
 
 @contextmanager
-def _limit_time (seconds):
+def _limit_time(seconds):
     """Raises WebCleanerInterrupt if given number of seconds have passed."""
     if os.name == 'posix':
         def signal_handler(signum, frame):
@@ -199,10 +199,10 @@ def _limit_time (seconds):
             signal.signal(signal.SIGALRM, old_handler)
 
 
-def limit_time (seconds, skip=False):
+def limit_time(seconds, skip=False):
     """Limit test time to the given number of seconds, else fail or skip."""
-    def run_limited (func):
-        def new_func (*args, **kwargs):
+    def run_limited(func):
+        def new_func(*args, **kwargs):
             try:
                 with _limit_time(seconds):
                     return func(*args, **kwargs)

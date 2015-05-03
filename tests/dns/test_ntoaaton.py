@@ -19,7 +19,7 @@ import unittest
 import wc.dns.exception
 import wc.dns.ipv6
 
-class TestNtoAAtoN (unittest.TestCase):
+class TestNtoAAtoN(unittest.TestCase):
 
     def test_aton1(self):
         a = wc.dns.ipv6.inet_aton('::')

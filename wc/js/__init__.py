@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2003-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 JavaScript helper classes and a Spidermonkey wrapper module.
 """
@@ -22,7 +8,7 @@ from ..dns import resolver as dns_resolver
 from .. import url as urlutil
 
 
-def clean (script, jscomments=True):
+def clean(script, jscomments=True):
     """
     Clean script from comments and HTML.
     """
@@ -31,7 +17,7 @@ def clean (script, jscomments=True):
 
 
 script_sub = re.compile(r"(?i)</script\s*>").sub
-def escape_js (script):
+def escape_js(script):
     """
     Escape HTML stuff in JS script.
     """
@@ -42,7 +28,7 @@ def escape_js (script):
     return "\n".join(lines)
 
 
-def escape_js_line (script):
+def escape_js_line(script):
     # if we encounter "</script>" in the script, we assume that is
     # in a quoted string. The solution is to split it into
     # "</scr"+"ipt>" (with the proper quotes of course)
@@ -81,7 +67,7 @@ _end_js_comment = re.compile(r"""\s*
     (?P<lcomment>//[^/]*)? # leading comment
     (?P<ecomment>--> | \]\]>) # ending comment
     $""", re.VERBOSE).search
-def remove_html_comments (script, jscomments=True):
+def remove_html_comments(script, jscomments=True):
     """
     Remove leading and trailing HTML comments from the script text.
     And remove JS comments if flag is not set.
@@ -110,7 +96,7 @@ def remove_html_comments (script, jscomments=True):
     return "\n".join(lines)
 
 
-def remove_js_comments (script):
+def remove_js_comments(script):
     """
     XXX use spidermonkey scanner here
     """
@@ -121,7 +107,7 @@ def remove_js_comments (script):
     return "\n".join(res)
 
 
-def get_js_data (attrs):
+def get_js_data(attrs):
     """
     Get js_ok flag and js_lang from given attrs.
     """
@@ -135,7 +121,7 @@ def get_js_data (attrs):
 
 
 has_js_ver = re.compile(r'(?i)javascript(?P<num>\d\.\d)').search
-def get_js_ver (language):
+def get_js_ver(language):
     """Get js version as float."""
     ver = 0.0
     if language:
@@ -145,7 +131,7 @@ def get_js_ver (language):
     return ver
 
 
-def is_safe_js_url (source_url, target_url):
+def is_safe_js_url(source_url, target_url):
     """Test validity of a background JS download."""
     source = urlutil.url_split(source_url)
     target = urlutil.url_split(target_url)

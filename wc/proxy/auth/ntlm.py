@@ -110,7 +110,7 @@ NTLMSSP_NEGOTIATE_KEY_EXCH                 = 0x40000000
 NTLMSSP_NEGOTIATE_80000000                 = -2147483648 # 0x80000000
 
 
-def str_flags (flags):
+def str_flags(flags):
     """
     Return list of names of all set flags.
     """
@@ -166,7 +166,7 @@ def str_flags (flags):
     return res
 
 
-def check_nonces ():
+def check_nonces():
     """
     Deprecate old nonces.
     """
@@ -180,7 +180,7 @@ def check_nonces ():
     make_timer(300, check_nonces)
 
 
-def get_ntlm_challenge (**attrs):
+def get_ntlm_challenge(**attrs):
     """
     Return initial challenge token for ntlm authentication.
     """
@@ -196,7 +196,7 @@ def get_ntlm_challenge (**attrs):
         raise IOError("Invalid NTLM challenge type")
 
 
-def parse_ntlm_challenge (challenge):
+def parse_ntlm_challenge(challenge):
     """
     Parse both type0 and type2 challenges.
     """
@@ -217,7 +217,7 @@ def parse_ntlm_challenge (challenge):
     return res, remainder
 
 
-def get_ntlm_credentials (challenge, **attrs):
+def get_ntlm_credentials(challenge, **attrs):
     """
     Return NTLM credentials for given challenge.
     """
@@ -238,7 +238,7 @@ def get_ntlm_credentials (challenge, **attrs):
     return "NTLM %s" % base64.encodestring(msg).strip()
 
 
-def parse_ntlm_credentials (credentials):
+def parse_ntlm_credentials(credentials):
     """
     Parse both type1 and type3 credentials.
     """
@@ -265,7 +265,7 @@ def parse_ntlm_credentials (credentials):
     return res, remainder
 
 
-def check_ntlm_credentials (credentials, **attrs):
+def check_ntlm_credentials(credentials, **attrs):
     """
     Return True if given credentials validate with given attrs.
     """
@@ -304,7 +304,7 @@ negotiate_flags = NTLMSSP_NEGOTIATE_80000000 | \
    NTLMSSP_NEGOTIATE_OEM | \
    NTLMSSP_REQUEST_TARGET
 
-def create_message1 (flags=negotiate_flags):
+def create_message1(flags=negotiate_flags):
     """
     Create and return NTLM message type 2 (NTLMSSP_NEGOTIATE).
     """
@@ -325,7 +325,7 @@ def create_message1 (flags=negotiate_flags):
     return msg
 
 
-def parse_message1 (msg):
+def parse_message1(msg):
     """
     Parse and return NTLM message type 1 (NTLMSSP_NEGOTIATE).
     """
@@ -352,7 +352,7 @@ challenge_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
    NTLMSSP_REQUEST_TARGET
 
 
-def create_message2 (domain, flags=challenge_flags):
+def create_message2(domain, flags=challenge_flags):
     """
     Create and return NTLM message type 2 (NTLMSSP_SIGNATURE).
     """
@@ -381,7 +381,7 @@ def create_message2 (domain, flags=challenge_flags):
     return msg
 
 
-def parse_message2 (msg):
+def parse_message2(msg):
     """
     Parse and return NTLM message type 2 (NTLMSSP_SIGNATURE).
     """
@@ -408,7 +408,7 @@ auth_flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN | \
    NTLMSSP_NEGOTIATE_UNICODE | \
    NTLMSSP_REQUEST_TARGET
 
-def create_message3 (nonce, domain, username, host,
+def create_message3(nonce, domain, username, host,
                      lm_hashed_pw, nt_hashed_pw, flags=auth_flags):
     """
     Create and return NTLM message type 3 (NTLMSSP_AUTH).
@@ -462,7 +462,7 @@ def create_message3 (nonce, domain, username, host,
     return msg
 
 
-def parse_message3 (msg):
+def parse_message3(msg):
     """
     Parse and return NTLM message type 3 (NTLMSSP_AUTH).
     """
@@ -488,14 +488,14 @@ def parse_message3 (msg):
 
 ############################ helper functions ###########################
 
-def compute_nonce ():
+def compute_nonce():
     """
     Return a random nonce integer value as 8-byte string.
     """
     return "%08d" % (random.random() * 100000000)
 
 
-def get_session_key ():
+def get_session_key():
     """
     Return ntlm session key.
     """
@@ -503,7 +503,7 @@ def get_session_key ():
     return ""
 
 
-def calc_resp (key, nonce):
+def calc_resp(key, nonce):
     """
     Takes a 21 byte array and treats it as 3 56-bit DES keys. The
     8 byte plaintext is encrypted with each key and the resulting 24
@@ -520,7 +520,7 @@ def calc_resp (key, nonce):
     return "%s%s%s" % (res1, res2, res3)
 
 
-def getint32 (s):
+def getint32(s):
     """
     Called internally to get a 32-bit integer in an NTLM message.
     """
@@ -528,7 +528,7 @@ def getint32 (s):
     return struct.unpack("<l", s)[0]
 
 
-def getint16 (s):
+def getint16(s):
     """
     Called internally to get a 16-bit integer in an NTLM message.
     """
@@ -536,28 +536,28 @@ def getint16 (s):
     return struct.unpack("<h", s)[0]
 
 
-def str2unicode (s):
+def str2unicode(s):
     """
     Converts ascii string to dumb unicode.
     """
     return "".join([ c+'\x00' for c in s ])
 
 
-def unicode2str (s):
+def unicode2str(s):
     """
     Converts dumb unicode back to ascii string.
     """
     return s[::2]
 
 
-def lst2str (lst):
+def lst2str(lst):
     """
     Converts a string to ascii string.
     """
     return "".join([chr(i & 0xFF) for i in lst])
 
 
-def convert_key (key):
+def convert_key(key):
     """
     Converts a 7-bytes key to an 8-bytes key based on an algorithm.
     """
@@ -569,12 +569,12 @@ def convert_key (key):
              chr(((ord(key[3]) << 4) & 0xFF) | (ord(key[4]) >> 4)),
              chr(((ord(key[4]) << 3) & 0xFF) | (ord(key[5]) >> 5)),
              chr(((ord(key[5]) << 2) & 0xFF) | (ord(key[6]) >> 6)),
-             chr( (ord(key[6]) << 1) & 0xFF),
+             chr((ord(key[6]) << 1) & 0xFF),
             ]
     return "".join([ set_odd_parity(b) for b in bytes ])
 
 
-def set_odd_parity (byte):
+def set_odd_parity(byte):
     """
     Turns one-byte into odd parity. Odd parity means that a number in
     binary has odd number of 1's.
@@ -595,7 +595,7 @@ def set_odd_parity (byte):
     return chr(ordbyte)
 
 
-def create_lm_hashed_password (passwd):
+def create_lm_hashed_password(passwd):
     """
     Create LanManager hashed password.
     """
@@ -611,7 +611,7 @@ def create_lm_hashed_password (passwd):
     return lm_hpw
 
 
-def create_lm_password (passwd):
+def create_lm_password(passwd):
     """
     Create Lan Manager hashed password.
     """
@@ -624,7 +624,7 @@ def create_lm_password (passwd):
     return lm_pw
 
 
-def create_nt_hashed_password (passwd):
+def create_nt_hashed_password(passwd):
     """
     Create NT hashed password.
     """
@@ -640,7 +640,7 @@ def create_nt_hashed_password (passwd):
 
 
 from ..timer import make_timer
-def init ():
+def init():
     """
     Check for timed out nonces every 5 minutes.
     """

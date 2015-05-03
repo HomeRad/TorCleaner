@@ -23,33 +23,33 @@ import random
 import wc.containers
 
 
-class TestAttrDict (unittest.TestCase):
+class TestAttrDict(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         self.d = wc.containers.AttrDict()
 
-    def test_access (self):
+    def test_access(self):
         self.d["test"] = 1
         self.assertEqual(self.d.test, self.d["test"])
         self.assertEqual(self.d.test, 1)
 
-    def test_method (self):
+    def test_method(self):
         self.d["get"] = 1
         self.assertTrue(isinstance(self.d.get, type({}.get)))
 
 
-class TestListDict (unittest.TestCase):
+class TestListDict(unittest.TestCase):
     """
     Test list dictionary routines.
     """
 
-    def setUp (self):
+    def setUp(self):
         """
         Set up self.d as empty listdict.
         """
         self.d = wc.containers.ListDict()
 
-    def test_insert (self):
+    def test_insert(self):
         """
         Test insertion order.
         """
@@ -59,7 +59,7 @@ class TestListDict (unittest.TestCase):
         self.assertTrue(2 in self.d)
         self.assertTrue(1 in self.d)
 
-    def test_delete (self):
+    def test_delete(self):
         """
         Test deletion order.
         """
@@ -70,7 +70,7 @@ class TestListDict (unittest.TestCase):
         self.assertTrue(2 in self.d)
         self.assertTrue(1 not in self.d)
 
-    def test_update (self):
+    def test_update(self):
         """
         Test update order.
         """
@@ -80,7 +80,7 @@ class TestListDict (unittest.TestCase):
         self.d[1] = 1
         self.assertEqual(self.d[1], 1)
 
-    def test_sorting (self):
+    def test_sorting(self):
         """
         Test sorting.
         """
@@ -103,7 +103,7 @@ class TestListDict (unittest.TestCase):
             self.assertTrue(x in toinsert)
             self.assertTrue(y in toinsert)
 
-    def test_clear (self):
+    def test_clear(self):
         """
         Test clearing.
         """
@@ -113,7 +113,7 @@ class TestListDict (unittest.TestCase):
         self.d.clear()
         self.assertTrue(not self.d)
 
-    def test_get_true (self):
+    def test_get_true(self):
         """
         Test getting a non-False object.
         """
@@ -124,18 +124,18 @@ class TestListDict (unittest.TestCase):
         self.assertEqual(self.d.get_true("b", 2), 1)
 
 
-class TestCaselessDict (unittest.TestCase):
+class TestCaselessDict(unittest.TestCase):
     """
     Test caseless dictionary routines.
     """
 
-    def setUp (self):
+    def setUp(self):
         """
         Set up self.d as empty caseless dict.
         """
         self.d = wc.containers.CaselessDict()
 
-    def test_insert (self):
+    def test_insert(self):
         self.assertTrue(not self.d)
         self.d["a"] = 1
         self.assertTrue("a" in self.d)
@@ -145,27 +145,27 @@ class TestCaselessDict (unittest.TestCase):
         self.assertTrue("Abcd" in self.d)
         self.assertTrue("ABCD" in self.d)
 
-    def test_delete (self):
+    def test_delete(self):
         self.assertTrue(not self.d)
         self.d["a"] = 1
         del self.d["A"]
         self.assertTrue("a" not in self.d)
         self.assertTrue("A" not in self.d)
 
-    def test_update (self):
+    def test_update(self):
         self.assertTrue(not self.d)
         self.d["a"] = 1
         self.d["A"] = 2
         self.assertEqual(self.d["a"], 2)
 
-    def test_clear (self):
+    def test_clear(self):
         self.assertTrue(not self.d)
         self.d["a"] = 5
         self.d["b"] = 6
         self.d.clear()
         self.assertTrue(not self.d)
 
-    def test_containment (self):
+    def test_containment(self):
         self.assertTrue(not self.d)
         self.assertTrue("A" not in self.d)
         self.assertTrue("a" not in self.d)
@@ -173,39 +173,39 @@ class TestCaselessDict (unittest.TestCase):
         self.assertTrue("A" in self.d)
         self.assertTrue("a" in self.d)
 
-    def test_setdefault (self):
+    def test_setdefault(self):
         self.assertTrue(not self.d)
         self.d["a"] = 5
         self.assertEqual(self.d.setdefault("A", 6), 5)
         self.assertEqual(self.d.setdefault("b", 7), 7)
 
-    def test_get (self):
+    def test_get(self):
         self.assertTrue(not self.d)
         self.d["a"] = 42
         self.assertEqual(self.d.get("A"), 42)
         self.assertTrue(self.d.get("B") is None)
 
-    def test_update2 (self):
+    def test_update2(self):
         self.assertTrue(not self.d)
         self.d["a"] = 42
         self.d.update({"A": 43})
         self.assertEqual(self.d["a"], 43)
 
-    def test_fromkeys (self):
+    def test_fromkeys(self):
         self.assertTrue(not self.d)
         keys = ["a", "A", "b", "C"]
         d1 = self.d.fromkeys(keys, 42)
         for key in keys:
             self.assertEqual(d1[key], 42)
 
-    def test_pop (self):
+    def test_pop(self):
         self.assertTrue(not self.d)
         self.d["a"] = 42
         self.assertEqual(self.d.pop("A"), 42)
         self.assertTrue(not self.d)
         self.assertRaises(KeyError, self.d.pop, "A")
 
-    def test_popitem (self):
+    def test_popitem(self):
         self.assertTrue(not self.d)
         self.d["a"] = 42
         self.assertEqual(self.d.popitem(), ("a", 42))
@@ -213,18 +213,18 @@ class TestCaselessDict (unittest.TestCase):
         self.assertRaises(KeyError, self.d.popitem)
 
 
-class TestCaselessSortedDict (unittest.TestCase):
+class TestCaselessSortedDict(unittest.TestCase):
     """
     Test caseless sorted dictionary routines.
     """
 
-    def setUp (self):
+    def setUp(self):
         """
         Set up self.d as empty caseless sorted dict.
         """
         self.d = wc.containers.CaselessSortedDict()
 
-    def test_sorted (self):
+    def test_sorted(self):
         self.assertTrue(not self.d)
         self.d["b"] = 6
         self.d["a"] = 7
@@ -242,19 +242,19 @@ class TestCaselessSortedDict (unittest.TestCase):
             prev = key
 
 
-class TestLFUCache (unittest.TestCase):
+class TestLFUCache(unittest.TestCase):
     """
     Test LFU cache implementation.
     """
 
-    def setUp (self):
+    def setUp(self):
         """
         Set up self.d as empty LFU cache with default size of 1000.
         """
         self.size = 1000
         self.d = wc.containers.LFUCache(self.size)
 
-    def test_num_uses (self):
+    def test_num_uses(self):
         self.assertTrue(not self.d)
         self.d["a"] = 1
         self.assertTrue("a" in self.d)
@@ -262,21 +262,21 @@ class TestLFUCache (unittest.TestCase):
         a = self.d["a"]
         self.assertEqual(self.d.uses("a"), 1)
 
-    def test_values (self):
+    def test_values(self):
         self.assertTrue(not self.d)
         self.d["a"] = 1
         self.d["b"] = 2
         self.assertEqual(set([1, 2]), set(self.d.values()))
         self.assertEqual(set([1, 2]), set(self.d.itervalues()))
 
-    def test_popitem (self):
+    def test_popitem(self):
         self.assertTrue(not self.d)
         self.d["a"] = 42
         self.assertEqual(self.d.popitem(), ("a", 42))
         self.assertTrue(not self.d)
         self.assertRaises(KeyError, self.d.popitem)
 
-    def test_shrink (self):
+    def test_shrink(self):
         self.assertTrue(not self.d)
         for i in range(self.size):
             self.d[i] = i
@@ -284,9 +284,9 @@ class TestLFUCache (unittest.TestCase):
         self.assertTrue(len(self.d) <= self.size)
 
 
-class TestEnum (unittest.TestCase):
+class TestEnum(unittest.TestCase):
 
-    def test_enum (self):
+    def test_enum(self):
         e = wc.containers.enum("a", "b", "c")
         self.assertEqual(e.a, 0)
         self.assertEqual(e.b, 1)

@@ -160,7 +160,7 @@ def walk_with_symlinks(top, func, arg):
                 walk_with_symlinks(name, func, arg)
 
 
-def has_path_component (path, name):
+def has_path_component(path, name):
     _drive, path = os.path.splitdrive(path)
     head, tail = os.path.split(path)
     while head and tail:
@@ -278,7 +278,7 @@ def get_test_cases(test_files, cfg, tracer=None):
     startTime = time.time()
     for file in test_files:
         module = import_module(file, cfg, tracer=tracer)
-        def get_test_suite ():
+        def get_test_suite():
             suite = unittest.TestSuite()
             for test_case in get_all_test_cases(module):
                 suite.addTest(
@@ -505,12 +505,12 @@ class CustomTestResult(unittest._TextTestResult):
                 w(self.separator2)
         self.__super_printErrors()
 
-    def printSkipped (self):
+    def printSkipped(self):
         self.stream.writeln()
         for test, msg in self.skipped:
             self.printSkip(test, msg)
 
-    def printSkip (self, test, msg):
+    def printSkip(self, test, msg):
         w = self.stream.writeln
         if self.cfg.colorize:
             c = colorize
@@ -561,7 +561,7 @@ class CustomTestResult(unittest._TextTestResult):
             self.stream.write("S")
         self.skipped.append((test, msg))
 
-    def addSuccess (self, test):
+    def addSuccess(self, test):
         now = time.time()
         unittest.TestResult.addSuccess(self, test)
         if self.cfg.colorize:
@@ -584,21 +584,21 @@ class CustomTestResult(unittest._TextTestResult):
             self.__super_printErrorList(flavour, errors)
 
 
-def get_tc_priv (testcase, attr):
+def get_tc_priv(testcase, attr):
     """get mangled private variables of TestCase instances"""
     if sys.version_info >= (2, 5, 0, 'alpha', 1):
         return getattr(testcase, "_" + attr)
     return getattr(testcase, "_TestCase__" + attr)
 
 
-class CustomTestCase (unittest.TestCase):
+class CustomTestCase(unittest.TestCase):
     """A test case with improved inequality test and resource support."""
 
-    def denied_resources (self, cfg_resources):
+    def denied_resources(self, cfg_resources):
         resources = getattr(self, "needed_resources", [])
         return [x for x in resources if x not in cfg_resources]
 
-    def run (self, result=None):
+    def run(self, result=None):
         if not isinstance(result, CustomTestResult):
             raise ValueError("Needed CustomTestResult object: %r" % result)
         result.startTest(self)
@@ -635,7 +635,7 @@ class CustomTestCase (unittest.TestCase):
         finally:
             result.stopTest(self)
 
-    def failUnlessEqual (self, first, second, msg=None):
+    def failUnlessEqual(self, first, second, msg=None):
         """
         Define the first argument as the test value, and the second
         one as the excpected value. Adjust the default error message
@@ -717,7 +717,7 @@ class CustomTestRunner(unittest.TextTestRunner):
         return CustomTestResult(self.stream, self.descriptions, self.verbosity,
                                 cfg=self.cfg, count=self.count)
 
-def run_tests (cfg, test_cases, tracer):
+def run_tests(cfg, test_cases, tracer):
     runner = CustomTestRunner(cfg, count=len(test_cases))
     suite = unittest.TestSuite()
     suite.addTests(test_cases)

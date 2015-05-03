@@ -32,7 +32,7 @@ from .. import log, LOG_PROXY
 
 timers = [] # list of (time, function)
 
-def make_timer (delay, callback):
+def make_timer(delay, callback):
     """
     After DELAY seconds, run the CALLBACK function.
     """
@@ -40,7 +40,7 @@ def make_timer (delay, callback):
     heapq.heappush(timers, (time.time()+delay, callback))
 
 
-def run_timers ():
+def run_timers():
     """
     Run all timers ready to be run, and return seconds to the next timer.
     """

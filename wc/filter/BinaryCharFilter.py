@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter invalid binary chars from HTML.
 """
@@ -39,7 +25,7 @@ charmap_in = ''.join(x[0] for x in charmap)
 charmap_out = ''.join(x[1] for x in charmap)
 
 
-class BinaryCharFilter (Filter.Filter):
+class BinaryCharFilter(Filter.Filter):
     """
     Replace binary characters, often found in Microsoft HTML documents,
     with their correct HTML equivalent.
@@ -47,7 +33,7 @@ class BinaryCharFilter (Filter.Filter):
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """
         Initialize stages and mime list.
         """
@@ -56,7 +42,7 @@ class BinaryCharFilter (Filter.Filter):
         super(BinaryCharFilter, self).__init__(stages=stages, mimes=mimes)
         self.transe = string.maketrans(charmap_in, charmap_out)
 
-    def doit (self, data, attrs):
+    def doit(self, data, attrs):
         """
         Filter given data.
         """

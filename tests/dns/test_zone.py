@@ -29,7 +29,7 @@ import wc.dns.zone
 
 _paths = ["tests", "dns"]
 
-def fname (name, sep=None):
+def fname(name, sep=None):
     args = tuple(_paths + [name])
     if sep is not None:
         return sep.join(args)
@@ -107,7 +107,7 @@ ns1 1d1s a 10.0.0.1
 ns2 1w1D1h1m1S a 10.0.0.2
 """
 
-def get_file_lines (fn):
+def get_file_lines(fn):
     res = []
     with open(fn) as fd:
         for line in fd:
@@ -115,7 +115,7 @@ def get_file_lines (fn):
     return res
 
 
-def get_file_diff (fn1, fn2):
+def get_file_diff(fn1, fn2):
     res = []
     c1 = get_file_lines(fn1)
     c2 = get_file_lines(fn2)
@@ -126,7 +126,7 @@ def get_file_diff (fn1, fn2):
     return res
 
 
-class TestZone (unittest.TestCase):
+class TestZone(unittest.TestCase):
 
     def testFromFile1(self):
         z = wc.dns.zone.from_file(fname('example'), 'example')

@@ -1,20 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # Copyright (C) 2007-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 A script to lossless compress media files to be used in production
 deployments of web software. Used together with HTML compression
@@ -57,13 +43,13 @@ distutils.log.set_verbosity(1)
 COMPRESS_EXTENSIONS = (".js", ".css", ".png", ".jpg", ".gif")
 
 
-def log (*args):
+def log(*args):
     for arg in args:
         print >> sys.stderr, arg,
     print >> sys.stderr
 
 
-def usage (msg=None):
+def usage(msg=None):
     """
     Print usage information to sys.stderr and call sys.exit().
     The exit code is zero if msg is None, else one.
@@ -109,7 +95,7 @@ class DirectoryWalker:
                 return fullname
 
 
-def is_compressable (settings, filename):
+def is_compressable(settings, filename):
     "Check if given filename is compressable."
     # is it excluded?
     if [x for x in settings["exclude"] if x in filename]:
@@ -118,7 +104,7 @@ def is_compressable (settings, filename):
     return os.path.splitext(filename)[1] in COMPRESS_EXTENSIONS
 
 
-def get_files (settings, args):
+def get_files(settings, args):
     """
     Given a list of files and/or directories return all compressable
     files as an iterator.
@@ -149,7 +135,7 @@ settings = {
     # list of file extensions to overwrite
     "overwrite": set(),
 }
-def parse_options (args):
+def parse_options(args):
     """
     Parse command line arguments.
     @return: (settings, args)
@@ -176,24 +162,24 @@ def parse_options (args):
     return settings, args
 
 
-def get_mtime (filename):
+def get_mtime(filename):
     "Return modification time of file."
     return os.stat(filename)[stat.ST_MTIME]
 
 
-def get_fsize (filename):
+def get_fsize(filename):
     "Return file size in bytes."
     return os.stat(filename)[stat.ST_SIZE]
 
 
-def needs_compression (infile, outfile):
+def needs_compression(infile, outfile):
     "Check if infile needs to be compressed to given outfile."
     if not os.path.exists(outfile):
         return True
     return get_mtime(infile) > get_mtime(outfile)
 
 
-def compress_file (infile):
+def compress_file(infile):
     "Compress given file if needed."
     base, ext = os.path.splitext(infile)
     if base.endswith("-min"):
@@ -227,7 +213,7 @@ def compress_file (infile):
         log("Skipping", repr(infile))
 
 
-def compress_cmd (ext, infile, outfile):
+def compress_cmd(ext, infile, outfile):
     "Get list of commands args for compression."
     cmd = []
     compressor = settings["compressor"][ext]
@@ -243,7 +229,7 @@ def compress_cmd (ext, infile, outfile):
     return cmd
 
 
-def compressor_args (compressor, infile, outfile):
+def compressor_args(compressor, infile, outfile):
     """
     Return list of commandline arguments that compress infile to outfile
     with given compressor.
@@ -262,26 +248,26 @@ def compressor_args (compressor, infile, outfile):
     return args
 
 
-def compressor_args_yui (infile, outfile):
+def compressor_args_yui(infile, outfile):
     return ["--charset", "utf8", "-o", outfile, infile]
 
-def compressor_args_pngcursh (infile, outfile):
+def compressor_args_pngcursh(infile, outfile):
     return [infile, outfile]
 
-def compressor_args_jpegtran (infile, outfile):
+def compressor_args_jpegtran(infile, outfile):
     return ["-optimize", "-perfect", "-copy", "none",
             "-outfile", outfile, infile]
 
-def compressor_args_giftrans (infile, outfile):
+def compressor_args_giftrans(infile, outfile):
     return ["-C", "-o", outfile, infile]
 
 
-def run_cmd (cmd):
+def run_cmd(cmd):
     "Execute given command."
     return spawn(cmd)
 
 
-def main (args):
+def main(args):
     settings, args = parse_options(args)
     for file in get_files(settings, args):
         compress_file(file)

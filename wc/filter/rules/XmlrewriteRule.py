@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Rule rewriting xml tags.
 """
@@ -48,7 +34,7 @@ _xpath_attr_pat = r"(?P<tag>[a-z:]+)\[(?P<attrs>(%s(,%s)*))\]" % \
                   (_attr_pat, _attr_pat)
 _xpath_attr_ro = re.compile(_xpath_attr_pat)
 
-def parse_xpath (xpath):
+def parse_xpath(xpath):
     """
     Parse a simplified XPath expression into a selector list.
     """
@@ -67,7 +53,7 @@ def parse_xpath (xpath):
     return res
 
 
-def serialize_xpath (xpath):
+def serialize_xpath(xpath):
     res = []
     for entry, attrs in xpath:
         if attrs:
@@ -78,7 +64,7 @@ def serialize_xpath (xpath):
     return u"/".join(res)
 
 
-def match_stack (stack, selector):
+def match_stack(stack, selector):
     if not stack or not selector:
         # both stack and selector must have items
         return False
@@ -101,7 +87,7 @@ def match_stack (stack, selector):
     return i == 0
 
 
-def match_element (tag, attrs, element_match):
+def match_element(tag, attrs, element_match):
     if tag != element_match[0]:
         return False
     for key, val in element_match[1]:
@@ -112,7 +98,7 @@ def match_element (tag, attrs, element_match):
     return True
 
 
-class XmlrewriteRule (UrlRule.UrlRule):
+class XmlrewriteRule(UrlRule.UrlRule):
     """
     An XML rule first matches a document selector (which is a simple
     XPath expression) to select the correct XML documents this rule
@@ -122,7 +108,7 @@ class XmlrewriteRule (UrlRule.UrlRule):
     more than one replacment rule to trigger.
     """
 
-    def __init__ (self, sid=None, titles=None, descriptions=None,
+    def __init__(self, sid=None, titles=None, descriptions=None,
                   disable=0, selector=u"", replacetype=u"rsshtml",
                   value=u""):
         """
@@ -136,7 +122,7 @@ class XmlrewriteRule (UrlRule.UrlRule):
         self.value = value
         self.attrnames.extend(("selector", "replacetype", "value"))
 
-    def compile_data (self):
+    def compile_data(self):
         """
         Parse selector and set replacetype value.
         """
@@ -146,7 +132,7 @@ class XmlrewriteRule (UrlRule.UrlRule):
         if self.replacetypenum == RSSHTML:
             self.rsshtml = RssHtmlFilter.RssHtmlFilter()
 
-    def toxml (self):
+    def toxml(self):
         """
         Rule data as XML for storing.
         """
@@ -161,7 +147,7 @@ class XmlrewriteRule (UrlRule.UrlRule):
         s += u"\n</%s>" % self.name
         return s
 
-    def __str__ (self):
+    def __str__(self):
         """
         Return rule data as string.
         """
@@ -173,13 +159,13 @@ class XmlrewriteRule (UrlRule.UrlRule):
         s += "replace %s %r\n" % (replace, value)
         return s
 
-    def match_tag (self, stack):
+    def match_tag(self, stack):
         """
         Match XML tag to given stack of XML elements.
         """
         return match_stack(stack, self.selector_list)
 
-    def filter_tag (self, pos, tagbuf, tag, url, htmlrules):
+    def filter_tag(self, pos, tagbuf, tag, url, htmlrules):
         """
         Filter XML tag data.
         """
@@ -198,7 +184,7 @@ class XmlrewriteRule (UrlRule.UrlRule):
         else:
             log.warn(LOG_XML, "%s: unimplemented replace type", self)
 
-    def filter_html (self, data, url, htmlrules):
+    def filter_html(self, data, url, htmlrules):
         """
         Filter HTML data.
         """

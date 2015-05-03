@@ -1,20 +1,6 @@
 #!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter a given file in response modify stage.
 """
@@ -36,7 +22,7 @@ extensions = {
     ".rss": "text/xml",
 }
 
-def get_content_type (filename, fp):
+def get_content_type(filename, fp):
     default_type = "text/html"
     extension = os.path.splitext(filename)[1]
     if extension in extensions:
@@ -50,7 +36,7 @@ def get_content_type (filename, fp):
     return default_type
 
 
-def _main ():
+def _main():
     """
     USAGE: scripts/run.sh test/filterfile.py <config dir> <filename> [url]
     """
@@ -95,7 +81,7 @@ def _main ():
         f.close()
 
 
-def _filter (f, attrs):
+def _filter(f, attrs):
     filtered = ""
     data = f.read(2048)
     while data:

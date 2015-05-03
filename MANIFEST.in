@@ -1,4 +1,4 @@
-include README COPYING CREDITS TODO INSTALL ChangeLog
+include README.md COPYING CREDITS TODO ChangeLog.txt
 include *.sh
 include *.bat
 include webcleaner

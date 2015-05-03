@@ -32,12 +32,12 @@ Direct request handling returning static data.
 from . import Server
 
 
-class ServerHandleDirectly (Server.Server):
+class ServerHandleDirectly(Server.Server):
     """
     Answer a server request with static data.
     """
 
-    def __init__ (self, client, response, status, headers, content):
+    def __init__(self, client, response, status, headers, content):
         """
         Write given response to client.
         """
@@ -50,13 +50,13 @@ class ServerHandleDirectly (Server.Server):
         client.server_close(self)
         self.connected = False
 
-    def process_connect (self):
+    def process_connect(self):
         """
         Empty function; no server connection has to be made.
         """
         pass
 
-    def process_read (self):
+    def process_read(self):
         """
         Empty function; no server has to be read.
         """

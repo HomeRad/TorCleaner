@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Basic rule class and routines.
 """
@@ -22,7 +8,7 @@ from wc.XmlUtils import xmlquote, xmlquoteattr, xmlunquote
 from . import register_rule
 
 
-def compileRegex (obj, attr, fullmatch=False, flags=0):
+def compileRegex(obj, attr, fullmatch=False, flags=0):
     """
     Regex-compile object attribute into <attr>_ro.
     """
@@ -34,14 +20,14 @@ def compileRegex (obj, attr, fullmatch=False, flags=0):
             setattr(obj, attr+"_ro", re.compile(val, flags))
 
 
-class LangDict (dict):
+class LangDict(dict):
     """
     Dictionary with a fallback algorithm, getting a default key entry if
     the requested key is not already mapped. Keys are usually languages
     like 'en' or 'de'.
     """
 
-    def __getitem__ (self, key):
+    def __getitem__(self, key):
         """
         Accessing an entry with unknown translation returns the default
         translated entry or if not found a random one or if the dict
@@ -57,7 +43,7 @@ class LangDict (dict):
         return super(LangDict, self).__getitem__(key)
 
 
-class Rule (object):
+class Rule(object):
     """
     Basic rule class for filtering.
 
@@ -78,7 +64,7 @@ class Rule (object):
         'attrnames', 'intattrs', 'listattrs',
     ]
 
-    def __init__ (self, sid=None, titles=None, descriptions=None,
+    def __init__(self, sid=None, titles=None, descriptions=None,
                   disable=0, parent=None):
         """
         Initialize basic rule data.
@@ -98,14 +84,14 @@ class Rule (object):
         self.intattrs = ['disable']
         self.listattrs = []
 
-    def _reset_parsed_data (self):
+    def _reset_parsed_data(self):
         """
         Reset parsed rule data.
         """
         self._data = u""
         self._lang = u"en"
 
-    def update (self, rule, dryrun=False, log=None):
+    def update(self, rule, dryrun=False, log=None):
         """
         Update title and description with given rule data.
         """
@@ -117,7 +103,7 @@ class Rule (object):
         chg = self.update_titledesc(rule, dryrun, log) or chg
         return chg
 
-    def update_titledesc (self, rule, dryrun, log):
+    def update_titledesc(self, rule, dryrun, log):
         """
         Update rule title and description with given rule data.
         """
@@ -152,7 +138,7 @@ class Rule (object):
                     self.descriptions[key] = value
         return chg
 
-    def update_attrs (self, attrs, rule, dryrun, log):
+    def update_attrs(self, attrs, rule, dryrun, log):
         """
         Update rule attributes (specified by attrs) with given rule data.
         """
@@ -169,49 +155,49 @@ class Rule (object):
                     setattr(self, attr, newval)
         return chg
 
-    def __lt__ (self, other):
+    def __lt__(self, other):
         """
         True iff self < other according to oid.
         """
         return self.oid < other.oid
 
-    def __le__ (self, other):
+    def __le__(self, other):
         """
         True iff self <= other according to oid.
         """
         return self.oid <= other.oid
 
-    def __eq__ (self, other):
+    def __eq__(self, other):
         """
         True iff self == other according to oid.
         """
         return self.oid == other.oid
 
-    def __ne__ (self, other):
+    def __ne__(self, other):
         """
         True iff self != other according to oid.
         """
         return self.oid != other.oid
 
-    def __gt__ (self, other):
+    def __gt__(self, other):
         """
         True iff self > other according to oid.
         """
         return self.oid > other.oid
 
-    def __ge__ (self, other):
+    def __ge__(self, other):
         """
         True iff self >= other according to oid.
         """
         return self.oid >= other.oid
 
-    def __hash__ (self):
+    def __hash__(self):
         """
         Hash value.
         """
         return self.sid
 
-    def fill_attrs (self, attrs, name):
+    def fill_attrs(self, attrs, name):
         """
         Initialize rule attributes with given attrs.
         """
@@ -235,13 +221,13 @@ class Rule (object):
             else:
                 setattr(self, attr, [])
 
-    def fill_data (self, data, name):
+    def fill_data(self, data, name):
         """
         Called when XML character data was parsed to fill rule values.
         """
         self._data += data
 
-    def end_data (self, name):
+    def end_data(self, name):
         """
         Called when XML end element was reached.
         """
@@ -254,7 +240,7 @@ class Rule (object):
         elif name == 'description':
             self.descriptions[self._lang] = self._data
 
-    def compile_data (self):
+    def compile_data(self):
         """
         Register this rule. Called when all XML parsing of rule is finished.
         """
@@ -268,7 +254,7 @@ class Rule (object):
             if name not in ('sid', 'disable'):
                 assert name not in self.reserved_attrnames
 
-    def toxml (self):
+    def toxml(self):
         """
         Rule data as XML for storing, must be overridden in subclass.
         """
@@ -279,7 +265,7 @@ class Rule (object):
             s += u' disable="%d"' % self.disable
         return s
 
-    def title_desc_toxml (self, prefix=""):
+    def title_desc_toxml(self, prefix=""):
         """
         XML for rule title and description.
         """
@@ -291,7 +277,7 @@ class Rule (object):
              for key,value in self.descriptions.iteritems() if value]
         return u"\n".join(t+d)
 
-    def __str__ (self):
+    def __str__(self):
         """
         Basic rule data as ISO-8859-1 encoded string.
         """
@@ -302,7 +288,7 @@ class Rule (object):
         s += "title %s\n" % self.titles['en'].encode("iso-8859-1")
         return s
 
-    def tiptext (self):
+    def tiptext(self):
         """
         Short info for gui display.
         """
@@ -311,13 +297,13 @@ class Rule (object):
             s +=  u'#%s' % self.sid
         return s
 
-    def applies_to_url (self, url):
+    def applies_to_url(self, url):
         """
         Wether rule applies to given URL.
         """
         return True
 
-    def applies_to_mime (self, mime):
+    def applies_to_mime(self, mime):
         """
         Wether rule applies to given MIME type.
         """

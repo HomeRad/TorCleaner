@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter a HTML stream.
 """
@@ -25,11 +11,11 @@ from .. import FilterRating
 from ... import log, LOG_HTML, configuration, rating, url as urlutil
 
 
-class HtmlFilter (JSFilter.JSFilter):
+class HtmlFilter(JSFilter.JSFilter):
     """Filtering HTML parser handler. Has filter rules and a rule stack.
     The callbacks modify parser state and buffers."""
 
-    def __init__ (self, rules, ratings, url, localhost, **opts):
+    def __init__(self, rules, ratings, url, localhost, **opts):
         """Init rules and buffers."""
         super(HtmlFilter, self).__init__(url, localhost, opts)
         self.rules = rules
@@ -44,16 +30,16 @@ class HtmlFilter (JSFilter.JSFilter):
         self.rule_tag_cache = {}
         log.debug(LOG_HTML, "%s with %d rules", self, len(self.rules))
 
-    def new_instance (self, **opts):
+    def new_instance(self, **opts):
         """Make a new instance of this filter, for recursive filtering."""
         return HtmlFilter(self.rules, self.ratings, self.url,
                           self.localhost, **opts)
 
-    def __repr__ (self):
+    def __repr__(self):
         """Representation with recursion level and state."""
         return "<HtmlFilter[%d] %s)>" % (self.level, self.url)
 
-    def _is_waiting (self, item):
+    def _is_waiting(self, item):
         """
         If parser is in wait state put item on waitbuffer and return True.
         """
@@ -62,7 +48,7 @@ class HtmlFilter (JSFilter.JSFilter):
             return True
         return False
 
-    def _data (self, data):
+    def _data(self, data):
         """
         General handler for data.
         """
@@ -71,21 +57,21 @@ class HtmlFilter (JSFilter.JSFilter):
             return
         self.htmlparser.tagbuf.append(item)
 
-    def cdata (self, data):
+    def cdata(self, data):
         """
         Character data.
         """
         log.debug(LOG_HTML, "%s cdata %r", self, data)
         return self._data(data)
 
-    def characters (self, data):
+    def characters(self, data):
         """
         Characters.
         """
         log.debug(LOG_HTML, "%s characters %r", self, data)
         return self._data(data)
 
-    def comment (self, data):
+    def comment(self, data):
         """
         A comment; accept only non-empty comments.
         """
@@ -97,35 +83,35 @@ class HtmlFilter (JSFilter.JSFilter):
             return
         self.htmlparser.tagbuf.append(item)
 
-    def doctype (self, data):
+    def doctype(self, data):
         """
         HTML doctype.
         """
         log.debug(LOG_HTML, "%s doctype %r", self, data)
         return self._data(u"<!DOCTYPE%s>" % data)
 
-    def pi (self, data):
+    def pi(self, data):
         """
         HTML pi.
         """
         log.debug(LOG_HTML, "%s pi %r", self, data)
         return self._data(u"<?%s?>" % data)
 
-    def start_element (self, tag, attrs):
+    def start_element(self, tag, attrs):
         """
         HTML start element.
         """
         log.debug(LOG_HTML, "%s start_element %r %s", self, tag, attrs)
         self._start_element(tag, attrs, STARTTAG)
 
-    def start_end_element (self, tag, attrs):
+    def start_end_element(self, tag, attrs):
         """
         HTML start-end element (<a/>).
         """
         log.debug(LOG_HTML, "%s start_end_element %r %s", self, tag, attrs)
         self._start_element(tag, attrs, STARTENDTAG)
 
-    def _start_element (self, tag, attrs, starttype):
+    def _start_element(self, tag, attrs, starttype):
         """
         We get a new start tag. New rules could be appended to the
         pending rules. No rules can be removed from the list.
@@ -182,13 +168,13 @@ class HtmlFilter (JSFilter.JSFilter):
         if not (self.rulestack or self.javascript):
             self.htmlparser.tagbuf2data()
 
-    def get_tag_rules (self, tag):
+    def get_tag_rules(self, tag):
         if tag not in self.rule_tag_cache:
             self.rule_tag_cache[tag] = \
                          [rule for rule in self.rules if rule.match_tag(tag)]
         return self.rule_tag_cache[tag]
 
-    def filter_start_element (self, tag, attrs, starttype):
+    def filter_start_element(self, tag, attrs, starttype):
         """Filter the start element according to filter rules."""
         rulelist = []
         filtered = False
@@ -227,7 +213,7 @@ class HtmlFilter (JSFilter.JSFilter):
             # put original item on tag buffer
             self.htmlparser.tagbuf.append(item)
 
-    def end_element (self, tag):
+    def end_element(self, tag):
         """We know the following: if a rule matches, it must be
         the one on the top of the stack. So we look only at the top
         rule.
@@ -255,7 +241,7 @@ class HtmlFilter (JSFilter.JSFilter):
         if not self.rulestack:
             self.htmlparser.tagbuf2data()
 
-    def filter_end_element (self, tag):
+    def filter_end_element(self, tag):
         """Filters an end tag, return True if tag was filtered, else
         False."""
         # remember: self.rulestack[-1][1] is the rulelist that

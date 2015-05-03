@@ -44,12 +44,12 @@ from . import Dispatcher
 MAX_BUFSIZE = 10*1024*1024
 
 
-class Connection (Dispatcher.Dispatcher):
+class Connection(Dispatcher.Dispatcher):
     """
     Add buffered input and output capabilities.
     """
 
-    def __init__ (self, sock=None):
+    def __init__(self, sock=None):
         """
         Initialize buffers.
         """
@@ -58,7 +58,7 @@ class Connection (Dispatcher.Dispatcher):
         # reuse counter for persistent connections
         self.sequence_number = 0
 
-    def reset (self):
+    def reset(self):
         """
         Reset send and receive buffers.
         """
@@ -70,13 +70,13 @@ class Connection (Dispatcher.Dispatcher):
         # True if connection should not be closed
         self.persistent = False
 
-    def readable (self):
+    def readable(self):
         """
         Return True if connection is readable.
         """
         return self.connected
 
-    def read (self, bytes=None):
+    def read(self, bytes=None):
         """
         Read up to LEN bytes from the internal buffer.
         """
@@ -86,7 +86,7 @@ class Connection (Dispatcher.Dispatcher):
         self.recv_buffer = self.recv_buffer[bytes:]
         return data
 
-    def handle_read (self):
+    def handle_read(self):
         """
         Read data from connection, put it into recv_buffer and call
         process_read.
@@ -114,25 +114,25 @@ class Connection (Dispatcher.Dispatcher):
         self.process_read()
 
     @decorators.notimplemented
-    def process_read (self):
+    def process_read(self):
         """
         Handle read event.
         """
         pass
 
-    def writable (self):
+    def writable(self):
         """
         Return True if connection is writable.
         """
         return self.connected and self.send_buffer
 
-    def write (self, data):
+    def write(self, data):
         """
         Write data to the internal buffer.
         """
         self.send_buffer += data
 
-    def handle_write (self):
+    def handle_write(self):
         """
         Write data from send_buffer to connection socket.
         Execute a possible pending close.
@@ -156,13 +156,13 @@ class Connection (Dispatcher.Dispatcher):
         if self.close_pending and self.close_ready():
             self.close()
 
-    def handle_connect (self):
+    def handle_connect(self):
         """
         Empty function; per default we don't connect to anywhere.
         """
         pass
 
-    def close (self):
+    def close(self):
         """
         Close connection.
         """
@@ -173,7 +173,7 @@ class Connection (Dispatcher.Dispatcher):
         else:
             self.close_close()
 
-    def close_close (self):
+    def close_close(self):
         """
         Close the connection socket.
         """
@@ -182,7 +182,7 @@ class Connection (Dispatcher.Dispatcher):
             self.connected = False
         super(Connection, self).close()
 
-    def handle_close (self):
+    def handle_close(self):
         """
         If we are still connected, wait until all data is sent, then close.
         Otherwise just close.
@@ -193,13 +193,13 @@ class Connection (Dispatcher.Dispatcher):
         else:
             self.close()
 
-    def close_ready (self):
+    def close_ready(self):
         """
         Return True if all data is sent and this connection can be closed.
         """
         return not self.send_buffer
 
-    def delayed_close (self):
+    def delayed_close(self):
         """
         Close whenever the data has been sent.
         """
@@ -212,7 +212,7 @@ class Connection (Dispatcher.Dispatcher):
             log.debug(LOG_PROXY, '%s close ready channel', self)
             self.close_pending = True
 
-    def close_reuse (self):
+    def close_reuse(self):
         """
         Don't close the socket, just reset the connection state.
         Must only be called for persistent connections.
@@ -223,7 +223,7 @@ class Connection (Dispatcher.Dispatcher):
             '%s Connection.close_reuse %d', self, self.sequence_number)
         self.sequence_number += 1
 
-    def handle_error (self, what):
+    def handle_error(self, what):
         """
         Print error and close the connection.
         """
@@ -231,7 +231,7 @@ class Connection (Dispatcher.Dispatcher):
         super(Connection, self).handle_error(what)
         self.close()
 
-    def handle_expt (self):
+    def handle_expt(self):
         """
         Handle socket exception.
         """

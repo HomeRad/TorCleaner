@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Deanimate GIF images.
 """
@@ -23,21 +9,21 @@ from .. import log, LOG_FILTER
 from . import Filter, STAGE_RESPONSE_MODIFY
 
 
-def i16 (c):
+def i16(c):
     """
     Merge two bytes to an integer.
     """
     return ord(c[0]) | (ord(c[1]) << 8)
 
 
-class RewindException (StandardError):
+class RewindException(StandardError):
     """
     Exception saying that more image data is needed for parsing.
     """
     pass
 
 
-class GifImage (Filter.Filter):
+class GifImage(Filter.Filter):
     """
     Base filter class which is using the GifParser to deanimate the
     incoming GIF stream.
@@ -45,7 +31,7 @@ class GifImage (Filter.Filter):
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """
         Init GIF stages and mimes.
         """
@@ -53,7 +39,7 @@ class GifImage (Filter.Filter):
         mimes = ['image/gif']
         super(GifImage, self).__init__(stages=stages, mimes=mimes)
 
-    def filter (self, data, attrs):
+    def filter(self, data, attrs):
         """
         Feed data to GIF image parser, return processed data.
         """
@@ -68,7 +54,7 @@ class GifImage (Filter.Filter):
             pass
         return gifparser.get_output()
 
-    def finish (self, data, attrs):
+    def finish(self, data, attrs):
         """
         Feed data to GIF image parser, flush it and return processed data.
         """
@@ -79,7 +65,7 @@ class GifImage (Filter.Filter):
         gifparser = attrs['gifparser']
         return data + (gifparser.finish and ';' or '')
 
-    def update_attrs (self, attrs, url, localhost, stages, headers):
+    def update_attrs(self, attrs, url, localhost, stages, headers):
         """
         Add GIF parser to attributes.
         """
@@ -94,7 +80,7 @@ class GifImage (Filter.Filter):
 _TINY_GIF = """R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="""
 
 
-class GifParser (object):
+class GifParser(object):
     """
     Here we have a parser (and filter) for GIF images.
     This parser filters all GIF image extensions (eg. comment and
@@ -117,7 +103,7 @@ class GifParser (object):
     DATA = 4
     NOFILTER = 5
 
-    def __init__ (self, url, sizes=None):
+    def __init__(self, url, sizes=None):
         """
         Initialize GIF parser buffers and flags.
         """
@@ -131,7 +117,7 @@ class GifParser (object):
         else:
             self.sizes = sizes
 
-    def str_state (self):
+    def str_state(self):
         """
         Return string representation of parser state.
         """
@@ -149,13 +135,13 @@ class GifParser (object):
             return 'NOFILTER'
         return 'UNKNOWN'
 
-    def add_data (self, data):
+    def add_data(self, data):
         """
         Add image data to internal parse buffer.
         """
         self.data += data
 
-    def flush (self):
+    def flush(self):
         """
         Flush already parsed image data to output buffer.
         """
@@ -163,7 +149,7 @@ class GifParser (object):
             self.output += self.consumed
             self.consumed = ''
 
-    def read (self, i):
+    def read(self, i):
         """
         Read i data from internal buffer.
 
@@ -181,13 +167,13 @@ class GifParser (object):
         self.data = self.data[i:]
         return self.consumed[-i:]
 
-    def remove (self, i):
+    def remove(self, i):
         """
         Remove i bytes from already parsed image data.
         """
         self.consumed = self.consumed[:-i]
 
-    def get_output (self):
+    def get_output(self):
         """
         Get output buffer data and flush it.
         """
@@ -197,7 +183,7 @@ class GifParser (object):
             return res
         return self.output
 
-    def parse (self):
+    def parse(self):
         """
         Big parse function. The trick is the usage of self.read(),
         which throws a RewindException when it can't give enough data.

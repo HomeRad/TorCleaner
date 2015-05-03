@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Apply rule to specific URLs.
 """
@@ -22,12 +8,12 @@ from . import MimeRule
 from wc.XmlUtils import xmlquote
 
 
-class UrlRule (MimeRule.MimeRule):
+class UrlRule(MimeRule.MimeRule):
     """
     Rule which applies only to URLs which match a regular expression.
     """
 
-    def __init__ (self, sid=None, titles=None, descriptions=None,
+    def __init__(self, sid=None, titles=None, descriptions=None,
                   disable=0, matchurls=None, nomatchurls=None, mimes=None):
         """
         Initialize rule attributes.
@@ -45,7 +31,7 @@ class UrlRule (MimeRule.MimeRule):
             self.nomatchurls = nomatchurls
         self.nomatchurls_ro = None
 
-    def applies_to_url (self, url):
+    def applies_to_url(self, url):
         """
         Return True iff this rule can be applied to given URL.
         """
@@ -59,7 +45,7 @@ class UrlRule (MimeRule.MimeRule):
                 return False
         return True
 
-    def end_data (self, name):
+    def end_data(self, name):
         """
         Store matchurl and nomatchurl data.
         """
@@ -69,7 +55,7 @@ class UrlRule (MimeRule.MimeRule):
         elif name == 'nomatchurl':
             self.nomatchurls.append(self._data)
 
-    def compile_data (self):
+    def compile_data(self):
         """
         Compile regular expressions.
         """
@@ -77,19 +63,19 @@ class UrlRule (MimeRule.MimeRule):
         self.compile_matchurls()
         self.compile_nomatchurls()
 
-    def compile_matchurls (self):
+    def compile_matchurls(self):
         """
         Compile matchurls regular expressions.
         """
         self.matchurls_ro = [re.compile(s) for s in self.matchurls]
 
-    def compile_nomatchurls (self):
+    def compile_nomatchurls(self):
         """
         Compile nomatchurls regular expressions.
         """
         self.nomatchurls_ro = [re.compile(s) for s in self.nomatchurls]
 
-    def matchestoxml (self, prefix=u""):
+    def matchestoxml(self, prefix=u""):
         """
         Match URL rule data as XML for storing.
         """
@@ -99,7 +85,7 @@ class UrlRule (MimeRule.MimeRule):
              (prefix, xmlquote(r)) for r in self.nomatchurls]
         return u"\n".join(m+n)
 
-    def endxml (self):
+    def endxml(self):
         """
         Return ending part of XML serialization with title and matches.
         """
@@ -111,7 +97,7 @@ class UrlRule (MimeRule.MimeRule):
         s += u"\n</%s>" % self.name
         return s
 
-    def __str__ (self):
+    def __str__(self):
         """
         Return rule data as string.
         """

@@ -7,22 +7,22 @@ import unittest
 import os
 from wc.magic import convert, classify
 
-class TestMagic (unittest.TestCase):
+class TestMagic(unittest.TestCase):
 
-    def setUp (self):
+    def setUp(self):
         self.basedir = os.path.join(os.getcwd(), "tests", "magic")
 
-    def doMagic (self, filename, expected):
+    def doMagic(self, filename, expected):
         fp = file(os.path.join(self.basedir, filename), 'rb')
         try:
             self.assertEqual(classify(fp), expected)
         finally:
             fp.close()
 
-    def test_html (self):
+    def test_html(self):
         self.doMagic("test.html", "text/html")
 
-    def test_convert (self):
+    def test_convert(self):
         self.assertEqual(255, convert.convert(r"0xFF"))
         self.assertEqual(255, convert.convert(r"\xFF"))
         self.assertEqual(63, convert.convert(r"077"))
@@ -31,14 +31,14 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(127, convert.convert(r"\177E"))
         self.assertEqual(2, convert.convert(r"02f7"))
 
-    def test_size_number (self):
+    def test_size_number(self):
         self.assertEqual(3, convert.size_number(r"100qwerty"))
         self.assertEqual(3, convert.size_number(r"100FFF"))
         self.assertEqual(2, convert.size_number(r"\77FF"))
         self.assertEqual(2, convert.size_number(r"\XFFG"))
         self.assertEqual(1, convert.size_number(r"02f7"))
 
-    def test_index_number (self):
+    def test_index_number(self):
         self.assertEqual(0, convert.index_number(r"0XF"))
         self.assertEqual(0, convert.index_number(r"\XF"))
         self.assertEqual(-1, convert.index_number(r"FF\FFGG"))
@@ -46,7 +46,7 @@ class TestMagic (unittest.TestCase):
         self.assertEqual(3, convert.index_number(r"FFF\XFFGG"))
         self.assertEqual(2, convert.index_number(r"FF\XFFGG"))
 
-    def test_convert_endian (self):
+    def test_convert_endian(self):
         # 0000 0001 -->     1
         # 0001 0000 -->    16
         # 0001 1000 -->    24

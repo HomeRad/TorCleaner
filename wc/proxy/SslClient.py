@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 SSL client connection.
 """
@@ -22,7 +8,7 @@ from .. import log, LOG_PROXY
 from ..webgui.webconfig import WebConfig
 
 
-class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
+class SslClient(HttpClient.HttpClient, SslConnection.SslConnection):
     """
     Handle SSL server requests, no proxy functionality is here.
     Response data will be encrypted with the WebCleaner SSL server
@@ -32,14 +18,14 @@ class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
     from HttpClient.
     """
 
-    def __init__ (self, sock, addr):
+    def __init__(self, sock, addr):
         super(SslClient, self).__init__(sock, addr)
         self.allow = Allowed.AllowedSslClient()
 
-    def get_default_scheme (self):
+    def get_default_scheme(self):
         return "https"
 
-    def server_request (self):
+    def server_request(self):
         assert self.state == 'receive', \
                       "%s server_request in non-receive state" % self
         log.debug(LOG_PROXY, "%s server_request", self)
@@ -47,7 +33,7 @@ class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
         ClientServerMatchmaker.ClientServerMatchmaker(
               self, self.request, self.headers, self.content, sslserver=True)
 
-    def handle_local (self, is_public_doc=False):
+    def handle_local(self, is_public_doc=False):
         assert self.state == 'receive'
         log.debug(LOG_PROXY, '%s handle_local', self)
         form = None
@@ -55,6 +41,6 @@ class SslClient (HttpClient.HttpClient, SslConnection.SslConnection):
         self.headers['Host'] = '%s\r' % self.socket.getsockname()[0]
         WebConfig(self, self.url, form, self.protocol, self.headers).send()
 
-    def mangle_request_headers (self, headers):
+    def mangle_request_headers(self, headers):
         # nothing to do
         pass

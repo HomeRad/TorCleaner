@@ -1,20 +1,6 @@
 #!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Filter JavaScript.
 """
@@ -26,32 +12,32 @@ import wc.js.jslib
 import wc.js.JSListener
 
 
-class JSFilter (wc.js.JSListener.JSListener):
+class JSFilter(wc.js.JSListener.JSListener):
     """defines callback handlers for filtering Javascript code"""
 
-    def __init__ (self, script, ver):
+    def __init__(self, script, ver):
         self.js_env = wc.js.jslib.JSEnv()
         self.js_env.listeners.append(self)
         self.js_env.executeScript(script, ver)
         self.js_env.listeners.remove(self)
 
-    def _str__ (self):
+    def _str__(self):
         return self.__class__.__name__
 
-    def js_process_data (self, data):
+    def js_process_data(self, data):
         """produced by document.write() JavaScript"""
         print "jsProcessData", repr(data)
 
-    def js_process_popup (self):
+    def js_process_popup(self):
         """process javascript popup"""
         print "jsProcessPopup"
 
-    def js_process_error (self, msg):
+    def js_process_error(self, msg):
         """process javascript syntax error"""
         print "jsProcessError", msg
 
 
-def _main ():
+def _main():
     """
     USAGE: scripts/run.sh test/filterjs.py <configdir> <.js file>
     """

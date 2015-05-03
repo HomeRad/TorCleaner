@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2001-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Parse basic and digest HTTP auth strings into key/value tokens.
 """
@@ -24,7 +10,7 @@ separators = ("()<>@,;:\\\"/[]?={} \t")
 token_chars = ('!#$%&\'*+-.abcdefghijklmnopqrstuvwxyz'
                'ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`0123456789|~')
 
-def parse_token (s, tok="", more_chars=""):
+def parse_token(s, tok="", more_chars=""):
     """
     Parse a token of data s, return tuple (tok, remaining data).
     If tok is empty, parse a default token.
@@ -44,7 +30,7 @@ def parse_token (s, tok="", more_chars=""):
     return tok, s.strip()
 
 
-def parse_quotedstring (s):
+def parse_quotedstring(s):
     """
     Parse a quoted string token of s.
 
@@ -68,7 +54,7 @@ def parse_quotedstring (s):
     return quoted, s.strip()
 
 
-def parse_auth (auth, data):
+def parse_auth(auth, data):
     """
     Generic authentication tokenizer
 

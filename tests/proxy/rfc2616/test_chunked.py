@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2010 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Test chunked encoding.
 Grammar for a chunked-encoded message body:
@@ -37,7 +23,7 @@ trailer        = *(entity-header CRLF)
 from .. import ProxyTest
 
 
-def chunk_size (data, extension):
+def chunk_size(data, extension):
     """
     Get chunk size of data with possible extension.
 
@@ -54,12 +40,12 @@ def chunk_size (data, extension):
     return hexstr
 
 
-class ChunkedTest (ProxyTest):
+class ChunkedTest(ProxyTest):
     """
     Base class for chunked requests and responses.
     """
 
-    def chunked (self, data, repeat=1, trailers=None, extension=None):
+    def chunked(self, data, repeat=1, trailers=None, extension=None):
         """
         Chunk-encode data.
 
@@ -87,37 +73,37 @@ class ChunkedTest (ProxyTest):
         return "\r\n".join(parts)
 
 
-class ChunkedResponseTest (ChunkedTest):
+class ChunkedResponseTest(ChunkedTest):
     """
     Send a chunked response.
     """
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
             "Transfer-Encoding: chunked",
         ]
 
-    def check_response_content (self, response):
+    def check_response_content(self, response):
         """
         Compare result with expected values.
         """
         self.assertEqual(response.content, self.body)
 
 
-class ChunkedRequestTest (ChunkedTest):
+class ChunkedRequestTest(ChunkedTest):
     """
     Send a chunked request.
     """
 
-    def get_request_method (self):
+    def get_request_method(self):
         """
         Make a POST request since GET must not have content.
         """
         return "POST"
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         port = self.server.socket.getsockname()[1]
         return [
             "Host: localhost:%d" % port,
@@ -125,7 +111,7 @@ class ChunkedRequestTest (ChunkedTest):
             "Transfer-Encoding: chunked",
         ]
 
-    def check_request_content (self, request):
+    def check_request_content(self, request):
         """
         Compare result with expected values.
         """
@@ -135,111 +121,111 @@ class ChunkedRequestTest (ChunkedTest):
 ########################## response tests #########################
 
 
-class test_chunked_1p1_0B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_0B_toClt(ChunkedResponseTest):
     """
     Chunked response with zero-size content to HTTP/1.1 client
     """
-    def test_chunked_1p1_0B_toClt (self):
+    def test_chunked_1p1_0B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("")
 
 
-class test_chunked_1p1_1B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_1B_toClt(ChunkedResponseTest):
     """
     Chunked response with one 1-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_1B_toClt (self):
+    def test_chunked_1p1_1B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a")
 
 
-class test_chunked_1p1_100B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_100B_toClt(ChunkedResponseTest):
     """
     Chunked response with one 100-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_100B_toClt (self):
+    def test_chunked_1p1_100B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a"*100)
 
 
-class test_chunked_1p1_65535B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_65535B_toClt(ChunkedResponseTest):
     """
     Chunked response with one 65535-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_65535B_toClt (self):
+    def test_chunked_1p1_65535B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a"*65535)
 
 
-class test_chunked_1p1_65536B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_65536B_toClt(ChunkedResponseTest):
     """
     Chunked response with one 65536-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_65536B_toClt (self):
+    def test_chunked_1p1_65536B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a"*65536)
 
 
-class test_chunked_1p1_65537B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_65537B_toClt(ChunkedResponseTest):
     """
     Chunked response with one 65537-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_65537B_toClt (self):
+    def test_chunked_1p1_65537B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a"*65537)
 
 
-class test_chunked_1p1_2x100B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_2x100B_toClt(ChunkedResponseTest):
     """
     Chunked response with two 100-Byte chunks to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_2x100B_toClt (self):
+    def test_chunked_1p1_2x100B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a"*100, repeat=2)
 
 
-class test_chunked_1p1_1025x100B_toClt (ChunkedResponseTest):
+class test_chunked_1p1_1025x100B_toClt(ChunkedResponseTest):
     """
     Chunked response with 1025 100-Byte chunks to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_1025x100B_toClt (self):
+    def test_chunked_1p1_1025x100B_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a"*100, repeat=1025)
 
 
-class test_chunked_1p1_trailer_11_1_announced_woutTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_1_announced_woutTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_announced_woutTe_toClt (self):
+    def test_chunked_1p1_trailer_11_1_announced_woutTe_toClt(self):
         self.start_test()
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -247,31 +233,31 @@ class test_chunked_1p1_trailer_11_1_announced_woutTe_toClt (ChunkedResponseTest)
             "Trailer: foo",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_1_announced_withTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_1_announced_withTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_announced_withTe_toClt (self):
+    def test_chunked_1p1_trailer_11_1_announced_withTe_toClt(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         headers = super(test_chunked_1p1_trailer_11_1_announced_withTe_toClt, self).get_request_headers(content)
         headers.append("TE: trailers")
         return headers
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -279,52 +265,52 @@ class test_chunked_1p1_trailer_11_1_announced_withTe_toClt (ChunkedResponseTest)
             "Trailer: foo",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_1_surprisesurprise_woutTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_1_surprisesurprise_woutTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 1 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_surprise_woutTe_toClt (self):
+    def test_chunked_1p1_trailer_11_1_surprise_woutTe_toClt(self):
         self.start_test()
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
             "Transfer-Encoding: chunked",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_1_surprise_withTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_1_surprise_withTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 1 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_1_surprise_withTe_toClt (self):
+    def test_chunked_1p1_trailer_11_1_surprise_withTe_toClt(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         port = self.server.socket.getsockname()[1]
         headers = [
            "Host: localhost:%d" % port,
@@ -335,7 +321,7 @@ class test_chunked_1p1_trailer_11_1_surprise_withTe_toClt (ChunkedResponseTest):
             headers.append("Content-Length: %d" % len(content))
         return headers
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -343,26 +329,26 @@ class test_chunked_1p1_trailer_11_1_surprise_withTe_toClt (ChunkedResponseTest):
             "Trailer: foo",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_17_announced_woutTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_17_announced_woutTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 17 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_announced_woutTe_toClt (self):
+    def test_chunked_1p1_trailer_11_17_announced_woutTe_toClt(self):
         self.start_test()
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -386,7 +372,7 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toClt (ChunkedResponseTest
             "Trailer: foo17",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -408,7 +394,7 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toClt (ChunkedResponseTest
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo1"))
         self.assertTrue(response.has_header("Foo2"))
         self.assertTrue(response.has_header("Foo3"))
@@ -428,16 +414,16 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toClt (ChunkedResponseTest
         self.assertTrue(response.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_11_17_announced_withTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_17_announced_withTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 17 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_announced_withTe_toClt (self):
+    def test_chunked_1p1_trailer_11_17_announced_withTe_toClt(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         port = self.server.socket.getsockname()[1]
         headers = [
            "Host: localhost:%d" % port,
@@ -448,7 +434,7 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toClt (ChunkedResponseTest
             headers.append("Content-Length: %d" % len(content))
         return headers
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -472,7 +458,7 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toClt (ChunkedResponseTest
             "Trailer: foo17",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -494,7 +480,7 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toClt (ChunkedResponseTest
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo1"))
         self.assertTrue(response.has_header("Foo2"))
         self.assertTrue(response.has_header("Foo3"))
@@ -514,23 +500,23 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toClt (ChunkedResponseTest
         self.assertTrue(response.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 17 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt (self):
+    def test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt(self):
         self.start_test()
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
             "Transfer-Encoding: chunked",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -552,7 +538,7 @@ class test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt (ChunkedResponseTest)
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo1"))
         self.assertTrue(response.has_header("Foo2"))
         self.assertTrue(response.has_header("Foo3"))
@@ -572,21 +558,21 @@ class test_chunked_1p1_trailer_11_17_surprise_woutTe_toClt (ChunkedResponseTest)
         self.assertTrue(response.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_11_17_surprise_withTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_11_17_surprise_withTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 11Byte chunk and with 17 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_11_17_surprise_withTe_toClt (self):
+    def test_chunked_1p1_trailer_11_17_surprise_withTe_toClt(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         headers = super(test_chunked_1p1_trailer_11_17_surprise_withTe_toClt, self).get_request_headers(content)
         headers.append("TE: trailers")
         return headers
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -610,7 +596,7 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toClt (ChunkedResponseTest)
             "Trailer: foo17",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -632,7 +618,7 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toClt (ChunkedResponseTest)
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo1"))
         self.assertTrue(response.has_header("Foo2"))
         self.assertTrue(response.has_header("Foo3"))
@@ -652,16 +638,16 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toClt (ChunkedResponseTest)
         self.assertTrue(response.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_0_1_announced_woutTe_toClt (ChunkedResponseTest):
+class test_chunked_1p1_trailer_0_1_announced_woutTe_toClt(ChunkedResponseTest):
     """
     Chunked response with one 0-Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def test_chunked_1p1_trailer_0_1_announced_woutTe_toClt (self):
+    def test_chunked_1p1_trailer_0_1_announced_woutTe_toClt(self):
         self.start_test()
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -669,109 +655,109 @@ class test_chunked_1p1_trailer_0_1_announced_woutTe_toClt (ChunkedResponseTest):
             "Trailer: foo",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("", trailers=trailers)
 
-    def check_response_headers (self, response):
+    def check_response_headers(self, response):
         self.assertTrue(response.has_header("Foo"))
 
 
-class test_chunked_1p1_nameExt_toClt (ChunkedResponseTest):
+class test_chunked_1p1_nameExt_toClt(ChunkedResponseTest):
     """
     Chunked response with a chunk-extension token sent to an HTTP/1.1
     client.
     """
 
-    def test_chunked_1p1_nameExt_toClt (self):
+    def test_chunked_1p1_nameExt_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         extension = ";foo"
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_valueExt_toClt (ChunkedResponseTest):
+class test_chunked_1p1_valueExt_toClt(ChunkedResponseTest):
     """
     Chunked response with a valued chunk-extension token sent to an HTTP/1.1
     client.
     """
 
-    def test_chunked_1p1_valueExt_toClt (self):
+    def test_chunked_1p1_valueExt_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         extension = ";foo=bar"
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_spacesValExt_toClt (ChunkedResponseTest):
+class test_chunked_1p1_spacesValExt_toClt(ChunkedResponseTest):
     """
     Chunked response with a chunk-extension with spaces token sent to
     an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_spacesValExt_toClt (self):
+    def test_chunked_1p1_spacesValExt_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         extension = ";foo =  bar "
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_quotedValExt_toClt (ChunkedResponseTest):
+class test_chunked_1p1_quotedValExt_toClt(ChunkedResponseTest):
     """
     Chunked response with a quoted chunk-extension token sent to an HTTP/1.1
     client.
     """
 
-    def test_chunked_1p1_quotedValExt_toClt (self):
+    def test_chunked_1p1_quotedValExt_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         extension = ';foo="a=b0xffff==abar"'
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_longValExt_16385_toClt (ChunkedResponseTest):
+class test_chunked_1p1_longValExt_16385_toClt(ChunkedResponseTest):
     """
     Chunked response with a 16385 Byte long chunk-extension token
     sent to an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_longValExt_16385_toClt (self):
+    def test_chunked_1p1_longValExt_16385_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         extension = ';foo='+("a"*16385)
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_longQValExt_16385_toClt (ChunkedResponseTest):
+class test_chunked_1p1_longQValExt_16385_toClt(ChunkedResponseTest):
     """
     Chunked response with a 16385 Byte long quoted chunk-extension token
     sent to an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_longQValExt_16385_toClt (self):
+    def test_chunked_1p1_longQValExt_16385_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         extension = ';foo="'+("="*16385)+'"'
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_lead0s_toClt (ChunkedResponseTest):
+class test_chunked_1p1_lead0s_toClt(ChunkedResponseTest):
     """
     Chunked response with leading zeros in chunk size to HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_lead0s_toClt (self):
+    def test_chunked_1p1_lead0s_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         self.body = "imadoofus"
         data = "0000000000%s\r\n" % hex(len(self.body))[2:]
         data += "%s\r\n" % self.body
@@ -779,29 +765,29 @@ class test_chunked_1p1_lead0s_toClt (ChunkedResponseTest):
         return data
 
 
-class test_chunked_1p1_0B_ext_toClt (ChunkedResponseTest):
+class test_chunked_1p1_0B_ext_toClt(ChunkedResponseTest):
     """
     Chunked response with 0 Bytes of content and a chunk-extension
     sent to an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_0B_ext_toClt (self):
+    def test_chunked_1p1_0B_ext_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         extension = ';foo=bar'
         return self.chunked("", extension=extension)
 
 
-class test_chunked_1p1_last_3x0_toClt (ChunkedResponseTest):
+class test_chunked_1p1_last_3x0_toClt(ChunkedResponseTest):
     """
     Chunked response with 3 zeros in last chunk to HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_last_3x0_toClt (self):
+    def test_chunked_1p1_last_3x0_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         self.body = "imadoofus"
         data = "%s\r\n" % hex(len(self.body))[2:]
         data += "%s\r\n" % self.body
@@ -809,15 +795,15 @@ class test_chunked_1p1_last_3x0_toClt (ChunkedResponseTest):
         return data
 
 
-class test_chunked_1p1_last_65x0_toClt (ChunkedResponseTest):
+class test_chunked_1p1_last_65x0_toClt(ChunkedResponseTest):
     """
     Chunked response with 65 zeros in last chunk to HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_last_65x0_toClt (self):
+    def test_chunked_1p1_last_65x0_toClt(self):
         self.start_test()
 
-    def get_response_content (self):
+    def get_response_content(self):
         self.body = "imadoofus"
         data = "%s\r\n" % hex(len(self.body))[2:]
         data += "%s\r\n" % self.body
@@ -825,12 +811,12 @@ class test_chunked_1p1_last_65x0_toClt (ChunkedResponseTest):
         return data
 
 
-class test_chunked_1p1_badClen_toClt (ChunkedResponseTest):
+class test_chunked_1p1_badClen_toClt(ChunkedResponseTest):
 
-    def test_chunked_1p1_badClen_toClt (self):
+    def test_chunked_1p1_badClen_toClt(self):
         self.start_test()
 
-    def get_response_headers (self, content):
+    def get_response_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -838,118 +824,118 @@ class test_chunked_1p1_badClen_toClt (ChunkedResponseTest):
             "Content-Length: 177999999",
         ]
 
-    def get_response_content (self):
+    def get_response_content(self):
         return self.chunked("a"*100)
 
 
 ########################## request tests #########################
 
 
-class test_chunked_1p1_0B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_0B_toSrv(ChunkedRequestTest):
     """
     Chunked request with zero-size content to HTTP/1.1 client
     """
-    def test_chunked_1p1_0B_toSrv (self):
+    def test_chunked_1p1_0B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("")
 
 
-class test_chunked_1p1_1B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_1B_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 1-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_1B_toSrv (self):
+    def test_chunked_1p1_1B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a")
 
 
-class test_chunked_1p1_100B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_100B_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 100-Byte chunk to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_100B_toSrv (self):
+    def test_chunked_1p1_100B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a"*100)
 
 
-class test_chunked_1p1_65535B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_65535B_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 65535-Byte chunk to HTTP/1.1 client
     """
 
-    def XXXtest_chunked_1p1_65535B_toSrv (self):
+    def XXXtest_chunked_1p1_65535B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a"*65535)
 
 
-class test_chunked_1p1_65536B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_65536B_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 65536-Byte chunk to HTTP/1.1 client
     """
 
-    def XXXtest_chunked_1p1_65536B_toSrv (self):
+    def XXXtest_chunked_1p1_65536B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a"*65536)
 
 
-class test_chunked_1p1_65537B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_65537B_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 65537-Byte chunk to HTTP/1.1 client
     """
 
-    def XXXtest_chunked_1p1_65537B_toSrv (self):
+    def XXXtest_chunked_1p1_65537B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a"*65537)
 
 
-class test_chunked_1p1_2x100B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_2x100B_toSrv(ChunkedRequestTest):
     """
     Chunked request with two 100-Byte chunks to HTTP/1.1 client
     """
 
-    def test_chunked_1p1_2x100B_toSrv (self):
+    def test_chunked_1p1_2x100B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a"*100, repeat=2)
 
 
-class test_chunked_1p1_1025x100B_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_1025x100B_toSrv(ChunkedRequestTest):
     """
     Chunked request with 1025 100-Byte chunks to HTTP/1.1 client
     """
 
-    def XXXtest_chunked_1p1_1025x100B_toSrv (self):
+    def XXXtest_chunked_1p1_1025x100B_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a"*100, repeat=1025)
 
 
-class test_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_announced_woutTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_announced_woutTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -957,31 +943,31 @@ class test_chunked_1p1_trailer_11_1_announced_woutTe_toSrv (ChunkedRequestTest):
             "Trailer: foo",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_1_announced_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_announced_withTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_1_announced_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_announced_withTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         headers = super(test_chunked_1p1_trailer_11_1_announced_withTe_toSrv, self).get_request_headers(content)
         headers.append("TE: trailers")
         return headers
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -989,52 +975,52 @@ class test_chunked_1p1_trailer_11_1_announced_withTe_toSrv (ChunkedRequestTest):
             "Trailer: foo",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_surprise_woutTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
             "Transfer-Encoding: chunked",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 1 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_1_surprise_withTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         port = self.server.socket.getsockname()[1]
         headers = [
            "Host: localhost:%d" % port,
@@ -1045,7 +1031,7 @@ class test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest):
             headers.append("Content-Length: %d" % len(content))
         return headers
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -1053,26 +1039,26 @@ class test_chunked_1p1_trailer_11_1_surprise_withTe_toSrv (ChunkedRequestTest):
             "Trailer: foo",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo"))
 
 
-class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_announced_woutTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -1096,7 +1082,7 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest)
             "Trailer: foo17",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -1118,7 +1104,7 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest)
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo1"))
         self.assertTrue(request.has_header("Foo2"))
         self.assertTrue(request.has_header("Foo3"))
@@ -1138,16 +1124,16 @@ class test_chunked_1p1_trailer_11_17_announced_woutTe_toSrv (ChunkedRequestTest)
         self.assertTrue(request.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_17_announced_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_announced_withTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         port = self.server.socket.getsockname()[1]
         headers = [
            "Host: localhost:%d" % port,
@@ -1158,7 +1144,7 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest)
             headers.append("Content-Length: %d" % len(content))
         return headers
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -1182,7 +1168,7 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest)
             "Trailer: foo17",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -1204,7 +1190,7 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest)
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo1"))
         self.assertTrue(request.has_header("Foo2"))
         self.assertTrue(request.has_header("Foo3"))
@@ -1224,23 +1210,23 @@ class test_chunked_1p1_trailer_11_17_announced_withTe_toSrv (ChunkedRequestTest)
         self.assertTrue(request.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
             "Transfer-Encoding: chunked",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -1262,7 +1248,7 @@ class test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTest):
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo1"))
         self.assertTrue(request.has_header("Foo2"))
         self.assertTrue(request.has_header("Foo3"))
@@ -1282,21 +1268,21 @@ class test_chunked_1p1_trailer_11_17_surprise_woutTe_toSrv (ChunkedRequestTest):
         self.assertTrue(request.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 11Byte chunk and with 17 surprise header(s)
     in the trailer sent to an HTTP/1.1 client that did send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_11_17_surprise_withTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         headers = super(test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv, self).get_request_headers(content)
         headers.append("TE: trailers")
         return headers
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -1320,7 +1306,7 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
             "Trailer: foo17",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo1: bar",
             "Foo2: bar",
@@ -1342,7 +1328,7 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
         ]
         return self.chunked("a"*11, trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo1"))
         self.assertTrue(request.has_header("Foo2"))
         self.assertTrue(request.has_header("Foo3"))
@@ -1362,16 +1348,16 @@ class test_chunked_1p1_trailer_11_17_surprise_withTe_toSrv (ChunkedRequestTest):
         self.assertTrue(request.has_header("Foo17"))
 
 
-class test_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_trailer_0_1_announced_woutTe_toSrv(ChunkedRequestTest):
     """
     Chunked request with one 0-Byte chunk and with 1 announced header(s)
     in the trailer sent to an HTTP/1.1 client that did not send TE: trailers.
     """
 
-    def XXXtest_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (self):
+    def XXXtest_chunked_1p1_trailer_0_1_announced_woutTe_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -1379,109 +1365,109 @@ class test_chunked_1p1_trailer_0_1_announced_woutTe_toSrv (ChunkedRequestTest):
             "Trailer: foo",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         trailers = [
             "Foo: bar",
         ]
         return self.chunked("", trailers=trailers)
 
-    def check_request_headers (self, request):
+    def check_request_headers(self, request):
         self.assertTrue(request.has_header("Foo"))
 
 
-class test_chunked_1p1_nameExt_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_nameExt_toSrv(ChunkedRequestTest):
     """
     Chunked request with a chunk-extension token sent to an HTTP/1.1
     client.
     """
 
-    def test_chunked_1p1_nameExt_toSrv (self):
+    def test_chunked_1p1_nameExt_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         extension = ";foo"
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_valueExt_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_valueExt_toSrv(ChunkedRequestTest):
     """
     Chunked request with a valued chunk-extension token sent to an HTTP/1.1
     client.
     """
 
-    def test_chunked_1p1_valueExt_toSrv (self):
+    def test_chunked_1p1_valueExt_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         extension = ";foo=bar"
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_spacesValExt_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_spacesValExt_toSrv(ChunkedRequestTest):
     """
     Chunked request with a chunk-extension with spaces token sent to
     an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_spacesValExt_toSrv (self):
+    def test_chunked_1p1_spacesValExt_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         extension = ";foo =  bar "
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_quotedValExt_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_quotedValExt_toSrv(ChunkedRequestTest):
     """
     Chunked request with a quoted chunk-extension token sent to an HTTP/1.1
     client.
     """
 
-    def test_chunked_1p1_quotedValExt_toSrv (self):
+    def test_chunked_1p1_quotedValExt_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         extension = ';foo="a=b0xffff==abar"'
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_longValExt_16385_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_longValExt_16385_toSrv(ChunkedRequestTest):
     """
     Chunked request with a 16385 Byte long chunk-extension token
     sent to an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_longValExt_16385_toSrv (self):
+    def test_chunked_1p1_longValExt_16385_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         extension = ';foo='+("a"*16385)
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_longQValExt_16385_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_longQValExt_16385_toSrv(ChunkedRequestTest):
     """
     Chunked request with a 16385 Byte long quoted chunk-extension token
     sent to an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_longQValExt_16385_toSrv (self):
+    def test_chunked_1p1_longQValExt_16385_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         extension = ';foo="'+("="*16385)+'"'
         return self.chunked("a"*10, extension=extension)
 
 
-class test_chunked_1p1_lead0s_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_lead0s_toSrv(ChunkedRequestTest):
     """
     Chunked request with leading zeros in chunk size to HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_lead0s_toSrv (self):
+    def test_chunked_1p1_lead0s_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         self.body = "imadoofus"
         data = "0000000000%s\r\n" % hex(len(self.body))[2:]
         data += "%s\r\n" % self.body
@@ -1489,29 +1475,29 @@ class test_chunked_1p1_lead0s_toSrv (ChunkedRequestTest):
         return data
 
 
-class test_chunked_1p1_0B_ext_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_0B_ext_toSrv(ChunkedRequestTest):
     """
     Chunked request with 0 Bytes of content and a chunk-extension
     sent to an HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_0B_ext_toSrv (self):
+    def test_chunked_1p1_0B_ext_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         extension = ';foo=bar'
         return self.chunked("", extension=extension)
 
 
-class test_chunked_1p1_last_3x0_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_last_3x0_toSrv(ChunkedRequestTest):
     """
     Chunked request with 3 zeros in last chunk to HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_last_3x0_toSrv (self):
+    def test_chunked_1p1_last_3x0_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         self.body = "imadoofus"
         data = "%s\r\n" % hex(len(self.body))[2:]
         data += "%s\r\n" % self.body
@@ -1519,15 +1505,15 @@ class test_chunked_1p1_last_3x0_toSrv (ChunkedRequestTest):
         return data
 
 
-class test_chunked_1p1_last_65x0_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_last_65x0_toSrv(ChunkedRequestTest):
     """
     Chunked request with 65 zeros in last chunk to HTTP/1.1 client.
     """
 
-    def test_chunked_1p1_last_65x0_toSrv (self):
+    def test_chunked_1p1_last_65x0_toSrv(self):
         self.start_test()
 
-    def get_request_content (self):
+    def get_request_content(self):
         self.body = "imadoofus"
         data = "%s\r\n" % hex(len(self.body))[2:]
         data += "%s\r\n" % self.body
@@ -1535,12 +1521,12 @@ class test_chunked_1p1_last_65x0_toSrv (ChunkedRequestTest):
         return data
 
 
-class test_chunked_1p1_badClen_toSrv (ChunkedRequestTest):
+class test_chunked_1p1_badClen_toSrv(ChunkedRequestTest):
 
-    def XXXtest_chunked_1p1_badClen_toSrv (self):
+    def XXXtest_chunked_1p1_badClen_toSrv(self):
         self.start_test()
 
-    def get_request_headers (self, content):
+    def get_request_headers(self, content):
         return [
             "Content-Type: text/plain",
             "Connection: close",
@@ -1548,5 +1534,5 @@ class test_chunked_1p1_badClen_toSrv (ChunkedRequestTest):
             "Content-Length: 177999999",
         ]
 
-    def get_request_content (self):
+    def get_request_content(self):
         return self.chunked("a"*100)

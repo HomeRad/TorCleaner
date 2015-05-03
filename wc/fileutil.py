@@ -24,7 +24,7 @@ import stat
 import fnmatch
 
 
-def write_file (filename, content, backup=False, callback=None):
+def write_file(filename, content, backup=False, callback=None):
     """Overwrite a possibly existing file with new content. Do this
     in a manner that does not leave truncated or broken files behind.
     @param filename: name of file to write
@@ -53,7 +53,7 @@ def write_file (filename, content, backup=False, callback=None):
         os.remove(filename+".bak")
 
 
-def has_module (name):
+def has_module(name):
     """Test if given module can be imported.
     @return: flag if import is successful
     @rtype: bool
@@ -65,17 +65,17 @@ def has_module (name):
         return False
 
 
-class GlobDirectoryWalker (object):
+class GlobDirectoryWalker(object):
     """A forward iterator that traverses a directory tree."""
 
-    def __init__ (self, directory, pattern="*"):
+    def __init__(self, directory, pattern="*"):
         """Set start directory and pattern matcher."""
         self.stack = [directory]
         self.pattern = pattern
         self.files = []
         self.index = 0
 
-    def __getitem__ (self, index):
+    def __getitem__(self, index):
         """Search for next filename."""
         while True:
             try:
@@ -99,25 +99,25 @@ class GlobDirectoryWalker (object):
 rglob = GlobDirectoryWalker
 
 
-class Buffer (object):
+class Buffer(object):
     """Holds buffered data"""
 
-    def __init__ (self, empty=''):
+    def __init__(self, empty=''):
         """Initialize buffer."""
         self.empty = self.buf = empty
         self.tmpbuf = []
         self.pos = 0
 
-    def __len__ (self):
+    def __len__(self):
         """Buffer length."""
         return self.pos
 
-    def write (self, data):
+    def write(self, data):
         """Write data to buffer."""
         self.tmpbuf.append(data)
         self.pos += len(data)
 
-    def flush (self, overlap=0):
+    def flush(self, overlap=0):
         """Flush buffered data and return it."""
         self.buf += self.empty.join(self.tmpbuf)
         self.tmpbuf = []
@@ -130,7 +130,7 @@ class Buffer (object):
         return data
 
 
-def get_mtime (filename):
+def get_mtime(filename):
     """Return modification time of filename or zero on errors."""
     try:
         return os.stat(filename)[stat.ST_MTIME]
@@ -148,7 +148,7 @@ elif "G_BROKEN_FILENAMES" in os.environ:
 else:
     FSCODING = "utf-8"
 
-def pathencode (path):
+def pathencode(path):
     if isinstance(path, unicode) and not os.path.supports_unicode_filenames:
         path = path.encode(FSCODING, "replace")
     return path
@@ -156,7 +156,7 @@ def pathencode (path):
 
 # cache for modified check {absolute filename -> mtime}
 _mtime_cache = {}
-def has_changed (filename):
+def has_changed(filename):
     """Check if filename has changed since the last check. If this
     is the first check, assume the file is changed."""
     key = os.path.abspath(filename)

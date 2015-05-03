@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Header mangling.
 """
@@ -29,7 +15,7 @@ from ..http import date as dateutil, parse_http_warning
 from .decoder import UnchunkStream, GunzipStream, DeflateStream
 
 
-def get_content_length (headers, default=None):
+def get_content_length(headers, default=None):
     """Get content length as int or None on error."""
     if "Content-Length" not in headers:
         if has_header_value(headers, "Transfer-Encoding", "chunked"):
@@ -43,7 +29,7 @@ def get_content_length (headers, default=None):
     return None
 
 
-def get_content_type (headers, url, default="application/octet-stream"):
+def get_content_type(headers, url, default="application/octet-stream"):
     """
     Get a mime type for this url.  First check the response headers.
     If not found, try to deduce from the file extension.
@@ -58,7 +44,7 @@ def get_content_type (headers, url, default="application/octet-stream"):
     return ctype
 
 
-def get_wc_client_headers (host):
+def get_wc_client_headers(host):
     """Get default webcleaner proxy request headers."""
     headers = WcMessage()
     headers['Host'] = '%s\r' % host
@@ -69,7 +55,7 @@ def get_wc_client_headers (host):
     return headers
 
 
-def remove_headers (headers, to_remove):
+def remove_headers(headers, to_remove):
     """
     Remove entries from RFC822 headers.
     """
@@ -79,7 +65,7 @@ def remove_headers (headers, to_remove):
             del headers[h]
 
 
-def has_header_value (headers, name, value):
+def has_header_value(headers, name, value):
     """
     Return true iff headers contain given value, case of key or value
     is not important.
@@ -93,14 +79,14 @@ def has_header_value (headers, name, value):
 
 ########## HttpServer/Client header helper functions ##############
 
-def set_via_header (headers):
+def set_via_header(headers):
     """
     Set "Via:" header.
     """
     headers.addheader("Via", "1.1 unknown\r")
 
 
-def remove_warning_headers (headers):
+def remove_warning_headers(headers):
     """
     Remove old warning headers.
     """
@@ -125,7 +111,7 @@ def remove_warning_headers (headers):
 
 
 forbidden_trailer_names = ("transfer-encoding", "content-length", "trailer")
-def check_trailer_headers (headers):
+def check_trailer_headers(headers):
     """
     Message header fields listed in the Trailer header field MUST NOT
     include the following header fields:
@@ -144,7 +130,7 @@ def check_trailer_headers (headers):
         headers.addheader('Trailer', trailer+'\r')
 
 
-def client_set_headers (headers, url):
+def client_set_headers(headers, url):
     """
     Modify client request headers.
     """
@@ -153,7 +139,7 @@ def client_set_headers (headers, url):
     set_via_header(headers)
 
 
-def client_remove_multiple_headers (headers, url):
+def client_remove_multiple_headers(headers, url):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
         if headers.remove_multiple_headers(name):
@@ -161,14 +147,14 @@ def client_remove_multiple_headers (headers, url):
                         "%r sent multiple %r client headers", url, name)
 
 
-def server_remove_multiple_headers (headers, url):
+def server_remove_multiple_headers(headers, url):
     # remove dangerous double entries
     for name in ['Content-Length', 'Age', 'Date', 'Host']:
         if headers.remove_multiple_headers(name):
             log.info(LOG_PROXY,
                         "%r sent multiple %r server headers", url, name)
 
-def client_remove_hop_by_hop_headers (headers):
+def client_remove_hop_by_hop_headers(headers):
     """
     Remove hop-by-hop headers.
     """
@@ -189,7 +175,7 @@ def client_remove_hop_by_hop_headers (headers):
     remove_headers(headers, to_remove)
 
 
-def client_set_encoding_headers (headers):
+def client_set_encoding_headers(headers):
     """
     Set encoding headers and return compression type.
     """
@@ -207,7 +193,7 @@ def client_set_encoding_headers (headers):
     return compress
 
 
-def client_remove_encoding_headers (headers):
+def client_remove_encoding_headers(headers):
     """
     Remove encoding headers of client request headers.
     """
@@ -222,7 +208,7 @@ def client_remove_encoding_headers (headers):
     headers['Warning'] = "214 Transformation applied\r"
 
 
-def client_get_max_forwards (headers):
+def client_get_max_forwards(headers):
     """
     Get Max-Forwards value as int and decrement it if its > 0.
     """
@@ -237,7 +223,7 @@ def client_get_max_forwards (headers):
     return mf
 
 
-def server_set_headers (headers, url):
+def server_set_headers(headers, url):
     """
     Modify server response headers.
     """
@@ -249,7 +235,7 @@ def server_set_headers (headers, url):
     check_trailer_headers(headers)
 
 
-def server_remove_hop_by_hop_headers (headers):
+def server_remove_hop_by_hop_headers(headers):
     """
     Remove hop-by-hop headers.
     """
@@ -263,7 +249,7 @@ def server_remove_hop_by_hop_headers (headers):
     remove_headers(headers, to_remove)
 
 
-def server_set_date_header (headers):
+def server_set_date_header(headers):
     """
     Add rfc2822 date if it was missing.
     """
@@ -272,7 +258,7 @@ def server_set_date_header (headers):
         headers['Date'] = "%s\r" % dateutil.get_date_rfc1123(now)
 
 
-def server_set_content_headers (status, headers, mime_types, url):
+def server_set_content_headers(status, headers, mime_types, url):
     """
     Add missing content-type headers.
     """
@@ -297,7 +283,7 @@ def server_set_content_headers (status, headers, mime_types, url):
     headers['Content-Type'] = "%s\r" % mime
 
 
-def server_set_encoding_headers (server, filename=None):
+def server_set_encoding_headers(server, filename=None):
     """
     Set encoding headers.
     """
@@ -369,7 +355,7 @@ def server_set_encoding_headers (server, filename=None):
     return bytes_remaining
 
 
-def get_encoding_dict (msg):
+def get_encoding_dict(msg):
     """
     Get encodings and their associated preference values.
     """

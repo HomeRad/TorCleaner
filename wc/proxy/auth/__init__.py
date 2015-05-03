@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Support for different HTTP proxy authentication schemes.
 """
@@ -35,14 +21,14 @@ if HasCrypto:
     from ntlm import check_ntlm_credentials
 
 
-def get_auth_uri (url):
+def get_auth_uri(url):
     """
     Return uri ready for authentication purposes.
     """
     return urlutil.stripsite(url)[1]
 
 
-def get_header_challenges (headers, key):
+def get_header_challenges(headers, key):
     """
     Get parsed challenge(s) out of headers[key].
     """
@@ -55,7 +41,7 @@ def get_header_challenges (headers, key):
     return auths
 
 
-def parse_challenges (challenge):
+def parse_challenges(challenge):
     """
     Return a parsed challenge dict.
     """
@@ -76,7 +62,7 @@ def parse_challenges (challenge):
     return auths
 
 
-def get_challenges (**args):
+def get_challenges(**args):
     """
     Return list of challenges for WebCleaner proxy authentication
     Note that HTTP/1.1 allows multiple authentication challenges
@@ -94,7 +80,7 @@ def get_challenges (**args):
     return chals
 
 
-def get_header_credentials (headers, key):
+def get_header_credentials(headers, key):
     """
     Return parsed credentials out of headers[key].
     """
@@ -107,7 +93,7 @@ def get_header_credentials (headers, key):
     return creds
 
 
-def parse_credentials (creds):
+def parse_credentials(creds):
     """
     Return a parsed credential dict.
     """
@@ -128,7 +114,7 @@ def parse_credentials (creds):
     return auths
 
 
-def get_credentials (challenges, **attrs):
+def get_credentials(challenges, **attrs):
     """
     Craft a challenge response with credential data.
 
@@ -148,7 +134,7 @@ def get_credentials (challenges, **attrs):
     return creds
 
 
-def check_credentials (creds, **attrs):
+def check_credentials(creds, **attrs):
     """
     Check credentials against given attributes.
     """

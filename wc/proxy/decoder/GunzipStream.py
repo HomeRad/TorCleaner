@@ -40,7 +40,7 @@ from ... import log, LOG_PROXY
 from . import DeflateStream
 
 
-class GunzipStream (DeflateStream.DeflateStream):
+class GunzipStream(DeflateStream.DeflateStream):
     """
     Stream filter ungzipp'ing data.
     """
@@ -48,7 +48,7 @@ class GunzipStream (DeflateStream.DeflateStream):
     # Flags in the gzip header
     FTEXT, FHCRC, FEXTRA, FNAME, FCOMMENT = 1, 2, 4, 8, 16
 
-    def __init__ (self):
+    def __init__(self):
         """
         Initialize internal data buffer and flags.
         """
@@ -56,7 +56,7 @@ class GunzipStream (DeflateStream.DeflateStream):
         self.buf = ''
         self.header_seen = False
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Object representation.
         """
@@ -67,7 +67,7 @@ class GunzipStream (DeflateStream.DeflateStream):
         return '<gunzip %s buflen=%d error=%s>' % \
                    (s, len(self.buf), self.error)
 
-    def attempt_header_read (self):
+    def attempt_header_read(self):
         """
         Try to parse the header from buffer, and if we can, set flag.
         """
@@ -131,7 +131,7 @@ class GunzipStream (DeflateStream.DeflateStream):
         self.buf = s
         self.header_seen = True
 
-    def process (self, s):
+    def process(self, s):
         """
         Gunzip data s.
         """
@@ -153,7 +153,7 @@ class GunzipStream (DeflateStream.DeflateStream):
         # We have seen the header, so we can move on to zlib
         return super(GunzipStream, self).process(s)
 
-    def flush (self):
+    def flush(self):
         """
         Flush buffer data and return it.
         """

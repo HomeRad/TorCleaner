@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2003-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Parameters for filterconfig.html page.
 """
@@ -145,21 +131,21 @@ newrulenames.sort()
 ruletype = {}
 
 
-def _is_valid_header_filterstage (stage):
+def _is_valid_header_filterstage(stage):
     """
     Check if stage is a valid header filter stage.
     """
     return stage in ('request', 'response', 'both')
 
 
-def _is_valid_header_action (action):
+def _is_valid_header_action(action):
     """
     Check if action is a valid header filter action.
     """
     return action in ('add', 'replace', 'remove')
 
 
-def set_indexstr (folder):
+def set_indexstr(folder):
     """
     Add indexstr variable to folder indicating the filter index.
     """
@@ -174,7 +160,7 @@ def set_indexstr (folder):
             (curindex + 1, min(curindex + _rules_per_page, l), l)
 
 
-def _exec_form (form, lang):
+def _exec_form(form, lang):
     """
     HTML CGI form handling.
     """
@@ -258,7 +244,7 @@ def _exec_form (form, lang):
     _form_set_tags()
 
 
-def _form_reset ():
+def _form_reset():
     """
     Set default values for form variables.
     """
@@ -279,7 +265,7 @@ def _form_reset ():
     curreplacetypes = None
 
 
-def _form_set_tags ():
+def _form_set_tags():
     """
     Set folder and rule tags for displaying.
     """
@@ -295,7 +281,7 @@ def _form_set_tags ():
         currule.selected = True
 
 
-def _form_selfolder (index):
+def _form_selfolder(index):
     """
     Select a folder.
     """
@@ -307,7 +293,7 @@ def _form_selfolder (index):
         error['folderindex'] = True
 
 
-def _form_selrule (index):
+def _form_selrule(index):
     """
     Select a rule.
     """
@@ -346,7 +332,7 @@ def _form_selrule (index):
         error['ruleindex'] = True
 
 
-def _form_selindex (index):
+def _form_selindex(index):
     """
     Display rules in curfolder from given index.
     """
@@ -357,7 +343,7 @@ def _form_selindex (index):
         error['selindex'] = True
 
 
-def _calc_selindex (folder, index):
+def _calc_selindex(folder, index):
     """
     Calculate rule selection index of given folder.
     """
@@ -369,14 +355,14 @@ def _calc_selindex (folder, index):
                        if 0 <= x < len(folder.rules) and x != index]
 
 
-def _reinit_filters ():
+def _reinit_filters():
     """
     Reinitialize filter modules.
     """
     config.init_filter_modules()
 
 
-def _form_newfolder (foldername, lang):
+def _form_newfolder(foldername, lang):
     """
     Create a new folder.
     """
@@ -405,7 +391,7 @@ def _form_newfolder (foldername, lang):
     info['newfolder'] = True
 
 
-def _form_renamefolder (foldername, lang):
+def _form_renamefolder(foldername, lang):
     """
     Rename a folder.
     """
@@ -417,7 +403,7 @@ def _form_renamefolder (foldername, lang):
     info['renamefolder'] = True
 
 
-def _form_disablefolder (folder):
+def _form_disablefolder(folder):
     """
     Disable a folder.
     """
@@ -430,7 +416,7 @@ def _form_disablefolder (folder):
     info['disablefolder'] = True
 
 
-def _form_enablefolder (folder):
+def _form_enablefolder(folder):
     """
     Enable a folder.
     """
@@ -443,7 +429,7 @@ def _form_enablefolder (folder):
     info['enablefolder'] = True
 
 
-def _form_removefolder (folder):
+def _form_removefolder(folder):
     """
     Remove a folder.
     """
@@ -459,7 +445,7 @@ def _form_removefolder (folder):
         error['removefolder'] = True
 
 
-def _form_newrule (rtype, lang):
+def _form_newrule(rtype, lang):
     """
     Create a new rule.
     """
@@ -486,7 +472,7 @@ def _form_newrule (rtype, lang):
     info['newrule'] = True
 
 
-def _form_disablerule (rule):
+def _form_disablerule(rule):
     """
     Disable a rule.
     """
@@ -499,7 +485,7 @@ def _form_disablerule (rule):
     info['disablerule'] = True
 
 
-def _form_enablerule (rule):
+def _form_enablerule(rule):
     """
     Enable a rule.
     """
@@ -512,7 +498,7 @@ def _form_enablerule (rule):
     info['enablerule'] = True
 
 
-def _form_removerule (rule):
+def _form_removerule(rule):
     """
     Remove a rule.
     """
@@ -531,7 +517,7 @@ def _form_removerule (rule):
         error['removerule'] = True
 
 
-def _form_htmlrewrite_addattr (form):
+def _form_htmlrewrite_addattr(form):
     """
     Add attribute to Htmlrewrite rule.
     """
@@ -546,7 +532,7 @@ def _form_htmlrewrite_addattr (form):
     info['htmlrewrite_addattr'] = True
 
 
-def _form_htmlrewrite_removeattrs (form):
+def _form_htmlrewrite_removeattrs(form):
     """
     Remove attribute from Htmlrewrite rule.
     """
@@ -563,7 +549,7 @@ def _form_htmlrewrite_removeattrs (form):
         info['htmlrewrite_delattr'] = True
 
 
-def _swap_rules (rules, idx):
+def _swap_rules(rules, idx):
     """
     Swap rules[idx] and rules[idx+1]. Helper function for moving
     rules or folders up and down.
@@ -573,7 +559,7 @@ def _swap_rules (rules, idx):
     rules[idx], rules[idx+1] = rules[idx+1], rules[idx]
 
 
-def _form_folder_down (oid):
+def _form_folder_down(oid):
     """
     Move folder with given oid one down.
     """
@@ -593,7 +579,7 @@ def _form_folder_down (oid):
     info['folderdown'] = True
 
 
-def _form_folder_up (oid):
+def _form_folder_up(oid):
     """
     Move folder with given oid one up.
     """
@@ -613,7 +599,7 @@ def _form_folder_up (oid):
     info['folderup'] = True
 
 
-def _form_rule_down (oid):
+def _form_rule_down(oid):
     """
     Move rule with given oid one down.
     """
@@ -631,7 +617,7 @@ def _form_rule_down (oid):
     info['ruledown'] = True
 
 
-def _form_rule_up (oid):
+def _form_rule_up(oid):
     """
     Move rule with given oid one up.
     """
@@ -649,7 +635,7 @@ def _form_rule_up (oid):
     info['ruleup'] = True
 
 
-def _form_apply (form, lang):
+def _form_apply(form, lang):
     """
     Delegate rule apply to different apply_* functions.
     """
@@ -662,7 +648,7 @@ def _form_apply (form, lang):
         curfolder.write()
 
 
-def _form_rule_titledesc (form, lang):
+def _form_rule_titledesc(form, lang):
     """
     Change rule title and description.
     """
@@ -679,7 +665,7 @@ def _form_rule_titledesc (form, lang):
         info['ruledesc'] = True
 
 
-def _form_rule_addmimetype (form):
+def _form_rule_addmimetype(form):
     """
     Add rule MIME type.
     """
@@ -693,7 +679,7 @@ def _form_rule_addmimetype (form):
         info['rulemimetype'] = True
 
 
-def _form_rule_delmimetypes (form):
+def _form_rule_delmimetypes(form):
     """
     Remove rule MIME type.
     """
@@ -707,7 +693,7 @@ def _form_rule_delmimetypes (form):
         info['rulemimetype'] = True
 
 
-def _form_rule_addmatchurl (form):
+def _form_rule_addmatchurl(form):
     """
     Add rule match URL.
     """
@@ -721,7 +707,7 @@ def _form_rule_addmatchurl (form):
         info['rulematchurl'] = True
 
 
-def _form_rule_delmatchurls (form):
+def _form_rule_delmatchurls(form):
     """
     Remove rule match URL.
     """
@@ -735,7 +721,7 @@ def _form_rule_delmatchurls (form):
         info['rulematchurl'] = True
 
 
-def _form_rule_addnomatchurl (form):
+def _form_rule_addnomatchurl(form):
     """
     Add rule nomatch URL.
     """
@@ -749,7 +735,7 @@ def _form_rule_addnomatchurl (form):
         info['rulenomatchurl'] = True
 
 
-def _form_rule_delnomatchurls (form):
+def _form_rule_delnomatchurls(form):
     """
     Remove rule nomatch URL.
     """
@@ -765,7 +751,7 @@ def _form_rule_delnomatchurls (form):
 
 # The _form_apply_* methods handle all rule types.
 
-def _form_apply_allow (form):
+def _form_apply_allow(form):
     """
     Change AllowRule.
     """
@@ -775,7 +761,7 @@ def _form_apply_allow (form):
         info['ruleurl'] = True
 
 
-def _form_apply_block (form):
+def _form_apply_block(form):
     """
     Change BlockwRule.
     """
@@ -786,7 +772,7 @@ def _form_apply_block (form):
         info['rulereplacement'] = True
 
 
-def _form_apply_header (form):
+def _form_apply_header(form):
     """
     Change HeaderRule.
     """
@@ -820,7 +806,7 @@ def _form_apply_header (form):
         _form_selrule(currule.oid)
 
 
-def _form_apply_image (form):
+def _form_apply_image(form):
     """
     Change ImageRule.
     """
@@ -845,7 +831,7 @@ def _form_apply_image (form):
     # XXX todo: image types
 
 
-def _form_apply_imagereduce (form):
+def _form_apply_imagereduce(form):
     """
     Change ImagereduceRule.
     """
@@ -869,32 +855,32 @@ def _form_apply_imagereduce (form):
         info['ruleimgminsize'] = True
 
 
-def _form_apply_javascript (form):
+def _form_apply_javascript(form):
     """
     Change JavascriptRule.
     """
     pass
 
-def _form_apply_antivirus (form):
+def _form_apply_antivirus(form):
     """
     Change AntivirusRule.
     """
     pass
 
-def _form_apply_nocomments (form):
+def _form_apply_nocomments(form):
     """
     Change NocommentsRule.
     """
     pass
 
-def _form_apply_nojscomments (form):
+def _form_apply_nojscomments(form):
     """
     Change NojscommentsRule.
     """
     pass
 
 
-def _form_apply_rating (form):
+def _form_apply_rating(form):
     """
     Change RatingRule.
     """
@@ -924,7 +910,7 @@ def _form_apply_rating (form):
             info['rulerating'] = True
 
 
-def _form_apply_replace (form):
+def _form_apply_replace(form):
     """
     Change ReplaceRule.
     """
@@ -943,7 +929,7 @@ def _form_apply_replace (form):
         info['rulereplace'] = True
 
 
-def _form_apply_htmlrewrite (form):
+def _form_apply_htmlrewrite(form):
     """
     Change HtmlrewriteRule.
     """
@@ -975,7 +961,7 @@ def _form_apply_htmlrewrite (form):
         info['rulerewritereplacement'] =  True
 
 
-def _form_apply_xmlrewrite (form):
+def _form_apply_xmlrewrite(form):
     """
     Change XmlrewriteRule.
     """

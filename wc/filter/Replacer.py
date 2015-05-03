@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Replace expressions in a data stream. Use this for highlighting and
 removing/replacing certain strings.
@@ -24,12 +10,12 @@ from .. import fileutil
 
 DefaultCharset = 'iso-8859-1'
 
-class Replacer (Filter.Filter):
+class Replacer(Filter.Filter):
     """Replace regular expressions in a data stream."""
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """Initialize replacer flags."""
         stages = [STAGE_RESPONSE_MODIFY]
         rulenames = ['replace']
@@ -39,7 +25,7 @@ class Replacer (Filter.Filter):
         super(Replacer, self).__init__(stages=stages, mimes=mimes,
                                        rulenames=rulenames)
 
-    def filter (self, data, attrs):
+    def filter(self, data, attrs):
         """Feed data to replacer buffer."""
         if 'replacer_buf' not in attrs:
             return data
@@ -48,7 +34,7 @@ class Replacer (Filter.Filter):
         charset = attrs.get('charset', DefaultCharset)
         return self.replace(data, charset, buf.filter)
 
-    def finish (self, data, attrs):
+    def finish(self, data, attrs):
         """Feed data to replacer buffer, flush and return it."""
         if 'replacer_buf' not in attrs:
             return data
@@ -57,13 +43,13 @@ class Replacer (Filter.Filter):
         charset = attrs.get('charset', DefaultCharset)
         return self.replace(data, charset, buf.finish)
 
-    def replace (self, data, charset, func):
+    def replace(self, data, charset, func):
         """Decode data, replace contents of buffer and encode again."""
         udata = data.decode(charset, 'ignore')
         udata = func(udata)
         return udata.encode(charset, 'ignore')
 
-    def update_attrs (self, attrs, url, localhost, stages, headers):
+    def update_attrs(self, attrs, url, localhost, stages, headers):
         """Initialize replacer buffer object."""
         if not self.applies_to_stages(stages):
             return
@@ -80,30 +66,30 @@ class Replacer (Filter.Filter):
 CHUNK_SIZE = 1024L*4L
 CHUNK_OVERLAP = 1024L
 
-class Buf (fileutil.Buffer):
+class Buf(fileutil.Buffer):
     """
     Holds buffer data ready for replacing, with overlapping scans.
     Strings must be unicode.
     """
 
-    def __init__ (self, rules):
+    def __init__(self, rules):
         """Store rules and initialize buffer."""
         super(Buf, self).__init__(empty=u"")
         self.rules = rules
         self.mime = None
 
-    def filter (self, data):
+    def filter(self, data):
         """Fill up buffer with given data, and scan for replacements."""
         self.write(data)
         if len(self) > CHUNK_SIZE:
             return self._replace(self.flush(overlap=CHUNK_OVERLAP))
         return u""
 
-    def finish (self, data):
+    def finish(self, data):
         self.write(data)
         return self._replace(self.flush())
 
-    def _replace (self, data):
+    def _replace(self, data):
         """Scan for replacements."""
         for rule in self.rules:
             if rule.search and rule.applies_to_mime(self.mime):

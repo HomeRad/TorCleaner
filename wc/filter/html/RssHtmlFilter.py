@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 A HTML filter that only allows a safe tag subset, suitable for displaying
 in an RSS reader.
@@ -59,20 +45,20 @@ rss_uris = {
     u"img": [u"src"],
 }
 
-class RssHtmlFilter (object):
+class RssHtmlFilter(object):
 
-    def __init__ (self):
+    def __init__(self):
         self.parser = wc.HtmlParser.htmlsax.parser(self)
         self.reset()
 
-    def reset (self):
+    def reset(self):
         self.outbuf = StringIO()
         self.url = ""
         self.valid = True
         self.stack = []
         self.rules = []
 
-    def filter (self, data, url, rules):
+    def filter(self, data, url, rules):
         # XXX remove encoding when HTML parser supports unicode
         encoding = "iso8859-1"
         self.parser.encoding = encoding
@@ -87,44 +73,44 @@ class RssHtmlFilter (object):
         self.reset()
         return data
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Representation with recursion level and state.
         """
         return "<RssHtmlFilter %s>" % self.url
 
-    def _data (self, data):
+    def _data(self, data):
         """
         General handler for data.
         """
         if self.valid:
             self.outbuf.write(data)
 
-    def cdata (self, data):
+    def cdata(self, data):
         """
         Character data.
         """
         return self._data(data)
 
-    def characters (self, data):
+    def characters(self, data):
         """
         Characters.
         """
         return self._data(data)
 
-    def start_element (self, tag, attrs):
+    def start_element(self, tag, attrs):
         """
         HTML start element.
         """
         self._start_element(tag, attrs, False)
 
-    def start_end_element (self, tag, attrs):
+    def start_end_element(self, tag, attrs):
         """
         HTML start-end element (<a/>).
         """
         self._start_element(tag, attrs, True)
 
-    def _start_element (self, tag, attrs, startend):
+    def _start_element(self, tag, attrs, startend):
         tag = check_spelling(tag, self.url)
         self.stack.append(tag)
         if not self.valid:
@@ -145,7 +131,7 @@ class RssHtmlFilter (object):
             self.valid = False
             self.stack = [tag]
 
-    def end_element (self, tag):
+    def end_element(self, tag):
         tag = check_spelling(tag, self.url)
         if self.stack and self.stack[-1] == tag:
             del self.stack[-1]

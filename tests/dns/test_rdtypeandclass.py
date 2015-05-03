@@ -19,7 +19,7 @@ import unittest
 import wc.dns.rdataclass
 import wc.dns.rdatatype
 
-class TestRdTypeAndClass (unittest.TestCase):
+class TestRdTypeAndClass(unittest.TestCase):
 
     # Classes
 

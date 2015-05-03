@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2004-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Parse and filter ratings.
 """
@@ -23,7 +9,7 @@ from .. import configuration
 from ..rating.service.rating import rating_from_headers
 
 
-class Rating (Filter.Filter):
+class Rating(Filter.Filter):
     """
     Reject pages that exceed the configured rating limit. Uses an
     existing rating store, as well as rating data supplied by
@@ -34,7 +20,7 @@ class Rating (Filter.Filter):
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """
         Initialize image reducer flags.
         """
@@ -42,7 +28,7 @@ class Rating (Filter.Filter):
         rulenames = ['rating']
         super(Rating, self).__init__(stages=stages, rulenames=rulenames)
 
-    def doit (self, data, attrs):
+    def doit(self, data, attrs):
         """
         Parse and check Content-Rating header according to rating rules.
 
@@ -75,7 +61,7 @@ class Rating (Filter.Filter):
             return data
         raise FilterRating(_("No rating data found."))
 
-    def update_attrs (self, attrs, url, localhost, stages, headers):
+    def update_attrs(self, attrs, url, localhost, stages, headers):
         """
         Store rating rules in data.
         """

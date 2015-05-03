@@ -45,19 +45,19 @@ from .. import log, LOG_PROXY
 from ..socketutil import create_socket, has_ipv6
 from . import timer
 
-def strerror (err):
+def strerror(err):
     return "%s (%s)" % (errno.errorcode.get(err, 'Unknown'),
                         os.strerror(err))
 
 # map of sockets
 socket_map = {}
 
-class Dispatcher (object):
+class Dispatcher(object):
     """
     Dispatch socket events to handler functions.
     """
 
-    def __init__ (self, sock=None, socktype=None):
+    def __init__(self, sock=None, socktype=None):
         """
         Initialize connection.
 
@@ -77,7 +77,7 @@ class Dispatcher (object):
             self.connected = True
             self.addr = sock.getpeername()
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Connection info string.
         """
@@ -93,13 +93,13 @@ class Dispatcher (object):
                 status.append(repr(self.addr))
         return '<%s at %#x>' % (' '.join(status), id(self))
 
-    def add_channel (self):
+    def add_channel(self):
         """
         Add this connection to the socket map.
         """
         socket_map[self.fileno()] = self
 
-    def del_channel (self):
+    def del_channel(self):
         """
         Delete this connection from socket map.
         """
@@ -107,7 +107,7 @@ class Dispatcher (object):
         if fd in socket_map:
             del socket_map[fd]
 
-    def get_family (self, ip):
+    def get_family(self, ip):
         """
         Get socket family for ip.
 
@@ -118,13 +118,13 @@ class Dispatcher (object):
             return socket.AF_INET6
         return socket.AF_INET
 
-    def create_socket (self, family, socktype):
+    def create_socket(self, family, socktype):
         """
         Create a new socket.
         """
         self.set_socket(create_socket(family, socktype), socktype)
 
-    def set_socket (self, sock, socktype):
+    def set_socket(self, sock, socktype):
         """
         Set new socket.
         """
@@ -138,7 +138,7 @@ class Dispatcher (object):
              sock.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
         self.add_channel()
 
-    def set_reuse_addr (self):
+    def set_reuse_addr(self):
         """
         Try to re-use a server port if possible.
         """
@@ -157,7 +157,7 @@ class Dispatcher (object):
     # to pass to select().
     # ==================================================
 
-    def readable (self):
+    def readable(self):
         """
         Check if connection is readable.
 
@@ -166,7 +166,7 @@ class Dispatcher (object):
         """
         return True
 
-    def writable (self):
+    def writable(self):
         """
         Check if connection is writable.
 
@@ -179,7 +179,7 @@ class Dispatcher (object):
     # socket object methods.
     # ==================================================
 
-    def fileno (self):
+    def fileno(self):
         """
         Get socket file number.
 
@@ -188,7 +188,7 @@ class Dispatcher (object):
         """
         return self._fileno
 
-    def listen (self, num):
+    def listen(self, num):
         """
         Let the socket listen to a port.
 
@@ -201,7 +201,7 @@ class Dispatcher (object):
             num = 1
         return self.socket.listen(num)
 
-    def bind (self, addr):
+    def bind(self, addr):
         """
         Bind the socket to an address.
 
@@ -212,7 +212,7 @@ class Dispatcher (object):
         self.addr = addr
         return self.socket.bind(addr)
 
-    def connect (self, addr):
+    def connect(self, addr):
         """
         Try to connect to a host. If connecting is in progress (indicated
         by EINPROGRESS or EWOULDBLOCK), try again sometime later.
@@ -231,7 +231,7 @@ class Dispatcher (object):
                 '%s connection error %d %s', self, err, strerror(err))
         if err in (errno.EINPROGRESS, errno.EWOULDBLOCK):
             # Connection is in progress, check the connect condition later.
-            def recheck ():
+            def recheck():
                 self.check_connect(addr)
             timer.make_timer(0.2, recheck)
         elif err in (0, errno.EISCONN):
@@ -246,7 +246,7 @@ class Dispatcher (object):
             raise socket.error((err, strerror(err)))
         return err
 
-    def check_connect (self, addr):
+    def check_connect(self, addr):
         """
         Check if the connection is etablished.
         See also http://cr.yp.to/docs/connect.html and connect(2) manpage.
@@ -257,7 +257,7 @@ class Dispatcher (object):
             log.debug(LOG_PROXY, '%s connect timed out', self)
             self.handle_close()
             return
-        def recheck ():
+        def recheck():
             self.check_connect(addr)
         try:
             (r, w, e) = select.select([], [self.fileno()], [], 0.2)
@@ -287,7 +287,7 @@ class Dispatcher (object):
                         self, err, strerr)
             self.handle_error(_("Connect error %s.") % strerr)
 
-    def accept (self):
+    def accept(self):
         """
         Accept a new connection on the socket.
 
@@ -304,7 +304,7 @@ class Dispatcher (object):
             else:
                 raise
 
-    def send (self, data, flags=0):
+    def send(self, data, flags=0):
         """
         Send given data on socket.
 
@@ -324,7 +324,7 @@ class Dispatcher (object):
                 return 0
             raise
 
-    def recv (self, buffer_size, flags=0):
+    def recv(self, buffer_size, flags=0):
         """
         Try to receive up to given buffer_size bytes from the socket.
 
@@ -348,7 +348,7 @@ class Dispatcher (object):
             else:
                 raise
 
-    def recv_bytes (self, buffer_size, flags=0):
+    def recv_bytes(self, buffer_size, flags=0):
         """
         Receive up to given buffer_size bytes from the socket.
 
@@ -365,7 +365,7 @@ class Dispatcher (object):
                 raise socket.error((errno.EREMCHG, str(addr)))
         return data
 
-    def close (self):
+    def close(self):
         """
         Close the socket.
         """
@@ -380,7 +380,7 @@ class Dispatcher (object):
                 pass
         self.socket.close()
 
-    def handle_read_event (self):
+    def handle_read_event(self):
         """
         Handle a read by calling handle_read().
         """
@@ -396,7 +396,7 @@ class Dispatcher (object):
             self.handle_connect()
             self.handle_read()
 
-    def handle_write_event (self):
+    def handle_write_event(self):
         """
         Handle write event by calling handle_write() or if not yet
         connected handle_connect().
@@ -407,53 +407,53 @@ class Dispatcher (object):
         else:
             self.handle_connect()
 
-    def handle_expt_event (self):
+    def handle_expt_event(self):
         """
         Handle exception event. Default is to call handle_expt().
         """
         self.handle_expt()
 
-    def handle_error (self, what):
+    def handle_error(self, what):
         """
         Handle error. Default is to log an error message.
         """
         log.exception(LOG_PROXY, "%s %s", self, what)
 
-    def handle_expt (self):
+    def handle_expt(self):
         """
         Handle socket exception. Default is to log a warning with the error.
         """
         log.warn(LOG_PROXY, '%s unhandled exception', self)
 
-    def handle_read (self):
+    def handle_read(self):
         """
         Handle read event. Should be overridden in subclass.
         Logs a warning as default.
         """
         log.warn(LOG_PROXY, '%s unhandled read event', self)
 
-    def handle_write (self):
+    def handle_write(self):
         """
         Handle write event. Should be overridden in subclass.
         Logs a warning as default.
         """
         log.warn(LOG_PROXY, '%s unhandled write event', self)
 
-    def handle_connect (self):
+    def handle_connect(self):
         """
         Handle connect event. Should be overridden in subclass.
         Logs a warning as default.
         """
         log.warn(LOG_PROXY, '%s unhandled connect event', self)
 
-    def handle_accept (self):
+    def handle_accept(self):
         """
         Handle accept event. Should be overridden in subclass.
         Logs a warning as default.
         """
         log.warn(LOG_PROXY, '%s unhandled accept event', self)
 
-    def handle_close (self):
+    def handle_close(self):
         """
         Handle close event. Logs a warning and closes the socket as default.
         """

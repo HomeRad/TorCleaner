@@ -32,25 +32,25 @@ Stateful connections.
 from . import Connection
 
 
-class StatefulConnection (Connection.Connection):
+class StatefulConnection(Connection.Connection):
     """
     Connection class allowing the connection to be in a specified state.
     """
 
-    def __init__ (self, state, sock=None):
+    def __init__(self, state, sock=None):
         """
         Initialize connection with given start state.
         """
         self.state = state
         super(StatefulConnection, self).__init__(sock=sock)
 
-    def readable (self):
+    def readable(self):
         """
         A connection is readable if we're connected and not in a close state.
         """
         return self.connected and self.state not in ('closed', 'unreadable')
 
-    def delegate_read (self):
+    def delegate_read(self):
         """
         Delegate a read process to process_* funcs according to the current
         state.

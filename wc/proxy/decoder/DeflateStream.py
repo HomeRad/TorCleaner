@@ -34,12 +34,12 @@ from ... import log, LOG_PROXY
 import zlib
 
 
-class DeflateStream (object):
+class DeflateStream(object):
     """
     Filter object unzip'ing all data.
     """
 
-    def __init__ (self):
+    def __init__(self):
         """
         Initialize unzipper.
         """
@@ -47,7 +47,7 @@ class DeflateStream (object):
         self.closed = False
         self.error = False
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Object representation.
         """
@@ -57,7 +57,7 @@ class DeflateStream (object):
             s = "open"
         return '<deflate %s>' % s
 
-    def process (self, s):
+    def process(self, s):
         """
         Unzip given data s and return decompressed data.
         """
@@ -74,7 +74,7 @@ class DeflateStream (object):
             self.error = True
             return s
 
-    def flush (self):
+    def flush(self):
         """
         Flush all buffered data and return it.
         """

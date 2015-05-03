@@ -39,7 +39,7 @@ from .ServerPool import serverpool
 BUSY_LIMIT = 15
 
 
-class ClientServerMatchmaker (object):
+class ClientServerMatchmaker(object):
     """
     The Matchmaker waits until the server connection is established
     and a response was received from it. Then it matches the client
@@ -72,7 +72,7 @@ class ClientServerMatchmaker (object):
         We are done matching up the client and server
     """
 
-    def __init__ (self, client, request, headers, content,
+    def __init__(self, client, request, headers, content,
                   mime_types=None, sslserver=False):
         """
         If mime is not None, the response will have the specified
@@ -115,12 +115,12 @@ class ClientServerMatchmaker (object):
         log.debug(LOG_PROXY, "background dns lookup %r", self.hostname)
         dns_lookups.background_lookup(self.hostname, self.handle_dns)
 
-    def get_ip_addr (self):
+    def get_ip_addr(self):
         ip = self.try_addrs[0]
         del self.try_addrs[0]
         return ip
 
-    def handle_dns (self, hostname, answer):
+    def handle_dns(self, hostname, answer):
         """
         Got dns answer, look for server.
         """
@@ -162,7 +162,7 @@ class ClientServerMatchmaker (object):
             self.client.error(504, _("Host not found"),
                 _('Host %s not found .. %s')%(hostname, answer.data))
 
-    def find_server (self):
+    def find_server(self):
         """
         Search for a connected server or make a new one.
         """
@@ -211,7 +211,7 @@ class ClientServerMatchmaker (object):
             except socket.error:
                 self.client.error(503, _('Connect error'))
 
-    def server_connected (self, server):
+    def server_connected(self, server):
         """
         The server has connected.
         """
@@ -259,7 +259,7 @@ class ClientServerMatchmaker (object):
                                    self.content, self,
                                    self.url, self.mime_types)
 
-    def server_abort (self, reason=_("No response from server")):
+    def server_abort(self, reason=_("No response from server")):
         """
         The server had an error, so we need to tell the client
         that we couldn't connect, or try another IP of the DNS IP list
@@ -281,7 +281,7 @@ class ClientServerMatchmaker (object):
                 # Tell the client that the server had an error.
                 self.client.error(503, reason)
 
-    def server_close (self, server):
+    def server_close(self, server):
         """
         The server has closed.
         """
@@ -298,7 +298,7 @@ class ClientServerMatchmaker (object):
             # tell the client, sorry.
             self.client.error(503, _("Server did not respond"))
 
-    def server_response (self, server, response, status, headers):
+    def server_response(self, server, response, status, headers):
         """
         The server got a response.
         """
@@ -310,7 +310,7 @@ class ClientServerMatchmaker (object):
         else:
             server.client_abort()
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Object representation.
         """

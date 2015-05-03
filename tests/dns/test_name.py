@@ -23,7 +23,7 @@ import wc.dns.reversename
 import wc.dns.e164
 
 
-class TestName (unittest.TestCase):
+class TestName(unittest.TestCase):
     def setUp(self):
         self.origin = wc.dns.name.from_text('example.')
 

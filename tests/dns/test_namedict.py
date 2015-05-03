@@ -19,7 +19,7 @@ import unittest
 import wc.dns.name
 import wc.dns.namedict
 
-class TestNameDict (unittest.TestCase):
+class TestNameDict(unittest.TestCase):
 
     def setUp(self):
         self.ndict = wc.dns.namedict.NameDict()

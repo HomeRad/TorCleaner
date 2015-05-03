@@ -21,27 +21,27 @@ JavaScript engine listener.
 from ..decorators import notimplemented
 
 
-class JSListener (object):
+class JSListener(object):
     """
     Define handler functions for javascript events.
     """
 
     @notimplemented
-    def js_process_data (self, data):
+    def js_process_data(self, data):
         """
         Handler for document.write content.
         """
         pass
 
     @notimplemented
-    def js_process_popup (self):
+    def js_process_popup(self):
         """
         Handler for popup windows.
         """
         pass
 
     @notimplemented
-    def js_process_error (self, msg):
+    def js_process_error(self, msg):
         """
         Handler for syntax errors.
         """

@@ -23,12 +23,12 @@ import os
 import wc.strformat
 
 
-class TestStrFormat (unittest.TestCase):
+class TestStrFormat(unittest.TestCase):
     """
     Test string formatting routines.
     """
 
-    def test_unquote (self):
+    def test_unquote(self):
         # Test quote stripping.
         u = wc.strformat.unquote
         self.assertEqual(u(""), "")
@@ -51,7 +51,7 @@ class TestStrFormat (unittest.TestCase):
         self.assertEqual(u("'a\"", matching=True), "'a\"")
         self.assertEqual(u("\"a'", matching=True), "\"a'")
 
-    def test_wrap (self):
+    def test_wrap(self):
         # Test line wrapping.
         wrap = wc.strformat.wrap
         s = "11%(sep)s22%(sep)s33%(sep)s44%(sep)s55" % {'sep': os.linesep}
@@ -73,14 +73,14 @@ class TestStrFormat (unittest.TestCase):
         self.assertFalse(wc.strformat.get_paragraphs(None))
 
 
-    def test_remove_markup (self):
+    def test_remove_markup(self):
         # Test markup removing.
         self.assertEqual(wc.strformat.remove_markup("<a>"), "")
         self.assertEqual(wc.strformat.remove_markup("<>"), "")
         self.assertEqual(wc.strformat.remove_markup("<<>"), "")
         self.assertEqual(wc.strformat.remove_markup("a < b"), "a < b")
 
-    def test_strsize (self):
+    def test_strsize(self):
         # Test byte size strings.
         self.assertRaises(ValueError, wc.strformat.strsize, -1)
         self.assertEqual(wc.strformat.strsize(0), "0B")
@@ -96,34 +96,34 @@ class TestStrFormat (unittest.TestCase):
         self.assertEqual(wc.strformat.strsize(1024*1024*1024*14),
             "14.0GB")
 
-    def test_is_ascii (self):
+    def test_is_ascii(self):
         self.assertTrue(wc.strformat.is_ascii("abcd./"))
         self.assertTrue(not wc.strformat.is_ascii("ä"))
         self.assertTrue(not wc.strformat.is_ascii(u"ä"))
 
-    def test_indent (self):
+    def test_indent(self):
         s = "bla"
         self.assertEqual(wc.strformat.indent(s, ""), s)
         self.assertEqual(wc.strformat.indent(s, " "), " "+s)
 
-    def test_stripall (self):
+    def test_stripall(self):
         self.assertEqual(wc.strformat.stripall("a\tb"), "ab")
         self.assertEqual(wc.strformat.stripall(" a\t b"), "ab")
         self.assertEqual(wc.strformat.stripall(" \r\na\t \nb\r"), "ab")
         self.assertEqual(wc.strformat.stripall(None), None)
 
-    def test_limit (self):
+    def test_limit(self):
         self.assertEqual(wc.strformat.limit("", 0), "")
         self.assertEqual(wc.strformat.limit("a", 0), "")
         self.assertEqual(wc.strformat.limit("1", 1), "1")
         self.assertEqual(wc.strformat.limit("11", 1), "1...")
 
-    def test_strtime (self):
+    def test_strtime(self):
         zone = wc.strformat.strtimezone()
         t = wc.strformat.strtime(0)
         self.assertEqual(t, "1970-01-01 01:00:00"+zone)
 
-    def test_duration (self):
+    def test_duration(self):
         duration = wc.strformat.strduration
         self.assertEqual(duration(-0.5), "-00:01")
         self.assertEqual(duration(0), "00:00")
@@ -135,7 +135,7 @@ class TestStrFormat (unittest.TestCase):
         self.assertEqual(duration(60*60), "01:00:00")
         self.assertEqual(duration(60*60*24), "24:00:00")
 
-    def test_duration_long (self):
+    def test_duration_long(self):
         duration = wc.strformat.strduration_long
         self.assertEqual(duration(-0.5), "-0.50 seconds")
         self.assertEqual(duration(0), "0.00 seconds")
@@ -150,23 +150,23 @@ class TestStrFormat (unittest.TestCase):
         self.assertEqual(duration(60*60*24*365 + 60*60*24 + 2),
                          "1 year, 1 day")
 
-    def test_linenumber (self):
+    def test_linenumber(self):
         get_line_number = wc.strformat.get_line_number
         self.assertEqual(get_line_number("a", -5), 0)
         self.assertEqual(get_line_number("a", 0), 1)
         self.assertEqual(get_line_number("a\nb", 2), 2)
 
-    def test_encoding (self):
+    def test_encoding(self):
         is_encoding = wc.strformat.is_encoding
         self.assertTrue(is_encoding('ascii'))
         self.assertFalse(is_encoding('hulla'))
 
-    def test_unicode_safe (self):
+    def test_unicode_safe(self):
         unicode_safe = wc.strformat.unicode_safe
         self.assertEqual(unicode_safe("a"), u"a")
         self.assertEqual(unicode_safe(u"a"), u"a")
 
-    def test_ascii_safe (self):
+    def test_ascii_safe(self):
         ascii_safe = wc.strformat.ascii_safe
         self.assertEqual(ascii_safe("a"), "a")
         self.assertEqual(ascii_safe(u"a"), "a")

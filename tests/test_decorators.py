@@ -24,21 +24,21 @@ from cStringIO import StringIO
 import wc.decorators
 
 
-class TestDecorators (unittest.TestCase):
+class TestDecorators(unittest.TestCase):
     """
     Test decorators.
     """
 
-    def test_timeit (self):
+    def test_timeit(self):
         @wc.decorators.timed()
-        def f ():
+        def f():
             return 42
         self.assertEqual(f(), 42)
 
-    def test_timeit2 (self):
+    def test_timeit2(self):
         log = StringIO()
         @wc.decorators.timed(log=log, limit=0)
-        def f ():
+        def f():
             time.sleep(1)
             return 42
         self.assertEqual(f(), 42)

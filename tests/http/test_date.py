@@ -1,28 +1,14 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2010 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import unittest
 import time
 import wc.http.date
 
 
-class TestDate (unittest.TestCase):
+class TestDate(unittest.TestCase):
 
-    def test_rfc1123 (self):
+    def test_rfc1123(self):
         now = time.time()
         wc.http.date.get_date_rfc1123(now)
         s = "Sat, 12 Feb 0005 11:12:13 GMT"
@@ -34,7 +20,7 @@ class TestDate (unittest.TestCase):
         s = "Tue, 99 Feb 2000 12:13:14 GMT"
         self.assertRaises(ValueError, wc.http.date.parse_date_rfc1123, s)
 
-    def test_rfc850 (self):
+    def test_rfc850(self):
         now = time.time()
         wc.http.date.get_date_rfc850(now)
         s = "Saturday, 12-Feb-09 11:12:13 GMT"
@@ -46,7 +32,7 @@ class TestDate (unittest.TestCase):
         s = "Tuesday, 99-Feb-98 12:13:14 GMT"
         self.assertRaises(ValueError, wc.http.date.parse_date_rfc850, s)
 
-    def test_asctime (self):
+    def test_asctime(self):
         now = time.time()
         wc.http.date.get_date_asctime(now)
         s = "Sat Feb 12 11:12:13 2005"

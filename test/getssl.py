@@ -1,20 +1,6 @@
 #!/usr/bin/python2.4
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Print headers of an URL.
 """
@@ -27,7 +13,7 @@ import select
 import errno
 import time
 
-def request1 (url, port):
+def request1(url, port):
     """httplib request"""
     parts = urlparse.urlsplit(url)
     host = parts[1]
@@ -47,7 +33,7 @@ def request1 (url, port):
         req.read()
 
 
-def proxyrequest1 (url, port):
+def proxyrequest1(url, port):
     """httplib request"""
     parts = urlparse.urlsplit(url)
     host = parts[1]
@@ -69,7 +55,7 @@ def proxyrequest1 (url, port):
         print req.read()
 
 
-def proxyrequest2 (url, port):
+def proxyrequest2(url, port):
     """raw request with PyOpenSSL"""
     from wc.proxy.Dispatcher import create_socket
     from wc.proxy.ssl import get_clientctx
@@ -111,7 +97,7 @@ def proxyrequest2 (url, port):
     sock.shutdown()
     sock.close()
 
-def sock_write (sock, data):
+def sock_write(sock, data):
     import OpenSSL.SSL
     while True:
         try:
@@ -121,7 +107,7 @@ def sock_write (sock, data):
         except OpenSSL.SSL.WantReadError:
             want_read(sock)
 
-def want_read (sock):
+def want_read(sock):
     import OpenSSL.SSL
     r, w, e = select.select([sock], [], [], 0.2)
     if not r:
@@ -132,7 +118,7 @@ def want_read (sock):
         pass
 
 
-def proxyrequest3 (url, port):
+def proxyrequest3(url, port):
     """raw request with socket.ssl"""
     from wc.proxy.Dispatcher import create_socket
     parts = urlparse.urlsplit(url)
@@ -154,7 +140,7 @@ def proxyrequest3 (url, port):
     _sock.close()
 
 
-def proxyrequest4 (url, port):
+def proxyrequest4(url, port):
     """raw request with proxy CONNECT protocol"""
     from wc.proxy.Dispatcher import create_socket
     from urllib import splitnport
@@ -191,7 +177,7 @@ def proxyrequest4 (url, port):
     _sock.close()
 
 
-def _main ():
+def _main():
     """
     USAGE: scripts/run.sh test/getssl.py <https url>
     """

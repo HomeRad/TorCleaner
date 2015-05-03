@@ -63,7 +63,7 @@ transtypes = {
 myfiles = ['domains', 'expressions', 'urls']
 ###################### read blacklist data #########################
 
-def read_blacklists (fname):
+def read_blacklists(fname):
     print "read", fname, "blacklists"
     if os.path.isdir(fname):
         for f in os.listdir(fname):
@@ -85,7 +85,7 @@ def read_blacklists (fname):
             read_data(fname, "expressions", expressions)
 
 
-def read_data (fname, name, data, cat=None):
+def read_data(fname, name, data, cat=None):
     if cat is None:
         cat = os.path.basename(os.path.dirname(fname))
     if cat not in mycats:
@@ -105,7 +105,7 @@ def read_data (fname, name, data, cat=None):
     f.close()
 
 
-def read_ids (filename, ids):
+def read_ids(filename, ids):
     p = wc.configuration.confparse.ZapperParser(filename)
     p.parse()
     ids['folder']['sid'] = str(p.folder.sid)
@@ -119,7 +119,7 @@ def read_ids (filename, ids):
 
 ##################### write blacklist data ########################
 
-def write_filters ():
+def write_filters():
     for cat, data in categories.items():
         if cat == 'kids_and_teens':
             ftype = 'whitelist'
@@ -140,7 +140,7 @@ def write_filters ():
         f.close()
 
 
-def write_folder (cat, ftype, data, ids, f):
+def write_folder(cat, ftype, data, ids, f):
     print "write", cat, "folder"
     if ids['folder']['sid'] is not None:
         sid = ' sid="%s"' % ids['folder']['sid']
@@ -187,7 +187,7 @@ def write_folder (cat, ftype, data, ids, f):
     f.write("</folder>\n")
 
 
-def write_domains (cat, b, ftype, ids, f):
+def write_domains(cat, b, ftype, ids, f):
     print "write", cat, "domains"
     d = {
         'title_en': "%s domain filter"%cat.capitalize(),
@@ -209,7 +209,7 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
 """ % d)
     f.write("</%(type)sdomains>" % d)
 
-def write_urls (cat, b, ftype, ids, f):
+def write_urls(cat, b, ftype, ids, f):
     print "write", cat, "urls"
     d = {
         'title_en': "%s url filter"%cat.capitalize(),
@@ -232,7 +232,7 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
     f.write("</%(type)surls>" % d)
 
 
-def write_expressions (cat, b, ftype, f):
+def write_expressions(cat, b, ftype, f):
     d = {
         'title_en': "%s expression filter"%cat.capitalize(),
         'title_de': "%s Ausdruckfilter"%transcats[cat]['de'].capitalize(),
@@ -261,7 +261,7 @@ Um die Filterdaten zu aktualisieren, starten Sie config/bl2wc.py von einem WebCl
 
 ##################### other functions ############################
 
-def blacklist (fname, extract_to="extracted"):
+def blacklist(fname, extract_to="extracted"):
     source = os.path.join("downloads", fname)
     if not os.path.isdir(extract_to):
         os.makedirs(extract_to, 0722)
@@ -293,7 +293,7 @@ def blacklist (fname, extract_to="extracted"):
         read_data(source, "domains", domains, cat="ads")
 
 # for now, only kids_and_teens
-def dmozlists (fname):
+def dmozlists(fname):
     print "filtering %s..." % fname
     smallfname = "small_%s"%fname
     if not os.path.exists("downloads/%s"%smallfname):
@@ -325,7 +325,7 @@ def dmozlists (fname):
     f.close()
 
 
-def geturl (basedir, fname, fun, saveas=None):
+def geturl(basedir, fname, fun, saveas=None):
     if saveas is not None:
         target = saveas
     else:
@@ -348,7 +348,7 @@ def geturl (basedir, fname, fun, saveas=None):
     fun(target)
 
 
-def rm_rf (directory):
+def rm_rf(directory):
     for f in os.listdir(directory):
         f = os.path.join(directory, f)
         if os.path.isdir(f):
@@ -361,7 +361,7 @@ def rm_rf (directory):
             os.remove(f)
 
 
-def download_and_merge (get_nonfree=False):
+def download_and_merge(get_nonfree=False):
     """Download all available filters and merge them"""
     # remove old files
     if not os.path.isdir("downloads"):
@@ -396,7 +396,7 @@ def download_and_merge (get_nonfree=False):
         geturl("http://squidguard.shalla.de/Downloads/", "shallalist.tar.gz", blacklist)
 
 
-def write_lists ():
+def write_lists():
     open_files("config")
     for data, name in ((domains,"domains"),(urls,"urls")):
         print "writing", name
@@ -408,7 +408,7 @@ def write_lists ():
     close_files()
 
 
-def open_files (directory):
+def open_files(directory):
     for cat in categories.keys():
         if cat=='kids_and_teens':
             d='whitelists'
@@ -426,7 +426,7 @@ def open_files (directory):
             categories[cat][ftype] = gzip.GzipFile(fname, 'wb')
 
 
-def close_files ():
+def close_files():
     for cat in categories.keys():
         for ftype in categories[cat].keys():
             f = categories[cat][ftype]
@@ -435,14 +435,14 @@ def close_files ():
                 f.close()
 
 
-def remove_old_data ():
+def remove_old_data():
     print "remove old extracted data..."
     for d in ("extracted", "config/blacklists_new"):
         if os.path.isdir(d):
             rm_rf(d)
 
 
-def remove_gunziped_files (fname):
+def remove_gunziped_files(fname):
     if os.path.isdir(fname):
         for f in os.listdir(fname):
             remove_gunziped_files(fname+"/"+f)

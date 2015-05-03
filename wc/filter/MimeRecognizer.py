@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2004-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Recognize MIME types.
 """
@@ -27,7 +13,7 @@ from .. import log, LOG_FILTER, magic
 from . import Filter, STAGE_RESPONSE_DECODE
 
 
-def is_preferred_mime (mime, origmime):
+def is_preferred_mime(mime, origmime):
     """
     See if the newly found mime is preferred over the original one.
     @param mime: MIME type from magic module.
@@ -54,14 +40,14 @@ def is_preferred_mime (mime, origmime):
     return True
 
 
-class MimeRecognizer (Filter.Filter):
+class MimeRecognizer(Filter.Filter):
     """
     Recognizes missing or wrong content type header of URLs request data.
     """
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """
         Initialize image reducer flags.
         """
@@ -72,7 +58,7 @@ class MimeRecognizer (Filter.Filter):
         # sufficient number of bytes to start mime recognition
         self.sufficient_size_bytes = 1024
 
-    def filter (self, data, attrs):
+    def filter(self, data, attrs):
         """
         Feed data to recognizer.
         """
@@ -87,7 +73,7 @@ class MimeRecognizer (Filter.Filter):
             return self.recognize(buf, attrs)
         return ''
 
-    def finish (self, data, attrs):
+    def finish(self, data, attrs):
         """
         Feed data to recognizer.
         """
@@ -104,7 +90,7 @@ class MimeRecognizer (Filter.Filter):
         buf.close()
         return data
 
-    def recognize (self, buf, attrs):
+    def recognize(self, buf, attrs):
         """Try to recognize MIME type and write Content-Type header."""
         # note: recognizing a mime type fixes exploits like
         # CVE-2002-0025 and CVE-2002-0024
@@ -125,7 +111,7 @@ class MimeRecognizer (Filter.Filter):
         buf.close()
         return data
 
-    def update_attrs (self, attrs, url, localhost, stages, headers):
+    def update_attrs(self, attrs, url, localhost, stages, headers):
         """Initialize buffer."""
         if not self.applies_to_stages(stages):
             return

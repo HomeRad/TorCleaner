@@ -178,19 +178,19 @@ flushtests = [
 ]
 
 
-class TestParser (unittest.TestCase):
+class TestParser(unittest.TestCase):
     """
     Test html parser.
     """
 
-    def setUp (self):
+    def setUp(self):
         """
         Initialize two internal html parsers to be used for testing.
         """
         self.htmlparser = wc.HtmlParser.htmlsax.parser()
         self.htmlparser2 = wc.HtmlParser.htmlsax.parser()
 
-    def test_parse (self):
+    def test_parse(self):
         # Parse all test patterns in one go.
         for _in, _out in parsetests:
             out = StringIO()
@@ -199,7 +199,7 @@ class TestParser (unittest.TestCase):
             self.htmlparser.feed(_in)
             self.check_results(self.htmlparser, _in, _out, out)
 
-    def check_results (self, htmlparser, _in, _out, out):
+    def check_results(self, htmlparser, _in, _out, out):
         """
         Check parse results.
         """
@@ -210,7 +210,7 @@ class TestParser (unittest.TestCase):
         self.assertEqual(res, _out, msg=msg)
         htmlparser.reset()
 
-    def test_feed (self):
+    def test_feed(self):
         # Parse all test patterns sequentially.
         for _in, _out in parsetests:
             out = StringIO()
@@ -220,7 +220,7 @@ class TestParser (unittest.TestCase):
                 self.htmlparser.feed(c)
             self.check_results(self.htmlparser, _in, _out, out)
 
-    def test_interwoven (self):
+    def test_interwoven(self):
         # Parse all test patterns on two parsers interwoven.
         for _in, _out in parsetests:
             out = StringIO()
@@ -235,7 +235,7 @@ class TestParser (unittest.TestCase):
             self.check_results(self.htmlparser, _in, _out, out)
             self.check_results(self.htmlparser2, _in, _out, out2)
 
-    def test_handler (self):
+    def test_handler(self):
         for _in, _out in parsetests:
             out = StringIO()
             out2 = StringIO()
@@ -248,7 +248,7 @@ class TestParser (unittest.TestCase):
                 self.htmlparser2.feed(c)
             self.assertEqual(out.getvalue(), out2.getvalue())
 
-    def test_flush (self):
+    def test_flush(self):
         # Test parser flushing.
         for _in, _out in flushtests:
             out = StringIO()
@@ -257,18 +257,18 @@ class TestParser (unittest.TestCase):
             self.htmlparser.feed(_in)
             self.check_results(self.htmlparser, _in, _out, out)
 
-    def test_entities (self):
+    def test_entities(self):
         # Test entity resolving.
         resolve = wc.HtmlParser.resolve_entities
         for c in "abcdefghijklmnopqrstuvwxyz":
             self.assertEqual(resolve("&#%d;" % ord(c)), c)
         self.assertEqual(resolve("&#1114112;"), u"")
 
-    def test_peek (self):
+    def test_peek(self):
         # Test peek() parser function
         data = '<a href="test.html">name</a>'
-        class NamePeeker (object):
-            def start_element (self_handler, tag, attrs):
+        class NamePeeker(object):
+            def start_element(self_handler, tag, attrs):
                 # use self reference of TestParser instance
                 self.assertRaises(TypeError, self.htmlparser.peek, -1)
                 self.assertEqual(self.htmlparser.peek(0), "")

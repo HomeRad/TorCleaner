@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2004-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Proxy start function.
 """
@@ -24,7 +10,7 @@ from . import (configuration, log, fileutil, ConfigDir, initlog,
 from .proxy import mainloop, timer, dns_lookups
 
 
-def wstartfunc (handle=None, confdir=ConfigDir, filelogs=True,
+def wstartfunc(handle=None, confdir=ConfigDir, filelogs=True,
                 profiling=False):
     """
     Initalize configuration, start psyco compiling and the proxy loop.
@@ -32,7 +18,7 @@ def wstartfunc (handle=None, confdir=ConfigDir, filelogs=True,
     """
     # init logging
     logconf = os.path.join(confdir, "logging.conf")
-    def checklog ():
+    def checklog():
         if fileutil.has_changed(logconf):
             initlog(filename=logconf, filelogs=filelogs)
         # check regularly for a changed logging configuration
@@ -70,7 +56,7 @@ def wstartfunc (handle=None, confdir=ConfigDir, filelogs=True,
     mainloop.mainloop(handle=handle)
 
 
-def load_psyco ():
+def load_psyco():
     """
     Load psyco library for speedup.
     """
@@ -87,7 +73,7 @@ def load_psyco ():
            "Psyco >= 1.4 is needed."))
 
 
-def restart ():
+def restart():
     """
     Restart the runit service. Assumes a standard installation, ie.
     it will not work if installed in custom directory.

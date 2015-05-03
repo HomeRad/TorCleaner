@@ -54,7 +54,7 @@ from ... import log, LOG_PROXY, LOG_NET
 match_bytes = re.compile(r"^(?P<bytes>[0-9a-fA-F]+)(;.+)?$").search
 
 
-class UnchunkStream (object):
+class UnchunkStream(object):
     """
     Stream filter for chunked transfer encoding
     States:
@@ -64,7 +64,7 @@ class UnchunkStream (object):
        we're reading up to bytes_remaining elements of data
     """
 
-    def __init__ (self, trailerhandler):
+    def __init__(self, trailerhandler):
         """
         Initialize internal buffers and flags.
         """
@@ -73,7 +73,7 @@ class UnchunkStream (object):
         self.bytes_remaining = None
         self.closed = False
 
-    def __repr__ (self):
+    def __repr__(self):
         """
         Representation of stream filter state.
         """
@@ -84,7 +84,7 @@ class UnchunkStream (object):
         return '<unchunk %s buflen=%d bytes_remaining=%s>' % \
                   (s, len(self.buf), self.bytes_remaining)
 
-    def process (self, s):
+    def process(self, s):
         """
         Unchunk given data s.
         """
@@ -130,7 +130,7 @@ class UnchunkStream (object):
         log.debug(LOG_NET, "unchunked %d bytes: %r", len(s), s)
         return s
 
-    def read_trailer (self):
+    def read_trailer(self):
         """
         Read trailer data from buffer.
         """
@@ -146,7 +146,7 @@ class UnchunkStream (object):
             self.trailerhandler.write_trailer(self.buf[:i])
             self.buf = self.buf[i+4:]
 
-    def flush (self):
+    def flush(self):
         """
         Flush internal buffers and return flushed data.
         """

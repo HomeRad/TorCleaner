@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2005-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 HTTP date handling
 """
@@ -30,7 +16,7 @@ monthname = [None,
              'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-def get_date_rfc1123 (timesecs):
+def get_date_rfc1123(timesecs):
     """
     RFC 822, updated by RFC 1123
     Grammar:
@@ -50,7 +36,7 @@ def get_date_rfc1123 (timesecs):
     return "%s, %02d %s %04d %02d:%02d:%02d GMT" % \
         (wkdayname[wd], day, monthname[month], year, hh, mm, ss)
 
-def parse_date_rfc1123 (datestring):
+def parse_date_rfc1123(datestring):
     """
     """
     curlocale = locale.getlocale(locale.LC_TIME)
@@ -59,7 +45,7 @@ def parse_date_rfc1123 (datestring):
     locale.setlocale(locale.LC_TIME, curlocale)
     return t
 
-def get_date_rfc850 (timesecs):
+def get_date_rfc850(timesecs):
     """
     RFC 850, obsoleted by RFC 1036
     Grammar:
@@ -79,7 +65,7 @@ def get_date_rfc850 (timesecs):
     return "%s, %02d-%s-%02d %02d:%02d:%02d GMT" % \
         (weekdayname[wd], day, monthname[month], year % 100, hh, mm, ss)
 
-def parse_date_rfc850 (datestring):
+def parse_date_rfc850(datestring):
     """
     """
     curlocale = locale.getlocale(locale.LC_TIME)
@@ -88,7 +74,7 @@ def parse_date_rfc850 (datestring):
     locale.setlocale(locale.LC_TIME, curlocale)
     return t
 
-def get_date_asctime (timesecs):
+def get_date_asctime(timesecs):
     """
     ANSI C's asctime() format
     Grammar:
@@ -108,7 +94,7 @@ def get_date_asctime (timesecs):
     return "%s %3s %2d %02d:%02d:%02d %4d" % \
         (wkdayname[wd], monthname[month], day, hh, mm, ss, year)
 
-def parse_date_asctime (datestring):
+def parse_date_asctime(datestring):
     """
     """
     # default to GMT timezone
@@ -123,7 +109,7 @@ def parse_date_asctime (datestring):
     return t
 
 
-def parse_http_date (datestring):
+def parse_http_date(datestring):
     """
     Try to parse HTTP-date.
     @return: the parsed date or None on error

@@ -34,7 +34,7 @@ import pywintypes
 # print all messages in encoded form
 enc = lambda s: s.encode("iso8859-1")
 
-def execute (args):
+def execute(args):
     """
     Execute command with arguments.
     @return: return code of executed command
@@ -50,7 +50,7 @@ def execute (args):
     return os.spawnv(os.P_WAIT, executable, args)
 
 
-def state_nt_service (name):
+def state_nt_service(name):
     """
     Return status of NT service.
     """
@@ -61,7 +61,7 @@ def state_nt_service (name):
     return None
 
 
-def install_service ():
+def install_service():
     """
     Install WebCleaner NT service.
     """
@@ -73,7 +73,7 @@ def install_service ():
     sys.argv = oldargs
 
 
-def remove_service ():
+def remove_service():
     """
     Remove WebCleaner NT service.
     """
@@ -85,7 +85,7 @@ def remove_service ():
     sys.argv = oldargs
 
 
-def start_service ():
+def start_service():
     """
     Start WebCleaner NT service.
     """
@@ -97,7 +97,7 @@ def start_service ():
     sys.argv = oldargs
 
 
-def stop_service ():
+def stop_service():
     """
     Stop WebCleaner NT service (if it is running).
     """
@@ -119,7 +119,7 @@ def stop_service ():
 
 
 _wc_config = None
-def get_wc_config ():
+def get_wc_config():
     """
     Get WebCleaner configuration object.
     """
@@ -132,7 +132,7 @@ def get_wc_config ():
 
 #################### installation ####################
 
-def do_install ():
+def do_install():
     """
     Install shortcuts and NT service.
     """
@@ -148,7 +148,7 @@ def do_install ():
     open_browser_config()
 
 
-def fix_configdata ():
+def fix_configdata():
     """
     Fix install and config paths in the config file.
     """
@@ -181,7 +181,7 @@ win_path_scheme = {
     "data": ("DATA", "."),
 }
 
-def fix_install_path (line):
+def fix_install_path(line):
     """
     Replace placeholders written by bdist_wininst with those specified
     in win_path_scheme.
@@ -200,7 +200,7 @@ def fix_install_path (line):
     return "%s = %r%s" % (key, val, os.linesep)
 
 
-def install_shortcuts ():
+def install_shortcuts():
     """
     create_shortcut(target, description, filename[, arguments[, \
                     workdir[, iconpath[, iconindex]]]])
@@ -244,7 +244,7 @@ def install_shortcuts ():
     file_created(path)
 
 
-def install_certificates ():
+def install_certificates():
     """
     Generate SSL certificates for SSL gateway functionality.
     """
@@ -258,7 +258,7 @@ You have to install the SSL certificates manually with
 'webcleaner-certificates install'."""))
 
 
-def install_adminpassword ():
+def install_adminpassword():
     """
     Ask for admin password if not already set.
     """
@@ -270,7 +270,7 @@ def install_adminpassword ():
     root = tk.Tk()
 
     # handler methods
-    def do_ok (event=None):
+    def do_ok(event=None):
         password = pass_entry.get()
         password2 = pass2_entry.get()
         if password != password2:
@@ -279,7 +279,7 @@ def install_adminpassword ():
             save_adminpassword(password)
         do_quit()
 
-    def do_quit (event=None):
+    def do_quit(event=None):
         root.destroy()
 
     root.title(_("%s administrator password") % wc.AppName)
@@ -313,14 +313,14 @@ worry, the web interface will tell you how to do that).""")
     root.mainloop()
 
 
-def has_adminpassword ():
+def has_adminpassword():
     """
     Check if admin password is already set.
     """
     return get_wc_config()["adminpass"]
 
 
-def save_adminpassword (password):
+def save_adminpassword(password):
     """
     Save new admin password to WebCleaner configuration.
     Also checks for invalid password format.
@@ -340,7 +340,7 @@ def save_adminpassword (password):
     print enc(_("Password saved."))
 
 
-def open_browser_config ():
+def open_browser_config():
     """
     Open the WebCleaner administration web interface.
     """
@@ -357,7 +357,7 @@ def open_browser_config ():
     open_browser(config_url)
 
 
-def open_browser (url):
+def open_browser(url):
     """
     Open a URL in the default browser.
     """
@@ -376,7 +376,7 @@ def open_browser (url):
 
 #################### removal ####################
 
-def do_remove ():
+def do_remove():
     """
     Stop and remove the installed NT service.
     """
@@ -393,7 +393,7 @@ def do_remove ():
     remove_empty_directories(wc.ConfigDir)
 
 
-def remove_certificates ():
+def remove_certificates():
     """
     Generate SSL certificates for SSL gateway functionality.
     """
@@ -406,7 +406,7 @@ Perhaps PyOpenSSL is not installed?
 You have to remove the SSL certificates manually."""))
 
 
-def remove_tempfiles ():
+def remove_tempfiles():
     """
     Remove log, custom config files and magic(1) cache file.
     """
@@ -417,7 +417,7 @@ def remove_tempfiles ():
             remove_file(fname)
 
 
-def purge_tempfiles ():
+def purge_tempfiles():
     """
     Ask if user wants to purge local config files.
     """
@@ -430,12 +430,12 @@ def purge_tempfiles ():
     root = tk.Tk()
 
     # handler methods
-    def do_ok (event=None):
+    def do_ok(event=None):
         for fname in files:
             remove_file(fname)
         do_quit()
 
-    def do_quit (event=None):
+    def do_quit(event=None):
         root.destroy()
 
     root.title(_("%s config purge") % wc.AppName)
@@ -457,7 +457,7 @@ installations of %(appname)s, but are useless otherwise.""")
     root.mainloop()
 
 
-def remove_file (fname):
+def remove_file(fname):
     """
     Remove a single file if it exists. Errors are printed to stdout.
     """
@@ -469,14 +469,14 @@ def remove_file (fname):
             print enc(_("Could not remove file %r: %s") % (fname, str(msg)))
 
 
-def is_empty_dir (name):
+def is_empty_dir(name):
     """
     Check if given name is a non-empty directory.
     """
     return os.path.isdir(name) and not os.listdir(name)
 
 
-def remove_empty_directories (dname):
+def remove_empty_directories(dname):
     """
     Remove empty directory structure.
     """

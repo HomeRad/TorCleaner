@@ -18,7 +18,7 @@ import unittest
 
 import wc.dns.rrset
 
-class TestRRset (unittest.TestCase):
+class TestRRset(unittest.TestCase):
 
     def testEqual1(self):
         r1 = wc.dns.rrset.from_text('foo', 300, 'in', 'a', '10.0.0.1', '10.0.0.2')

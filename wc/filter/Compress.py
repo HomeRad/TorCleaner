@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Compress documents on-the-fly with zlib.
 """
@@ -26,7 +12,7 @@ from . import Filter, STAGE_RESPONSE_ENCODE
 
 _compress_encs = ('gzip', 'x-gzip', 'compress', 'x-compress', 'deflate')
 
-def gzip_header ():
+def gzip_header():
     """
     Return a GZIP header string.
     """
@@ -38,7 +24,7 @@ def gzip_header ():
               )
 
 
-def get_compress_object ():
+def get_compress_object():
     """
     Return attributes for Compress filter.
     """
@@ -51,7 +37,7 @@ def get_compress_object ():
            }
 
 
-def compress (data, compobj):
+def compress(data, compobj):
     """
     Compress data and adjust CRC of the compressor.
 
@@ -71,7 +57,7 @@ def compress (data, compobj):
     return compressed
 
 
-def set_encoding_header (attrs):
+def set_encoding_header(attrs):
     """
     Fix headers for compression, and add a compression object
     to the filter attrs. Since the headers are modified this cannot
@@ -95,7 +81,7 @@ def set_encoding_header (attrs):
 
 
 AE_HEADER = "Accept-Encoding"
-def accept_encoding (attrs):
+def accept_encoding(attrs):
     clientheaders = attrs['headers']['client']
     if AE_HEADER not in clientheaders:
         # IE does not accept compressed content when no accept-encoding
@@ -107,14 +93,14 @@ def accept_encoding (attrs):
     return False
 
 
-class Compress (Filter.Filter):
+class Compress(Filter.Filter):
     """
     Filter class compressing its input with zlib.
     """
 
     enable = True
 
-    def __init__ (self):
+    def __init__(self):
         """
         Set init compressor flag to True.
         """
@@ -128,7 +114,7 @@ class Compress (Filter.Filter):
         super(Compress, self).__init__(stages=stages, mimes=mimes)
         self.init_compressor = True
 
-    def filter (self, data, attrs):
+    def filter(self, data, attrs):
         """
         Compress the string s.
         Note that compression state is saved outside of this function
@@ -144,7 +130,7 @@ class Compress (Filter.Filter):
             return data
         return compress(data, attrs['compressobj'])
 
-    def finish (self, data, attrs):
+    def finish(self, data, attrs):
         """
         Final compression of data, flush gzip buffers.
         """

@@ -85,7 +85,7 @@ goodhex3 = '04d2010f0001000000000001047777777709646e73707974686f6e' \
 
 goodwire3 = goodhex3.decode('hex_codec')
 
-class TestMessage (unittest.TestCase):
+class TestMessage(unittest.TestCase):
 
     def test_comparison_eq1(self):
         q1 = wc.dns.message.from_text(query_text)

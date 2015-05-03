@@ -58,7 +58,7 @@ blaz ANY A
 blaz2 ANY ANY
 """
 
-class TestUpdate (unittest.TestCase):
+class TestUpdate(unittest.TestCase):
 
     def test_to_wire1(self):
         update = wc.dns.update.Update('example')

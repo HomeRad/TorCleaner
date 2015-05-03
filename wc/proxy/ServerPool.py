@@ -34,7 +34,7 @@ from .. import log, LOG_PROXY
 from . import timer
 
 
-class ServerPool (object):
+class ServerPool(object):
     """
     Server connection pool for reusing server connections
 
@@ -48,19 +48,19 @@ class ServerPool (object):
     register_callback to express an interest in a server
     """
 
-    def __init__ (self):
+    def __init__(self):
         """Initialize pool data."""
         self.smap = {} # {(ipaddr, port) -> {server -> ('available'|'busy')}}
         self.http_versions = {} # {(ipaddr, port) -> http_version}
         self.callbacks = {} # {(ipaddr, port) -> [functions to call]}
         timer.make_timer(60, self.expire_servers)
 
-    def count_servers (self, addr):
+    def count_servers(self, addr):
         """How many busy server objects connect to this address?"""
         return len([x for x in self.smap.get(addr, {}).values()
                     if x[0] == 'busy'])
 
-    def reserve_server (self, addr):
+    def reserve_server(self, addr):
         """Try to return an existing server connection for given addr,
         or return None if on connection is available at the moment."""
         log.debug(LOG_PROXY, "pool reserve server %s", addr)
@@ -72,7 +72,7 @@ class ServerPool (object):
                 return server
         return None
 
-    def unreserve_server (self, addr, server):
+    def unreserve_server(self, addr, server):
         """Make given server connection available."""
         log.debug(LOG_PROXY, "pool unreserve %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
@@ -83,12 +83,12 @@ class ServerPool (object):
         self.smap[addr][server] = ('available', time.time())
         self.invoke_callbacks(addr)
 
-    def register_server (self, addr, server):
+    def register_server(self, addr, server):
         """Register the server as being used."""
         log.debug(LOG_PROXY, "pool register %s %s", addr, server)
         self.smap.setdefault(addr, {})[server] = ('busy',)
 
-    def unregister_server (self, addr, server):
+    def unregister_server(self, addr, server):
         """Unregister the server and remove it from the pool."""
         log.debug(LOG_PROXY, "pool unregister %s %s", addr, server)
         assert addr in self.smap, '%s missing %s' % (self.smap, addr)
@@ -99,13 +99,13 @@ class ServerPool (object):
             del self.smap[addr]
         self.invoke_callbacks(addr)
 
-    def register_callback (self, addr, callback):
+    def register_callback(self, addr, callback):
         """Callbacks are called whenever a server may be available
         for (addr). It's the callback's responsibility to re-register
         if someone else has stolen the server already."""
         self.callbacks.setdefault(addr, []).append(callback)
 
-    def connection_limit (self, addr):
+    def connection_limit(self, addr):
         """Keep these limits reasonably high (at least twenty or more)
         since having background downloads with no available servers
         can lead to aborted downloads."""
@@ -115,12 +115,12 @@ class ServerPool (object):
         else:
             return 40
 
-    def set_http_version (self, addr, http_version):
+    def set_http_version(self, addr, http_version):
         """Store http version for a given server."""
         self.http_versions[addr] = http_version
         self.invoke_callbacks(addr)
 
-    def expire_servers (self):
+    def expire_servers(self):
         """Expire server connection that have been unused for too long."""
         log.debug(LOG_PROXY, "pool expire servers")
         expire_time = time.time() - 300 # Unused for five minutes
@@ -138,7 +138,7 @@ class ServerPool (object):
                        "Not expired: %s" % str(self.smap[addr])
         timer.make_timer(60, self.expire_servers)
 
-    def invoke_callbacks (self, addr):
+    def invoke_callbacks(self, addr):
         """Notify whoever wants to know about a server becoming available."""
         if addr in self.callbacks:
             callbacks = self.callbacks[addr]

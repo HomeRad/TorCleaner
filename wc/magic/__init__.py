@@ -33,7 +33,7 @@ unsupported_types = ['text/css']
 
 _magic = None
 
-def classify (fp, magicdir=None):
+def classify(fp, magicdir=None):
     """
     Classify a file.
     """
@@ -63,21 +63,21 @@ def classify (fp, magicdir=None):
 # Some code cleanup and better error catching are needed
 # Implement the missing part of the magic file definition
 
-def dump (o, f):
+def dump(o, f):
     """
     Pickle object o to file f.
     """
     cPickle.dump(o, f, pickle.HIGHEST_PROTOCOL)
 
 
-class Failed (StandardError):
+class Failed(StandardError):
     """
     Raised for Failed rules.
     """
     pass
 
 
-class Magic (object):
+class Magic(object):
     """
     Store/load/cache files in magic(5) format, and apply detection
     rules to existing files.
@@ -95,7 +95,7 @@ class Magic (object):
        r"^\(([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)" \
        r"(\.[bslBSL])*([-+])([0\\\][xX][\dA-Fa-f]+|[0\\\][0-7]*|\d+)\)").match
 
-    def __init__ (self, filename, cachename):
+    def __init__(self, filename, cachename):
         self.entries = 0
         self._leveldict = {}
         self._direct = {}
@@ -119,7 +119,7 @@ class Magic (object):
             self.read_cache(cachename)
 
     # read_magic subfunction
-    def _split (self, line):
+    def _split(self, line):
         result = ''
         split = line.split()
         again = True
@@ -146,20 +146,20 @@ class Magic (object):
             split = part
         return part
 
-    def _level (self, text):
+    def _level(self, text):
         return text.count('>')
 
-    def _strip_start (self, char, text):
+    def _strip_start(self, char, text):
         if text[0] == char:
             return text[1:]
         return text
 
-    def _direct_offset (self, text):
+    def _direct_offset(self, text):
         if text[0] == '(' and text[-1] == ')':
             return 0
         return 1
 
-    def _offset (self, text):
+    def _offset(self, text):
         direct = self._direct_offset(text)
         offset_type = 'l'
         offset_delta = 0L
@@ -184,7 +184,7 @@ class Magic (object):
                     offset_delta = convert.convert(match_add.group(4))
         return (direct, offset_type, offset_delta, offset_relatif)
 
-    def _oper_mask (self, text):
+    def _oper_mask(self, text):
         type_mask_and = text.split('&')
         type_mask_or = text.split('^')
 
@@ -200,14 +200,14 @@ class Magic (object):
             return (oper, mask, rest)
         return ('', 0L, text)
 
-    def _endian (self, full_type):
+    def _endian(self, full_type):
         if full_type.startswith('be'):
             return 'big'
         elif full_type.startswith('le'):
             return 'little'
         return 'local'
 
-    def _kind (self, full_type, endian):
+    def _kind(self, full_type, endian):
         if endian == 'local':
             kind = full_type
         else:
@@ -234,7 +234,7 @@ class Magic (object):
 
         return kind
 
-    def _test_result (self, test_result):
+    def _test_result(self, test_result):
         if test_result[0] in "=><&!^":
             test = test_result[0]
             result = test_result[1:]
@@ -248,7 +248,7 @@ class Magic (object):
             result = test_result
             return (test, result)
 
-    def _data (self, kind, result):
+    def _data(self, kind, result):
         if kind in ("string", "regex"):
             return result.replace("\\", "")
         elif kind in ("stringnocase", "regexnocase"):
@@ -281,7 +281,7 @@ class Magic (object):
                     data.append(nb*1L)
         return data
 
-    def _length (self, kind, data):
+    def _length(self, kind, data):
         # Calculate the size of the data to read in the file
         if kind.startswith("string"):
             replace = ""
@@ -302,7 +302,7 @@ class Magic (object):
             length = self.data_size[kind]
         return length
 
-    def _mime (self, list):
+    def _mime(self, list):
         mime = ''
         for name in list:
             mime += name + " "
@@ -317,13 +317,13 @@ class Magic (object):
         mime = mime.replace("\\0", "\0")
         return mime
 
-    def read_magic (self, magic_file):
+    def read_magic(self, magic_file):
         self.magic = []
 
         with open(magic_file, 'rb') as f:
             self.read_magic_file(f)
 
-    def read_magic_file (self, f):
+    def read_magic_file(self, f):
         self.index = 0
         for line in f.readlines():
             line = line.strip()
@@ -335,7 +335,7 @@ class Magic (object):
                 part.append(r'\b')
             self.read_magic_part(part)
 
-    def read_magic_part (self, part):
+    def read_magic_part(self, part):
         # Get the level of the test
         level = self._level(part[0])
         # XXX: What does the & is used for in ">>&2" as we do
@@ -376,7 +376,7 @@ class Magic (object):
         self.index += 1
         self.entries = self.index
 
-    def write_cache (self, name):
+    def write_cache(self, name):
         with open(name, 'wb') as f:
             dump(self._leveldict, f)
             dump(self._direct, f)
@@ -392,7 +392,7 @@ class Magic (object):
             dump(self._lengthdict, f)
             dump(self._mimedict, f)
 
-    def read_cache (self, name):
+    def read_cache(self, name):
         with open(name, 'rb') as f:
             self._leveldict = cPickle.load(f)
             self._direct = cPickle.load(f)
@@ -411,7 +411,7 @@ class Magic (object):
 
     # classify subfuntions
 
-    def _indirect_offset (self, f, type, offset):
+    def _indirect_offset(self, f, type, offset):
         # Raise file error if file too short
         f.seek(offset)
         if type == 'l':
@@ -428,14 +428,14 @@ class Magic (object):
             delta = ord(self._read(f, 1))
         return offset + delta
 
-    def _read (self, fp, number):
+    def _read(self, fp, number):
         # This may retun IOError
         data = fp.read(number)
         if not data:
             raise IOError("out of file access")
         return data
 
-    def _readlines (self, fp, number):
+    def _readlines(self, fp, number):
         lines = []
         for dummy in xrange(number):
             data = fp.readline()
@@ -444,7 +444,7 @@ class Magic (object):
             lines.append(data)
         return "\n".join(lines)
 
-    def _convert (self, kind, endian, data):
+    def _convert(self, kind, endian, data):
         # Can raise StandardError and IOError
         value = data
 
@@ -500,7 +500,7 @@ class Magic (object):
             raise StandardError("Type %r not recognised" % kind)
         return value
 
-    def _binary_mask (self, oper, value, mask):
+    def _binary_mask(self, oper, value, mask):
         if oper == '&':
             value &= mask
         elif oper == '^':
@@ -511,7 +511,7 @@ class Magic (object):
             raise StandardError("Binary operator unknown %r" % oper)
         return value
 
-    def _read_string (self, fp):
+    def _read_string(self, fp):
         # This may retun IOError
         limit = 0
         result = ""
@@ -526,10 +526,10 @@ class Magic (object):
             raise Failed("too much NULL bytes in input")
         return result
 
-    def _is_null_string (self, data):
+    def _is_null_string(self, data):
         return len(data) == 2 and data[0] == '\\' and data[1] == 0L
 
-    def classify (self, f):
+    def classify(self, f):
         if not self.entries:
             raise StandardError("Not initialised properly")
         # Are we still looking for the ruleset to apply or are we in a rule

@@ -84,12 +84,12 @@ in the ListDict (ie. "<a href>" with lead to a {href: None} dict entry).
 Used callbacks of a handler are:
 
 - Comments: <!--data-->
-  def comment (data)
+  def comment(data)
   @param data:
   @type data: Unicode string
 
 - Start tag: <tag {attr1:value1, attr2:value2, ..}>
-  def start_element (tag, attrs)
+  def start_element(tag, attrs)
   @param tag: tag name
   @type tag: Unicode string
   @param attrs: tag attributes
@@ -103,24 +103,24 @@ Used callbacks of a handler are:
   @type attrs: ListDict
 
 - End tag: </tag>
-  def end_element (tag)
+  def end_element(tag)
   @param tag: tag name
   @type tag: Unicode string
 
 - Document type: <!DOCTYPE data>
-  def doctype (data)
+  def doctype(data)
   @param data: doctype string data
   @type data: Unicode string
 
 - Processing instruction (PI): <?name data?>
-  def pi (name, data=None)
+  def pi(name, data=None)
   @param name: instruction name
   @type name: Unicode string
   @param data: instruction data
   @type data: Unicode string
 
 - Character data: <![CDATA[data]]>
-  def cdata (data)
+  def cdata(data)
   @param data: character data
   @type data: Unicode string
 
@@ -132,17 +132,17 @@ Used callbacks of a handler are:
 Additionally, there are error and warning callbacks:
 
 - Parser warning.
-  def warning (msg)
+  def warning(msg)
   @param msg: warning message
   @type msg: Unicode string
 
 - Parser error.
-  def error (msg)
+  def error(msg)
   @param msg: error message
   @type msg: Unicode string
 
 - Fatal parser error
-  def fatal_error (msg)
+  def fatal_error(msg)
   @param msg: error message
   @type msg: Unicode string
 
@@ -164,7 +164,7 @@ import codecs
 import htmlentitydefs
 
 
-def _resolve_entity (mo):
+def _resolve_entity(mo):
     """
     Resolve a HTML entity.
 
@@ -197,7 +197,7 @@ def _resolve_entity (mo):
 
 _entity_re = re.compile(ur'(?i)&(#x?)?(?P<entity>[0-9a-z]+);')
 
-def resolve_entities (s):
+def resolve_entities(s):
     """
     Resolve HTML entities in s.
 
@@ -212,7 +212,7 @@ SUPPORTED_CHARSETS = ["utf-8", "iso-8859-1", "iso-8859-15"]
 
 _encoding_ro = re.compile(r"charset=(?P<encoding>[-0-9a-zA-Z]+)")
 
-def set_encoding (parsobj, attrs):
+def set_encoding(parsobj, attrs):
     """
     Set document encoding for the HTML parser according to the <meta>
     tag attribute information.
@@ -228,7 +228,7 @@ def set_encoding (parsobj, attrs):
             parsobj.encoding = charset
 
 
-def get_ctype_charset (text):
+def get_ctype_charset(text):
     """
     Extract charset information from mime content type string, eg.
     "text/html; charset=iso8859-1".
@@ -245,7 +245,7 @@ def get_ctype_charset (text):
     return None
 
 
-def set_doctype (parsobj, doctype):
+def set_doctype(parsobj, doctype):
     """
     Set document type of the HTML parser according to the given
     document type string.

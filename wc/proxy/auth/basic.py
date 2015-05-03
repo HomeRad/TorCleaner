@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 HTTP basic authentication routines.
 """
@@ -27,14 +13,14 @@ from ... import log, LOG_AUTH
 from . import wc_realm
 from .parse import parse_token, parse_auth
 
-def get_basic_challenge ():
+def get_basic_challenge():
     """
     Return initial challenge token for basic authentication.
     """
     return 'Basic realm="%s"' % wc_realm
 
 
-def parse_basic_challenge (challenge):
+def parse_basic_challenge(challenge):
     """
     Parse basic authentication challenge, return dict with
     challenge data.
@@ -42,7 +28,7 @@ def parse_basic_challenge (challenge):
     return parse_auth({}, challenge)
 
 
-def get_basic_credentials (challenge, **attrs):
+def get_basic_credentials(challenge, **attrs):
     """
     Return basic credential string for given challenge.
     """
@@ -52,7 +38,7 @@ def get_basic_credentials (challenge, **attrs):
     return "Basic %s" % auth
 
 
-def parse_basic_credentials (credentials):
+def parse_basic_credentials(credentials):
     """
     Parse basic authentication credentials, return dict with credentials.
     """
@@ -66,7 +52,7 @@ def parse_basic_credentials (credentials):
     return {'username': _user, 'password': _pw}, credentials.strip()
 
 
-def check_basic_credentials (cred, **attrs):
+def check_basic_credentials(cred, **attrs):
     """
     Return True if authentication succeded, else False.
     """

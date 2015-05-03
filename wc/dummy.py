@@ -18,49 +18,49 @@
 Dummy objects.
 """
 
-class Dummy (object):
+class Dummy(object):
     """A dummy object ignores all access to it. Useful for testing."""
 
-    def __init__ (self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         pass
 
-    def __call__ (self, *args, **kwargs):
+    def __call__(self, *args, **kwargs):
         return self
 
-    def __getattr__ (self, name):
+    def __getattr__(self, name):
         return self
 
-    def __setattr__ (self, name, value):
+    def __setattr__(self, name, value):
         pass
 
-    def __delattr__ (self, name):
+    def __delattr__(self, name):
         pass
 
-    def __str__ (self):
+    def __str__(self):
         return "dummy"
 
-    def __repr__ (self):
+    def __repr__(self):
         return "<dummy>"
 
-    def __unicode__ (self):
+    def __unicode__(self):
         return u"dummy"
 
-    def __len__ (self):
+    def __len__(self):
         return 0
 
-    def __getitem__ (self, key):
+    def __getitem__(self, key):
         return self
 
-    def __setitem__ (self, key, value):
+    def __setitem__(self, key, value):
         pass
 
-    def __delitem__ (self, key):
+    def __delitem__(self, key):
         pass
 
-    def __contains__ (self, key):
+    def __contains__(self, key):
         return False
 
 
-def dummy (*args, **kwargs):
+def dummy(*args, **kwargs):
     """Ignore any positional or keyword arguments, return None."""
     pass

@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2000-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Buffered HTML parser.
 """
@@ -36,7 +22,7 @@ BOMS = [
 ]
 
 
-class HtmlParser (wc.HtmlParser.htmlsax.parser):
+class HtmlParser(wc.HtmlParser.htmlsax.parser):
     """
     HTML parser with ability to buffer incoming and outgoing data.
 
@@ -61,7 +47,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         After a wait state, replays the waitbuf and re-feed the inbuf data.
     """
 
-    def __init__ (self, handler):
+    def __init__(self, handler):
         """
         Initialize parser state and handler data.
         """
@@ -84,13 +70,13 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         self.initial = True
         self.bom = None
 
-    def __str__ (self):
+    def __str__(self):
         """
         String representation of parser with state info.
         """
         return "%s in state %s" % (self.__class__.__name__, str(self.state))
 
-    def debugbuf (self, cat=LOG_HTML):
+    def debugbuf(self, cat=LOG_HTML):
         """
         Print debugging information about buffered data.
         """
@@ -99,7 +85,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         log.debug(cat, "self.waitbuf %r", self.waitbuf)
         log.debug(cat, "self.inbuf %r", self.inbuf.getvalue())
 
-    def tagbuf2data (self):
+    def tagbuf2data(self):
         """
         Append serialized tag items of the tag buffer to the output buffer
         and clear the tag buffer.
@@ -108,7 +94,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         tagbuf2data(self.tagbuf, self.outbuf)
         self.tagbuf = []
 
-    def feed (self, data):
+    def feed(self, data):
         """
         Feed some data to the parser.
         """
@@ -144,7 +130,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         else:
             assert False, "parser %s has unknown parser state" % str(self)
 
-    def flush (self):
+    def flush(self):
         """
         Flush pending data.
         """
@@ -156,7 +142,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
                 (self.waited, str(self)))
         super(HtmlParser, self).flush()
 
-    def getoutput (self):
+    def getoutput(self):
         """
         Returns all data in output buffer and clears the output buffer.
         """
@@ -165,7 +151,7 @@ class HtmlParser (wc.HtmlParser.htmlsax.parser):
         self.outbuf = StringIO()
         return data.encode(self.encoding, "ignore")
 
-    def replay (self, waitbuf):
+    def replay(self, waitbuf):
         """
         Call the handler functions again with buffer data.
         """

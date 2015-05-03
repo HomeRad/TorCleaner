@@ -20,7 +20,7 @@ import wc.dns.flags
 import wc.dns.rcode
 import wc.dns.opcode
 
-class TestFlags (unittest.TestCase):
+class TestFlags(unittest.TestCase):
 
     def test_rcode1(self):
         self.assertEqual(wc.dns.rcode.from_text('FORMERR'),

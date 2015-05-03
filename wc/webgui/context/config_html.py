@@ -1,19 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2003-2009 Bastian Kleineidam
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 """
 Parameters for config.html page.
 """
@@ -95,7 +81,7 @@ for _i in _resolver.interfaces:
 clamavconf = _canonical_clamav_conf()
 
 
-def _form_reset ():
+def _form_reset():
     """
     Reset info/error and global variables.
     """
@@ -109,7 +95,7 @@ def _form_reset ():
 
 
 # form execution
-def _exec_form (form, lang):
+def _exec_form(form, lang):
     """
     HTML CGI form handling.
     """
@@ -253,7 +239,7 @@ def _exec_form (form, lang):
     return res[0]
 
 
-def _form_bindaddress (addr):
+def _form_bindaddress(addr):
     """
     Form handling for bind address changes.
     """
@@ -267,7 +253,7 @@ def _form_bindaddress (addr):
         info['bindaddress'] = True
 
 
-def _form_proxyport (port):
+def _form_proxyport(port):
     """
     Form handling for proxy port changes.
     """
@@ -285,7 +271,7 @@ def _form_proxyport (port):
         error['port'] = True
 
 
-def _form_sslport (port):
+def _form_sslport(port):
     """
     Form handling for proxy SSL port changes.
     """
@@ -303,7 +289,7 @@ def _form_sslport (port):
         error['sslport'] = True
 
 
-def _form_sslgateway (enable):
+def _form_sslgateway(enable):
     """
     Form handling for SSL gateway flag changes.
     """
@@ -317,7 +303,7 @@ def _form_sslgateway (enable):
         info['sslgateway'] = True
 
 
-def _form_adminuser (adminuser, res):
+def _form_adminuser(adminuser, res):
     """
     Form handling for admin user changes.
     """
@@ -330,7 +316,7 @@ def _form_adminuser (adminuser, res):
         res[0] = 401
 
 
-def _form_adminpass (adminpass, res):
+def _form_adminpass(adminpass, res):
     """
     Form handling for admin password changes.
     """
@@ -344,7 +330,7 @@ def _form_adminpass (adminpass, res):
             res[0] = 401
 
 
-def _form_proxyuser (proxyuser):
+def _form_proxyuser(proxyuser):
     """
     Form handling for proxy user changes.
     """
@@ -356,7 +342,7 @@ def _form_proxyuser (proxyuser):
         info['proxyuser'] = True
 
 
-def _form_proxypass (proxypass):
+def _form_proxypass(proxypass):
     """
     Form handling for proxy password changes.
     """
@@ -368,7 +354,7 @@ def _form_proxypass (proxypass):
         info['proxypass'] = True
 
 
-def _form_clamavconf (clamavconf):
+def _form_clamavconf(clamavconf):
     """
     Form handling for clamav config changes.
     """
@@ -378,7 +364,7 @@ def _form_clamavconf (clamavconf):
         info['clamavconf'] = True
 
 
-def _form_parentproxy (parentproxy):
+def _form_parentproxy(parentproxy):
     """
     Form handling for parent proxy host changes.
     """
@@ -388,7 +374,7 @@ def _form_parentproxy (parentproxy):
         info['parentproxy'] = True
 
 
-def _form_parentproxyport (parentproxyport):
+def _form_parentproxyport(parentproxyport):
     """
     Form handling for parent proxy port changes.
     """
@@ -402,7 +388,7 @@ def _form_parentproxyport (parentproxyport):
         error['parentproxyport'] = True
 
 
-def _form_parentproxyuser (parentproxyuser):
+def _form_parentproxyuser(parentproxyuser):
     """
     Form handling for parent proxy user changes.
     """
@@ -414,7 +400,7 @@ def _form_parentproxyuser (parentproxyuser):
         info['parentproxyuser'] = True
 
 
-def _form_parentproxypass (parentproxypass):
+def _form_parentproxypass(parentproxypass):
     """
     Form handling for parent proxy password changes.
     """
@@ -426,7 +412,7 @@ def _form_parentproxypass (parentproxypass):
         info['parentproxypass'] = True
 
 
-def _form_timeout (timeout):
+def _form_timeout(timeout):
     """
     Form handling for timeout value changes.
     """
@@ -440,7 +426,7 @@ def _form_timeout (timeout):
         error['timeout'] = True
 
 
-def _form_filtermodules (form):
+def _form_filtermodules(form):
     """
     Form handling for filter module list changes.
     """
@@ -468,7 +454,7 @@ def _form_filtermodules (form):
     filterdisabled = u", ".join(disabled)
 
 
-def _form_addallowed (host):
+def _form_addallowed(host):
     """
     Form handling for allowed host list additions.
     """
@@ -485,7 +471,7 @@ def _form_addallowed (host):
             error['addallowed'] = True
 
 
-def _form_delallowed (form):
+def _form_delallowed(form):
     """
     Form handling for allowed host list deletions.
     """
@@ -500,7 +486,7 @@ def _form_delallowed (form):
         info['delallowed'] = True
 
 
-def _form_addnofilter (host):
+def _form_addnofilter(host):
     """
     Form handling for nofilter host list additions.
     """
@@ -510,7 +496,7 @@ def _form_addnofilter (host):
         info['addnofilter'] = True
 
 
-def _form_delnofilter (hosts):
+def _form_delnofilter(hosts):
     """
     Form handling for nofilter host list deletions.
     """
